@@ -1,0 +1,250 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<link rel="stylesheet" href="../../templates/newgreen/index.css"></link>
+<link rel="alternate" type="application/rss+xml" title="ChinaUnix Blog RSS Feed" href="http://blog.chinaunix.net/u/rss.php?id=70445"></link>
+<meta name="keywords" content="对uboot移植的点滴记录 - BootLoader、系统移植 - Embeded Linux">
+<meta name="description" content="中国最大的IT技术博客-ChinaUnix博客：对uboot移植的点滴记录 - BootLoader、系统移植 - Embeded Linux">
+<title>对uboot移植的点滴记录 - BootLoader、系统移植 - Embeded Linux</title>
+</head>
+<body leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 style="background:#FFFFFF;background-image:url()" align="center">
+
+<table border="0" cellspacing="0" cellpadding="0" background="/images/tophem1.gif" style="border-collapse: collapse;height:25" height="25" width="100%" align="center">
+<tr> <td id="tool-bar" align="left"  nowrap>
+&nbsp;
+<a href="http://blog.chinaunix.net/" target="_blank">博客首页</a>
+<a href="http://blog.chinaunix.net/register.php" target="_blank">注册</a>
+<a href="http://bbs.chinaunix.net/forumdisplay.php?fid=51" target="_blank">建议与交流</a> 
+<a href="http://blog.chinaunix.net/top/" target="_blank">排行榜</a>
+<a href="" target="_blank" onclick="NewWindows('http://www.cublog.cn/addlink.php?url='+location.href+'&title='+document.title);return false;">加入友情链接</a>
+
+</td><form id="loginForm" method="get" target="_blank" action="/search.php">
+<td align="right" nowrap>
+<img src="/u2/userstar.php?blogid=70445" id="starimg" border=0 alt="" width=55 height=12>
+<a href="/u2/star.php?blogid=70445" id="star" onclick="NewWindows(this.href);return false;" title="给此博客推荐值">推荐</a>
+<a href="/u2/complaint.php?blogid=70445" id="complaint" onclick="NewWindows(this.href);return false;" title="投诉此博客">投诉</a>
+
+ 搜索：<input type="text" name="q" size="20"> <input type="submit" value="搜索" class="button1"> <a href="/help/" >帮助</a></td>
+</form></tr>
+
+</table>
+<script language="javascript">
+<!--
+
+navHover = function() {
+var lis = document.getElementById("navmenu").getElementsByTagName("LI");
+for (var i=0; i<lis.length; i++) {
+lis[i].onmouseover=function() {
+this.className+=" iehover";
+}
+lis[i].onmouseout=function() {
+this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+}
+}
+}
+
+function NewWindows(shref){
+var xx=(window.screen.width-450)/2;
+var yy=(window.screen.height-200)/2;
+pp=window.open(shref,"win","menubar=no,location=no,resizable=no,scrollbars=no,status=no,left="+xx+",top="+yy+",Width=450,Height=200");
+}
+function $(s){return document.getElementById(s);}
+//-->
+</script>
+<table border="0" cellspacing="0" cellpadding="0" height="143" style="border-collapse: collapse;background-image:url(http://www.cublog.cn/templates/newgreen/images/bg_top.gif);background-repeat: no-repeat" width="100%" bgcolor="#187218" align="center">
+<tr><td width="360"></td><td align="center" width="500" >
+
+<p style="line-height: 150%; margin: 5px">
+ <font style="font-size:14pt" color="#FFFFFF"><b>
+<p style="line-height: 150%; margin: 5px">
+ <font style="font-size:14px" 
+ 
+ color="#FFFFFF">
+ 
+<b>
+ 
+ 
+ 
+ Embeded Linux 
+ 
+ 
+</b>
+ 
+ </font></p>
+ </b></font></p>
+
+</td><td width="360">
+天道酬勤</td></tr>
+<tr><td colspan="3">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="980">
+<tr><td></td></tr>
+</table>
+</td></tr>
+</table>
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%" align="center" background="../../templates/green/images/bg_menu.gif" height="27" bgcolor="#FFFFFF">
+<tr><td width="30" align="center"><img src="../../templates/green/images/img_menu_left.gif" border="0" alt="" width="26" height="29" /></td><td width="200">
+<a href="http://fglswh.cublog.cn" class="list1" target="_blank">fglswh.cublog.cn</a>
+ 
+</td><td align="right" style="color:#2A5200" width="750">
+<ul id="navmenu"><li class="ul0"><a href="http://control.cublog.cn/" target="_blank" class="list1">管理博客</a> </li>
+
+<li class="ul0"><a href="http://control.cublog.cn/article_new.php" target="_blank" class="list1">发表文章</a></li>
+<li class="ul0"><a href="guestbook.html" class="list1">留言</a></li>
+<li class="ul0"><a href="links.html" class="list1">收藏夹</a>
+<ul class="ul1"><li><a href="links_16609.html"> · 优秀个人技术博客<!-- a16609 --></a><!-- 16609 --></li>
+<li><a href="links_16610.html"> · Linux技术网站<!-- a16610 --></a><!-- 16610 --></li>
+<li><a href="links_16611.html"> · 电子开发网站<!-- a16611 --></a><!-- 16611 --></li>
+</ul>
+
+</li>
+<li class="ul0"><a href="group.html" class="list1">博客圈</a></li>
+<li class="ul0"><a href="music.html" class="list1">音乐</a>
+<!-- 0 -->
+</li>
+<li class="ul0"><a href="photo.html" class="list1">相册</a>
+<!-- 0 -->
+</li> 
+ 
+<li class="ul0"><a href="article.html" class="list1">文章</a>
+<ul class="ul1"><li><a href="article_87332.html"> · ARM<!-- a87332 --></a><!-- 87332 --></li>
+<li><a href="article_87432.html"> · BootLoader、系统移植<!-- a87432 --></a><!-- 87432 --></li>
+<li><a href="article_87334.html"> · Driver<!-- a87334 --></a><!-- 87334 --></li>
+<li><a href="article_87333.html"> · Kernel<!-- a87333 --></a><!-- 87333 --></li>
+<li><a href="article_87331.html"> · C/C++<!-- a87331 --></a><!-- 87331 --></li>
+<li><a href="article_89413.html"> · Linux应用编程<!-- a89413 --></a><!-- 89413 --></li>
+<li><a href="article_90190.html"> · Linux Shell<!-- a90190 --></a><!-- 90190 --></li>
+<li><a href="article_87335.html"> · Linux系统使用<!-- a87335 --></a><!-- 87335 --></li>
+<li><a href="article_87330.html"> · 硬件原理、单片机<!-- a87330 --></a><!-- 87330 --></li>
+<li><a href="article_87329.html"> · 电子电路<!-- a87329 --></a><!-- 87329 --></li>
+<li><a href="article_89405.html"> · 杂七杂八<!-- a89405 --></a><!-- 89405 --></li>
+<li><a href="article_87336.html"> · 励志<!-- a87336 --></a><!-- 87336 --></li>
+</ul>
+
+</li> 
+<li class="ul0"><a href="index.html" class="list1">首页</a></li>
+</ul>
+</td>
+<td width="10"></td>
+</tr>
+<tr><td colspan="4">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="980">
+<tr><td></td></tr>
+</table>
+</td></tr>
+</table>
+<script language="javascript">
+function $(s){return document.getElementById(s);}
+function ShowHideDiv(divid,iImg){
+if($(divid).style.display == "none"){
+iImg.src="../../templates/newgreen/images/dot2.gif";
+$(divid).style.display = "block";
+iImg.title="收起";
+}else{
+iImg.src="../../templates/newgreen/images/dot4.gif";
+$(divid).style.display = "none";
+iImg.title="展开";
+}
+}
+navHover();
+</script>
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
+<tr><td height="3"></td> </tr>
+</table>
+
+
+<br />
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="90%" align="center">
+<tr><td width="18" height="28"><img src="../../templates/newgreen/images/bg_art_left_top.gif" border="0" alt="" /></td><td background="../../templates/newgreen/images/bg_art_top.gif"><p style="line-height: 150%; margin: 5px"></p></td><td width="18" height="28"><img src="../../templates/newgreen/images/bg_art_right_top.gif" border="0" alt="" /></td></tr>
+<tr><td width="18"  background="../../templates/newgreen/images/bg_art_left.gif"></td><td bgcolor="#F5FDEE" align="center">
+<br />
+<font color="#295200" style="font-size:14pt"><b>对uboot移植的点滴记录</b></font>
+
+<table border="1" cellspacing="1" cellpadding="0" style="border-collapse: collapse" bordercolor="#A5BD6B" width="100%">
+<tr><td align="center">
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;" width="100%">
+<tr><td align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;"  width="100%">
+<tr><td >
+<div id="art"  style=" margin: 15px">
+<DIV>
+<DIV class=postcontent>
+<P>命令使用：<BR>烧写Uboot：protect off 1:0<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; erase 1:0<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tftp 30008000 u-boot.bin<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cp.b 30008000 0 20000<BR>对于Uboot下一步的工作是增加一个fl命令，应该比这个erase好用些，因为erase察出要知道那几个扇区或者是那两块地址之间<BR>烧写BMP图片：tftp 30008000 logo.bmp<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cp.b 300080000 00fa0000 $filesize<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; setenv splashimage 00fa0000<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; saveenv<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bmp info $splashimage<BR>把JPG转换成BMP（在Linux下使用PBM工具）：<BR>#jpegtopnm Bergkirchen.jpg | \<BR>&gt; ppmquant 256 | \<BR>&gt; ppmtobmp -bpp 8 &gt;Bergkirchen-8bit.bmp<BR>jpegtopnm: WRITING PPM FILE<BR>ppmquant: making histogram...<BR>ppmquant: too many colors!<BR>ppmquant: scaling colors from maxval=255 to maxval=127 to improve clustering...<BR>ppmquant: making histogram...<BR>ppmquant: too many colors!<BR>ppmquant: scaling colors from maxval=127 to maxval=63 to improve clustering...<BR>ppmquant: making histogram...<BR>ppmquant: 9760 colors found<BR>ppmquant: choosing 256 colors...<BR>ppmquant: mapping image to new colors...<BR>ppmtobmp: analyzing colors...<BR>ppmtobmp: 231 colors found<BR>ppmtobmp: Writing 8 bits per pixel with a color pallette<BR><BR>制作uImage:<BR>./mkimage -A arm -O linux -T kernel -C none -a 0x30008000 -e 0x30008040 -n&nbsp; 'linux-2.4.18'&nbsp;&nbsp; -d zImage Image<BR>-A 设置那种类型的CPU<BR>-O 设置那种类型的OS<BR>-T&nbsp; 设置映像image类型<BR>-C&nbsp; 是否压缩<BR>-a&nbsp; 设置装载点<BR>-e 设置进入点（内核的入口地址，信息头的大小是0X40，在制作uImage时，加的一个头，在使用bootm时会判别这个头）<BR>-n 设置image名称<BR><BR>把信息传入linux核心的TAG定义：<BR>#define CONFIG_SETUP_MEMORY_TAGS&nbsp;&nbsp; //如果没有定义这个参数，则uboot参数必须加入men=内存大小<BR>#define CONFIG_INITRD_TAG<BR>#define CONFIG_CMDLINE_TAG&nbsp; //设置bootargs出入内核必须</P>
+<P>#define CFG_LOAD_ADDR&nbsp; 0x33000000 //把0X33000000改为0X30008000<BR><BR>设置NFS启动：<BR>set bootargs root=/dev/nfs nfsroot=192.168.0.5:/home/zouzheng/HHARM/rootbox rw noinitrd init=/linuxrc ip=192.168.0.240:192.168.0.5:192.168.0.5:255.255.255.0:hharm:eth0:off console=ttyS0,115200<BR>设置RAMDISK启动：<BR>set bootargs&nbsp; initrd=0x30800000,0x440000 mem=64M&nbsp; root=/dev/ram init=/linuxrc console=ttyS0</P>
+<P>&nbsp;内核启动参数 </P>
+<P>/////////////关于根文件系统的位置：<BR>(1)initrd=0x30800000,0x440000 root=/dev/ram init=/linuxrc &nbsp; (ramdisk) 
+<P>(2)console=ttyS0,115200 nfsroot=10.0.0.38:/root_arm ip=10.0.0.182:10.0.0.38:10.0.0.38:255.0.0.0:arm_emb:eth0:off (网络文件系统) 
+<P>(3)noinitrd root=/dev/mtdblock/3 init=/linuxrc console=ttySAC0" （在jffs2 或 cramfs） 
+<P>(4)console=ttySC1,115200 root=/dev/inftla" &nbsp;(在DOC) 
+<P>要看你到底使用的什么文件系统，及文件系统的位置<BR></P>
+<P>1．调试时最便捷的搭配：(内核---server/tftpboot/zImage ; 文件系统----sever/root_arm) 
+<P>#define CONFIG_BOOTCOMMAND"help;help;tftp 30008000 zImage;go 30008000" 
+<P>console=ttySAC0,115200 nfsroot=10.0.0.38:/root_arm ip=10.0.0.182:10.0.0.38:10.0.0.38:255.0.0.0:arm_emb:eth0:off (网络文件系统) 
+<P>2．典型应用：(内核---flash ; 文件系统----flash) 
+<P>
+<P>#define CONFIG_BOOTCOMMAND"help &nbsp;;version &nbsp;; cp 01040000 30008000 100000; cp 01140000 30800000 400000; go 30008000 " 
+<P>initrd=0x30800000,0x440000 root=/dev/ram init=/linuxrc 
+<P>3.最终产品：(内核---flash ; 文件系统----DOC) 
+<P>#define CONFIG_BOOTCOMMAND"help &nbsp;;version &nbsp;; cp 01040000 30008000 200000; go 30008000 " 
+<P>console=ttySC0,115200 root=/dev/inftla"<BR><BR>Uboot编译错误记录：<BR></P>
+<P><FONT size=3><SPAN>1、此时会出现一个错误：</SPAN><SPAN><FONT face="Times New Roman">cc1: error: invalid option `abi=apcs-gnu'<BR></FONT></SPAN></FONT><FONT size=3><SPAN>修改</SPAN><SPAN><FONT face="Times New Roman">/cpu/arm920t/</FONT></SPAN><SPAN>下的</SPAN><SPAN><FONT face="Times New Roman">config.mk:<BR></FONT></SPAN></FONT><SPAN><FONT size=3>将 </FONT></SPAN><SPAN><FONT face="Times New Roman" size=3>PLATFORM_CPPFLAGS +=$(call cc-option,-mapcs-32,-mabi=apcs-gnu)<BR></FONT></SPAN><SPAN><FONT size=3>改成：</FONT></SPAN><SPAN><FONT face="Times New Roman" size=3>PLATFORM_CPPFLAGS +=$(call cc-option,-mapcs-32,$(call cc-option,-mabi=apcs-gnu),)<BR><BR>2、编译的时候出现下面的错误：<BR>&nbsp; /usr/local/arm/3.4.1/bin/arm-linux-ld: ERROR:<BR>&nbsp; /usr/local/arm/3.4.1/lib/gcc/arm-linux/3.4.1/libgcc.a(_divsi3.oS) uses hardware FP, whereas u-boot uses software FP<BR>&nbsp; /usr/local/arm/3.4.1/bin/arm-linux-ld: failed to merge target specific data of file /usr/local/arm/3.4.1/lib/gcc/arm-linux/3.4.1/libgcc.a(_divsi3.oS)<BR>&nbsp; /usr/local/arm/3.4.1/bin/arm-linux-ld: ERROR:<BR>&nbsp; /usr/local/arm/3.4.1/lib/gcc/arm-linux/3.4.1/libgcc.a(_modsi3.oS) uses hardware FP, whereas u-boot uses software FP<BR>&nbsp; /usr/local/arm/3.4.1/bin/arm-linux-ld: failed to merge target specific data of file <BR>&nbsp; /usr/local/arm/3.4.1/lib/gcc/arm-linux/3.4.1/libgcc.a(_modsi3.oS)lib_arm/libarm.a(_udivsi3.o)(.text+0x8c):/u-boot/u-boot-1.1.4/lib_arm/_udivsi3.S:67:relocation truncated to fit: R_ARM_PLT32 __div0 lib_arm/libarm.a(_umodsi3.o)(.text+0xa:/u-boot/u-boot-1.1.4/lib_arm/_umodsi3.S:79:<BR>relocation truncated to fit: R_ARM_PLT32 __div0<BR>&nbsp; /usr/local/arm/3.4.1/lib/gcc/arm-linux/3.4.1/libgcc.a(_divsi3.oS)(.text+0x11c):/work/crosstool-0.27/build/arm-linux/gcc-3.4.1-glibc-2.3.2/gcc-3.4.1/gcc/config/arm/lib1funcs.asm:735:<BR>relocation truncated to fit: R_ARM_PLT32 __div0<BR>&nbsp; /usr/local/arm/3.4.1/lib/gcc/arm-linux/3.4.1/libgcc.a(_modsi3.oS)(.text+0xd:/work/crosstool-0.27/build/arm-linux/gcc-3.4.1-glibc-2.3.2/gcc-3.4.1/gcc/config/arm/lib1funcs.asm:795:<BR>relocation truncated to fit: R_ARM_PLT32 __div0<BR>make: *** [u-boot] Error 1<BR>&nbsp;&nbsp; 出现上面的错误有人说这样修改：<BR>&nbsp;&nbsp; PLATFORM_RELFLAGS += -fno-strict-aliasing&nbsp; -fno-common -ffixed-r8 <BR>#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -msoft-float</FONT></SPAN></P>
+<P><SPAN><FONT face="Times New Roman" size=3>PLATFORM_CPPFLAGS += -march=armv4<BR># =========================================================================<BR>#<BR># Supply options according to compiler version<BR>#<BR># =========================================================================<BR>#PLATFORM_CPPFLAGS +=$(call cc-option,-mapcs-32,-mabi=apcs-gnu)<BR>PLATFORM_CPPFLAGS +=$(call cc-option,-mapcs-32,)<BR>PLATFORM_RELFLAGS +=$(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,))</FONT></SPAN></P>
+<P><SPAN><FONT face="Times New Roman" size=3>其实这样改是没有用的，问题是3.4.1用的是hardware FP，而u-boot uses software FP，用2.95或者3.3.2版本可解决这个问题<BR>不过用2.95版本的时候还要修改一个链接</FONT></SPAN><BR><BR>在Uboot里找一块使用相同Flash的板子<BR>如：使用SST160 Flash<BR>grep –R ‘SST160A’ ./<BR>看到一大堆的板子，我们选用名字为dave中的flash.c，拷贝这个flash.c到smdk2410目录，<BR>cp board/dave/common/flash.c board/smdk2410/<BR>如：使用SST39VF160 Flash的板子<BR>grep -nir sst39vf160 u-boot<BR>然后把使用sst39vf160的flash拷贝<BR>如：找44B0的板子<BR>find . -exec grep -l 44B0 {} \;</P>
+<P><BR>问题：如果你在uboot保存环境变量时saveenv，出现Error: end address not on sector boundary<BR>&nbsp;解决办法：/include/configs/at91rm9200dk.h(smdk2410.h)中 #define CFG_ENV_ADDR (PHYS_FLASH_1+0X20000) #define CFG_ENV_SIZE 0X20000（将环境变量放到了0x10040000，大家也可以根据具体情况改变你的地址，即修改CFG_ENV_ADDR）<BR></P></DIV></DIV>
+</div>
+</td></tr>
+</table>
+
+<p style="line-height: 150%; margin: 5px">
+ 
+ 
+</p>
+</td></tr>
+ 
+ 
+<tr><td height="25" align="center">
+<font color="#295200">发表于： 2008-07-11 ，修改于： 2008-07-11 14:46，已浏览239次，有评论0条</font>
+<a href="/u2/star.php?blogid=70445&artid=1078842" id="star" onclick="NewWindows(this.href);return false;" title="推荐这篇文章">推荐</a>
+<a href="/u2/complaint.php?blogid=70445&artid=1078842" id="complaint" onclick="NewWindows(this.href);return false;" title="投诉这篇文章">投诉</a>
+
+</td></tr>
+
+
+</table>
+
+
+</td></tr>
+</table>
+
+
+</td><td width="18" background="../../templates/newgreen/images/bg_art_right.gif"></td></tr>
+
+
+<tr><td width="18" height="28"><img src="../../templates/newgreen/images/bg_art_left_bottom.gif" border="0" alt="" /></td><td background="../../templates/newgreen/images/bg_art_bottom.gif"><p style="line-height: 150%; margin: 5px"></p></td><td width="18" height="28"><img src="../../templates/newgreen/images/bg_art_right_bottom.gif" border="0" alt="" /></td></tr>
+
+
+</table>
+<br />
+<table border="1" cellspacing="1" cellpadding="0" style="border-collapse: collapse" bordercolor="#A5BD6B" width="90%" align="center">
+<tr><td height="25" style="color:#295200" bgcolor="#EFF7DE"> <b>网友评论</b></td></tr>
+<tr><td height="1" bgcolor="#FFFFFF"></td></tr>
+<tr><td align="center" bgcolor="#F9F5E7">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;color:#295200;word-wrap:break-word;" width="100%" align="center">
+</table>
+</td></tr>
+</table>
+<br />
+
+
+<table border="1" cellspacing="1" cellpadding="0" style="border-collapse: collapse" bordercolor="#A5BD6B" width="90%" align="center">
+<tr><td height="25" style="color:#295200" bgcolor="#EFF7DE"> <b>发表评论</b></td></tr>
+<tr><td height="1" bgcolor="#FFFFFF"></td></tr>
+<tr><td align="center" bgcolor="#F9F5E7">
+ 
+<IFRAME NAME="comment" SRC="/comment/comment.php?bg=F9F5E7&ctype=0&iscomment=1&artid=1078842&blogid=70445" WIDTH="100%" HEIGHT="160" frameborder="0"></IFRAME>
+ 
+
+</td></tr>
+</table>

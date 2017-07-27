@@ -1,0 +1,13 @@
+#if defined(CONFIG_1)
+******
+#elif defined(CONFIG_2)
+******
+#endif
+
+#ifdef CONFIG_1
+»ò
+#if 1
+******
+#else
+******
+#endif

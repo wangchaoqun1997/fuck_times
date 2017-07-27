@@ -1,0 +1,437 @@
+<html>
+<head> 
+<title>嵌入式技术园地 - u-boot移植心得</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<script language="javaScript" type="text/javascript" SRC="http://www.hhcn.com/non-cgi/images/board.js"></SCRIPT>
+<!--end Java-->
+
+<!--css info(editable)-->
+<style>
+A:visited{TEXT-DECORATION: none}
+A:active{TEXT-DECORATION: none}
+A:hover{TEXT-DECORATION: underline overline}
+A:link{text-decoration: none;}
+.t{LINE-HEIGHT: 1.4}
+BODY{FONT-FAMILY: 宋体; FONT-SIZE: 9pt;
+SCROLLBAR-HIGHLIGHT-COLOR: buttonface;
+SCROLLBAR-SHADOW-COLOR: buttonface;
+SCROLLBAR-3DLIGHT-COLOR: buttonhighlight;
+SCROLLBAR-TRACK-COLOR: #eeeeee;
+SCROLLBAR-DARKSHADOW-COLOR: buttonshadow}
+TD,DIV,form ,OPTION,P,TD,BR{FONT-FAMILY: 宋体; FONT-SIZE: 9pt} 
+INPUT{BORDER-TOP-WIDTH: 1px; PADDING-RIGHT: 1px; PADDING-LEFT: 1px; BORDER-LEFT-WIDTH: 1px; FONT-SIZE: 9pt; BORDER-LEFT-COLOR: #cccccc; BORDER-BOTTOM-WIDTH: 1px; BORDER-BOTTOM-COLOR: #cccccc; PADDING-BOTTOM: 1px; BORDER-TOP-COLOR: #cccccc; PADDING-TOP: 1px; HEIGHT: 18px; BORDER-RIGHT-WIDTH: 1px; BORDER-RIGHT-COLOR: #cccccc}
+textarea, select {border-width: 1; border-color: #000000; background-color: #efefef; font-family: 宋体; font-size: 9pt; font-style: bold;}
+</style>
+<!--end css info-->
+</head>
+<body bgcolor=#FFFFFF alink=#333333 vlink=#333333 link=#333333 topmargin=0 leftmargin=0>
+<table width=97% align=center cellspacing=0 cellpadding=1 border=0 bgcolor=#050C09><tr><td><table width=100% cellspacing=0 cellpadding=4 border=0><tr><td bgcolor=#F8F8F8 ><font color=#333333>>> 欢迎您，<b>客人</b>： <a href="loginout.cgi?forum=6" title=从这里开始进入论坛>登录</a> | <a href="register.cgi?forum=6" title=注册了才能发表文章哦！>注册</a> | <a href="profile.cgi?action=lostpassword" title=好惨啊，忘记密码登录不了 style="cursor:help">忘记密码</a> | <a href="whosonline.cgi" title=看看有谁在线……>在线</a> | <a href="search.cgi?forum=6" title=按关键字、作者来搜寻>搜索</a> | <span style="cursor:hand" onClick="javascript:openScript('help.cgi',500,400)" title=常见问题的解答>帮助</span> </td><td bgcolor=#F8F8F8 align=right ><a href=http://www.hhcn.com target=_blank><img src=http://www.hhcn.com/non-cgi/images/gohome.gif width=48 height=16 border=0></a>&nbsp;</td></tr></table></td></tr></table><p><table cellpadding=0 cellspacing=0 width=97% align=center><tr><td width=30% rowspan=2 valign=top><a href=forums.cgi?forum=6><img src=http://www.hhcn.com/non-cgi/myimages/logo.gif border=0></a></td><td align=top><font color=#000000><img src=http://www.hhcn.com/non-cgi/images/closedfold.gif width=14>　<a href=leoboard.cgi>华恒嵌入式Linux技术论坛</a><br>
+<img src=http://www.hhcn.com/non-cgi/images/bar.gif width=15 height=15><img src=http://www.hhcn.com/non-cgi/images/closedfold.gif width=14 height=14>　<a href=forums.cgi?forum=6>嵌入式技术园地</a>　[<a href=forums.cgi?show=0&forum=6>返回</a>]<br>
+　 <img src=http://www.hhcn.com/non-cgi/images/bar.gif width=15 height=15><img src=http://www.hhcn.com/non-cgi/images/openfold.gif width=14 height=14>　u-boot移植心得　 <img src="http://www.hhcn.com/non-cgi/images/jhinfo.gif" align=absmiddle alt=本帖为精华帖子> 
+
+<a name="top"></a>
+</td><tr><td valign=bottom align=right><font color=#333333><a href=forums.cgi?forum=6&action=resetposts>标记论坛所有内容为已读</a>　 <img src=http://www.hhcn.com/non-cgi/images/help_b.gif border=0 style="cursor:hand" onClick="javascript:openScript('help.cgi?helpon=阅读标记',500,400)">&nbsp;<br>>> 嵌入式技术园地欢迎您的到来 <<&nbsp;</td></tr></tr></table><br>
+<script language="JavaScript" type="text/javascript">
+
+</script>
+<table cellpadding=1 cellspacing=0 width=97% align=center>
+<tr><td align=center width=1></td>
+<td width=322 valign=bottom><a href=post.cgi?action=new&forum=6><img src=http://www.hhcn.com/non-cgi/images/newthread.gif border=0 alt=发表一个新主题 width=99 height=25></a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/newreply.gif border=0 alt=回复贴子 width=99 height=25></a>　<a href=poll.cgi?action=new&forum=6><img src=http://www.hhcn.com/non-cgi/images/newpoll.gif border=0 alt=开启一个新投票 width=99 height=25></a></td>
+<td align=right valign=bottom width=* nowarp><font color=#333333>◆您是本帖第 <b>3318</b> 个阅读者◆　　<a href=topic.cgi?forum=6&topic=2905&show=0><img src=http://www.hhcn.com/non-cgi/images/prethread.gif border=0 alt=浏览上一篇主题 width=52 height=12></a>&nbsp;　<a href="javascript:this.location.reload()"><img src=http://www.hhcn.com/non-cgi/images/refresh.gif border=0 alt=刷新本主题 width=40 height=12></a> &nbsp;<a href=topic.cgi?forum=6&topic=366&changemode=1><img src=http://www.hhcn.com/non-cgi/images/treeview.gif width=40 height=12 border=0 alt=树形显示贴子></a>　<a href=topic.cgi?forum=6&topic=2904&show=0><img src=http://www.hhcn.com/non-cgi/images/nextthread.gif border=0 alt=浏览下一篇主题 width=52 height=12></a></td><td align=center width=2></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24><img src=http://www.hhcn.com/non-cgi/images/none.gif width=1></td><td bgcolor=#9898BA colspan=2>
+<table cellpadding=0 cellspacing=1 width=100%><tr><td bgcolor=#9898BA><font color=#333333>&nbsp;<b>* 贴子主题</B>： u-boot移植心得　　</font></td>
+<td bgcolor=#9898BA align=right> <a href=# onclick="javascript:WebBrowser.ExecWB(4,1)"><img src=http://www.hhcn.com/non-cgi/images/saveas.gif border=0 width=16 alt="保存该页为文件" align=absmiddle></a><object id="WebBrowser" width=0 height=0 classid="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2"></object>&nbsp; <a href=report.cgi?forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/report.gif border=0 width=16 height=15 alt=本贴有问题，发送短消息报告给版主></a>&nbsp; <a href=fav.cgi?action=add&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/fav.gif border=0 width=13 height=15 alt=加入个人收藏&关注本贴></a>&nbsp; <a href=printpage.cgi?forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/printpage.gif border=0 width=16 alt=显示可打印的版本></a>&nbsp; <span style="CURSOR: hand" onClick="window.external.AddFavorite('http://www.hhcn.com/cgi-bin/topic.cgi?forum=6&topic=366', ' 华恒嵌入式Linux技术论坛 - u-boot移植心得')"><IMG SRC=http://www.hhcn.com/non-cgi/images/fav_add1.gif BORDER=0 width=15 height=15 alt=把本贴加入IE收藏夹></span>&nbsp;&nbsp;</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#F8F8F8"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#F8F8F8>
+<tr><td bgcolor=#F8F8F8 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=#cccccc,direction=135)">&nbsp;<font color=#0000ff><b>luofuchong&nbsp;</b></table>
+<font color=#555555>&nbsp;头衔: 古道热肠侠</font><BR>
+<font color=#333333>&nbsp;门派: 广东工大<br></font>
+noavatar
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="风云使者"><img src=http://www.hhcn.com/non-cgi/images/pips5.gif width=100 border=0></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle> <img src=http://www.hhcn.com/non-cgi/images/teammo.gif alt="此人为版主
+失踪 292 天" width=16 align=absmiddle> <img src=http://www.hhcn.com/non-cgi/images/mal.gif width=20 alt=帅哥 align=absmiddle> <IMG src=http://www.hhcn.com/non-cgi/sx/sx1s.gif height=15 alt=子鼠 align=absmiddle> <IMG src=http://www.hhcn.com/non-cgi/star/z8.gif height=15 alt=天蝎座 align=absmiddle></font>
+<br><font color=#333333>威望: +31</font>
+<br><font color=#555555>来自: 广东广州　<img src=http://www.hhcn.com/non-cgi/flags/blank.gif height=14 align=absmiddle></font>
+<br><font color=#333333>总发贴数: <b>432</b> 篇</font>
+<br><font color=#555555 title="在线: 402734 秒">注册日期: 2006/03/27</font><BR>
+</td>
+<td bgcolor=#F8F8F8 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#F8F8F8 valign=top width=* height=100%>
+<span style="cursor:hand" onClick="javascript:openScript('messanger.cgi?action=new&touser=luofuchong',420,320)" title="发送一个短消息给luofuchong"><img src=http://www.hhcn.com/non-cgi/images/message.gif border=0 width=16 align=absmiddle>消息</span>　<a href=profile.cgi?action=show&member=luofuchong title="查看luofuchong的个人资料"><img src=http://www.hhcn.com/non-cgi/images/profile.gif border=0 width=16 align=absmiddle>查看</a>　<a href="search.cgi?action=startsearch&TYPE_OF_SEARCH=username_search&NAME_SEARCH=topictitle_search&FORUMS_TO_SEARCH=6&SEARCH_STRING=luofuchong" target=_blank title="搜索luofuchong在本分论坛的全部贴子"><img src=http://www.hhcn.com/non-cgi/images/find.gif border=0 width=16 align=absmiddle>搜索</a>　<span style="cursor:hand" onClick="javascript:openScript('friendlist.cgi?action=adduser&adduser=luofuchong',420,320)" title="加luofuchong为我的好友"><img src=http://www.hhcn.com/non-cgi/images/friend.gif border=0 width=16 align=absmiddle>好友</span>　<a href=mailto:luofuchong@163.com title=电子邮件地址><img src=http://www.hhcn.com/non-cgi/images/email.gif border=0 width=16 align=absmiddle>邮件</a>　<a href=post.cgi?action=copy1&forum=6&topic=366&postno=1 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=1 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/02.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#555555><font color=#000066>[这个贴子最后由luofuchong在 2006/09/24 06:09pm 第 1 次编辑]</font><br><br>几经艰辛，终于基本完成了u-boot在s3c44b0的移植工作，在些记录一下在移植过程中所碰到的困难和解决方法（一些心得），作为日后参考之用，也希望能够帮到其它有需要的人^_^。<br>1.来由：<br>在我搞完ucos后(本来我是想学uclinux的，不过在对系统一无所知的情况下，还是先学一下ucos比较实际^_^，从中也可以对系统有个清晰的概念)，我意识到要搞系统的话一个功能强大的bootloader是必不可少的，而我的板上自带的是armboot（其实我个人觉得应用在ARM上的话armboot已经足够了，毕竟u-boot也是从armboot中发展过来的，纯属个人意见），如果我的板上自带光盘有已经移植好的armboot源代码供我参考的话，我想我也不会花这么多时间去搞u-boot，可恨的是我的光盘上只有armboot.bin这个二进制文件，而没有源文件，没办法，我下定主意自己搞一个，考虑了一番后我选择了u-boot，毕竟参考资料相对比较多，再我学完u-boot后再回头看armboot，简直是一个炉里出的饼，这是后话。<br> &nbsp; &nbsp; 2.准备：<br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 说是容易，做起来却挺难。因为编译u-boot要在linux环境下，而不能在我们平时所熟悉的ads下那么直观。首先要建立好交叉编译环境，这个交叉编译环境可以自己来做，不过完全没必要，而且难度也挺大，一般是下载人家编译好的工具。我刚开始在这里就郁闷了很久，现在会了以后觉得原来就是这么简单，在些我把方法说清楚，希望不会再有人为这个问题郁闷了^_^：<br>1）在网上下载一个u-boot源代码，我用的是1.1.2版本的，最新的应该是1.1.4的吧，其实差不多，那就像我那样下载一个1.1.2版本的吧。把源文件解压，这个应该不用说了吧，学过linux的人应该会，不会的话我想你继续做下去也困难，那就先装个linux用下吧（我用的是RedHat的，哦对了，编译程序是需要gcc编译器的，所以安装方式一定要选择工作站哦^_^）。好了，解压后你发现在u-boot.1.1.2目录下有Makefile这个文件吧？让我们看看它里面的内容，最简单的方法就是vi Makefile了。我们要看的是它选择的是哪一个交叉编译器。可以看到这一项：<br>ifeq ($(ARCH),arm)<br>CROSS_COMPILE = arm-linux-<br>看到吧，也就是说这里所用的交叉编译器是arm-linux-gcc了，（u-boot默认是用这个的，也有用arm-elf-gcc的，网上有个工具包arm-elf-tools-20030314.sh,我试过用它来编译，没有问题，顺便提一下，arm-elf-gcc是用来编译uClinux内核的工具来的）那你就下载一个arm-linux-的交叉编译器吧，我是在网上下载cross-2.95.3.tar.bz2这个文件，然后解压得到2.95.3版本的交叉编译工具的，具体设置如下（参考网上资料）：<p>2）在宿主机上建立arm-linux-gcc交叉编译环境<br>在RedHat Linux系统下以root用户登录，<br>将cross-2.95.3.tar.bz2文件复制到/目录下，<br>安装：<br># tar jxvf cross-2.95.3.tar.bz2<br>这个命令会在你的/usr/local/arm/2.95.3目录下安装 arm-linux-gcc 交叉编译程序，<br>然后在PATH变量中添加一项：/usr/local/arm/2.95.3/bin.<br>[root@localhost root]# export ATH=/usr/local/arm/2.95.3/bin:$PATH<br>或<br>把PATH=/usr/local/arm/2.95.3/bin:$PATH添加到/ETC/bash_profile文件中<br>或者<br>在/etc/bashrc文件中添加一项:<br>export PATH=/usr/local/arm/2.95.3/bin:$PATH<br>测试：<br>把终端关闭，重新打开后执行如下命令：<br># arm-linux-gcc –v<br>好了，建立好交叉编译环境后可以试着编译u-boot了<p>这里提几个注意点：<br>1.不可用winRAR解压u-boot-1.1.2.tar.bz2或u-boot-1.1.2.tar.gz这种文件（就个可能新手会犯，一般熟悉linux命令的人应该都不会这样做吧，在此还是要提一下）<br>2.可能下载的文件有一些中间文件会阻碍编译的运行，所以在编译前最好来个彻底清除，在u-boot.1.1.2目录下运行命令：make distclean （其实这个命令在Makefile文件下就有）我当时为这个问题郁闷了很久，希望你们不会像我这样^_^）&#59;<br>3，有些人为了方便想在cygwin下编译，但是经常在网上看到在这个虚拟平台下编译有很多的问题，要配置的东西也多，而且好像我用过那个vi没有linux环境下的好用，所以最好还是不要用这个软件了吧，如果你真的离不开windows的话可以像我这样装个虚拟机，在虚拟机下再装linux的系统，具体参考这个网站）：http://fedora.linuxsir.org/doc/vmware/<br>3）好了，现在开始测试你的交叉编译器搞好没有。在u-boot.1.1.2目录下执行如下命令：<br>1)Make distclean (再次强调)<br>2)Make B2_config(随便再个现成的试试^_^)<br>3)Make (没错的话应该会生成u-boot.bin文件，发生错误的话也不怕，只要细心看一下哪里错就行了，gcc碰到错误后会退出编译，所以可以一个个错误来改，一般的问题都是没找到编译器（可能你没装或者装的不对，例如人家用的是arm-linux-而你装的是arm-elf-，如果你装了的话看看你的环境变量设好了没有，前面有讲，如果不关编译器的事的话那就再看看，一般是文件的后缀不对，有些文件后缀是大写的，例如start.S但是如果你的是start.s小写的话那当然找不到（解决方法很，把它改成大写就行了）。细心看吧，不用怕，它都有注明路径，很容易可以找到的）)<br>如果以上步骤都无误的话那么恭喜你，你的交叉编译环境可以用来编译你的u-boot源代码了，可以开始以下阶段。<br>3.移植：<br>说时迟那时快，现在开始移植工作(以下是我一步步重新做一遍，力求说得详细点，感谢我吧^_^)<br>我以B2板子的程序做为模板来做. <br>#cd u-boot-1.1.2<br>#cd board <br>#cp -R dave myboard (这是我取的板子名字，可以换上你的，但是后面的也要跟着来换哦^_^) <br>#cd myboard<br>#mv B2 myboards3c44b0 (自己取个板子名) <br>#cd myboards3c44b0 <br># mv B2.c myboards3c44b0.c <br>修改myboards3c44b0里面的Makefile, 把B2改成myboards3c44b0，编译时如果报的其它类似找不到B2的错误也是把相应的B2改成myboards3c44b0来处理。<p>1）其中的myboards3c44b0.c文件是板的初始化代码，看一下就知道，根据你的板上自带的44binit.s来修改吧。memsetup.S文件主要是存储器的初始化设置，其实也是44binit.s里面的一部分。<br>2）其实board这里要修改的不多，先跳过flash部分吧，我们来看一下cpu设置部分吧。<br>u-boot-1.1.2里面已经加入了对s3c44b0的支持，让我们来看一下cpu/s3c44b0里面的部分吧。<br>看到start.S这个文件了吗？要修改的其实并不多，按照你的板设置一下中断跳转矢量就行了，或者上网查一下吧，应该很容易看明的。其中cpu.c这个文件简直不用修改，再来看一下serial.c这个文件吧，改一下波特率的设置就行，就是你用多少M的CPU频率的话对应的波特率参数设置问题，其实B2已经做得不错的了，很多子程序都不用自己写的了^_^，在我的板上是这样设置的,参考一下吧:<br>#if CONFIG_S3C44B0_CLOCK_SPEED==66 ，把所有的这些66改成60，原因，我的实验板上用的频率是60（44B0最高频率为64M）。然后其它分频系数，寄存器初始化设置，可以参考一下44blib.c，在这里我给出我的设置出来吧，可以参考一下。<p>case 115200:<br>#if CONFIG_S3C44B0_CLOCK_SPEED==60<br>divisor = 32&#59;<p>UFCON0 = 0x0&#59;<br>ULCON0 = 0x03&#59;<br>UCON0 = 0x245&#59;<br>UBRDIV0 = divisor&#59;<p>我在这方面算术不好，所以都是参考人家的。<p>3）好，再加上个头文件：<br>cd u-boot-1.1.2/include/configs<br>cp B2.h myboards3c44b0.h<br>这个头文件其实要改的地方还挺多的，我等下再说怎样修改。先回到u-boot.1.1.2目录，<p>4）在Makefile里面加上这部分，不会的话就模仿B2来写吧^_^<br>在B2的这部分文件<br>B2_config:unconfig<br>@./mkconfig $(@:_config=) arm s3c44b0 B2 dave<br>后面加上这部分：<br>myboards3c44b0_config:unconfig<br>@./mkconfig $(@:_config=) arm s3c44b0 myboard3c44b0 myboard<p>切记在@./mkconfig $(@:_config=) arm s3c44b0 myboard3c44b0 myboard前面的是Tab来的，万万不能用空格代替，因为它是靠这个来识别命令的！<br> &nbsp; &nbsp;<br>5）好，现在可以在u-boot-1.1.2目录下执行如下命令：<br>Make distclean（还是用这个吧，比较彻底）<br>Make myboards3c44b0_config<br>Make<br>看看有没有错，有错的话按着提示来改，如果没错的话应该就能生成u-boot.bin这个文件，现在还不能用哦，因为这几是B2的一个仿制品而已（注：在我的机上到这一步可没有报错哦，你一步步按着来做的话应该也不会有什么错误吧^_^）。<p><br>6）好，现在继续修改u-boot-1.1.2/include/configs/myboards3c44b0.h这个文件。<br>#define CONFIG_INIT_CRITICAL1 &nbsp; &nbsp; &nbsp; &nbsp; 这个在cpu/s3c44b0/start.S里面用到，如果你的u-boot程序不是在sdram中调试而是固化到flash中运行的话，这个必不可少。<br>找到 #define CONFIG_B2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;1 &nbsp; &nbsp; &nbsp; &nbsp;把B2改成myboards3c44b0吧（不然就不会编译你的板了）<br>找到 #define CONFIG_S3C44B0_CLOCK_SPEED &nbsp; 75 &nbsp; 你的44b0x应该没有75M吧 我的是改成60的<br>找到Size of malloc() pool这部分设置，改成这样吧，反正我是照着人家来做的，你自己研究下吧^_^。<p>#define CFG_MONITOR_LEN(256 * 1024)/* Reserve 256 kB for Monitor*/<br>#define CFG_ENV_SIZE &nbsp; (64*1024)/* 1024 bytes may be used for env vars*/<br>#define CFG_MALLOC_LEN(CFG_ENV_SIZE + 128*1024 )<br>#define CFG_GBL_DATA_SIZE128/* size in bytes reserved for initial data */<br>#define CFG_ENV_IS_IN_FLASH &nbsp;1 &nbsp;这个必不可少，如果你想把你的参数保存到flash的话（有些板是保存到EEPRAM中去的，但是s3c44b0的话还是保存到flash吧）<br>#define CFG_ENV_ADDR(PHYS_FLASH_1+0x40000) &nbsp;这个就是你的参数保存在flash里的起始地址了<br>#define CFG_ENV_OFFSET0x40000 &nbsp; &nbsp; &nbsp;这个我后来看它源程序发现如果你上一步没有设置它的起始地址的话就会用它来作默认地址的了<br>#define CONFIG_AUTO_COMPLETE<p>其它地方没有深究哦，有些好像不要也行，你就试试吧。<p>找到Hardware drivers部分，这应该是网络芯片设置吧，参考一下这个吧（要看芯片的）：<br>#define CONFIG_DRIVER_RTL8019 &nbsp; &nbsp; &nbsp; &nbsp;这个就要看你的板上用的是什么网卡了（这个是台湾出的，有10M）<br>#define RTL8019_BASE0x06000000 &nbsp; 这个是网卡相就寄存器的起始地址<br>以下部分我试过不要也行，你试下吧<br>#define RTL8019_BUS320<br>#define CONFIG_SMC_USE_16_BIT<br>#undef &nbsp;CONFIG_SHOW_ACTIVITY<br>#define CONFIG_NET_RETRY_COUNT10 &nbsp; 应该是重试的次数吧<p>#define CONFIG_BAUDRATE115200 &nbsp;设置波特率<p>#define CONFIG_COMMANDS( CONFIG_CMD_DFL | \<br>CFG_CMD_DATE | \<br>CFG_CMD_ELF| \<br>CFG_CMD_NET &nbsp; &nbsp;| \<br>CFG_CMD_EEPROM| \<br>CFG_CMD_I2C| \<br>CFG_CMD_FAT | \<br>CFG_CMD_JFFS2)<br>把CFG_CMD_EEPROM改成CFG_CMD_FLASH吧，虽然不改也是可以的，具体没考究。<p>以下是板上env参数设置，看一下吧，其实我觉得了解一下就行的了，只是一些初始设置值，以后可以用命令setenv &nbsp;saveenv来修改的。<br>#define CONFIG_BOOTDELAY3 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这个就是运行bootcmd之前的等待时间<br>#define CONFIG_BOOTARGS &nbsp;"devfs=mount root=ramfs console=ttyS0,115200" 引导uClinux的时候传递的参数，不会就先不用管它也行。 <br>#define CONFIG_ETHADDR00:50:c2:1e:af:fb &nbsp; &nbsp;网卡的物理地址MAC<br>#define CONFIG_NETMASK &nbsp;255.255.255.0 &nbsp; &nbsp; &nbsp; 掩码地址，设置过ip的人都应该知道吧<br>#define CONFIG_IPADDR &nbsp; 192.168.0.30 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这是你板上网卡8019的ip地址<br>#define CONFIG_SERVERIP192.168.0.10 &nbsp; &nbsp; &nbsp; 这是你宿主机的ip地址，以后用tftp下载的时候用到，一定要跟你的宿主机一致才行。<br>#define CONFIG_BOOTFILE"u-boot.bin" &nbsp; &nbsp; &nbsp; &nbsp;这个就是你要下载文件的默认名字<br>#define CONFIG_BOOTCOMMAND"bootm 0x50000" &nbsp; 这是bootdelay后运行的命令<p>Miscellaneous configurable options部分，参考一下吧：<br>#defineCFG_LONGHELP/* undef to save memory*/<br>#defineCFG_PROMPT"s3c44b0=>" &nbsp; 这是进入命令模式下的提示符，改个帅一点的吧<br>#defineCFG_CBSIZE256/* Console I/O Buffer Size*/<br>#defineCFG_PBSIZE (CFG_CBSIZE+sizeof(CFG_PROMPT)+16) /* Print Buffer Size */<br>#defineCFG_MAXARGS 100/* max number of command args*/<br>#define CFG_BARGSIZECFG_CBSIZE/* Boot Argument Buffer Size*/<p>#define CFG_MEMTEST_START &nbsp; &nbsp;0x0C400000/* memtest works on*/<br>#define CFG_MEMTEST_END0x0C800000/* 4 ... 8 MB in DRAM*/<br>#undef &nbsp;CFG_CLKS_IN_HZ/* everything, incl board info, in Hz */<br>#defineCFG_LOAD_ADDR0x0c008000默认的下载地址<br>#defineCFG_HZ1000/* 1 kHz */<br>#define CFG_BAUDRATE_TABLE &nbsp;{ 9600, 19200, 38400, 57600, 115200 } 可供选择的波特率<p><br>Physical Memory Map部分，比较重要，修改你的sdram和flash的地址和容量。<br>#define CONFIG_NR_DRAM_BANKS1 &nbsp; 我们只占用了一个Bank用来映射sdram<br>#define PHYS_SDRAM_10x0c000000 &nbsp; &nbsp; sdram的起始地址<br>#define PHYS_SDRAM_1_SIZE0x00800000 &nbsp; &nbsp; sdram的容量（8M）<br>#define PHYS_FLASH_10x00000000 &nbsp; &nbsp; flash的起始地址<br>#define PHYS_FLASH_SIZEflash的容量（2M）<br>#define CFG_FLASH_BASEPHYS_FLASH_1 &nbsp; 定义多个名字而已，其它地方会用到<p><br>FLASH organization部分，看注释应该知道了吧，参考一下：<br>#define CFG_FLASH_ERASE_TOUT4120000/* Timeout for Flash Erase (in ms)*/<br>#define CFG_FLASH_WRITE_TOUT4000/* Timeout for Flash Write (in ms)*/<p><br>按着来一步步的做应该不难，这里提一下vi程序的用法，其实在google一搜就找到了，不过为了方便大家，还是说一声吧，<br>在命令模式下：<br>按/ xxx再回车即可搜索到你所需要的内容（xxx），再按n搜索下一个，按shift+n搜索上一个 <br>按:xxx即可跟到你想要的行<br>按:set nu显示行号<br>其它查书都可以找到就不说了。<p>做到这个时候，你可以再编译一下，看有没有错，这一步我就没有帮你们做了，不过我觉得应该不会有问题吧，下载到ram中运行，看看效果。<p><br>7）终于到了flash的设置部分了，这完全是我个人悟出来的，网上资料好像讲得不是先清楚。<br> &nbsp;首先介绍一下flash的识别吧，每块flash都有一个id，前部分用来说明生产厂家，后部分用来说明它的容量，类型，位数等。它们的定义是在u-boot-1.1.2/include/flash.h中，就以我的ssts9vf1601为例：<br>#define SST_MANUFACT0x00BF00BF &nbsp;这是生产厂家id<br>#define SST_ID_xF16010x234B234B &nbsp;这是它的型号，容量，位数等id<br>#define FLASH_SST160A0x0046 &nbsp; &nbsp; &nbsp; 这个我还说不清楚，有个要注意的问题是像sst160是不能用奇地址的，我做的过程中是把SST160A改成SST1601的，懒得帮它创一个<br>好了，相信你已经找到你的板上所用的flash对应的id号了吧？现在就来谈谈怎么改。<br>先进入u-boot-1.1.2/board/myboards3c44b0/common/flash.c<br>它里面已经帮SST160A设置好了，我的做法是把SST公司的160A都改成1601，是不是很简单，当然你也可以帮1601再写一分，但是我是个懒人，所以我就样做了^_^<p>到这里还有个问题没提到的，就是如果你重新用setenv saveenv 设置了参数，但是复位后会发现怎么没有保存到的（不信你试试看）。其实我是故意留到这里讲的，应该它不会报错，可以说是比较隐秘的问题，所以我故意放到这里来说，以引起你的重视。<br>解决方法：vi u-boot-1.1.2/board/myboard/common/flash.c<br>找到这个函数：write_buff<br>里面有这句话：#ifdef CONFIG_B2<br>要把B2改了，因为我们的板不叫B2，那叫什么呢？原来是在这里定义的：u-boot-1.1.2/include/configs/myboards3c44b0.h<br>里面有这句话：#define CONFIG_HFRK 你不喜欢HFRK这个名字也行，可以改成别的名字，只不过相应地前面的B2也要改成这个名字而已。<p><br>4.后记：<br> &nbsp; 本来是想刚做好的时候写的，但是后来发现有些功能实现不了，所以就停住了笔，等我搞好了以后，又急着去学习uClinux的移植，真的很忙，现在终于抽空把它写完。虽然有些地方还没说清楚（毕竟我对它的了解还不是很深，但我相信在我以后移植系统的过程中会逐步加深对它的了解），我还是希望它能成为最详尽的u-boot移植新手指导，对u-boot移植的初学者起到实质性的作用，这样就不枉我花了这么多的心思来写这个文档。<br> <br>参考资料：<br><a href=http://blog.21ic.com/more.asp?name=sockit&amp;id=8509 target=_blank>http://blog.21ic.com/more.asp?name=sockit&amp;id=8509</a><br>我所认为的最有奉献精神，写得最详细的记录，在此表示我深深的敬意！<br></td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#F8F8F8 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#555555>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2006/04/29 10:33pm　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#EFF3F9"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#EFF3F9>
+<tr><td bgcolor=#EFF3F9 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=#9898BA,direction=135)">&nbsp;<font color=#000066><b>hn&nbsp;</b></table>
+<font color=#555555>&nbsp;　　 -* 未注册 *-</font><BR>
+<font color=#333333>&nbsp;</font>
+<BR>
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="未知"></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle>    </font>
+<br><font color=#333333>威望: 未知</font>
+<br><font color=#555555>来自: 未知</font>
+<br><font color=#333333>总发贴数: <b>0</b> 篇</font>
+<br><font color=#555555 title="在线: 0 秒">注册日期: 未知</font><BR>
+</td>
+<td bgcolor=#EFF3F9 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#EFF3F9 valign=top width=* height=100%>
+<a href=post.cgi?action=copy1&forum=6&topic=366&postno=2 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=2 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/14.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#333333>ding...</td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#EFF3F9 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#333333>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2006/04/30 08:41am　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#F8F8F8"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#F8F8F8>
+<tr><td bgcolor=#F8F8F8 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=,direction=135)">&nbsp;<font color=><b>不省人事&nbsp;</b></table>
+<font color=#555555>&nbsp;头衔: 认证会员</font><BR>
+<font color=#333333>&nbsp;</font>
+noavatar
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="精灵"><img src=http://www.hhcn.com/non-cgi/images/pips4.gif width=100 border=0></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle> <img src=http://www.hhcn.com/non-cgi/images/teamrz.gif alt=此人为认证用户 width=16 align=absmiddle>   </font>
+<br><font color=#333333>威望: +16</font>
+<br><font color=#555555>来自: 保密　<img src=http://www.hhcn.com/non-cgi/flags/blank.gif height=14 align=absmiddle></font>
+<br><font color=#333333>总发贴数: <b>215</b> 篇</font>
+<br><font color=#555555 title="在线: 271697 秒">注册日期: 2005/12/09</font><BR>
+</td>
+<td bgcolor=#F8F8F8 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#F8F8F8 valign=top width=* height=100%>
+<span style="cursor:hand" onClick="javascript:openScript('messanger.cgi?action=new&touser=%B2%BB%CA%A1%C8%CB%CA%C2',420,320)" title="发送一个短消息给不省人事"><img src=http://www.hhcn.com/non-cgi/images/message.gif border=0 width=16 align=absmiddle>消息</span>　<a href=profile.cgi?action=show&member=%B2%BB%CA%A1%C8%CB%CA%C2 title="查看不省人事的个人资料"><img src=http://www.hhcn.com/non-cgi/images/profile.gif border=0 width=16 align=absmiddle>查看</a>　<a href="search.cgi?action=startsearch&TYPE_OF_SEARCH=username_search&NAME_SEARCH=topictitle_search&FORUMS_TO_SEARCH=6&SEARCH_STRING=%B2%BB%CA%A1%C8%CB%CA%C2" target=_blank title="搜索不省人事在本分论坛的全部贴子"><img src=http://www.hhcn.com/non-cgi/images/find.gif border=0 width=16 align=absmiddle>搜索</a>　<span style="cursor:hand" onClick="javascript:openScript('friendlist.cgi?action=adduser&adduser=%B2%BB%CA%A1%C8%CB%CA%C2',420,320)" title="加不省人事为我的好友"><img src=http://www.hhcn.com/non-cgi/images/friend.gif border=0 width=16 align=absmiddle>好友</span>　<a href=mailto:lm@yeah.net title=电子邮件地址><img src=http://www.hhcn.com/non-cgi/images/email.gif border=0 width=16 align=absmiddle>邮件</a>　<a href=post.cgi?action=copy1&forum=6&topic=366&postno=3 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=3 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/18.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#555555>好！</td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#F8F8F8 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#555555>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2006/04/30 11:18am　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#EFF3F9"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#EFF3F9>
+<tr><td bgcolor=#EFF3F9 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=#9898BA,direction=135)">&nbsp;<font color=#000066><b>hn&nbsp;</b></table>
+<font color=#555555>&nbsp;　　 -* 未注册 *-</font><BR>
+<font color=#333333>&nbsp;</font>
+<BR>
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="未知"></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle>    </font>
+<br><font color=#333333>威望: 未知</font>
+<br><font color=#555555>来自: 未知</font>
+<br><font color=#333333>总发贴数: <b>0</b> 篇</font>
+<br><font color=#555555 title="在线: 0 秒">注册日期: 未知</font><BR>
+</td>
+<td bgcolor=#EFF3F9 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#EFF3F9 valign=top width=* height=100%>
+<a href=post.cgi?action=copy1&forum=6&topic=366&postno=4 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=4 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/09.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#333333>ding to stanler</td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#EFF3F9 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#333333>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2006/08/01 01:43pm　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#F8F8F8"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#F8F8F8>
+<tr><td bgcolor=#F8F8F8 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=#9898BA,direction=135)">&nbsp;<font color=#000066><b>hn&nbsp;</b></table>
+<font color=#555555>&nbsp;　　 -* 未注册 *-</font><BR>
+<font color=#333333>&nbsp;</font>
+<BR>
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="未知"></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle>    </font>
+<br><font color=#333333>威望: 未知</font>
+<br><font color=#555555>来自: 未知</font>
+<br><font color=#333333>总发贴数: <b>0</b> 篇</font>
+<br><font color=#555555 title="在线: 0 秒">注册日期: 未知</font><BR>
+</td>
+<td bgcolor=#F8F8F8 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#F8F8F8 valign=top width=* height=100%>
+<a href=post.cgi?action=copy1&forum=6&topic=366&postno=5 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=5 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/11.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#555555>转一个：<br><a href=http://www.linuxforum.net/forum/showflat.php?Cat=&amp;Board=embedded&amp;Number=618767&amp;page=0&amp;view=collapsed&amp;sb=5&amp;o=0&amp;fpart= target=_blank>http://www.linuxforum.net/forum/showflat.php?Cat=&amp;Board=embedded&amp;Number=618767&amp;page=0&amp;view=collapsed&amp;sb=5&amp;o=0&amp;fpart=</a><br>s3c44b0x主板启动用到的代码分析 <p>一 首先从cpu/s3c44b0/start.S这个文件开始执行，这个文件主要作以下几点： <br>1 设置处理器的工作模式。 <br>2 初始化中断向量。 <br>3 关闭看门狗功能。 <br>4 允许timer5的中断（时钟中断）。 <br>5 允许IRQ中断，进制FIQ中断。 <br>6 设置时钟控制寄存器控制CPU的主频。根据我自己的开发板进行了设置。（下面介绍了时钟主频的计算公式）。 <br>7 调用board/<your.board>/lowlevel.S对存储器进行初始化。这个文件主要是根据开发板设置每个存储器的BANK。我修改了这个文件使其支持我的开发板。 <br>8 将ROM中的U-BOOT代码拷贝到RAM中。并在RAM中设置好中断向量表。 <br>9 设置堆栈。 <br>10 跳到lib_arm/board.c中执行start_armboot. <br>二 执行lib_arm/board.c中的start_armboot，主要完成一下工作： <br>1 调用cpu/<your.board>/cpu.c中的cpu_init()来刷新所有cache,将0x00000000~0x0c000000区设为非cache区。并使用全部8K空间作为cache。总线优先级为默认优先级。 <br>2 调用board/<your.board>/<your.board>.c中的board_init()根据具体的开发板对PORT进行设置。我修改这个文件使其支持我的开发板。 <br>3 调用cpu/s3c44b0/interrupts.c 中的interrupt_init()初始化Timer1定时器使其在指定时间产生中断。 <br>4 根据include/configs/<your.board>.h配置文件中(CFG_ENV_IS_IN_<*>)环境变量保存位置选项来调用common/env_*.c对应文件中的env_init()。其作用是初始化环境变量。由于我的配置文件中的选项是CFG_ENV_IS_IN_FLASH，所以我修改board/<your.board>/flash.c使它支持我板子的FLASH。 <br>5 调用本文件中的init_baudrate()来设置串口的波特率，这个函数的功能是可以使用环境变量对串口波特率进行修改。 <br>6 调用cpu/s3c44b0/serial.c文件中的serial_init()对串口进行初始化。我修改这个文件使它支持我的开发板时钟频率对应的串口波特率。（下面介绍了串口波特率的计算公式）。 <br>7 调用common/console.c文件中的console_init_f()对控制台进行初始化。 <br>8 调用本文件中的display_banner()显示标题信息。 <br>9 调用board/<your.board>/<your.board>.c文件中的dram_init()对SDRAM进行初始化，其主要作用是在全局变量gd中设置SDRAM的起始地址与大小。 <br>10 调用本文件中的display_dram_config()显示一些配置信息。 <br>11 调用flash_init()来初始化FLASH。如果CFG_FLASH_CFI_DRIVER在配置文件中被定义，则调用drivers/cfi_flash.c中flash_init()驱动。否则将调用自己的FALSH驱动。 <p><p>移植U-BOOT过程 <p>一 为我的QT板子建立一个模板 <br>1 cp –r board/dave board/51EDA <br>2 mv board/51EDA/B2 board/51EDA/QT <br>3 mv board/51EDA/QT/B2.c board/51EDA/QT/QT.c <br>4 cp include/configs/B2.h include/configs/QT.h <br>5 将board/51EDA/所有文件中的B2改为QT，将include/configs/QT.h中的B2改为QT。 <br>6 修改Makefile和MAKEALL文件，为QT添加新的选项。 <br>7 然后开始编译，能够正确通过，说明上面为我的QT板子建立的模板正确，下面开始修改模板中的文件使其支持自己的QT板子。 <br>8 修改cpu/s3c44b0/start.S文件，根据自己的开发板提供的石英振荡频率（Fin）来设置自己想要的时钟主频。 <br>9 修改board/51EDA/QT/lowlevel_init.S文件，根据自己的开发板对存储器（Bank）进行初始化。 <br>10 修改board/51EDA/QT/QT.c文件，根据自己的开发板对PORT进行初始化。 <br>11 修改board/51EDA/QT/flash.c文件，使它支持自己的开发板。 <br>12 修改cpu/s3c44b0/serial.c文件，使它支持自己想要的波特率。 <br>13 修改include/configs/QT.h文件，设置里面的选项使其满足自己的要求。 <p><p>遇到的问题： <p>1. 在对应自己的开发板修改了board目录下的lowlevel_init.S，QT.c文件后串口终于出东西了。但是总是出现乱码，无论设置成什么样的时波特率，都是乱码，于是认为是自己的CPU主频的串口的波特率计算错误，查看相关资料修改了cpu目录下的start.S和serial.c文件中的系统时钟和串口波特率部分后，串口终于读到正确的数据了。（下面是有关cpu时钟频率和串口波特率的计算公式）。 <br>S3C44B0的系统时钟设置公式 <br>一. 通过PLL输出时钟脉冲频率的计算： <br>a) Fpllo = (m * Fin) / (p * 2s) <br>b) m = (MDIV + 8), p = (PDIV + 2), s = SDIV <br>c) 20MHz < Fpllo < 66MHz <br>d) Fpllo * 2s < 170MHz （s应该尽可能的大） <br>e) 1MHz <= Fin/p < 2MHz (最好是Fin/p = 1MHz) <br>f) 如果PLL打开则：Fpllo = Fout <br>g) 这样计算出MDIV, PDIV, SDIV的值写入PLLCON寄存器中就可设置Fpllo的输出频率。 <br>二. PLL的锁存时间（为输出稳定时钟频率需要的平静时间） <br>a) T_lock = (1 / Fin) * n > 280us. (n = LTIMECNT &#118;alue) <br>S3C44B0的UART波特率计算公式 <br>UBRDIVn = ( (int)(MCLK / (bps * 16) + 0.5) – 1 ) <br>MCLK = Fout = Fpllo <br>Bps = 1200，9600，19200，38400，57600，115200 <p>2. 在使用printenv与bdinfo命令读取flash中的环境变量总是出错，并且每次读出的数据都不一样，在通过调试器进行观察后发现原来是DECLARE_GLOBAL_DATA_PTR的使用问题，这是当前我使用的这个版本(u-boot-1.1.4)的一个bug，于是换了一个更新的版本(u-boot-2006-05-10-1800),这个版本已经将这个bug去处掉了。终于读出了正确的环境变量。 <p>3. 每当我使用出现错误死机重启后都无法正常启动，只有关掉电源10－30分钟后在启动就会正常，通过调试器对程序的观察发现，在start.S文件中将程序从flash复制到RAM中时，它只复制到了bss段的开始，而并没有对bss段进行复制（bss初始化为0的静态变量区），这样到的当我运行的程序出现错误对bss段进行了写入后，而内存在断电后数据并没有马上消失，这样就导致在重启后读取值为0的静态变量时出现了错误的数据。于是我修改了程序，让它将bss段也复制到内存，这样当重启后总是会对内存的bss段进行初始化。<br>建议用git直接从git repository里面拿最新的u-boot <br>git-clone <a href=http://www.denx.de/git/u-boot.git target=_blank>http://www.denx.de/git/u-boot.git</a> u-boot-git <p><br></td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#F8F8F8 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#555555>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2006/08/01 03:57pm　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#EFF3F9"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#EFF3F9>
+<tr><td bgcolor=#EFF3F9 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=#9898BA,direction=135)">&nbsp;<font color=#000066><b>yixin8611&nbsp;</b></table>
+<font color=#555555>&nbsp;　　 </font><BR>
+<font color=#333333>&nbsp;</font>
+noavatar
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="新手上路"></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle>    </font>
+<br><font color=#333333>威望: +1</font>
+<br><font color=#555555>来自: 保密　<img src=http://www.hhcn.com/non-cgi/flags/blank.gif height=14 align=absmiddle></font>
+<br><font color=#333333>总发贴数: <b>2</b> 篇</font>
+<br><font color=#555555 title="在线: 11461 秒">注册日期: 2006/08/19</font><BR>
+</td>
+<td bgcolor=#EFF3F9 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#EFF3F9 valign=top width=* height=100%>
+<span style="cursor:hand" onClick="javascript:openScript('messanger.cgi?action=new&touser=yixin8611',420,320)" title="发送一个短消息给yixin8611"><img src=http://www.hhcn.com/non-cgi/images/message.gif border=0 width=16 align=absmiddle>消息</span>　<a href=profile.cgi?action=show&member=yixin8611 title="查看yixin8611的个人资料"><img src=http://www.hhcn.com/non-cgi/images/profile.gif border=0 width=16 align=absmiddle>查看</a>　<a href="search.cgi?action=startsearch&TYPE_OF_SEARCH=username_search&NAME_SEARCH=topictitle_search&FORUMS_TO_SEARCH=6&SEARCH_STRING=yixin8611" target=_blank title="搜索yixin8611在本分论坛的全部贴子"><img src=http://www.hhcn.com/non-cgi/images/find.gif border=0 width=16 align=absmiddle>搜索</a>　<span style="cursor:hand" onClick="javascript:openScript('friendlist.cgi?action=adduser&adduser=yixin8611',420,320)" title="加yixin8611为我的好友"><img src=http://www.hhcn.com/non-cgi/images/friend.gif border=0 width=16 align=absmiddle>好友</span>　<a href=mailto:fenghui8611@sina.com title=电子邮件地址><img src=http://www.hhcn.com/non-cgi/images/email.gif border=0 width=16 align=absmiddle>邮件</a>　<a href=post.cgi?action=copy1&forum=6&topic=366&postno=6 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=6 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/07.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#333333>虽然自已也移植过,但一直没有时间写这些方档,对这些无私奉献的大侠,表示感谢</td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#EFF3F9 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#333333>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2006/08/20 04:17pm　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#F8F8F8"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#F8F8F8>
+<tr><td bgcolor=#F8F8F8 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=,direction=135)">&nbsp;<font color=><b>stanler&nbsp;</b></table>
+<font color=#555555>&nbsp;头衔: 安徽大侠</font><BR>
+<font color=#333333>&nbsp;</font>
+noavatar
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="骑士"><img src=http://www.hhcn.com/non-cgi/images/pips2.gif width=100 border=0></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle> <img src=http://www.hhcn.com/non-cgi/images/teamrz.gif alt=此人为认证用户 width=16 align=absmiddle>   </font>
+<br><font color=#333333>威望: +10</font>
+<br><font color=#555555>来自: 保密　<img src=http://www.hhcn.com/non-cgi/flags/blank.gif height=14 align=absmiddle></font>
+<br><font color=#333333>总发贴数: <b>76</b> 篇</font>
+<br><font color=#555555 title="在线: 63910 秒">注册日期: 2006/03/04</font><BR>
+</td>
+<td bgcolor=#F8F8F8 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#F8F8F8 valign=top width=* height=100%>
+<span style="cursor:hand" onClick="javascript:openScript('messanger.cgi?action=new&touser=stanler',420,320)" title="发送一个短消息给stanler"><img src=http://www.hhcn.com/non-cgi/images/message.gif border=0 width=16 align=absmiddle>消息</span>　<a href=profile.cgi?action=show&member=stanler title="查看stanler的个人资料"><img src=http://www.hhcn.com/non-cgi/images/profile.gif border=0 width=16 align=absmiddle>查看</a>　<a href="search.cgi?action=startsearch&TYPE_OF_SEARCH=username_search&NAME_SEARCH=topictitle_search&FORUMS_TO_SEARCH=6&SEARCH_STRING=stanler" target=_blank title="搜索stanler在本分论坛的全部贴子"><img src=http://www.hhcn.com/non-cgi/images/find.gif border=0 width=16 align=absmiddle>搜索</a>　<span style="cursor:hand" onClick="javascript:openScript('friendlist.cgi?action=adduser&adduser=stanler',420,320)" title="加stanler为我的好友"><img src=http://www.hhcn.com/non-cgi/images/friend.gif border=0 width=16 align=absmiddle>好友</span>　<a href=mailto:stanler@sina.com title=电子邮件地址><img src=http://www.hhcn.com/non-cgi/images/email.gif border=0 width=16 align=absmiddle>邮件</a>　<a href=post.cgi?action=copy1&forum=6&topic=366&postno=7 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=7 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/14.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#555555>我刚刚移植成功，谢谢这些写文档的同志们</td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#F8F8F8 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#555555>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2006/08/23 02:41pm　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#EFF3F9"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#EFF3F9>
+<tr><td bgcolor=#EFF3F9 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=,direction=135)">&nbsp;<font color=><b>redbag&nbsp;</b></table>
+<font color=#555555>&nbsp;头衔: 一代天骄</font><BR>
+<font color=#333333>&nbsp;</font>
+noavatar
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="侠客"><img src=http://www.hhcn.com/non-cgi/images/pips1.gif width=100 border=0></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle> <img src=http://www.hhcn.com/non-cgi/images/teamrz.gif alt=此人为认证用户 width=16 align=absmiddle>   </font>
+<br><font color=#333333>威望: +20</font>
+<br><font color=#555555>来自: 保密　<img src=http://www.hhcn.com/non-cgi/flags/blank.gif height=14 align=absmiddle></font>
+<br><font color=#333333>总发贴数: <b>40</b> 篇</font>
+<br><font color=#555555 title="在线: 92475 秒">注册日期: 2006/09/15</font><BR>
+</td>
+<td bgcolor=#EFF3F9 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#EFF3F9 valign=top width=* height=100%>
+<span style="cursor:hand" onClick="javascript:openScript('messanger.cgi?action=new&touser=redbag',420,320)" title="发送一个短消息给redbag"><img src=http://www.hhcn.com/non-cgi/images/message.gif border=0 width=16 align=absmiddle>消息</span>　<a href=profile.cgi?action=show&member=redbag title="查看redbag的个人资料"><img src=http://www.hhcn.com/non-cgi/images/profile.gif border=0 width=16 align=absmiddle>查看</a>　<a href="search.cgi?action=startsearch&TYPE_OF_SEARCH=username_search&NAME_SEARCH=topictitle_search&FORUMS_TO_SEARCH=6&SEARCH_STRING=redbag" target=_blank title="搜索redbag在本分论坛的全部贴子"><img src=http://www.hhcn.com/non-cgi/images/find.gif border=0 width=16 align=absmiddle>搜索</a>　<span style="cursor:hand" onClick="javascript:openScript('friendlist.cgi?action=adduser&adduser=redbag',420,320)" title="加redbag为我的好友"><img src=http://www.hhcn.com/non-cgi/images/friend.gif border=0 width=16 align=absmiddle>好友</span>　<a href=mailto:www.6952181@163.com title=电子邮件地址><img src=http://www.hhcn.com/non-cgi/images/email.gif border=0 width=16 align=absmiddle>邮件</a>　<a href=post.cgi?action=copy1&forum=6&topic=366&postno=8 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=8 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/16.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#333333>谢谢，古道热肠侠和版主，我是看你们 的 文章来 一步一步来弄的 。<br>刚刚把U－boot弄起来了 ，让他 在 PXA270上跑起来了。<br>我是新手，用的 板子是adsvix的板子，不知道他 用的 是什么网卡，我的 板子 上是 用的 smc91c1111 的 ，我 在 include/configs/adsvix.h中没有看见有网卡的定义。<br>我就在 adsvix.h &nbsp;中加了 #define CONFIG_DRIVER_SMC91111,在编译不能通过，<br>drivers/libdrivers.a(smc91111.o): In function `smc_rcv':<br>/home/whz/u-boot/drivers/smc91111.c:980: undefined reference to `NetReceive'<br>drivers/libdrivers.a(smc91111.o): In function `eth_rx':<br>/home/whz/u-boot/drivers/smc91111.c:1532: undefined reference to `NetRxPackets'<br>我在 net.h &nbsp;找到了<br>extern volatile uchar * NetRxPackets[PKTBUFSRX]&#59;/* Receive packets<br>没有任何的编译条件限制的 <br>我现在不知道怎样去 分析？<br></td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#EFF3F9 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#333333>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2006/09/20 03:22pm　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#F8F8F8"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#F8F8F8>
+<tr><td bgcolor=#F8F8F8 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=#9898BA,direction=135)">&nbsp;<font color=#000066><b>chen586&nbsp;</b></table>
+<font color=#555555>&nbsp;　　 </font><BR>
+<font color=#333333>&nbsp;</font>
+noavatar
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="新手上路"></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle>    </font>
+<br><font color=#333333>威望: 0</font>
+<br><font color=#555555>来自: 保密　<img src=http://www.hhcn.com/non-cgi/flags/blank.gif height=14 align=absmiddle></font>
+<br><font color=#333333>总发贴数: <b>2</b> 篇</font>
+<br><font color=#555555 title="在线: 5539 秒">注册日期: 2006/07/22</font><BR>
+</td>
+<td bgcolor=#F8F8F8 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#F8F8F8 valign=top width=* height=100%>
+<span style="cursor:hand" onClick="javascript:openScript('messanger.cgi?action=new&touser=chen586',420,320)" title="发送一个短消息给chen586"><img src=http://www.hhcn.com/non-cgi/images/message.gif border=0 width=16 align=absmiddle>消息</span>　<a href=profile.cgi?action=show&member=chen586 title="查看chen586的个人资料"><img src=http://www.hhcn.com/non-cgi/images/profile.gif border=0 width=16 align=absmiddle>查看</a>　<a href="search.cgi?action=startsearch&TYPE_OF_SEARCH=username_search&NAME_SEARCH=topictitle_search&FORUMS_TO_SEARCH=6&SEARCH_STRING=chen586" target=_blank title="搜索chen586在本分论坛的全部贴子"><img src=http://www.hhcn.com/non-cgi/images/find.gif border=0 width=16 align=absmiddle>搜索</a>　<span style="cursor:hand" onClick="javascript:openScript('friendlist.cgi?action=adduser&adduser=chen586',420,320)" title="加chen586为我的好友"><img src=http://www.hhcn.com/non-cgi/images/friend.gif border=0 width=16 align=absmiddle>好友</span>　<a href=mailto:chen586@126.com title=电子邮件地址><img src=http://www.hhcn.com/non-cgi/images/email.gif border=0 width=16 align=absmiddle>邮件</a>　<a href=post.cgi?action=copy1&forum=6&topic=366&postno=9 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=9 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/21.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#555555>海看不懂 。。。</td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#F8F8F8 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#555555>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2006/09/22 10:46am　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#EFF3F9"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#EFF3F9>
+<tr><td bgcolor=#EFF3F9 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=#9898BA,direction=135)">&nbsp;<font color=#000066><b>bob2004&nbsp;</b></table>
+<font color=#555555>&nbsp;　　 </font><BR>
+<font color=#333333>&nbsp;门派: 嵌入式开发 kernel<br></font>
+058
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="新手上路"></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle>  <img src=http://www.hhcn.com/non-cgi/images/mal.gif width=20 alt=帅哥 align=absmiddle>  </font>
+<br><font color=#333333>威望: 0</font>
+<br><font color=#555555>来自: 江苏苏州　<img src=http://www.hhcn.com/non-cgi/flags/China.gif height=14 align=absmiddle></font>
+<br><font color=#333333>总发贴数: <b>2</b> 篇</font>
+<br><font color=#555555 title="在线: 8601 秒">注册日期: 2007/06/14</font><BR>
+</td>
+<td bgcolor=#EFF3F9 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#EFF3F9 valign=top width=* height=100%>
+<span style="cursor:hand" onClick="javascript:openScript('messanger.cgi?action=new&touser=bob2004',420,320)" title="发送一个短消息给bob2004"><img src=http://www.hhcn.com/non-cgi/images/message.gif border=0 width=16 align=absmiddle>消息</span>　<a href=profile.cgi?action=show&member=bob2004 title="查看bob2004的个人资料"><img src=http://www.hhcn.com/non-cgi/images/profile.gif border=0 width=16 align=absmiddle>查看</a>　<a href="search.cgi?action=startsearch&TYPE_OF_SEARCH=username_search&NAME_SEARCH=topictitle_search&FORUMS_TO_SEARCH=6&SEARCH_STRING=bob2004" target=_blank title="搜索bob2004在本分论坛的全部贴子"><img src=http://www.hhcn.com/non-cgi/images/find.gif border=0 width=16 align=absmiddle>搜索</a>　<span style="cursor:hand" onClick="javascript:openScript('friendlist.cgi?action=adduser&adduser=bob2004',420,320)" title="加bob2004为我的好友"><img src=http://www.hhcn.com/non-cgi/images/friend.gif border=0 width=16 align=absmiddle>好友</span>　<a href=http://kernelChina.cublog.cn target=_blank title="访问 bob2004 的主页"><img src=http://www.hhcn.com/non-cgi/images/homepage.gif border=0 width=16 align=absmiddle>主页</a>　<a href=post.cgi?action=copy1&forum=6&topic=366&postno=10 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=10 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/10.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#333333>xxxxxxxxxxxxxxxxxxxxx</td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#EFF3F9 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#333333>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2007/07/25 10:25pm　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#F8F8F8"><table width=100% cellpadding=4 cellspacing=5 bgcolor=#F8F8F8>
+<tr><td bgcolor=#F8F8F8 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=#9898BA,direction=135)">&nbsp;<font color=#000066><b>bob2004&nbsp;</b></table>
+<font color=#555555>&nbsp;　　 </font><BR>
+<font color=#333333>&nbsp;门派: 嵌入式开发 kernel<br></font>
+058
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="新手上路"></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle>  <img src=http://www.hhcn.com/non-cgi/images/mal.gif width=20 alt=帅哥 align=absmiddle>  </font>
+<br><font color=#333333>威望: 0</font>
+<br><font color=#555555>来自: 江苏苏州　<img src=http://www.hhcn.com/non-cgi/flags/China.gif height=14 align=absmiddle></font>
+<br><font color=#333333>总发贴数: <b>2</b> 篇</font>
+<br><font color=#555555 title="在线: 8601 秒">注册日期: 2007/06/14</font><BR>
+</td>
+<td bgcolor=#F8F8F8 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#F8F8F8 valign=top width=* height=100%>
+<span style="cursor:hand" onClick="javascript:openScript('messanger.cgi?action=new&touser=bob2004',420,320)" title="发送一个短消息给bob2004"><img src=http://www.hhcn.com/non-cgi/images/message.gif border=0 width=16 align=absmiddle>消息</span>　<a href=profile.cgi?action=show&member=bob2004 title="查看bob2004的个人资料"><img src=http://www.hhcn.com/non-cgi/images/profile.gif border=0 width=16 align=absmiddle>查看</a>　<a href="search.cgi?action=startsearch&TYPE_OF_SEARCH=username_search&NAME_SEARCH=topictitle_search&FORUMS_TO_SEARCH=6&SEARCH_STRING=bob2004" target=_blank title="搜索bob2004在本分论坛的全部贴子"><img src=http://www.hhcn.com/non-cgi/images/find.gif border=0 width=16 align=absmiddle>搜索</a>　<span style="cursor:hand" onClick="javascript:openScript('friendlist.cgi?action=adduser&adduser=bob2004',420,320)" title="加bob2004为我的好友"><img src=http://www.hhcn.com/non-cgi/images/friend.gif border=0 width=16 align=absmiddle>好友</span>　<a href=http://kernelChina.cublog.cn target=_blank title="访问 bob2004 的主页"><img src=http://www.hhcn.com/non-cgi/images/homepage.gif border=0 width=16 align=absmiddle>主页</a>　<a href=post.cgi?action=copy1&forum=6&topic=366&postno=11 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=11 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/12.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#555555>good</td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#F8F8F8 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#555555>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2007/07/25 10:28pm　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% align=center><tr><td bgcolor=#000000 width=1 height=24></td><td bgcolor="#EFF3F9"><a name="bottom"></a><table width=100% cellpadding=4 cellspacing=5 bgcolor=#EFF3F9>
+<tr><td bgcolor=#EFF3F9 valign=top width=160 rowspan=2>
+<table style="filter:glow(color=#9898BA,direction=135)">&nbsp;<font color=#000066><b>linbintao&nbsp;</b></table>
+<font color=#555555>&nbsp;　　 </font><BR>
+<font color=#333333>&nbsp;</font>
+noavatar
+<br>
+<br><a href=lookinfo.cgi?action=style target=_blank title="新手上路"></a>
+<BR><font color=#555555>信息: <IMG SRC=http://www.hhcn.com/non-cgi/images/offline1.gif width=15 alt=该用户目前不在线 align=absmiddle>    </font>
+<br><font color=#333333>威望: 0</font>
+<br><font color=#555555>来自: 保密　<img src=http://www.hhcn.com/non-cgi/flags/blank.gif height=14 align=absmiddle></font>
+<br><font color=#333333>总发贴数: <b>1</b> 篇</font>
+<br><font color=#555555 title="在线: 1780 秒">注册日期: 2007/07/14</font><BR>
+</td>
+<td bgcolor=#EFF3F9 width=1 height=100% rowspan=2>
+<table width=1 height=100% cellpadding=0 cellspacing=0 bgcolor=#9898BA><tr><td width=1></td></tr></table>
+</td><td bgcolor=#EFF3F9 valign=top width=* height=100%>
+<span style="cursor:hand" onClick="javascript:openScript('messanger.cgi?action=new&touser=linbintao',420,320)" title="发送一个短消息给linbintao"><img src=http://www.hhcn.com/non-cgi/images/message.gif border=0 width=16 align=absmiddle>消息</span>　<a href=profile.cgi?action=show&member=linbintao title="查看linbintao的个人资料"><img src=http://www.hhcn.com/non-cgi/images/profile.gif border=0 width=16 align=absmiddle>查看</a>　<a href="search.cgi?action=startsearch&TYPE_OF_SEARCH=username_search&NAME_SEARCH=topictitle_search&FORUMS_TO_SEARCH=6&SEARCH_STRING=linbintao" target=_blank title="搜索linbintao在本分论坛的全部贴子"><img src=http://www.hhcn.com/non-cgi/images/find.gif border=0 width=16 align=absmiddle>搜索</a>　<span style="cursor:hand" onClick="javascript:openScript('friendlist.cgi?action=adduser&adduser=linbintao',420,320)" title="加linbintao为我的好友"><img src=http://www.hhcn.com/non-cgi/images/friend.gif border=0 width=16 align=absmiddle>好友</span>　<a href=mailto:linbintao@126.com title=电子邮件地址><img src=http://www.hhcn.com/non-cgi/images/email.gif border=0 width=16 align=absmiddle>邮件</a>　<a href=post.cgi?action=copy1&forum=6&topic=366&postno=12 title=复制这个贴子><img src=http://www.hhcn.com/non-cgi/images/copy.gif border=0 width=16 align=absmiddle>复制</a>　<a href=post.cgi?action=replyquote&forum=6&topic=366&postno=12 title=引用回复这个贴子><img src=http://www.hhcn.com/non-cgi/images/reply.gif border=0 width=16 align=absmiddle>引用</a>　<a href=post.cgi?action=reply&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/replynow.gif border=0 alt=回复贴子 width=16>回复</a>　<BR><hr width=100% size=1 color=#000000>
+<table cellpadding=0 cellspacing=0 width=100% style="TABLE-LAYOUT: fixed">
+<tr><td width=32 valign=top><img src=http://www.hhcn.com/non-cgi/posticons/00.gif>&nbsp;</td>
+<td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><table width=100% cellpadding=0 cellspacing=0 height=70 style="TABLE-LAYOUT: fixed"><tr valign=top><td style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word;"><font color=#333333><BR><table cellpadding=0 cellspacing=0 border=0 WIDTH=94% bgcolor=#000000 align=center style="TABLE-LAYOUT: fixed"><tr><td><table width=100% cellpadding=5 cellspacing=1 border=0><TR><TD BGCOLOR=#EFF3F9 style="LEFT: 0px; WIDTH: 100%; WORD-WRAP: break-word; "><b>下面引用由<u>stanler</u>在 <i>2006/08/23 02:41pm</i> 发表的内容：</b> <br>我刚刚移植成功，谢谢这些写文档的同志们 <br></td></tr></table></td></tr></table><BR> <br></td></tr></table><table width=100% cellpadding=0 cellspacing=0><tr><td><BR><BR><BR></td></tr></table></font><BR></td>
+<td width=16></td></tr></table></td></tr>
+<tr><td class=bottomline bgcolor=#EFF3F9 valign=bottom><hr width=100% size=1 color=#000000>
+<table width=100% cellpadding=0 cellspacing=0>
+<tr><td valign=bottom><font color=#333333>　　<img src=http://www.hhcn.com/non-cgi/images/posttime.gif width=16 height=15 alt=发贴时间 align=absmiddle>2007/09/11 08:15pm　<img src=http://www.hhcn.com/non-cgi/images/ip.gif width=13 height=15 alt="此 IP 为代理服务器" align=absmiddle>IP: 已设置保密</td>
+<td align=right nowarp valign=bottom width=110></td></form>
+<td align=right valign=bottom width=4></td></tr></table>
+</td></tr></table></td><td bgcolor=#000000 width=1 height=24></td></tr></table>
+<table cellpadding=0 cellspacing=0 width=97% bgcolor=#000000 align=center><tr><td height=1></td></tr></table>
+<table cellpadding=0 cellspacing=2 width=97% align=center><tr bgcolor=#F8F8F8 height=4></tr><tr><td><font color=#333333>&nbsp;<font color=#333333><b>本主题共有 <font color=#990000>2</font> 页</b> <font color=#990000 face=webdings>9</font> <font color=#990000 face=webdings >7</font> [ <font color=#990000><b>1</b></font> <a href=topic.cgi?forum=6&topic=366&start=12&show=0 class=hb>2</a>  ] <a href=topic.cgi?forum=6&topic=366&start=12 title=第2页><font face=webdings >8</font></a>  <a href=topic.cgi?forum=6&topic=366&start=12 title="尾 页"><font face=webdings>:</font></a> </td></tr></table><br><form action="post.cgi?action=reply&forum=6&topic=366" method=post name="FORM" enctype="multipart/form-data">
+<input type=hidden name="action" value="addreply">
+<input type=hidden name="forum" value="6">
+<input type=hidden name="topic" value="366">
+<table cellPadding=5 cellSpacing=1 width=97% bgcolor=#000000 align=center>
+<tr><td bgcolor=#9898BA width=220><font color=#000000><b>快速回复主题:</b></font></td><td bgcolor=#9898BA width=500> <font color=#000000>u-boot移植心得</font></td></tr>
+<tr><td bgcolor=#FFFFFF><font color=#000000><b>输入用户名和密码:</b></font></td><td bgcolor=#FFFFFF> <font color=#000000><b>用户名</b>: <input type=text name="membername" value="客人" onmouseover=this.focus() onfocus=this.select()> <span onclick="javascript:location.href='register.cgi?forum=6'" style="cursor:hand">没有注册？</span>　<b>密码:</b> <input type=password name="password" value="" onmouseover=this.focus() onfocus=this.select()> <a href="profile.cgi?action=lostpass" style="cursor:help">忘记密码？</a></font></td></tr>
+
+<tr><td bgcolor=#EEEEEE valign=top><font color=#000000><b>选项</b> <br><BR>
+<input type=checkbox name="uselbcode" value="yes" checked>使用 LB5000 标签？<BR>
+<input CHECKED name=inshowsignature type=checkbox value=yes>显示您的签名？<br>
+<BR><BR></td>
+<td bgcolor=#EEEEEE width=*> <textarea cols=75 name=inpost onKeyDown=ctlent() rows=8></textarea><br>
+ <INPUT name=Submit onclick="return clckcntr();" type=submit value="发 表 回 复">　<INPUT name=Clear type=reset value="清 除 内 容">　　[使用 Ctrl+Enter 直接提交贴子]
+</td></tr></table></form>
+<table cellspacing=0 cellpadding=0 width=97% align=center>
+<tr><td>&nbsp;<a href=#top><img src=http://www.hhcn.com/non-cgi/images/gotop.gif height=15 width=15 border=0 align=absmiddle>顶端</a>　<a href=fav.cgi?action=add&forum=6&topic=366><img src=http://www.hhcn.com/non-cgi/images/addfavorite.gif height=15 width=18 border=0 align=absmiddle>加到"个人收藏夹"</a></td><td nowrap align=right><font color=#333333><b>主题管理</B>：
+<a href=postings.cgi?action=abslocktop&forum=6&topic=366>总固顶</a> |
+<a href=postings.cgi?action=absunlocktop&forum=6&topic=366>取消总固顶</a> |
+<a href=postings.cgi?action=catlocktop&forum=6&topic=366>区固顶</a> |
+<a href=postings.cgi?action=catunlocktop&forum=6&topic=366>取消区固顶</a> |
+<a href=postings.cgi?action=locktop&forum=6&topic=366>固顶</a> |
+<a href=postings.cgi?action=unlocktop&forum=6&topic=366>取消固顶</a> |<BR>
+<a href=jinghua.cgi?action=add&forum=6&topic=366>精华</a> |
+<a href=jinghua.cgi?action=del&forum=6&topic=366>取消精华</a> |
+<a href=postings.cgi?action=puttop&forum=6&topic=366>提升</a> |
+<a href=postings.cgi?action=lock&forum=6&topic=366>锁定</a> |
+<a href=postings.cgi?action=unlock&forum=6&topic=366>解锁</a> |
+<a href=delpost.cgi?action=delete&forum=6&topic=366>删除</a> |
+<span style="cursor:hand" onClick="javascript:DelReply();">删除回复</span> | 
+<a href=delpost.cgi?action=movetopic&forum=6&topic=366>移动</a> |
+</td></tr></table><p><p>
+<form action="delpost.cgi" method=post name="DReply"> 
+<input type=hidden name="forum" value="6"> 
+<input type=hidden name="topic" value="366"> 
+<input type=hidden name="action" value="directdel"> 
+<input type=hidden name="postno"></form>
+
+<center><hr width=380 size=1><table width=80% align=center cellpadding=0 cellspacing=0><tr><td align=center><font color=#000000>&copy; 中文版权所有： <a href=http://www.hhcn.com>华恒科技</a><script language=javascript type=text/javascript src=http://www.hhcn.com/count/count/count.js ></script>　 <BR><font color=#333333>　</font><BR><img src=http://www.hhcn.com/non-cgi/images/none.gif width=0 height=3></font></td></tr></table></center>
+
+
+</body>
+</html>

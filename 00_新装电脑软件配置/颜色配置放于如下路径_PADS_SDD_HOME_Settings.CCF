@@ -1,0 +1,25 @@
+PADS POWERPCB COLOR CONFIGURATION FILE
+wangchaoqun1
+
+BackGroundColor 0
+ForeGroundColor 14
+ConnectionColor 4
+BusColor 3
+LineColor 22
+TextColor 15
+TextBoxColor 0
+PartColor 6
+RefDesColor 6
+RefDesBoxColor 0
+PartTypeColor 6
+PartTypeBoxColor 0
+PartTextColor 6
+PartTextBoxColor 0
+PinNumberColor 6
+PinNumberBoxColor 0
+NetNameColor 13
+NetNameBoxor 0
+HierCompColor 3
+FieldColor 2
+FieldBoxColor 0
+*END*

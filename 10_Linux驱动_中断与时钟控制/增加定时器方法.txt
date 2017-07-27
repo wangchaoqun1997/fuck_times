@@ -1,0 +1,17 @@
+struct timer_list tp_timer;
+static int IS_60S=0;
+extern int fts_ctpm_auto_download(struct i2c_client *);
+static void tp_do_timer(unsigned long arg)
+{
+int err =0;
+char data;
+IS_60S=1;
+}
+static void update_from_sdcard()
+{
+	printk("wangcq327 --- into update_from_sdcard()");
+	init_timer(&tp_timer);
+	tp_timer.function = &tp_do_timer;
+	tp_timer.expires = jiffies + 130*HZ;//60s≤ªƒ‹…Ÿ
+	add_timer(&tp_timer);	
+}

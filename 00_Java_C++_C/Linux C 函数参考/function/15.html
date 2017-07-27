@@ -1,0 +1,253 @@
+<html>
+<head>
+<title>Untitled Document</title>
+</head>
+<body>
+<table width="100%">
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc289></a></font> </div>
+    </td>
+  </tr>
+  <tr>
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      getenv（取得环境变量内容） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> putenv，setenv，unsetenv<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> char * getenv(const char *name);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> getenv()用来取得参数name环境变量的内容。参数name为环境变量的名称，如果该变量存在则会返回指向该内容的指针。环境变量的格式为name＝value。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回指向该内容的指针，找不到符合的环境变量名称则返回NULL。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      mian()<br>
+      {<br>
+      char *p;<br>
+      if((p = getenv(“USER”)))<br>
+      printf(“USER=%s\n”,p);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> USER = root<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc290></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      putenv（改变或增加环境变量） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> getenv，setenv，unsetenv<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include4&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int putenv(const char * string);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> putenv()用来改变或增加环境变量的内容。参数string的格式为name＝value，如果该环境变量原先存在，则变量内容会依参数string改变，否则此参数内容会成为新的环境变量。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，有错误发生则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> ENOMEM 内存不足，无法配置新的环境变量空间。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      main()<br>
+      {<br>
+      char *p;<br>
+      if((p = getenv(“USER”)))<br>
+      printf(“USER =%s\n”,p);<br>
+      putenv(“USER=test”);<br>
+      printf(“USER+5s\n”,getenv(“USER”));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> USER=root<br>
+      USER=root<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc291></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      setenv（改变或增加环境变量） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> getenv，putenv，unsetenv<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int setenv(const char *name,const char * value,int 
+      overwrite);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> setenv()用来改变或增加环境变量的内容。参数name为环境变量名称字符串。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 参数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> value则为变量内容，参数overwrite用来决定是否要改变已存在的环境变量。如果overwrite不为0，而该环境变量原已有内容，则原内容会被改为参数value所指的变量内容。如果overwrite为0，且该环境变量已有内容，则参数value会被忽略。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，有错误发生时返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> ENOMEM 内存不足，无法配置新的环境变量空间<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      main()<br>
+      {<br>
+      char * p;<br>
+      if((p=getenv(“USER”)))<br>
+      printf(“USER =%s\n”,p);<br>
+      setenv(“USER”,”test”,1);<br>
+      printf(“USER=%s\n”,getenv(“USEr”));<br>
+      unsetenv(“USER”);<br>
+      printf(“USER=%s\n”,getenv(“USER”));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> USER = root<br>
+      USER = test<br>
+      USER = (null)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+      </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

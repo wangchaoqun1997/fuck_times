@@ -1,0 +1,2375 @@
+<html>
+<head>
+<title>Untitled Document</title>
+</head>
+<body>
+<table width="100%">
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc211></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      access（判断是否具有存取文件的权限） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> stat，open，chmod，chown，setuid，setgid<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int access(const char * pathname,int mode);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> access()会检查是否可以读/写某一已存在的文件。参数mode有几种情况组合，R_OK，W_OK，X_OK 
+      和F_OK。R_OK，W_OK与X_OK用来检查文件是否具有读取、写入和执行的权限。F_OK则是用来判断该文件是否存在。由于access()只作权限的核查，并不理会文件形态或文件内容，因此，如果一目录表示为“可写入”，表示可以在该目录中建立新文件等操作，而非意味此目录可以被当做文件处理。例如，你会发现DOS的文件都具有“可执行”权限，但用execve()执行时则会失败。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 若所有欲查核的权限都通过了检查则返回0值，表示成功，只要有一权限被禁止则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EACCESS 参数pathname 所指定的文件不符合所要求测试的权限。<br>
+      EROFS 欲测试写入权限的文件存在于只读文件系统内。<br>
+      EFAULT 参数pathname指针超出可存取内存空间。<br>
+      EINVAL 参数mode 不正确。<br>
+      ENAMETOOLONG 参数pathname太长。<br>
+      ENOTDIR 参数pathname为一目录。<br>
+      ENOMEM 核心内存不足<br>
+      ELOOP 参数pathname有过多符号连接问题。<br>
+      EIO I/O 存取错误。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 使用access()作用户认证方面的判断要特别小心，例如在access()后再做open()的空文件可能会造成系统安全上的问题。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /* 判断是否允许读取/etc/passwd */<br>
+      #include&lt;unistd.h&gt;<br>
+      int main()<br>
+      {<br>
+      if (access(“/etc/passwd”,R_OK) = =0)<br>
+      printf(“/etc/passwd can be read\n”);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /etc/passwd can be read<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc212></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      alphasort（依字母顺序排序目录结构） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> scandir，qsort<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;dirent.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int alphasort(const struct dirent **a,const 
+      struct dirent **b);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> alphasort()为scandir()最后调用qsort()函数时传给qsort()作为判断的函数，详细说明请参考scandir()及qsort()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参考qsort()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /* 读取/目录下所有的目录结构，并依字母顺序排列*/<br>
+      main()<br>
+      {<br>
+      struct dirent **namelist;<br>
+      int i,total;<br>
+      total = scandir(“/”,&namelist ,0,alphasort);<br>
+      if(total &lt;0)<br>
+      perror(“scandir”);<br>
+      else{<br>
+      for(i=0;i&lt;total;i++)<br>
+      printf(“%s\n”,namelist[i]-&gt;d_name);<br>
+      printf(“total = %d\n”,total);<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> ..<br>
+      .gnome<br>
+      .gnome_private<br>
+      ErrorLog<br>
+      Weblog<br>
+      bin<br>
+      boot<br>
+      dev<br>
+      dosc<br>
+      dosd<br>
+      etc<br>
+      home<br>
+      lib<br>
+      lost+found<br>
+      misc<br>
+      mnt<br>
+      opt<br>
+      proc<br>
+      root<br>
+      sbin<br>
+      tmp<br>
+      usr<br>
+      var<br>
+      total = 24<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc213></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      chdir（改变当前的工作（目录） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> getcwd，chroot<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int chdir(const char * path);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> chdir()用来将当前的工作目录改变成以参数path所指的目录。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，失败返回-1，errno为错误代码。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      chdir(“/tmp”);<br>
+      printf(“current working directory: %s\n”,getcwd(NULL,NULL));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> current working directory :/tmp<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc214></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      chmod（改变文件的权限） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fchmod，stat，open，chown<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int chmod(const char * path,mode_t mode);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> chmod()会依参数mode 权限来更改参数path 指定文件的权限。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 参数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> mode 有下列数种组合<br>
+      S_ISUID 04000 文件的（set user-id on execution）位<br>
+      S_ISGID 02000 文件的（set group-id on execution）位<br>
+      S_ISVTX 01000 文件的sticky位<br>
+      S_IRUSR（S_IREAD） 00400 文件所有者具可读取权限<br>
+      S_IWUSR（S_IWRITE）00200 文件所有者具可写入权限<br>
+      S_IXUSR（S_IEXEC） 00100 文件所有者具可执行权限<br>
+      S_IRGRP 00040 用户组具可读取权限<br>
+      S_IWGRP 00020 用户组具可写入权限<br>
+      S_IXGRP 00010 用户组具可执行权限<br>
+      S_IROTH 00004 其他用户具可读取权限<br>
+      S_IWOTH 00002 其他用户具可写入权限<br>
+      S_IXOTH 00001 其他用户具可执行权限<br>
+      只有该文件的所有者或有效用户识别码为0，才可以修改该文件权限。基于系统安全，如果欲将数据写入一执行文件，而该执行文件具有S_ISUID 或S_ISGID 
+      权限，则这两个位会被清除。如果一目录具有S_ISUID 位权限，表示在此目录下只有该文件的所有者或root可以删除该文件。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 权限改变成功返回0，失败返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EPERM 进程的有效用户识别码与欲修改权限的文件拥有者不同，而且也不具root权限。<br>
+      EACCESS 参数path所指定的文件无法存取。<br>
+      EROFS 欲写入权限的文件存在于只读文件系统内。<br>
+      EFAULT 参数path指针超出可存取内存空间。<br>
+      EINVAL 参数mode不正确<br>
+      ENAMETOOLONG 参数path太长<br>
+      ENOENT 指定的文件不存在<br>
+      ENOTDIR 参数path路径并非一目录<br>
+      ENOMEM 核心内存不足<br>
+      ELOOP 参数path有过多符号连接问题。<br>
+      EIO I/O 存取错误<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /* 将/etc/passwd 文件权限设成S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH 
+      */<br>
+      #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      main()<br>
+      {<br>
+      chmod(“/etc/passwd”,S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc215></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      chown（改变文件的所有者） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fchown，lchown，chmod<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int chown(const char * path, uid_t owner,gid_t 
+      group);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> chown()会将参数path指定文件的所有者变更为参数owner代表的用户，而将该文件的组变更为参数group组。如果参数owner或group为-1，对应的所有者或组不会有所改变。root与文件所有者皆可改变文件组，但所有者必须是参数group组的成员。当root用chown()改变文件所有者或组时，该文件若具有S_ISUID或S_ISGID权限，则会清除此权限位，此外如果具有S_ISGID权限但不具S_IXGRP位，则该文件会被强制锁定，文件模式会保留。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回0，失败返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参考chmod（）。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /* 将/etc/passwd 的所有者和组都设为root */<br>
+      #include&lt;sys/types.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      chown(“/etc/passwd”,0,0);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc216></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      chroot（改变根目录） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> chdir<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int chroot(const char * path);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> chroot()用来改变根目录为参数path 所指定的目录。只有超级用户才允许改变根目录，子进程将继承新的根目录。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 调用成功则返回0，失败则返-1，错误代码存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EPERM 权限不足，无法改变根目录。<br>
+      EFAULT 参数path指针超出可存取内存空间。<br>
+      ENAMETOOLONG 参数path太长。<br>
+      ENOTDIR 路径中的目录存在但却非真正的目录。<br>
+      EACCESS 存取目录时被拒绝<br>
+      ENOMEM 核心内存不足。<br>
+      ELOOP 参数path有过多符号连接问题。<br>
+      EIO I/O 存取错误。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /* 将根目录改为/tmp ,并将工作目录切换至/tmp */<br>
+      #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      chroot(“/tmp”);<br>
+      chdir(“/”);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc217></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      closedir（关闭目录） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> opendir<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;dirent.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int closedir(DIR *dir);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> closedir()关闭参数dir所指的目录流。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 关闭成功则返回0，失败返回-1，错误原因存于errno 中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF 参数dir为无效的目录流<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参考readir()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc218></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      fchdir（改变当前的工作目录） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> getcwd，chroot<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int fchdir(int fd);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fchdir()用来将当前的工作目录改变成以参数fd 所指的文件描述词。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值执 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 行成功则返回0，失败返回-1，errno为错误代码。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      int fd;<br>
+      fd = open(“/tmp”,O_RDONLY);<br>
+      fchdir(fd);<br>
+      printf(“current working directory : %s \n”,getcwd(NULL,NULL));<br>
+      close(fd);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> current working directory : /tmp<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc219></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      fchmod（改变文件的权限） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> chmod，stat，open，chown<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int fchmod(int fildes,mode_t mode);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fchmod()会依参数mode权限来更改参数fildes所指文件的权限。参数fildes为已打开文件的文件描述词。参数mode请参考chmod（）。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 权限改变成功则返回0，失败返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误原因 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF 参数fildes为无效的文件描述词。<br>
+      EPERM 进程的有效用户识别码与欲修改权限的文件所有者不同，而且也不具root权限。<br>
+      EROFS 欲写入权限的文件存在于只读文件系统内。<br>
+      EIO I/O 存取错误。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/stat.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      main()<br>
+      {<br>
+      int fd;<br>
+      fd = open (“/etc/passwd”,O_RDONLY);<br>
+      fchmod(fd,S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);<br>
+      close(fd);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc220></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      fchown（改变文件的所有者） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> chown，lchown，chmod<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int fchown(int fd,uid_t owner,gid_t group);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fchown()会将参数fd指定文件的所有者变更为参数owner代表的用户，而将该文件的组变更为参数group组。如果参数owner或group为-1，对映的所有者或组有所改变。参数fd 
+      为已打开的文件描述词。当root用fchown()改变文件所有者或组时，该文件若具S_ISUID或S_ISGID权限，则会清除此权限位。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回0，失败则返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF 参数fd文件描述词为无效的或该文件已关闭。<br>
+      EPERM 进程的有效用户识别码与欲修改权限的文件所有者不同，而且也不具root权限，或是参数owner、group不正确。<br>
+      EROFS 欲写入的文件存在于只读文件系统内。<br>
+      ENOENT 指定的文件不存在<br>
+      EIO I/O存取错误<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      main()<br>
+      {<br>
+      int fd;<br>
+      fd = open (“/etc/passwd”,O_RDONLY);<br>
+      chown(fd,0,0);<br>
+      close(fd);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc221></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      fstat（由文件描述词取得文件状态） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> stat，lstat，chmod，chown，readlink，utime<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/stat.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int fstat(int fildes,struct stat *buf);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fstat()用来将参数fildes所指的文件状态，复制到参数buf所指的结构中(struct 
+      stat)。Fstat()与stat()作用完全相同，不同处在于传入的参数为已打开的文件描述词。详细内容请参考stat()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，失败返回-1，错误代码存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/stat.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      #include&lt;fcntk.h&gt;<br>
+      main()<br>
+      {<br>
+      struct stat buf;<br>
+      int fd;<br>
+      fd = open (“/etc/passwd”,O_RDONLY);<br>
+      fstat(fd,&buf);<br>
+      printf(“/etc/passwd file size +%d\n “,buf.st_size);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /etc/passwd file size = 705<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc222></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      ftruncate（改变文件大小） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，truncate<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int ftruncate(int fd,off_t length);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> ftruncate()会将参数fd指定的文件大小改为参数length指定的大小。参数fd为已打开的文件描述词，而且必须是以写入模式打开的文件。如果原来的文件大小比参数length大，则超过的部分会被删去。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，失败返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF 参数fd文件描述词为无效的或该文件已关闭。<br>
+      EINVAL 参数fd 为一socket 并非文件，或是该文件并非以写入模式打开。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc223></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      getcwd（取得当前的工作目录） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> get_current_dir_name，getwd，chdir<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> char * getcwd(char * buf,size_t size);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> getcwd()会将当前的工作目录绝对路径复制到参数buf所指的内存空间，参数size为buf的空间大小。在调用此函数时，buf所指的内存空间要足够大，若工作目录绝对路径的字符串长度超过参数size大小，则回值NULL，errno的值则为ERANGE。倘若参数buf为NULL，getcwd()会依参数size的大小自动配置内存(使用malloc())，如果参数size也为0，则getcwd()会依工作目录绝对路径的字符串程度来决定所配置的内存大小，进程可以在使用完此字符串后利用free()来释放此空间。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则将结果复制到参数buf所指的内存空间，或是返回自动配置的字符串指针。失败返回NULL，错误代码存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      char buf[80];<br>
+      getcwd(buf,sizeof(buf));<br>
+      printf(“current working directory : %s\n”,buf);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> current working directory :/tmp<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc224></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      link（建立文件连接） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> symlink，unlink<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int link (const char * oldpath,const char * 
+      newpath);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> link()以参数newpath指定的名称来建立一个新的连接(硬连接)到参数oldpath所指定的已存在文件。如果参数newpath指定的名称为一已存在的文件则不会建立连接。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回0，失败返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> link()所建立的硬连接无法跨越不同文件系统，如果需要请改用symlink()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EXDEV 参数oldpath与newpath不是建立在同一文件系统。<br>
+      EPERM 参数oldpath与newpath所指的文件系统不支持硬连接<br>
+      EROFS 文件存在于只读文件系统内<br>
+      EFAULT 参数oldpath或newpath 指针超出可存取内存空间。<br>
+      ENAMETOLLONG 参数oldpath或newpath太长<br>
+      ENOMEM 核心内存不足<br>
+      EEXIST 参数newpath所指的文件名已存在。<br>
+      EMLINK 参数oldpath所指的文件已达最大连接数目。<br>
+      ELOOP 参数pathname有过多符号连接问题<br>
+      ENOSPC 文件系统的剩余空间不足。<br>
+      EIO I/O 存取错误。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /* 建立/etc/passwd 的硬连接为pass */<br>
+      #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      link(“/etc/passwd”,”pass”);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc225></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      lstat（由文件描述词取得文件状态） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> stat，fstat，chmod，chown，readlink，utime<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/stat.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int lstat (const char * file_name.struct stat 
+      * buf);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> lstat()与stat()作用完全相同，都是取得参数file_name所指的文件状态，其差别在于，当文件为符号连接时，lstat()会返回该link本身的状态。详细内容请参考stat()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，失败返回-1，错误代码存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参考stat()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc226></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      opendir（打开目录） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，readdir，closedir，rewinddir，seekdir，telldir，scandir<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;dirent.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> DIR * opendir(const char * name);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> opendir()用来打开参数name指定的目录，并返回DIR*形态的目录流，和open()类似，接下来对目录的读取和搜索都要使用此返回值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回DIR* 型态的目录流，打开失败则返回NULL。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EACCESS 权限不足<br>
+      EMFILE 已达到进程可同时打开的文件数上限。<br>
+      ENFILE 已达到系统可同时打开的文件数上限。<br>
+      ENOTDIR 参数name非真正的目录<br>
+      ENOENT 参数name 指定的目录不存在，或是参数name 为一空字符串。<br>
+      ENOMEM 核心内存不足。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc227></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      readdir（读取目录） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，opendir，closedir，rewinddir，seekdir，telldir，scandir<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;dirent.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> struct dirent * readdir(DIR * dir);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> readdir()返回参数dir目录流的下个目录进入点。<br>
+      结构dirent定义如下<br>
+      struct dirent<br>
+      {<br>
+      ino_t d_ino;<br>
+      ff_t d_off;<br>
+      signed short int d_reclen;<br>
+      unsigned char d_type;<br>
+      har d_name[256;<br>
+      };<br>
+      d_ino 此目录进入点的inode<br>
+      d_off 目录文件开头至此目录进入点的位移<br>
+      d_reclen _name的长度，不包含NULL字符<br>
+      d_type d_name 所指的文件类型<br>
+      d_name 文件名<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回下个目录进入点。有错误发生或读取到目录文件尾则返回NULL。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF参数dir为无效的目录流。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;dirent.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      DIR * dir;<br>
+      struct dirent * ptr;<br>
+      int i;<br>
+      dir =opendir(“/etc/rc.d”);<br>
+      while((ptr = readdir(dir))!=NULL)<br>
+      {<br>
+      printf(“d_name: %s\n”,ptr-&gt;d_name);<br>
+      }<br>
+      closedir(dir);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> d_name:.<br>
+      d_name:..<br>
+      d_name:init.d<br>
+      d_name:rc0.d<br>
+      d_name:rc1.d<br>
+      d_name:rc2.d<br>
+      d_name:rc3.d<br>
+      d_name:rc4.d<br>
+      d_name:rc5.d<br>
+      d_name:rc6.d<br>
+      d_name:rc<br>
+      d_name:rc.local<br>
+      d_name:rc.sysinit<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc228></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      readlink（取得符号连接所指的文件） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> stat，lstat，symlink<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int readlink(const char * path ,char * buf,size_t 
+      bufsiz);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> readlink()会将参数path的符号连接内容存到参数buf所指的内存空间，返回的内容不是以NULL作字符串结尾，但会将字符串的字符数返回。若参数bufsiz小于符号连接的内容长度，过长的内容会被截断。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则传符号连接所指的文件路径字符串，失败则返回-1，错误代码存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EACCESS 取文件时被拒绝，权限不够<br>
+      EINVAL 参数bufsiz 为负数<br>
+      EIO I/O 存取错误。<br>
+      ELOOP 欲打开的文件有过多符号连接问题。<br>
+      ENAMETOOLONG 参数path的路径名称太长<br>
+      ENOENT 参数path所指定的文件不存在<br>
+      ENOMEM 核心内存不足<br>
+      ENOTDIR 参数path路径中的目录存在但却非真正的目录。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc229></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      remove（删除文件） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> link，rename，unlink<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdio.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int remove(const char * pathname);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> remove()会删除参数pathname指定的文件。如果参数pathname为一文件，则调用unlink()处理，若参数pathname为一目录，则调用rmdir()来处理。请参考unlink()与rmdir()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回0，失败则返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EROFS 欲写入的文件存在于只读文件系统内<br>
+      EFAULT 参数pathname指针超出可存取内存空间<br>
+      ENAMETOOLONG 参数pathname太长<br>
+      ENOMEM 核心内存不足<br>
+      ELOOP 参数pathname有过多符号连接问题<br>
+      EIO I/O 存取错误。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc230></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      rename（更改文件名称或位置） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> link，unlink，symlink<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdio.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int rename(const char * oldpath,const char 
+      * newpath);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> rename()会将参数oldpath 所指定的文件名称改为参数newpath所指的文件名称。若newpath所指定的文件已存在，则会被删除。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，失败返回-1，错误原因存于errno<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /* 设计一个DOS下的rename指令rename 旧文件名新文件名*/<br>
+      #include &lt;stdio.h&gt;<br>
+      void main(int argc,char **argv)<br>
+      {<br>
+      if(argc&lt;3){<br>
+      printf(“Usage: %s old_name new_name\n”,argv[0]);<br>
+      return;<br>
+      }<br>
+      printf(“%s=&gt;%s”,argc[1],argv[2]);<br>
+      if(rename(argv[1],argv[2]&lt;0)<br>
+      printf(“error!\n”);<br>
+      else<br>
+      printf(“ok!\n”);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc231></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      rewinddir（重设读取目录的位置为开头位置） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，opendir，closedir，telldir，seekdir，readdir，scandir<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;dirent.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> void rewinddir(DIR *dir);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> rewinddir()用来设置参数dir 目录流目前的读取位置为原来开头的读取位置。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF dir为无效的目录流<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;dirent.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      DIR * dir;<br>
+      struct dirent *ptr;<br>
+      dir = opendir(“/etc/rc.d”);<br>
+      while((ptr = readdir(dir))!=NULL)<br>
+      {<br>
+      printf(“d_name :%s\n”,ptr-&gt;d_name);<br>
+      }<br>
+      rewinddir(dir);<br>
+      printf(“readdir again!\n”);<br>
+      while((ptr = readdir(dir))!=NULL)<br>
+      {<br>
+      printf(“d_name: %s\n”,ptr-&gt;d_name);<br>
+      }<br>
+      closedir(dir);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> d_name:.<br>
+      d_name:..<br>
+      d_name:init.d<br>
+      d_name:rc0.d<br>
+      d_name:rc1.d<br>
+      d_name:rc2.d<br>
+      d_name:rc3.d<br>
+      d_name:rc4.d<br>
+      d_name:rc5.d<br>
+      d_name:rc6.d<br>
+      d_name:rc<br>
+      d_name:rc.local<br>
+      d_name:rc.sysinit<br>
+      readdir again!<br>
+      d_name:.<br>
+      d_name:..<br>
+      d_name:init.d<br>
+      d_name:rc0.d<br>
+      d_name:rc1.d<br>
+      d_name:rc2.d<br>
+      d_name:rc3.d<br>
+      d_name:rc4.d<br>
+      d_name:rc5.d<br>
+      d_name:rc6.d<br>
+      d_name:rc<br>
+      d_name:rc.local<br>
+      d_name:rc.sysinit<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc232></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      seekdir（设置下回读取目录的位置） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，opendir，closedir，rewinddir，telldir，readdir，scandir<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;dirent.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> void seekdir(DIR * dir,off_t offset);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> seekdir()用来设置参数dir目录流目前的读取位置，在调用readdir()时便从此新位置开始读取。参数offset 
+      代表距离目录文件开头的偏移量。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF 参数dir为无效的目录流<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;dirent.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      DIR * dir;<br>
+      struct dirent * ptr;<br>
+      int offset,offset_5,i=0;<br>
+      dir=opendir(“/etc/rc.d”);<br>
+      while((ptr = readdir(dir))!=NULL)<br>
+      {<br>
+      offset = telldir(dir);<br>
+      if(++i = =5) offset_5 =offset;<br>
+      printf(“d_name :%s offset :%d \n”,ptr-&gt;d_name,offset);<br>
+      }<br>
+      seekdir(dir offset_5);<br>
+      printf(“Readdir again!\n”);<br>
+      while((ptr = readdir(dir))!=NULL)<br>
+      {<br>
+      offset = telldir(dir);<br>
+      printf(“d_name :%s offset :%d\n”,ptr-&gt;d_name.offset);<br>
+      }<br>
+      closedir(dir);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> d_name : . offset :12<br>
+      d_name : .. offset:24<br>
+      d_name : init.d offset 40<br>
+      d_name : rc0.d offset :56<br>
+      d_name :rc1.d offset :72<br>
+      d_name:rc2.d offset :88<br>
+      d_name:rc3.d offset 104<br>
+      d_name:rc4.d offset:120<br>
+      d_name:rc5.d offset:136<br>
+      d_name:rc6.d offset:152<br>
+      d_name:rc offset 164<br>
+      d_name:rc.local offset :180<br>
+      d_name:rc.sysinit offset :4096<br>
+      readdir again!<br>
+      d_name:rc2.d offset :88<br>
+      d_name:rc3.d offset 104<br>
+      d_name:rc4.d offset:120<br>
+      d_name:rc5.d offset:136<br>
+      d_name:rc6.d offset:152<br>
+      d_name:rc offset 164<br>
+      d_name:rc.local offset :180<br>
+      d_name:rc.sysinit offset :4096<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc233></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      stat（取得文件状态） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fstat，lstat，chmod，chown，readlink，utime<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/stat.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int stat(const char * file_name,struct stat 
+      *buf);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> stat()用来将参数file_name所指的文件状态，复制到参数buf所指的结构中。<br>
+      下面是struct stat内各参数的说明<br>
+      struct stat<br>
+      {<br>
+      dev_t st_dev; /*device*/<br>
+      ino_t st_ino; /*inode*/<br>
+      mode_t st_mode; /*protection*/<br>
+      nlink_t st_nlink; /*number of hard links */<br>
+      uid_t st_uid; /*user ID of owner*/<br>
+      gid_t st_gid; /*group ID of owner*/<br>
+      dev_t st_rdev; /*device type */<br>
+      off_t st_size; /*total size, in bytes*/<br>
+      unsigned long st_blksize; /*blocksize for filesystem I/O */<br>
+      unsigned long st_blocks; /*number of blocks allocated*/<br>
+      time_t st_atime; /* time of lastaccess*/<br>
+      time_t st_mtime; /* time of last modification */<br>
+      time_t st_ctime; /* time of last change */<br>
+      };<br>
+      st_dev 文件的设备编号<br>
+      st_ino 文件的i-node<br>
+      st_mode 文件的类型和存取的权限<br>
+      st_nlink 连到该文件的硬连接数目，刚建立的文件值为1。<br>
+      st_uid 文件所有者的用户识别码<br>
+      st_gid 文件所有者的组识别码<br>
+      st_rdev 若此文件为装置设备文件，则为其设备编号<br>
+      st_size 文件大小，以字节计算<br>
+      st_blksize 文件系统的I/O 缓冲区大小。<br>
+      st_blcoks 占用文件区块的个数，每一区块大小为512 个字节。<br>
+      st_atime 文件最近一次被存取或被执行的时间，一般只有在用mknod、utime、read、write与tructate时改变。<br>
+      st_mtime 文件最后一次被修改的时间，一般只有在用mknod、utime和write时才会改变<br>
+      st_ctime i-node最近一次被更改的时间，此参数会在文件所有者、组、权限被更改时更新先前所描述的st_mode 则定义了下列数种情况<br>
+      S_IFMT 0170000 文件类型的位遮罩<br>
+      S_IFSOCK 0140000 scoket<br>
+      S_IFLNK 0120000 符号连接<br>
+      S_IFREG 0100000 一般文件<br>
+      S_IFBLK 0060000 区块装置<br>
+      S_IFDIR 0040000 目录<br>
+      S_IFCHR 0020000 字符装置<br>
+      S_IFIFO 0010000 先进先出<br>
+      S_ISUID 04000 文件的（set user-id on execution）位<br>
+      S_ISGID 02000 文件的（set group-id on execution）位<br>
+      S_ISVTX 01000 文件的sticky位<br>
+      S_IRUSR（S_IREAD） 00400 文件所有者具可读取权限<br>
+      S_IWUSR（S_IWRITE）00200 文件所有者具可写入权限<br>
+      S_IXUSR（S_IEXEC） 00100 文件所有者具可执行权限<br>
+      S_IRGRP 00040 用户组具可读取权限<br>
+      S_IWGRP 00020 用户组具可写入权限<br>
+      S_IXGRP 00010 用户组具可执行权限<br>
+      S_IROTH 00004 其他用户具可读取权限<br>
+      S_IWOTH 00002 其他用户具可写入权限<br>
+      S_IXOTH 00001 其他用户具可执行权限<br>
+      上述的文件类型在POSIX 中定义了检查这些类型的宏定义<br>
+      S_ISLNK （st_mode） 判断是否为符号连接<br>
+      S_ISREG （st_mode） 是否为一般文件<br>
+      S_ISDIR （st_mode）是否为目录<br>
+      S_ISCHR （st_mode）是否为字符装置文件<br>
+      S_ISBLK （s3e） 是否为先进先出<br>
+      S_ISSOCK （st_mode） 是否为socket<br>
+      若一目录具有sticky 位（S_ISVTX），则表示在此目录下的文件只能被该文件所有者、此目录所有者或root来删除或改名。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，失败返回-1，错误代码存于errno<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> ENOENT 参数file_name指定的文件不存在<br>
+      ENOTDIR 路径中的目录存在但却非真正的目录<br>
+      ELOOP 欲打开的文件有过多符号连接问题，上限为16符号连接<br>
+      EFAULT 参数buf为无效指针，指向无法存在的内存空间<br>
+      EACCESS 存取文件时被拒绝<br>
+      ENOMEM 核心内存不足<br>
+      ENAMETOOLONG 参数file_name的路径名称太长<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/stat.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      mian()<br>
+      {<br>
+      struct stat buf;<br>
+      stat (“/etc/passwd”,&buf);<br>
+      printf(“/etc/passwd file size = %d \n”,buf.st_size);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /etc/passwd file size = 705<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc234></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      symlink（建立文件符号连接） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> link，unlink<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int symlink( const char * oldpath,const char 
+      * newpath);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> symlink()以参数newpath指定的名称来建立一个新的连接(符号连接)到参数oldpath所指定的已存在文件。参数oldpath指定的文件不一定要存在，如果参数newpath指定的名称为一已存在的文件则不会建立连接。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回0，失败返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EPERM 参数oldpath与newpath所指的文件系统不支持符号连接<br>
+      EROFS 欲测试写入权限的文件存在于只读文件系统内<br>
+      EFAULT 参数oldpath或newpath指针超出可存取内存空间。<br>
+      ENAMETOOLONG 参数oldpath或newpath太长<br>
+      ENOMEM 核心内存不足<br>
+      EEXIST 参数newpath所指的文件名已存在。<br>
+      EMLINK 参数oldpath所指的文件已达到最大连接数目<br>
+      ELOOP 参数pathname有过多符号连接问题<br>
+      ENOSPC 文件系统的剩余空间不足<br>
+      EIO I/O 存取错误<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      symlink(“/etc/passwd”,”pass”);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc235></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      telldir（取得目录流的读取位置） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，opendir，closedir，rewinddir，seekdir，readdir，scandir<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;dirent.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> off_t telldir(DIR *dir);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> telldir()返回参数dir目录流目前的读取位置。此返回值代表距离目录文件开头的偏移量返回值返回下个读取位置，有错误发生时返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF参数dir为无效的目录流。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;dirent.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      DIR *dir;<br>
+      struct dirent *ptr;<br>
+      int offset;<br>
+      dir = opendir(“/etc/rc.d”);<br>
+      while((ptr = readdir(dir))!=NULL)<br>
+      {<br>
+      offset = telldir (dir);<br>
+      printf(“d_name : %s offset :%d\n”, ptr-&gt;d_name,offset);<br>
+      }<br>
+      closedir(dir);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> d_name : . offset :12<br>
+      d_name : .. offset:24<br>
+      d_name : init.d offset 40<br>
+      d_name : rc0.d offset :56<br>
+      d_name :rc1.d offset :72<br>
+      d_name:rc2.d offset :88<br>
+      d_name:rc3.d offset 104<br>
+      d_name:rc4.d offset:120<br>
+      d_name:rc5.d offset:136<br>
+      d_name:rc6.d offset:152<br>
+      d_name:rc offset 164<br>
+      d_name:rc.local offset :180<br>
+      d_name:rc.sysinit offset :4096<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc236></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      truncate（改变文件大小） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，ftruncate<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int truncate(const char * path,off_t length);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> truncate()会将参数path 指定的文件大小改为参数length 指定的大小。如果原来的文件大小比参数length大，则超过的部分会被删去。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，失败返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EACCESS 参数path所指定的文件无法存取。<br>
+      EROFS 欲写入的文件存在于只读文件系统内<br>
+      EFAULT 参数path指针超出可存取内存空间<br>
+      EINVAL 参数path包含不合法字符<br>
+      ENAMETOOLONG 参数path太长<br>
+      ENOTDIR 参数path路径并非一目录<br>
+      EISDIR 参数path 指向一目录<br>
+      ETXTBUSY 参数path所指的文件为共享程序，而且正被执行中<br>
+      ELOOP 参数path’有过多符号连接问题<br>
+      EIO I/O 存取错误。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc237></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      umask（设置建立新文件时的权限遮罩） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> creat，open<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> mode_t umask(mode_t mask);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> umask()会将系统umask值设成参数mask&0777后的值，然后将先前的umask值返回。在使用open()建立新文件时，该参数mode并非真正建立文件的权限，而是(mode&~umask)的权限值。例如，在建立文件时指定文件权限为0666，通常umask值默认为022，则该文件的真正权限则为0666&～022＝0644，也就是rw-r--r--返回值此调用不会有错误值返回。返回值为原先系统的umask值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc238></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      unlink（删除文件） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> link，rename，remove<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int unlink(const char * pathname);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> unlink()会删除参数pathname指定的文件。如果该文件名为最后连接点，但有其他进程打开了此文件，则在所有关于此文件的文件描述词皆关闭后才会删除。如果参数pathname为一符号连接，则此连接会被删除。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回0，失败返回-1，错误原因存于errno<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EROFS 文件存在于只读文件系统内<br>
+      EFAULT 参数pathname指针超出可存取内存空间<br>
+      ENAMETOOLONG 参数pathname太长<br>
+      ENOMEM 核心内存不足<br>
+      ELOOP 参数pathname 有过多符号连接问题<br>
+      EIO I/O 存取错误<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc239></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      utime（修改文件的存取时间和更改时间） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> utimes，stat<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;utime.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int utime(const char * filename,struct utimbuf 
+      * buf);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> utime()用来修改参数filename文件所属的inode存取时间。<br>
+      结构utimbuf定义如下<br>
+      struct utimbuf{<br>
+      time_t actime;<br>
+      time_t modtime;<br>
+      };<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 如果参数buf为空指针(NULL)，则该文件的存取时间和更改时间全部会设为目前时间。<br>
+      执行成功则返回0，失败返回-1，错误代码存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EACCESS 存取文件时被拒绝，权限不足<br>
+      ENOENT 指定的文件不存在。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc240></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      utimes（修改文件的存取时间和更改时间） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> utime，stat<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;utime.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int utimes(char * filename.struct timeval *tvp);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> utimes()用来修改参数filename文件所属的inode存取时间和修改时间。<br>
+      结构timeval定义如下<br>
+      struct timeval {<br>
+      long tv_sec;<br>
+      long tv_usec; /* 微妙*/<br>
+      };<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参数tvp 指向两个timeval 结构空间，和utime（）使用的utimebuf结构比较，tvp[0].tc_sec 
+      则为utimbuf.actime，tvp]1].tv_sec 为utimbuf.modtime。<br>
+      执行成功则返回0。失败返回-1，错误代码存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EACCESS 存取文件时被拒绝，权限不足<br>
+      ENOENT 指定的文件不存在<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+      </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

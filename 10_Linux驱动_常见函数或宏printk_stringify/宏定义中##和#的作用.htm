@@ -1,0 +1,590 @@
+
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<link rel="stylesheet" href="../../templates/newtech/index.css"></link>
+<link rel="alternate" type="application/rss+xml" title="ChinaUnix Blog RSS Feed" href="http://blog.chinaunix.net/u/rss.php?id=17855"></link>
+<meta name="keywords" content="宏定义中##和#的作用 - C/C++ - 东湖之滨">
+<meta name="description" content="中国最大的IT技术博客-ChinaUnix博客：宏定义中##和#的作用 - C/C++ - 东湖之滨">
+<title>宏定义中##和#的作用 - C/C++ - 东湖之滨</title>
+</head>
+<body leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 style="background:#FFFFFF;background-image:url()" align="center">
+
+
+<table border="0" cellspacing="0" cellpadding="0" background="/images/tophem1.gif" style="border-collapse: collapse;height:25" height="25" width="100%" >
+<tr> <td id="tool-bar" align="left" width="540" nowrap>
+&nbsp;
+<a href="http://blog.chinaunix.net/" target="_blank">博客首页</a>
+<a href="http://blog.chinaunix.net/register.php" target="_blank">注册</a>
+<a href="http://bbs.chinaunix.net/forumdisplay.php?fid=51" target="_blank">建议与交流</a> 
+<a href="http://blog.chinaunix.net/top/" target="_blank">排行榜</a>
+<a href="" target="_blank" onclick="NewWindows('http://www.cublog.cn/addlink.php?url='+location.href+'&title='+document.title);return false;">加入友情链接</a>
+
+</td><form id="loginForm" method="get" target="_blank" action="/search.php">
+<td align="right" nowrap>
+<img src="/u2/userstar.php?blogid=17855" id="starimg" border=0 alt="" width=55 height=12>
+<a href="/u2/star.php?blogid=17855" id="star" onclick="NewWindows(this.href);return false;" title="给此博客推荐值">推荐</a>
+<a href="/u2/complaint.php?blogid=17855" id="complaint" onclick="NewWindows(this.href);return false;" title="投诉此博客">投诉</a>
+
+ 搜索：<input type="text" name="q" size="20"> <input type="submit" value="搜索" class="button1"> <a href="/help/" >帮助</a></td>
+</form></tr>
+<tr><td colspan="2">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="1000">
+<tr><td width="1000"></td></tr>
+</table>
+</td></tr>
+</table>
+<script language="javascript">
+<!--
+
+navHover = function() {
+var lis = document.getElementById("navmenu").getElementsByTagName("LI");
+for (var i=0; i<lis.length; i++) {
+lis[i].onmouseover=function() {
+this.className+=" iehover";
+}
+lis[i].onmouseout=function() {
+this.className=this.className.replace(new RegExp(" iehover\\b"), "");
+}
+}
+}
+
+function NewWindows(shref){
+var xx=(window.screen.width-450)/2;
+var yy=(window.screen.height-200)/2;
+pp=window.open(shref,"win","menubar=no,location=no,resizable=no,scrollbars=no,status=no,left="+xx+",top="+yy+",Width=450,Height=200");
+}
+function $(s){return document.getElementById(s);}
+//-->
+</script>
+<table border="0" cellspacing="0" cellpadding="0" height="80" style="border-collapse: collapse;background-image:url();background-repeat: " width="100%" bgcolor="#204689">
+<tr><td align="center"  width="200" >
+<p style="line-height: 150%; margin: 5px">
+ <font style="font-size:14px" 
+ 
+ color="#FFFFFF">
+ 
+<b>
+ 
+ 
+ 
+ 东湖之滨 
+ 
+ 
+</b>
+ 
+ </font></p>
+ 
+</td><td style="color:#AAC6F6">
+淡泊以明志 宁静而致远</td></tr>
+</table>
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%" height="27"  bgcolor="#EEEEEE">
+<tr><td>&nbsp;
+<a href="http://linqo.cublog.cn" class="list1" target="_blank">linqo.cublog.cn</a>
+ 
+</td><td align="right" style="color:#2A5200" width="680">
+<ul id="navmenu"><li class="ul0"><a href="http://control.cublog.cn/" target="_blank" class="list1">管理博客</a> </li>
+
+<li class="ul0"><a href="http://control.cublog.cn/article_new.php" target="_blank" class="list1">发表文章</a></li>
+<li class="ul0"><a href="guestbook.html" class="list1">留言</a></li>
+<li class="ul0"><a href="links.html" class="list1">收藏夹</a>
+<!-- 0 -->
+</li>
+<li class="ul0"><a href="group.html" class="list1">博客圈</a></li>
+<li class="ul0"><a href="music.html" class="list1">音乐</a>
+<ul class="ul1"><li><a href="music_140.html"> · vitas<!-- a140 --></a><!-- 140 --></li>
+<li><a href="music_531.html"> · Enya<!-- a531 --></a><!-- 531 --></li>
+<li><a href="music_533.html"> · Alizee<!-- a533 --></a><!-- 533 --></li>
+<li><a href="music_865.html"> · westlife<!-- a865 --></a><!-- 865 --></li>
+<li><a href="music_2533.html"> · Bryan Adams<!-- a2533 --></a><!-- 2533 --></li>
+<li><a href="music_2534.html"> · Other<!-- a2534 --></a><!-- 2534 --></li>
+<li><a href="music_3250.html"> · Bandari<!-- a3250 --></a><!-- 3250 --></li>
+<li><a href="music_3265.html"> · Andrea Bocelli<!-- a3265 --></a><!-- 3265 --></li>
+</ul>
+
+</li>
+<li class="ul0"><a href="photo.html" class="list1">相册</a>
+<ul class="ul1"><li><a href="photo_1951.html"> · 文章链接图片<!-- a1951 --></a><!-- 1951 --></li>
+</ul>
+
+</li> 
+ 
+<li class="ul0"><a href="article.html" class="list1">文章</a>
+<ul class="ul1"><li><a href="article_28380.html"> · Linux Programming&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_28409.html"> · 应用编程<!-- a28409 --></a><!-- 28409 --></li>
+<li><a href="article_28410.html"> · 内核相关<!-- a28410 --></a><!-- 28410 --></li>
+<li><a href="article_28554.html"> · C/C++<!-- a28554 --></a><!-- 28554 --></li>
+</ul>
+</li>
+<li><a href="article_28499.html"> · 嵌入式<!-- a28499 --></a><!-- 28499 --></li>
+<li><a href="article_28498.html"> · Networking Related<!-- a28498 --></a><!-- 28498 --></li>
+<li><a href="article_28407.html"> · Economy Related&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_56402.html"> · 股票<!-- a56402 --></a><!-- 56402 --></li>
+<li><a href="article_56403.html"> · 期货<!-- a56403 --></a><!-- 56403 --></li>
+<li><a href="article_56404.html"> · 外汇<!-- a56404 --></a><!-- 56404 --></li>
+<li><a href="article_56405.html"> · 基金<!-- a56405 --></a><!-- 56405 --></li>
+<li><a href="article_56401.html"> · 房地产<!-- a56401 --></a><!-- 56401 --></li>
+</ul>
+</li>
+<li><a href="article_28405.html"> · English Corner<!-- a28405 --></a><!-- 28405 --></li>
+<li><a href="article_33958.html"> · Business Management<!-- a33958 --></a><!-- 33958 --></li>
+<li><a href="article_30554.html"> · Linux应用<!-- a30554 --></a><!-- 30554 --></li>
+<li><a href="article_32010.html"> · SIP And VOIP<!-- a32010 --></a><!-- 32010 --></li>
+<li><a href="article_72766.html"> · Voice&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_72767.html"> · SIP And VOIP<!-- a72767 --></a><!-- 72767 --></li>
+<li><a href="article_72768.html"> · ISDN<!-- a72768 --></a><!-- 72768 --></li>
+</ul>
+</li>
+<li><a href="article_28406.html"> · 生活流水帐<!-- a28406 --></a><!-- 28406 --></li>
+<li><a href="article_30535.html"> · Kong Fu&nbsp;&nbsp;&nbsp;<font face='Wingdings 3'>}</font></a><ul class="ul2"><li><a href="article_36880.html"> · Traditional KongFu<!-- a36880 --></a><!-- 36880 --></li>
+<li><a href="article_36882.html"> · San Shou<!-- a36882 --></a><!-- 36882 --></li>
+<li><a href="article_36879.html"> · Thai Boxing<!-- a36879 --></a><!-- 36879 --></li>
+<li><a href="article_36881.html"> · Other<!-- a36881 --></a><!-- 36881 --></li>
+</ul>
+</li>
+<li><a href="article_28408.html"> · 泥巴<!-- a28408 --></a><!-- 28408 --></li>
+<li><a href="article_33959.html"> · 杂谈<!-- a33959 --></a><!-- 33959 --></li>
+<li><a href="article_34443.html"> · Just For Fun<!-- a34443 --></a><!-- 34443 --></li>
+<li><a href="article_39989.html"> · music<!-- a39989 --></a><!-- 39989 --></li>
+</ul>
+
+</li> 
+<li class="ul0"><a href="index.html" class="list1">首页</a></li>
+</ul>
+</td>
+<td width="2"></td>
+</tr>
+</table>
+<script language="javascript">
+function $(s){return document.getElementById(s);}
+function ShowHideDiv(divid,iImg){
+if($(divid).style.display == "none"){
+iImg.src="../../templates/tech/images/dot2.gif";
+$(divid).style.display = "block";
+iImg.title="收起";
+}else{
+iImg.src="../../templates/tech/images/dot4.gif";
+$(divid).style.display = "none";
+iImg.title="展开";
+}
+}
+if (window.attachEvent) window.attachEvent("onload", navHover);
+</script>
+
+<script language="javascript" src="http://stat.it168.com/pv.js"></script>
+<script>
+function sendPV(){
+    var pvTrack = new PvTrack();
+    pvTrack.type = 35; // 频道类别ID
+    pvTrack.channel = 189; // 频道ID
+   
+    pvTrack.pageType = 0;
+    pvTrack.track();
+}
+window.setTimeout("sendPV()", 0);
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-20237423-2']);
+  _gaq.push(['_setDomainName', '.chinaunix.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<div style='display:none'>
+<script type="text/javascript"> 
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F0ee5e8cdc4d43389b3d1bfd76e83216b' type='text/javascript'%3E%3C/script%3E"));
+</script>
+</div>
+<body>
+</html>
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%" >
+<tr><td width="235" valign="top"  align="center">
+<br />
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="220">
+<tr><td><img src="../../templates/newtech/images/left_bg_top.gif" border="0" alt="" /></td></tr>
+<tr><td bgcolor="#EDF2F2" height="25" align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="200">
+<tr><td width="180" align="center"><font style="font-size:10pt" color="#1F72D0"><b>关于作者</b></font></td><td width="20"><img src="../../templates/newtech/images/dot2.gif" border="0" title="收起" onclick="ShowHideDiv('aboutwriter',this);return false;"/></td></tr>
+</table>
+
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+
+<tr><td style="color:#02368D" bgcolor="F3F6F6"  align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;table-layout: fixed;color:#02368D;" width="200" id="aboutwriter">
+<tr><td align="center">
+<a href="up_user.jpg" target="_blank"><img src="up_user_pre.jpg" border=0 alt=""></a>
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;" width="200">
+<tr><td width="200">
+<pre style="line-height: 150%; margin: 5px; " width="25">
+Name：Linqo
+Age ：20-30
+Loc ：WuHan
+
+   在非洲，每天早晨羚羊睁开眼睛，所想的第一件事是：我必须比跑得最快的狮子跑得更快，否则，我就会被狮子吃掉。而在同一时刻，狮子从睡梦中醒来，首先闪现脑海的念头是：我必须追上跑得最慢的羚羊，要不然我就会被饿死
+   不论你是羚羊还是狮子，每当太阳升起之时,你要做的，就是奔跑
+  </pre>	
+</td></tr>
+</table>
+</td></tr>
+</table>
+</td></tr>
+<tr><td>
+<table bgcolor="#FFFFFF" cellspacing="0" cellpadding="0" style="border-collapse: collapse;border: 1px solid #D2DEE2; padding: 1" align="center" width="220" border="0">
+<tr height="20" bgcolor="#EDF2F2">
+<td align="center" width="14" style="cursor: hand; color: #1F72D0;font-size:9pt;" title="上一年" onclick="pushBtm('YU')">||</td>
+<td align="center" width="14" style="cursor: hand; color: #1F72D0;font-size:9pt" title="上一月" onclick="pushBtm('MU')">&lt;&lt;</td>
+<td align="center" nowrap="nowrap" id="YMBG" style="color: #1F72D0;font-size:9pt"></td>
+<td align="center" nowrap="nowrap" id="GZ" style="color: #1F72D0;font-size:9pt"></td>
+<td align="center" width="14" style="cursor: hand; color: #1F72D0;font-size:9pt" title="下一月" onclick="pushBtm('MD')">>></td>
+<td align="center" width="14" style="cursor: hand; color: #1F72D0;font-size:9pt" title="下一年" onclick="pushBtm('YD')">||</td>
+</tr>
+<tr><td colspan="6">
+<div id="ttdiv" align="center" width="210"></div>
+</td></tr>
+<tr><td colspan="6" height="1"></td></tr>
+</table>
+
+<script src="../../templates/newtech/mdate.js" ></script>
+<script language="javascript">
+var arrArtdate=new Array('20060421','20060423','20060424','20060425','20060426','20060517','20060519','20060520','20060607','20060608','20060623','20060625','20060626','20060630','20060706','20060709','20060710','20060716','20060719','20060823','20060824','20060829','20060911','20060926','20060929','20061013','20061030','20061129','20061212','20061222','20061230','20070104','20070119','20070303','20070305','20070323','20070407','20070412','20070515','20070524','20070526','20070719','20070820','20070828','20070903','20070911','20070925','20071011','20071102','20071105','20071130','20071204','20071219','20071220','20071226','20071228','20080108','20080118','20080219','20080422');
+
+initial("ttdiv");
+
+</script>
+
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+<tr><td bgcolor="#EDF2F2" height="25" align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" bordercolor="#111111" width="200">
+<tr><td width="180" align="center"><font style="font-size:10pt" color="#1F72D0"><b>我的分类</b></font></td><td width="20"><img src="../../templates/tech/images/dot2.gif" border="0" title="收起" onclick="ShowHideDiv('lefttree',this);return false;"/></td></tr>
+</table>
+
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+<tr><td style="color:#02368D" bgcolor="F3F6F6">
+<script src="../../templates/newtech/tree.js" ></script>
+<div style="overflow:auto;scrollbar-face-color: #EEEEEE;scrollbar-highlight-color: #FFFFFF;scrollbar-shadow-color: #CCCCCC;scrollbar-3dlight-color: #D1D7DC;scrollbar-arrow-color:#006699;scrollbar-track-color: #CCCCCC;scrollbar-darkshadow-color: #EEDFE7;" id="lefttree"></div>
+<script language="javascript">
+ContentsTree = new CTree("ContentsTree");
+ContentsTree.bAutoClose = false;
+ContentsTree.stTarget = "";
+a0 = ContentsTree.AddNode(null, "我的文章分类", "article.html");
+a0.bOpen=true;
+p0 = ContentsTree.AddNode(null, "我的图片分类", "photo.html");
+p0.bOpen=true;
+f0 = ContentsTree.AddNode(null, "我的链接分类", "links.html");
+f0.bOpen=true;
+m0 = ContentsTree.AddNode(null, "我的音乐分类", "music.html");
+m0.bOpen=true;
+a28380 = ContentsTree.AddNode(a0, "Linux Programming", "article_28380.html");
+a28409 = ContentsTree.AddNode(a28380, "应用编程", "article_28409.html");
+a28410 = ContentsTree.AddNode(a28380, "内核相关", "article_28410.html");
+a28554 = ContentsTree.AddNode(a28380, "C/C++", "article_28554.html");
+a28499 = ContentsTree.AddNode(a0, "嵌入式", "article_28499.html");
+a28498 = ContentsTree.AddNode(a0, "Networking Related", "article_28498.html");
+a28407 = ContentsTree.AddNode(a0, "Economy Related", "article_28407.html");
+a56402 = ContentsTree.AddNode(a28407, "股票", "article_56402.html");
+a56403 = ContentsTree.AddNode(a28407, "期货", "article_56403.html");
+a56404 = ContentsTree.AddNode(a28407, "外汇", "article_56404.html");
+a56405 = ContentsTree.AddNode(a28407, "基金", "article_56405.html");
+a56401 = ContentsTree.AddNode(a28407, "房地产", "article_56401.html");
+a28405 = ContentsTree.AddNode(a0, "English Corner", "article_28405.html");
+a33958 = ContentsTree.AddNode(a0, "Business Management", "article_33958.html");
+a30554 = ContentsTree.AddNode(a0, "Linux应用", "article_30554.html");
+a32010 = ContentsTree.AddNode(a0, "SIP And VOIP", "article_32010.html");
+a72766 = ContentsTree.AddNode(a0, "Voice", "article_72766.html");
+a72767 = ContentsTree.AddNode(a72766, "SIP And VOIP", "article_72767.html");
+a72768 = ContentsTree.AddNode(a72766, "ISDN", "article_72768.html");
+a28406 = ContentsTree.AddNode(a0, "生活流水帐", "article_28406.html");
+a30535 = ContentsTree.AddNode(a0, "Kong Fu", "article_30535.html");
+a36880 = ContentsTree.AddNode(a30535, "Traditional KongFu", "article_36880.html");
+a36882 = ContentsTree.AddNode(a30535, "San Shou", "article_36882.html");
+a36879 = ContentsTree.AddNode(a30535, "Thai Boxing", "article_36879.html");
+a36881 = ContentsTree.AddNode(a30535, "Other", "article_36881.html");
+a28408 = ContentsTree.AddNode(a0, "泥巴", "article_28408.html");
+a33959 = ContentsTree.AddNode(a0, "杂谈", "article_33959.html");
+a34443 = ContentsTree.AddNode(a0, "Just For Fun", "article_34443.html");
+a39989 = ContentsTree.AddNode(a0, "music", "article_39989.html");
+ 
+p1951 = ContentsTree.AddNode(p0, "文章链接图片", "photo_1951.html");
+ 
+ 
+m140 = ContentsTree.AddNode(m0, "vitas", "music_140.html");
+m531 = ContentsTree.AddNode(m0, "Enya", "music_531.html");
+m533 = ContentsTree.AddNode(m0, "Alizee", "music_533.html");
+m865 = ContentsTree.AddNode(m0, "westlife", "music_865.html");
+m2533 = ContentsTree.AddNode(m0, "Bryan Adams", "music_2533.html");
+m2534 = ContentsTree.AddNode(m0, "Other", "music_2534.html");
+m3250 = ContentsTree.AddNode(m0, "Bandari", "music_3250.html");
+m3265 = ContentsTree.AddNode(m0, "Andrea Bocelli", "music_3265.html");
+ 
+//document.write(ContentsTree.GetHTMLCode());
+document.getElementById("lefttree").innerHTML=ContentsTree.GetHTMLCode();
+</script>	
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+
+<tr><td><img src="../../templates/tech/images/left_bg_bottom.gif" border="0" alt="" /></td></tr>
+
+</table>
+
+
+</td><td width="10"></td><td  valign="top" align="center">
+
+<br />
+
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%">
+<tr><td width="11" height="11"><img src="../../templates/tech/images/g_left_top.gif" border="0" alt="" /></td>
+<td bgcolor="#DDDDDD" width="99%" height="11"></td>
+<td width="11" height="11"><img src="../../templates/tech/images/g_right_top.gif" border="0" alt="" /></td>
+</tr>
+
+<tr><td colspan="3" width="100%" bgcolor="#DDDDDD" align="center" valign="top"> 
+
+
+
+
+
+
+
+
+<br />
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="96%">
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_top.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3" width="100%"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_top.gif" border="0" alt="" /></td>
+</tr>
+<tr><td colspan="3"  bgcolor="#F3F3F3" align="center">
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;" width="100%" >
+<tr><td height="25" align="center">
+<font color="#02368D" style="font-size:14pt"><b>宏定义中##和#的作用</b></font></b></font><br />
+</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1"></td></tr>
+<tr><td align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;"  width="100%">
+<tr><td width="100%">
+<div id="art" width="100%" style=" margin: 15px">
+
+		<span style="text-decoration: underline;"> </span><div style="text-align: center;">Author: linqo&nbsp;&nbsp;  from: linqo.cublog.cn<br></div><br>&nbsp;&nbsp;&nbsp; 内核中有很多的宏定义，在宏定义define中经常看到两个字符串##和#，这里把它的用法做一下说明：<br>&nbsp;&nbsp;&nbsp; ##是一个连接符号，用于把参数连在一起<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 例如：<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &gt; #define&nbsp; FOO(arg)&nbsp;&nbsp; my##arg<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;  则<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp; &gt; FOO(abc)<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;  相当于&nbsp;&nbsp; myabc<br>&nbsp;&nbsp;&nbsp; <br>&nbsp;&nbsp;&nbsp; #是“字符串化”的意思。出现在宏定义中的#是把跟在后面的参数转换成一个字符串<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;  例如：<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp;  &gt; #define STRCPY(dst, src)&nbsp;&nbsp;  strcpy(dst, #src)<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;  则<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;  &nbsp;&nbsp;&nbsp;&nbsp; &gt; STRCPY(buff, abc)<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;  相当于&nbsp;&nbsp;  strcpy(buff, "abc")<br><br>&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">另外，如果##后的参数本身也是一个宏的话，##会阻止这个宏的展开</span>。<br><br>&nbsp;&nbsp;&nbsp; #define STRCPY(a, b)&nbsp;&nbsp;&nbsp; strcpy(a ## _p, #b)<br>&nbsp;&nbsp;&nbsp; int main()<br>&nbsp;&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; char var1_p[20];<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; char var2_p[30];<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; strcpy(var1_p, "aaaa");<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; strcpy(var2_p, "bbbb");<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; STRCPY(var1, var2);<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; STRCPY(var2, var1);<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; printf("var1 = %s\n", var1_p);<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; printf("var2 = %s\n", var2_p);<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return 0;<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; /* 注意这里 */<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; STRCPY(STRCPY(var1,var2),var2);<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; /* 这里是否会展开为： strcpy(strcpy(var1_p,"var2")_p,"var2“）？<br>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; * 答案是否定的：<br>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; * 展开结果将是：&nbsp; strcpy(STRCPY(var1,var2)_p,"var2")<br>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; * ## 阻止了参数的宏展开!<br>&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; * 如果宏定义里没有用到 # 和 ##, 宏将会完全展开<br>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */<br>&nbsp;&nbsp;&nbsp; }&nbsp;&nbsp;  <br><br>&nbsp;&nbsp;&nbsp; <br>
+		
+		
+		
+		
+		
+		
+		
+</div>
+</td></tr>
+</table>
+
+
+<p style="line-height: 150%; margin: 5px">
+ 
+ 
+</p>
+</td></tr>
+ 
+ 
+<tr><td height="25" align="center">
+<font color="#295200">发表于： 2006-05-17，修改于： 2006-05-17 13:07，已浏览2741次，有评论1条</font> 
+<a href="/u2/star.php?blogid=17855&artid=113663" id="star" onclick="NewWindows(this.href);return false;" title="推荐这篇文章">推荐</a>
+<a href="/u2/complaint.php?blogid=17855&artid=113663" id="complaint" onclick="NewWindows(this.href);return false;" title="投诉这篇文章">投诉</a>
+</td></tr>
+
+
+
+
+</table>
+
+
+</td></tr>
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_buttom.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_buttom.gif" border="0" alt="" /></td>
+</tr>
+</table>
+
+
+<tr><td width="11" height="11"><img src="../../templates/tech/images/g_left_bottom.gif" border="0" alt="" /></td>
+<td bgcolor="#DDDDDD"></td>
+<td width="11" height="11"><img src="../../templates/tech/images/g_right_bottom.gif" border="0" alt="" /></td>
+</tr>
+</table>
+<br />
+<br />
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%">
+<tr><td width="11" height="11"><img src="../../templates/tech/images/g_left_top.gif" border="0" alt="" /></td>
+<td bgcolor="#DDDDDD" width="99%" height="11"></td>
+<td width="11" height="11"><img src="../../templates/tech/images/g_right_top.gif" border="0" alt="" /></td>
+</tr>
+
+<tr><td colspan="3" width="100%" bgcolor="#DDDDDD" align="center" valign="top"> 
+<b>网友评论</b>
+<br />
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="96%">
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_top.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3" width="100%"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_top.gif" border="0" alt="" /></td>
+</tr>
+<tr><td colspan="3"  bgcolor="#F3F3F3" align="center">
+
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;color:#02368D;" width="700" align="center">
+<tr height="25">
+<td width="25"><img src="../../templates/tech/images/dot.gif" width="8" height="8" border="0" alt="" /></td>
+<td width="120">网友：<b>
+linqo</b> </td><td width="555" align="right" style="color:#AAAAAA">时间：2006-06-01 17:22:37  &#32;&#32;IP地址：61.183.139.★</td></tr>
+<tr><td bgcolor="#D2DEE2" height="1" colspan="3"></td></tr>
+<tr><td bgcolor="#FFFFFF" height="1" colspan="3"></td></tr>
+<tr>
+<td colspan="3">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;word-wrap:break-word;" bordercolor="#111111" width="700">
+<tr><td valign="top" width="20"></td><td width="580">
+<pre style="line-height: 150%; margin: 0px;" wrap="break-word">
+tell&nbsp;you&nbsp;about&nbsp;##&nbsp;in&nbsp;common&nbsp;text<br />
+<br />
+关于记号粘贴操作符(token&nbsp;paste&nbsp;operator):&nbsp;##<br />
+<br />
+feiy@KernelTech,&nbsp;newsmth.org<br />
+<br />
+1.&nbsp;简单的说，“##”是一种分隔连接方式，它的作用是先分隔，然后进行强制连接。<br />
+<br />
+&nbsp;&nbsp;&nbsp;其中，分隔的作用类似于空格。我们知道在普通的宏定义中，预处理器一般把空格<br />
+&nbsp;&nbsp;&nbsp;解释成分段标志，对于每一段和前面比较，相同的就被替换。但是这样做的结果是，<br />
+&nbsp;&nbsp;&nbsp;被替换段之间存在一些空格。如果我们不希望出现这些空格，就可以通过添加一些<br />
+&nbsp;&nbsp;&nbsp;##来替代空格。<br />
+<br />
+&nbsp;&nbsp;&nbsp;另外一些分隔标志是，包括操作符，比如&nbsp;+,&nbsp;-,&nbsp;*,&nbsp;/,&nbsp;[,],&nbsp;...，所以尽管下面的<br />
+&nbsp;&nbsp;&nbsp;宏定义没有空格，但是依然表达有意义的定义：&nbsp;define&nbsp;add(a,&nbsp;b)&nbsp;&nbsp;a+b<br />
+<br />
+&nbsp;&nbsp;&nbsp;而其强制连接的作用是，去掉和前面的字符串之间的空格，而把两者连接起来。<br />
+<br />
+<br />
+2.&nbsp;举列&nbsp;--&nbsp;试比较下述几个宏定义的区别<br />
+<br />
+&nbsp;&nbsp;&nbsp;#define&nbsp;A1(name,&nbsp;type)&nbsp;&nbsp;type&nbsp;name_##type##_type&nbsp;或<br />
+&nbsp;&nbsp;&nbsp;#define&nbsp;A2(name,&nbsp;type)&nbsp;&nbsp;type&nbsp;name##_##type##_type<br />
+<br />
+&nbsp;&nbsp;&nbsp;A1(a1,&nbsp;int);&nbsp;&nbsp;/*&nbsp;等价于:&nbsp;int&nbsp;name_int_type;&nbsp;*/<br />
+&nbsp;&nbsp;&nbsp;A2(a1,&nbsp;int);&nbsp;&nbsp;/*&nbsp;等价于:&nbsp;int&nbsp;a1_int_type;&nbsp;&nbsp;&nbsp;*/<br />
+<br />
+&nbsp;&nbsp;&nbsp;解释：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)&nbsp;在第一个宏定义中，&quot;name&quot;和第一个&quot;_&quot;之间，以及第2个&quot;_&quot;和第二个<br />
+&nbsp;&nbsp;&nbsp;&quot;type&quot;之间没有被分隔，所以预处理器会把name_##type##_type解释成3段：<br />
+&nbsp;&nbsp;&nbsp;“name_”、“type”、以及“_type”，这中间只有“type”是在宏前面出现过<br />
+&nbsp;&nbsp;&nbsp;&nbsp;的，所以它可以被宏替换。<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)&nbsp;而在第二个宏定义中，“name”和第一个“_”之间也被分隔了，所以<br />
+&nbsp;&nbsp;&nbsp;预处理器会把name##_##type##_type解释成4段：“name”、“_”、“type”<br />
+&nbsp;&nbsp;&nbsp;以及“_type”，这其间，就有两个可以被宏替换了。<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3)&nbsp;A1和A2的定义也可以如下：<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#define&nbsp;A1(name,&nbsp;type)&nbsp;&nbsp;type&nbsp;name_&nbsp;&nbsp;##type&nbsp;##_type&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;##前面随意加上一些空格&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#define&nbsp;A2(name,&nbsp;type)&nbsp;&nbsp;type&nbsp;name&nbsp;##_&nbsp;##type&nbsp;##_type<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;结果是##&nbsp;会把前面的空格去掉完成强连接，得到和上面结果相同的宏定义<br />
+<br />
+3.&nbsp;其他相关&nbsp;--&nbsp;单独的一个&nbsp;#<br />
+<br />
+&nbsp;&nbsp;&nbsp;至于单独一个#，则表示&nbsp;对这个变量替换后，再加双引号引起来。比如<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#define&nbsp;&nbsp;__stringify_1(x)&nbsp;&nbsp;&nbsp;#x<br />
+那么<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__stringify_1(linux)&nbsp;&nbsp;&nbsp;&lt;==&gt;&nbsp;&nbsp;&quot;linux&quot;<br />
+<br />
+所以，对于MODULE_DEVICE_TABLE<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1)&nbsp;#define&nbsp;MODULE_DEVICE_TABLE(type,name)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MODULE_GENERIC_TABLE(type##_device,name)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2)&nbsp;#define&nbsp;MODULE_GENERIC_TABLE(gtype,name)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;extern&nbsp;const&nbsp;struct&nbsp;gtype##_id&nbsp;__mod_##gtype##_table&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__attribute__&nbsp;((unused,&nbsp;alias(__stringify(name))))<br />
+<br />
+得到&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MODULE_DEVICE_TABLE(usb,&nbsp;products)&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/*notes:&nbsp;struct&nbsp;usb_device_id&nbsp;products;&nbsp;*/<br />
+&nbsp;&lt;==&gt;&nbsp;MODULE_GENERIC_TABLE(usb_device,products)<br />
+&nbsp;&lt;==&gt;&nbsp;extern&nbsp;const&nbsp;struct&nbsp;usb_device_id&nbsp;__mod_usb_device_table&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__attribute__&nbsp;((unused,&nbsp;alias(&quot;products&quot;)))&nbsp;&nbsp;&nbsp;<br />
+<br />
+注意到alias&nbsp;attribute需要一个双引号，所以在这里使用了__stringify(name)来<br />
+给name加上双引号。另外，还注意到一个外部变量&quot;__mod_usb_device_table&quot;被alias<br />
+到了本驱动专用的由用户自定义的变量products&lt;usb_device_id类型&gt;。这个外部变量<br />
+是如何使用的，更多的信息请参看《probe()过程分析》。<br />
+<br />
+4.&nbsp;分析方法和验证方式&nbsp;--&nbsp;编写一个简单的C程序<br />
+<br />
+&nbsp;&nbsp;&nbsp;用宏定义一个变量，同时用直接方式定义一个相同的变量，编译报告重复定义；<br />
+&nbsp;&nbsp;&nbsp;用宏定义一个变量，直接使用该宏定义的变量名称，编译通过且运行结果正确；<br />
+&nbsp;&nbsp;&nbsp;使用printf打印字符串数据。printf(&quot;token&nbsp;macro&nbsp;is&nbsp;%s&quot;,&nbsp;__stringify_1(a1));<br />
+<br />
+</pre>
+</td></tr>
+</table>
+
+</td>
+</tr>
+<tr><td height="15" colspan="3"></td></tr>
+</table>
+
+
+</td></tr>
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_buttom.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_buttom.gif" border="0" alt="" /></td>
+</tr>
+</table>
+<br />
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="96%">
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_top.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3" width="100%"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_top.gif" border="0" alt="" /></td>
+</tr>
+<tr><td colspan="3"  bgcolor="#F3F3F3" align="center">
+<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="700" align="center">
+
+<tr><td style="color:#0000CC;" height="25">
+　发表评论
+</td></tr>
+<tr><td height="25">
+ 
+<IFRAME NAME="comment" SRC="/comment/comment.php?bg=F3F3F3&ctype=0&iscomment=1&artid=113663&blogid=17855" WIDTH="640" HEIGHT="160" frameborder="0"></IFRAME>
+ 
+</td></tr>
+
+</table>
+
+</td></tr>
+<tr><td width="7" height="7"><img src="../../templates/tech/images/w_left_buttom.gif" border="0" alt="" /></td>
+<td bgcolor="#F3F3F3"></td>
+<td width="7" height="7"><img src="../../templates/tech/images/w_right_buttom.gif" border="0" alt="" /></td>
+</tr>
+</table>
+
+
+<tr><td width="11" height="11"><img src="../../templates/tech/images/g_left_bottom.gif" border="0" alt="" /></td>
+<td bgcolor="#DDDDDD"></td>
+<td width="11" height="11"><img src="../../templates/tech/images/g_right_bottom.gif" border="0" alt="" /></td>
+</tr>
+</table>
+</td></tr>
+</table>
+
+</center>
+
+</html>

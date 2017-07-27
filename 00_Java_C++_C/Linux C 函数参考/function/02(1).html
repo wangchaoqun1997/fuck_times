@@ -1,0 +1,800 @@
+<html>
+<head>
+<title>Untitled Document</title>
+</head>
+<body>
+<table width="100%">
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc14></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      atof（将字符串转换成浮点型数） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atoi，atol，strtod，strtol，strtoul<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> double atof(const char *nptr);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atof()会扫描参数nptr字符串，跳过前面的空格字符，直到遇上数字或正负符号才开始做转换，而再遇到非数字或字符串结束时('\0')才结束转换，并将结果返回。参数nptr字符串可包含正负号、小数点或E(e)来表示指数部分，如123.456或123e-2。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回转换后的浮点型数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atof()与使用strtod(nptr,(char**)NULL)结果相同。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 将字符串a 与字符串b转换成数字后相加*/<br>
+      #include&lt;stdlib.h&gt;<br>
+      main()<br>
+      {<br>
+      char *a=”-100.23”;<br>
+      char *b=”200e-2”;<br>
+      float c;<br>
+      c=atof(a)+atof(b);<br>
+      printf(“c=%.2f\n”,c);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> c=-98.23<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc15></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      atoi（将字符串转换成整型数） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atof，atol，atrtod，strtol，strtoul<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int atoi(const char *nptr);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atoi()会扫描参数nptr字符串，跳过前面的空格字符，直到遇上数字或正负符号才开始做转换，而再遇到非数字或字符串结束时('\0')才结束转换，并将结果返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回转换后的整型数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atoi()与使用strtol(nptr，(char**)NULL，10)；结果相同。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 将字符串a 与字符串b转换成数字后相加*/<br>
+      #include&lt;stdlib.h&gt;<br>
+      mian()<br>
+      {<br>
+      char a[]=”-100”;<br>
+      char b[]=”456”;<br>
+      int c;<br>
+      c=atoi(a)+atoi(b);<br>
+      printf(c=%d\n”,c);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> c=356<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc16></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      atol（将字符串转换成长整型数） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atof，atoi，strtod，strtol，strtoul<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> long atol(const char *nptr);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atol()会扫描参数nptr字符串，跳过前面的空格字符，直到遇上数字或正负符号才开始做转换，而再遇到非数字或字符串结束时('\0')才结束转换，并将结果返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回转换后的长整型数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atol()与使用strtol(nptr,(char**)NULL,10)；结果相同。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /*将字符串a与字符串b转换成数字后相加*/<br>
+      #include&lt;stdlib.h&gt;<br>
+      main()<br>
+      {<br>
+      char a[]=”1000000000”;<br>
+      char b[]=” 234567890”;<br>
+      long c;<br>
+      c=atol(a)+atol(b);<br>
+      printf(“c=%d\n”,c);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> c=1234567890<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc17></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      gcvt（将浮点型数转换为字符串，取四舍五入） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> ecvt，fcvt，sprintf<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char *gcvt(double number，size_t 
+      ndigits，char *buf);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> gcvt()用来将参数number转换成ASCII码字符串，参数ndigits表示显示的位数。gcvt()与ecvt()和fcvt()不同的地方在于，gcvt()所转换后的字符串包含小数点或正负符号。若转换成功，转换后的字符串会放在参数buf指针所指的空间。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回一字符串指针，此地址即为buf指针。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      main()<br>
+      {<br>
+      double a=123.45;<br>
+      double b=-1234.56;<br>
+      char *ptr;<br>
+      int decpt,sign;<br>
+      gcvt(a,5,ptr);<br>
+      printf(“a value=%s\n”,ptr);<br>
+      ptr=gcvt(b,6,ptr);<br>
+      printf(“b value=%s\n”,ptr);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> a value=123.45<br>
+		b value=-1234.56<br>
+      </font> </td>
+  </tr>
+  
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc18></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strtod（将字符串转换成浮点数） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atoi，atol，strtod，strtol，strtoul<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> double strtod(const char *nptr,char 
+      **endptr);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strtod()会扫描参数nptr字符串，跳过前面的空格字符，直到遇上数字或正负符号才开始做转换，到出现非数字或字符串结束时('\0')才结束转换，并将结果返回。若endptr不为NULL，则会将遇到不合条件而终止的nptr中的字符指针由endptr传回。参数nptr字符串可包含正负号、小数点或E(e)来表示指数部分。如123.456或123e-2。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回转换后的浮点型数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考atof()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /*将字符串a，b，c 分别采用10，2，16 进制转换成数字*/<br>
+      #include&lt;stdlib.h&gt;<br>
+      mian()<br>
+      {<br>
+      char a[]=”1000000000”;<br>
+      char b[]=”1000000000”;<br>
+      char c[]=”ffff”;<br>
+      printf(“a=%d\n”,strtod(a,NULL,10));<br>
+      printf(“b=%d\n”,strtod(b,NULL,2));<br>
+      printf(“c=%d\n”,strtod(c,NULL,16));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> a=1000000000<br>
+      b=512<br>
+      c=65535<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc19></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strtol（将字符串转换成长整型数） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atof，atoi，atol，strtod，strtoul<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> long int strtol(const char *nptr,char 
+      **endptr,int base);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strtol()会将参数nptr字符串根据参数base来转换成长整型数。参数base范围从2至36，或0。参数base代表采用的进制方式，如base值为10则采用10进制，若base值为16则采用16进制等。当base值为0时则是采用10进制做转换，但遇到如'0x'前置字符则会使用16进制做转换。一开始strtol()会扫描参数nptr字符串，跳过前面的空格字符，直到遇上数字或正负符号才开始做转换，再遇到非数字或字符串结束时('\0')结束转换，并将结果返回。若参数endptr不为NULL，则会将遇到不合条件而终止的nptr中的字符指针由endptr返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回转换后的长整型数，否则返回ERANGE并将错误代码存入errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> ERANGE指定的转换字符串超出合法范围。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 将字符串a，b，c 分别采用10，2，16进制转换成数字*/<br>
+      #include&lt;stdlib.h&gt;<br>
+      main()<br>
+      {<br>
+      char a[]=”1000000000”;<br>
+      char b[]=”1000000000”;<br>
+      char c[]=”ffff”;<br>
+      printf(“a=%d\n”,strtol(a,NULL,10));<br>
+      printf(“b=%d\n”,strtol(b,NULL,2));<br>
+      printf(“c=%d\n”,strtol(c,NULL,16));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> a=1000000000<br>
+      b=512<br>
+      c=65535<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc20></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strtoul（将字符串转换成无符号长整型数） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> atof，atoi，atol，strtod，strtol<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> unsigned long int strtoul(const 
+      char *nptr,char **endptr,int base);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strtoul()会将参数nptr字符串根据参数base来转换成无符号的长整型数。参数base范围从2至36，或0。参数base代表采用的进制方式，如base值为10则采用10进制，若base值为16则采用16进制数等。当base值为0时则是采用10进制做转换，但遇到如'0x'前置字符则会使用16进制做转换。一开始strtoul()会扫描参数nptr字符串，跳过前面的空格字符串，直到遇上数字或正负符号才开始做转换，再遇到非数字或字符串结束时('\0')结束转换，并将结果返回。若参数endptr不为NULL，则会将遇到不合条件而终止的nptr中的字符指针由endptr返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回转换后的长整型数，否则返回ERANGE并将错误代码存入errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> ERANGE指定的转换字符串超出合法范围。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考strtol()<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc21></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      toascii（将整型数转换成合法的ASCII 码字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isascii，toupper，tolower<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int toascii(int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> toascii()会将参数c转换成7位的unsigned char值，第八位则会被清除，此字符即会被转成ASCII码字符。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 将转换成功的ASCII码字符值返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      main()<br>
+      {<br>
+      int a=217;<br>
+      char b;<br>
+      printf(“before toascii () : a value =%d(%c)\n”,a,a);<br>
+      b=toascii(a);<br>
+      printf(“after toascii() : a value =%d(%c)\n”,b,b);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> before toascii() : a value =217()<br>
+      after toascii() : a value =89(Y)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc22></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      tolower（将大写字母转换成小写字母） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isalpha，toupper<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int tolower(int c);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为大写字母则将该对应的小写字母返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回转换后的小写字母，若不须转换则将参数c值返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 将s字符串内的大写字母转换成小写字母*/<br>
+      #include&lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char s[]=”aBcDeFgH12345;!#$”;<br>
+      int i;<br>
+      printf(“before tolower() : %s\n”,s);<br>
+      for(i=0;I&lt;sizeof(s);i++)<br>
+      s[i]=tolower(s[i]);<br>
+      printf(“after tolower() : %s\n”,s);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> before tolower() : aBcDeFgH12345;!#$<br>
+      after tolower() : abcdefgh12345;!#$<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc23></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      toupper（将小写字母转换成大写字母） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isalpha，tolower<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int toupper(int c);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为小写字母则将该对映的大写字母返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回转换后的大写字母，若不须转换则将参数c值返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 将s字符串内的小写字母转换成大写字母*/<br>
+      #include&lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char s[]=”aBcDeFgH12345;!#$”;<br>
+      int i;<br>
+      printf(“before toupper() : %s\n”,s);<br>
+      for(i=0;I&lt;sizeof(s);i++)<br>
+      s[i]=toupper(s[i]);<br>
+      printf(“after toupper() : %s\n”,s);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> before toupper() : aBcDeFgH12345;!#$<br>
+      after toupper() : ABCDEFGH12345;!#$<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+      </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

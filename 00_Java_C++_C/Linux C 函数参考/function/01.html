@@ -1,0 +1,972 @@
+<html>
+<head>
+<title>Untitled Document</title>
+</head>
+<body>
+<table width="100%">
+<tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc1></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      isalnum（测试字符是否为英文或数字） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isalpha，isdigit，islower，isupper<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int isalnum (int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为英文字母或阿拉伯数字，在标准c中相当于使用“isalpha(c) 
+      || isdigit(c)”做测试。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为字母或数字，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 找出str 字符串中为英文字母或数字的字符*/<br>
+      #include &lt; ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str[]=”123c@#FDsP[e?”;<br>
+      int i;<br>
+      for (i=0;str[i]!=0;i++ )<br>
+      if ( isalnum(str[i])) printf(“%c is an alphanumeric character\n”,str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 1 is an apphabetic character<br>
+      2 is an apphabetic character<br>
+      3 is an apphabetic character<br>
+      c is an apphabetic character<br>
+      F is an apphabetic character<br>
+      D is an apphabetic character<br>
+      s is an apphabetic character<br>
+      P is an apphabetic character<br>
+      e is an apphabetic character<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc2></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      isalpha （测试字符是否为英文字母） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isalnum，islower，isupper<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int isalpha (int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为英文字母，在标准c中相当于使用“isupper(c)||islower(c)”做测试。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为英文字母，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 找出str 字符串中为英文字母的字符*/<br>
+      #include &lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str[]=”123c@#FDsP[e?”;<br>
+      int i;<br>
+      for (i=0;str[i]!=0;i++)<br>
+      if(isalpha(str[i])) printf(“%c is an alphanumeric character\n”,str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> c is an apphabetic character<br>
+      F is an apphabetic character<br>
+      D is an apphabetic character<br>
+      s is an apphabetic character<br>
+      P is an apphabetic character<br>
+      e is an apphabetic character<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc3></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      isascii（测试字符是否为ASCII 码字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> iscntrl<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int isascii(int c);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为ASCII码字符，也就是判断c的范围是否在0到127之间。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为ASCII码字符，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 判断int i是否具有对映的ASCII码字符*/<br>
+      #include&lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      int i;<br>
+      for(i=125;i&lt;130;i++)<br>
+      if(isascii(i))<br>
+      printf("%d is an ascii character:%c\n",i,i);<br>
+      else<br>
+      printf("%d is not an ascii character\n",i);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 125 is an ascii character:}<br>
+      126 is an ascii character:~<br>
+      127 is an ascii character:<br>
+      128 is not an ascii character<br>
+      129 is not an ascii character<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc4></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      iscntrl（测试字符是否为ASCII 码的控制字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isascii<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int iscntrl(int c)；<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为ASCII控制码，也就是判断c的范围是否在0到30之间。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为ASCII控制码，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc5></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      isdigit（测试字符是否为阿拉伯数字） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isxdigit<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int isdigit(int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为阿拉伯数字0到9。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为阿拉伯数字，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 找出str字符串中为阿拉伯数字的字符*/<br>
+      #include&lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str[]="123@#FDsP[e?";<br>
+      int i;<br>
+      for(i=0;str[i]!=0;i++)<br>
+      if(isdigit(str[i])) printf("%c is an digit character\n",str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 1 is an digit character<br>
+      2 is an digit character<br>
+      3 is an digit character<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc6></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      isgraphis（测试字符是否为可打印字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isprint<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int isgraph (int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为可打印字符，若c所对映的ASCII码可打印，且非空格字符则返回TRUE。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为可打印字符，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 判断str字符串中哪些为可打印字符*/<br>
+      #include&lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str[]="a5 @;";<br>
+      int i;<br>
+      for(i=0;str[i]!=0;i++)<br>
+      if(isgraph(str[i])) printf("str[%d] is printable character:%d\n",i,str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> str[0] is printable character:a<br>
+      str[1] is printable character:5<br>
+      str[3] is printable character:@<br>
+      str[4] is printable character:;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc7></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      islower（测试字符是否为小写字母） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isalpha，isupper<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int islower(int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为小写英文字母。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为小写英文字母，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str[]="123@#FDsP[e?";<br>
+      int i;<br>
+      for(i=0;str[i]!=0;i++)<br>
+      if(islower(str[i])) printf("%c is a lower-case character\n",str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> c is a lower-case character<br>
+      s is a lower-case character<br>
+      e is a lower-case character<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc8></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      isprint（测试字符是（否为可打印字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isgraph<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int isprint(int c);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为可打印字符，若c所对映的ASCII码可打印，其中包含空格字符，则返回TRUE。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为可打印字符，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 判断str字符串中哪些为可打印字符包含空格字符*/<br>
+      #include&lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str[]="a5 @;";<br>
+      int i;<br>
+      for(i=0;str[i]!=0;i++)<br>
+      if(isprint(str[i])) printf("str[%d] is printable character:%d\n",i,str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> str[0] is printable character:a<br>
+      str[1] is printable character:5<br>
+      str[2] is printable character:<br>
+      str[3] is printable character:@<br>
+      str[4] is printable character:;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc9></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      isspace（测试字符是否为空格字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isgraph<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int isspace(int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为空格字符，也就是判断是否为空格('')、定位字符('\t')、CR('\r')、换行('\n')、垂直定位字符('\v')或翻页('\f')的情况。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为空格字符，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /*将字符串str[]中内含的空格字符找出，并显示空格字符的ASCII码*/<br>
+      #include &lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str="123c @# FD\tsP[e?\n";<br>
+      int i;<br>
+      for(i=0;str[i]!=0;i++)<br>
+      if(isspace(str[i]))<br>
+      printf("str[%d] is a white-space character:%d\n",i,str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> str[4] is a white-space character:32<br>
+      str[7] is a white-space character:32<br>
+      str[10] is a white-space character:9 /* \t */<br>
+      str[16] is a white-space character:10 /* \t */<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc10></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      ispunct（测试字符是否为标点符号或特殊符号） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isspace，isdigit，isalpha<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #inlude&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int ispunct(int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为标点符号或特殊符号。返回TRUE也就是代表参数c为非空格、非数字和非英文字母。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> v若参数c为标点符号或特殊符号，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /*列出字符串str中的标点符号或特殊符号*/<br>
+      #include &lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str[]="123c@ #FDsP[e?";<br>
+      int i;<br>
+      for(i=0;str[i]!=0;i++)<br>
+      if(ispunct(str[i])) printf("%c\n",str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> v<br>
+      @#[?<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc11></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      isupper（测试字符是否为大写英文字母） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isalpha，islower<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int isupper(int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为大写英文字母。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为大写英文字母，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /*找出字符串str中为大写英文字母的字符*/<br>
+      #include &lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str[]="123c@#FDsP[e?";<br>
+      int i;<br>
+      for(i=0;str[i]!=0;i++)<br>
+      if(isupper(str[i])) printf("%c is an uppercase character\n",str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> F is an uppercase character<br>
+      D is an uppercase character<br>
+      P is an uppercase character<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc12></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      isxdigit（测试字符是否为16进制数字） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> isalnum，isdigit<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;ctype.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int isxdigit (int c)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 检查参数c是否为16进制数字，只要c为下列其中一个情况则返回TRUE。16进制数字:0123456789ABCDEF。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数c为16进制数字，则返回TRUE，否则返回NULL(0)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 此为宏定义，非真正函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /*找出字符串str中为十六进制数字的字符*/<br>
+      #include &lt;ctype.h&gt;<br>
+      main()<br>
+      {<br>
+      char str[]="123c@#FDsP[e?";<br>
+      int i;<br>
+      for(i=0;str[i]!=0;i++)<br>
+      if(isxdigit(str[i])) printf("%c is a hexadecimal digits\n",str[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 1 is a hexadecimal digits<br>
+      2 is a hexadecimal digits<br>
+      3 is a hexadecimal digits<br>
+      c is a hexadecimal digits<br>
+      F is a hexadecimal digits<br>
+      D is a hexadecimal digits<br>
+      e is a hexadecimal digits<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+      </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

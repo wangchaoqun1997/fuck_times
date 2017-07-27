@@ -1,0 +1,453 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>linux2.6.22下usb驱动完成情况及问题解决 - ◇Linux程序设计交流区 -  开源快讯论坛  - Powered by Discuz!</title>
+<meta name="keywords" content="Discuz!,Board,Comsenz,forums,bulletin board,">
+<meta name="description" content="开源快讯论坛  - Discuz! Board">
+<meta name="generator" content="Discuz! 5.0.0 with Templates 5.0.0">
+<meta name="MSSmartTagsPreventParsing" content="TRUE">
+<meta http-equiv="MSThemeCompatible" content="Yes">
+<link rel="stylesheet" type="text/css" id="css" href="forumdata/cache/style_2.css">
+<script type="text/javascript" src="include/common.js"></script>
+<script type="text/javascript" src="include/menu.js"></script>
+</head>
+<body onkeydown="if(event.keyCode==27) return false;">
+
+<center>
+<div class="mainborder"></div>
+<div class="headerline" style="height: 6px"></div>
+<div class="maintable"><div style="width: 100%; height: 78px; text-align: left;">
+<div class="right"><br><a href="http://bbs.lpichina.org" target="_blank"><img src="http://www.lpi-china.org/bbs/attachments/20080519_c293f2bffafeabce46f89ETXXETJL9At.jpg" alt="众志成城 抗击地震" border="0"></a></div>
+<a href="index.php"><embed src="images/default/logo2.swf" width="200" height="84" type="application/x-shockwave-flash" alt="开源快讯论坛"></embed></a>
+</div></div>
+
+<div class="headerline" style="height: 6px"></div>
+<div class="headermenu">
+<div class="maintable">
+<div class="right" id="menu">
+<span class="bold">游客: &nbsp;</span><a href="register.php">注册</a>
+| <a href="logging.php?action=login">登录</a>
+| <a href="member.php?action=list">会员</a> 
+| <a href="faq.php">帮助</a>
+</div></div></div>
+<div class="headerline" style="height: 6px"></div>
+
+<div class="maintable"><br><div class="subtable nav" style="width:98%">
+<div class="right">
+<form method="post" action="search.php?srchtype=qihoo" onSubmit="this.target='_blank';">
+<input type="hidden" name="searchsubmit" value="yes">
+<input type="text" name="srchtxt" value="输入关键词，快速搜索本论坛" size="27" class="input" style="background-color: #FFFFFF" onmouseover="this.focus();this.value='';this.onmouseover=null;" onfocus="this.select()">
+<input name="searchsubmit" class="button" type="submit" value="搜索">
+<input name="allsearchsubmit" class="button" type="submit" value="奇虎">
+</form>
+</div>
+<span id="forumlist"><a href="index.php">开源快讯论坛</a><script type="text/javascript">menuregister(false, "forumlist")</script></span>
+ &raquo; <a href="forumdisplay.php?fid=5">◇Linux程序设计交流区</a> &raquo; linux2.6.22下usb驱动完成情况及问题解决</div><br></div>
+<div class="maintable">
+<table width="98%" cellspacing="0" cellpadding="0" align="center" style="clear: both;">
+<tr><td valign="bottom">
+<div style="margin-bottom: 4px">
+<a href="redirect.php?fid=5&amp;tid=4146&amp;goto=nextoldset" style="font-weight: normal"> &lsaquo;&lsaquo; 上一主题</a> | <a href="redirect.php?fid=5&amp;tid=4146&amp;goto=nextnewset" style="font-weight: normal">下一主题 &rsaquo;&rsaquo;</a><br>
+</div>
+</td><td width="40%" align="right" valign="bottom">
+<div class="right">&nbsp;<a href="post.php?action=reply&amp;fid=5&amp;tid=4146&amp;extra="><img src="images/default/reply.gif" border="0" alt="" /></a></div>
+<div id="newspecialheader" class="right"><a href="post.php?action=newthread&amp;fid=5&amp;extra="><img src="images/default/newtopic.gif" border="0" alt="" /></a><a href="###"><img src="images/default/newspecial.gif" border="0" alt="" /></a><script type="text/javascript">menuregister(false, "newspecialheader", true)</script></div>
+<div class="popupmenu_popup newspecialmenu" id="newspecialheader_menu" style="display: none">
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
+<tr><td class="popupmenu_option"><div class="newspecial"><a href="post.php?action=newthread&amp;fid=5&amp;extra=&amp;poll=yes">投票</a></div></td></tr>
+<tr><td class="popupmenu_option"><div class="newspecial"><a href="post.php?action=newthread&amp;fid=5&amp;extra=&amp;trade=yes">交易</a></div></td></tr>
+<tr><td class="popupmenu_option"><div class="newspecial"><a href="post.php?action=newthread&amp;fid=5&amp;extra=&amp;reward=yes">悬赏</a></div></td></tr>
+<tr><td class="popupmenu_option"><div class="newspecial"><a href="post.php?action=newthread&amp;fid=5&amp;extra=&amp;activity=yes">活动</a></div></td></tr>
+</table></div>
+</td></tr></table></div>
+<script type="text/javascript">
+function fastreply(subject) {
+if($('postform')) {
+$('postform').subject.value = subject;
+$('postform').message.focus();
+}
+}
+</script>
+
+<div class="maintable">
+<div class="spaceborder" style="width: 98%; border-bottom: none">
+<table cellspacing="0" cellpadding="4" width="100%" align="center">
+<tr class="header"><td colspan="2" style="color: #FFFFFF">
+<div class="right" style="font-weight: normal">
+<a href="viewthread.php?action=printable&amp;tid=4146" target="_blank">打印</a> |
+<a href="misc.php?action=emailfriend&amp;tid=4146">推荐</a> |
+<a href="my.php?item=subscriptions&amp;subadd=4146">订阅</a> |
+<a href="my.php?item=favorites&amp;favadd=4146&amp;type=thread">收藏</a>
+| <a href="http://www.linuxexpress.com.cn/index.php?action/register" target="_blank">开通个人空间</a>
+| <a href="http://www.linuxexpress.com.cn/spacecp.php?action=spacenews&op=add&tid=4146" target="_blank">加入资讯</a>
+</div>
+标题:
+[技术] linux2.6.22下usb驱动完成情况及问题解决</td></tr>
+</table></div>
+
+<form method="post" name="delpost" action="topicadmin.php?action=delpost&amp;fid=5&amp;tid=4146&amp;page=1">
+<input type="hidden" name="formhash" value="b7cc92b9">
+<div class="spaceborder" style="width: 98%; margin-bottom: 4px;
+ border-top: none
+">
+<table cellspacing="0" cellpadding="4" width="100%" align="center" class="t_row">
+<tr style="height: 100%">
+<td width="18%" valign="top" class="t_user"> <a href="viewpro.php?uid=12422" target="_blank" class="bold">tyywm</a>
+<br><div class="smalltxt">
+初级会员<br>
+<img src="images/default/star_level2.gif" alt="Rank: 2" /><br>
+<br>
+<br><br>
+UID 12422<br>
+精华 
+0<br>
+积分 94<br>
+帖子 47<br>
+阅读权限 10<br>
+注册 2007-11-17<br>
+状态 离线
+</div>
+</td>
+<td width="82%" valign="top" style="padding: 0px">
+<table border="0" cellspacing="0" cellpadding="4" class="t_msg">
+<tr><td>
+<div>
+<div class="right t_number"><a href="###" class="bold" onclick="window.clipboardData.setData('text','http://www.lpi-china.org/bbs/viewthread.php?tid=4146&amp;page=1#pid5698')">#1</a></div>
+<div style="padding-top: 4px;">
+发表于 2007-11-20 14:25&nbsp;
+<a href="viewpro.php?uid=12422">资料</a>
+<a href="pm.php?action=send&amp;uid=12422" target="_blank">短消息</a>&nbsp;
+</div></div>
+</td></tr>
+<tr><td valign="top" class="line" height="100%" style="padding-top: 10px;">
+<a name="pid5698" href="misc.php?action=viewratings&amp;tid=4146&amp;pid=5698" title="评分 0"></a>
+<span class="bold">linux2.6.22下usb驱动完成情况及问题解决</span><br><br>
+<div style="font-size: 12px">2007.11.16<br />
+1.在kernel启动是出现如下问题：<br />
+mount: mounting tmpfs on /dev failed<br />
+解决方案如下，<br />
+File systems ---&gt;<br />
+Pseudo filesystems ---&gt;<br />
+Virtual memory file system support (former shm fs)<br />
+<br />
+2.另附上vivi启动参数，最近一直用nfs，转换着麻烦，先记下来cp<br />
+设置从flash 启动：<br />
+param set linux_cmd_line &quot;noinitrd init=/linuxrc console=ttySAC0 root=/dev/mtdblock3&quot;<br />
+设置从nfs启动：<br />
+param set linux_cmd_line &quot;noinitrd init=/linuxrc console=ttySAC0 root=/dev/nfs nfsroot=192.192.192.xx:/srv/nfs/rootfs ip=192.192.192.200:192.192.192.xx:192.192.192.xx:255.255.255.0::eth0:off&quot;<br />
+设置从ramdisk启动：<br />
+param set linux_cmd_line &quot;console=ttySAC0 initrd=0x30800000,0x400000 root=/dev/ram&quot;。<br />
+<br />
+3.测试通过了usb device的测试，可以进行从设备操作，对usb device进行模块加载操作，方法如下：（两个.ko文件为usb驱动的模块文件，需要加载后使用）<br />
+$ insmod s3c2410_udc.ko<br />
+$ insmod g_file_storage.ko file=/dev/mtdblock5 stall=0 removable=1<br />
+<br />
+4、usb从部分添加内容：<br />
+4.1.usb初始化为从设备时配置：<br />
++++ linux-2.6.22/arch/arm/mach-s3c2410/mach-f2410.c 2007-11-15 <br />
+&amp;s3c_device_i2c,<br />
+&amp;s3c_device_iis,<br />
+&amp;s3c_device_nand,<br />
++/* add by feng */<br />
++ &amp;s3c_device_usbgadget,<br />
+};<br />
+/* USB */<br />
+s3c_device_usb.dev.platform_data = &amp;usb_s3c2410_info; <br />
+s3c2410_modify_misccr(S3C2410_MISCCR_USBSUSPND0 |<br />
+- S3C2410_MISCCR_USBSUSPND1, 0x8);<br />
++ S3C2410_MISCCR_USBSUSPND1 |<br />
++ S3C2410_MISCCR_USBHOST, 0x0);<br />
+<br />
+4.2.添加udc驱动：<br />
++++ linux-2.6.22/drivers/usb/gadget/s3c2410-udc.c 2007-11-15 17:38:17.000000000 +0800<br />
++++ linux-2.6.22/drivers/usb/gadget/s3c2410-udc.h 2007-11-15 17:38:31.000000000 +0800<br />
++++ linux-2.6.22/include/asm/arch-s3c2410/regs-udc.h 2007-11-16 01:22:25.000000000 +0800<br />
+<br />
+4.3.在kconfig中添加udc选项支持：<br />
++++ linux-2.6.22/drivers/usb/gadget/Kconfig 2007-11-15 <br />
+Select this only if your OMAP board has a Mini-AB connector.<br />
++# add by feng <br />
++config USB_GADGET_S3C2410<br />
++ boolean &quot;S3C2410&quot;<br />
++ depends on ARCH_S3C2410<br />
++ help<br />
++ Samsung's S3C2410 is an ARM-4 processor with an integrated<br />
++ full speed USB 1.1 device controller.<br />
++ It has 4 configurable endpoints, as well as endpoint<br />
++ zero (for control transfers).<br />
++<br />
++config USB_S3C2410<br />
++ tristate<br />
++ depends on USB_GADGET_S3C2410<br />
++ default USB_GADGET<br />
++ select USB_GADGET_SELECTED<br />
++<br />
++config USB_S3C2410_DEBUG<br />
++ boolean &quot;S3C2410 udc debug messages&quot;<br />
++ depends on USB_GADGET_S3C2410<br />
++#end add<br />
++<br />
+config USB_GADGET_AT91<br />
+boolean &quot;AT91 USB Device Port&quot;<br />
+4.4.在makefile中添加udc选项支持：<br />
++++ linux-2.6.22/drivers/usb/gadget/Makefile 2007-11-15 17:01:04.000000000 +0800<br />
+obj-$(CONFIG_USB_FSL_USB2) += fsl_usb2_udc.o<br />
++#add by feng<br />
++obj-$(CONFIG_USB_S3C2410) += s3c2410-udc.o<br />
+<br />
+2007.11.15<br />
+一、学习ctags查找源码的用法，超级方便<br />
+步骤：<br />
+1，现在源码目录中运行指令<br />
+$ ctags –R * ($ 为Linux系统Shell提示符)<br />
+2，用vi进入编辑环境，<br />
+Ctrl + ]查找查询<br />
+Ctrl + T返回上一步<br />
+:ta XX 查找文件XX<br />
+二、usb从部分(以后添加)<br />
+1，添加udc驱动：<br />
+<br />
+在kconfig中添加udc支持：<br />
+<br />
+在makefile中添加udc支持：<br />
+<br />
+2.配置<br />
+Device Drivers ---&gt;<br />
+USB Gadget Support ---&gt;<br />
+Support for USB Gadgets<br />
+USB Peripheral Controller (S3C2410) ---&gt; <br />
+(X) S3C2410<br />
+File-backed Storage Gadget<br />
+2007.11.14<br />
+参考luofuchong的帖子，修改文件，并修改mach-f2410.c文件，使其支持usb的初始化<br />
+在mach-f2410.c添加如下：<br />
+<br />
+#include <br />
+#include <br />
+#include <br />
+#include <br />
+#include <br />
+<br />
+/* USB */<br />
+static struct s3c2410_hcd_info usb_s3c2410_info = {<br />
+.port[0] = {<br />
+.flags = S3C_HCDFLG_USED<br />
+},<br />
+.port[1] = {<br />
+.flags = S3C_HCDFLG_USED<br />
+}<br />
+}; <br />
+<br />
+int __init s3c2410_init_usb(void)<br />
+{<br />
+unsigned long upllvalue;<br />
+printk(&quot;USB Control, (c) 2006 pc104\n&quot;); <br />
+s3c_device_usb.dev.platform_data = &amp;usb_s3c2410_info;<br />
+<br />
+s3c2410_modify_misccr(S3C2410_MISCCR_USBSUSPND0 |<br />
+S3C2410_MISCCR_USBSUSPND1, 0x8);<br />
+<br />
+upllvalue = (0x78&lt;&lt;12)|(0x02&lt;&lt;4)|(0x03);<br />
+while(upllvalue!=__raw_readl(S3C2410_UPLLCON))<br />
+{<br />
+__raw_writel(upllvalue,S3C2410_UPLLCON);<br />
+mdelay(1);<br />
+}<br />
+return 0;<br />
+}<br />
+<br />
+static void __init f2410_init_machine(void)<br />
+{<br />
+s3c_device_nand.dev.platform_data = &amp;sbc2410x_nand_info;<br />
+platform_add_devices(f2410_devices, ARRAY_SIZE(f2410_devices));<br />
+s3c2410_init_usb();<br />
+}<br />
+<br />
+下面为配置：<br />
+<br />
+下面为拷贝luofuchong的 linux-2.6.14下USB驱动移植心得，主要根据2.6.22的核改了一下，使其可以支持u盘。<br />
+/*****************************************from luofuchong**********************************/<br />
+１、让内核支持热插拔 <br />
+│ General setup ---&gt; <br />
+Configure standard kernel features (for small systems) ---&gt; <br />
+Support for hot-pluggable devices (NEW) <br />
+2.USB驱动设置<br />
+Device Drivers ---&gt; <br />
+Generic Driver Options ---&gt; <br />
+&lt;*&gt; Userspace firmware loading support<br />
+Block devices ---&gt;<br />
+&lt;*&gt; Low Performance USB Block driver<br />
+SCSI device support ---&gt;<br />
+&lt;*&gt; SCSI generic support<br />
+Probe all LUNs on each SCSI device <br />
+USB support ---&gt; <br />
+&lt;*&gt; Support for Host-side USB <br />
+USB device filesystem<br />
+&lt;*&gt; OHCI HCD support <br />
+&lt;*&gt; USB Mass Storage support<br />
+USB Monitor <br />
+３、加入了MSDOS fs和VFAT fs的支持。<br />
+<br />
+File systems ---&gt; <br />
+DOS/FAT/NT Filesystems ---&gt; <br />
+&lt;*&gt; MSDOS fs support <br />
+&lt;*&gt; VFAT (Windows-95) fs support <br />
+(936) Default codepage for FAT <br />
+(cp936) Default iocharset for FAT<br />
+<br />
+File systems ---&gt;<br />
+Partition Types ---&gt; <br />
+PC BIOS (MSDOS partition tables) support<br />
+<br />
+4. 加入中文字体库（可惜在我的板上还是没能正常显示中文~_~，知道的朋友麻烦告诉我一声，大家一起探讨）<br />
+Native Language Support ---&gt; <br />
+&lt;*&gt; Simplified Chinese charset (CP936, GB2312) <br />
+&lt;*&gt; NLS UTF8 <br />
+<br />
+5、另外，如果想让内核把它当成SCSI设备来处理的话，只要把上面：<br />
+Device Drivers ---&gt; <br />
+Block devices ---&gt; <br />
+&lt;*&gt; Low Performance USB Block driver<br />
+的 Low Performance USB Block driver这个选项去掉，然后把：<br />
+Device Drivers ---&gt;<br />
+SCSI device support ---&gt; <br />
+&lt;*&gt;SCSI disk support<br />
+的SCSI disk support这个选项选上，重新编译内核就行。<br />
+/***************************************end from*********************************************/<br />
+2007.11.13</div>
+</td></tr>
+<tr><td align="right">
+<a href="###" onclick="scroll(0,0)"><img src="images/default/top.gif" border="0" alt="顶部" /></a>
+</td></tr>
+<tr class="t_infoline"><td class="line" style="padding: 5px">[广告] <script type="text/javascript"><!--
+google_ad_client = "pub-0839384527332732";
+google_ad_width = 728;
+google_ad_height = 90;
+google_ad_format = "728x90_as";
+google_ad_type = "text_image";
+google_ad_channel = "";
+//-->
+</script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></td></tr>
+</table></td></tr></table></div>
+<div class="spaceborder" style="width: 98%; margin-bottom: 4px;
+">
+<table cellspacing="0" cellpadding="4" width="100%" align="center" class="t_row">
+<tr style="height: 100%">
+<td width="18%" valign="top" class="t_user"> <a name="lastpost"></a><a href="viewpro.php?uid=20240" target="_blank" class="bold">hao5503</a>
+<br><div class="smalltxt">
+新手上路<br>
+<img src="images/default/star_level1.gif" alt="Rank: 1" /><br>
+<br>
+<br><br>
+UID 20240<br>
+精华 
+0<br>
+积分 11<br>
+帖子 11<br>
+阅读权限 1<br>
+注册 2008-6-14<br>
+状态 离线
+</div>
+</td>
+<td width="82%" valign="top" style="padding: 0px">
+<table border="0" cellspacing="0" cellpadding="4" class="t_msg">
+<tr><td>
+<div>
+<div class="right t_number"><a href="###" class="bold" onclick="window.clipboardData.setData('text','http://www.lpi-china.org/bbs/viewthread.php?tid=4146&amp;page=1#pid6631')">#2</a></div>
+<div style="padding-top: 4px;">
+发表于 2008-6-20 05:50&nbsp;
+<a href="viewpro.php?uid=20240">资料</a>
+<a href="http://www.fsifu.com" target="_blank">主页</a>
+<a href="pm.php?action=send&amp;uid=20240" target="_blank">短消息</a>&nbsp;
+<a href="http://wpa.qq.com/msgrd?V=1&amp;Uin=37528&amp;Site=开源快讯论坛&amp;Menu=yes" target="_blank"><img src="http://wpa.qq.com/pa?p=1:37528:4"  border="0" alt="QQ" /></a>
+</div></div>
+</td></tr>
+<tr><td valign="top" class="line" height="100%" style="padding-top: 10px;">
+<a name="pid6631" href="misc.php?action=viewratings&amp;tid=4146&amp;pid=6631" title="评分 0"></a>
+<span class="bold">再次支持</span><br><br>
+<div style="font-size: 12px"><font color="black">楼主，你写得实在是太好了。我惟一能做的，就只有把这个帖子顶上</font><a href="http://chuanqishijie.fsifu.com/" target="_blank"><font color="black">传奇世界私服</font></a><font color="black">去这件事了。楼主的帖子实在是写得太好了。文笔流畅，修辞得体，深得</font><a href="http://www.igxy.com/game/runescape/" target="_blank"><font color="black">runescape</font></a><font color="black">魏晋诸朝遗风，更将唐风宋骨发扬得入木三分，能在有生之年看见楼主的这个帖子。实在是我三生之幸啊。看完楼主的这个帖子之后，我竟产生出一种无以名之的悲痛感——啊，这么好的帖子，如果将来我再也看不到了，那我该怎么办？那我该怎么办？直到我毫不犹豫地把楼主的这个帖子收藏了，我内心的那种激动才逐渐平静下来。可是我立刻想到，这么好的帖子，倘若别人看不到</font><a href="http://chuanqi.fsifu.com/" target="_blank"><font color="black">传奇私服</font></a><font color="black">，那么不是浪费楼主的心血吗？<br />
+&nbsp; &nbsp; 经过痛苦的思想斗争，我终于下定决心，牺牲小我，奉献大我。我要拿出这帖子奉献给世人赏阅，我要把这个帖子一直往上顶，往上顶！顶到所有人</font><a href="http://wanmeishijie.fsifu.com/" target="_blank"><font color="black">完美世界私服</font></a><font color="black">都看到为止！在遇到你之前，我对人世间是否有真正的圣人是怀疑的；而现在，我终于相信了！我曾经忘情于两汉的歌赋，我曾经惊讶于李杜的诗才，我曾经流连于宋元的词曲。但现在，我才知道我有多么浅薄！楼主，你的高尚情操太让人感动了。在现在这样一个物欲横流的金钱社会里，竟然还能见到楼主这样的性情中人，无疑是我这辈子最大的幸运。 让我深深感受到了人性的伟大。楼主的帖子，就好比黑暗中</font><a href="http://moyu.fsifu.com/" target="_blank"><font color="black">魔域私服</font></a><font color="black">刺裂夜空的闪电，又好比撕开乌云的阳光，一瞬间就让我如饮甘露，让我明白了永恒的真理在这个世界上是真实存在着的。只有楼主这样具备广阔胸怀和完整知识体系的人，才能作为这真理的惟一引言者。</font></div>
+</td></tr>
+<tr><td align="right">
+<a href="###" onclick="scroll(0,0)"><img src="images/default/top.gif" border="0" alt="顶部" /></a>
+</td></tr>
+</table></td></tr></table></div>
+</form>
+</div>
+<script type="text/javascript">
+function setanswer(pid){
+if(confirm("您确认要把该回复选为“最佳答案”吗？")){
+document.delpost.action='misc.php?action=bestanswer&tid=4146&pid=' + pid + '&bestanswersubmit=yes';
+document.delpost.submit();
+}
+}
+</script>
+<div class="maintable" style="clear:both">
+<table width="98%" cellspacing="0" cellpadding="0" align="center">
+<tr><td valign="top"></td><td width="40%" align="right">
+<div class="right">&nbsp;<a href="post.php?action=reply&amp;fid=5&amp;tid=4146&amp;extra="><img src="images/default/reply.gif" border="0" alt="" /></a></div>
+<div id="newspecialfooter" class="right"><a href="post.php?action=newthread&amp;fid=5&amp;extra="><img src="images/default/newtopic.gif" border="0" alt="" /></a><a href="###"><img src="images/default/newspecial.gif" border="0" alt="" /></a><script type="text/javascript">menuregister(false, "newspecialfooter", true)</script></div>
+<div class="popupmenu_popup newspecialmenu" id="newspecialfooter_menu" style="display: none">
+<table cellpadding="4" cellspacing="0" border="0" width="100%">
+<tr><td class="popupmenu_option"><div class="newspecial"><a href="post.php?action=newthread&amp;fid=5&amp;extra=&amp;poll=yes">投票</a></div></td></tr>
+<tr><td class="popupmenu_option"><div class="newspecial"><a href="post.php?action=newthread&amp;fid=5&amp;extra=&amp;trade=yes">交易</a></div></td></tr>
+<tr><td class="popupmenu_option"><div class="newspecial"><a href="post.php?action=newthread&amp;fid=5&amp;extra=&amp;reward=yes">悬赏</a></div></td></tr>
+<tr><td class="popupmenu_option"><div class="newspecial"><a href="post.php?action=newthread&amp;fid=5&amp;extra=&amp;activity=yes">活动</a></div></td></tr>
+</table></div>
+</table><br></div>
+<div class="popupmenu_popup" id="forumlist_menu" style="display: none">
+<table cellpadding="4" cellspacing="0" border="0">
+<tr><td class="popupmenu_option"><a href="index.php" class="nav">开源快讯论坛</a></td></tr>
+<tr><td class="popupmenu_option"><a href="index.php?gid=8">◆ 站务与论坛公告 ◆</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=9">&nbsp; &gt; ◇ 论坛事务公告区</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=10">&nbsp; &gt; ◇留言板</a></td></tr><tr><td class="popupmenu_option"><a href="index.php?gid=14">  ◆ Linux培训/认证专区 ◆</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=1">&nbsp; &gt; ◇Linux培训/认证</a></td></tr><tr><td class="popupmenu_option"><a href="index.php?gid=15">◆ LINUX讨论区 ◆</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=2">&nbsp; &gt; ◇Linux新手入门</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=13">&nbsp; &gt; ◇linux资源区</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=3">&nbsp; &gt; ◇Linux应用技术交流区</a></td></tr><tr><td class="popupmenu_option"><a class="bold" href="forumdisplay.php?fid=5">&nbsp; &gt; ◇Linux程序设计交流区</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=6">&nbsp; &gt; ◇Linux安全技术交流区</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=4">&nbsp; &gt; ◇Linux数据库技术交流区</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=33">&nbsp; &gt; ◇高性能集群</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=7">&nbsp; &gt; ◇新闻动态</a></td></tr><tr><td class="popupmenu_option"><a href="index.php?gid=35">◆ 吉林大学专区◆</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=36">&nbsp; &gt; ◇6-Winners</a></td></tr><tr><td class="popupmenu_option"><a href="index.php?gid=22">◆ 培训及商业信息专区◆</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=23">&nbsp; &gt; ◇Linux培训和商业信息</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=37">&nbsp; &gt; 人才招聘专栏</a></td></tr><tr><td class="popupmenu_option"><a href="index.php?gid=16">  ◆ 娱乐休闲 ◆</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=34">&nbsp; &gt; ◇跳蚤闲置物品区</a></td></tr><tr><td class="popupmenu_option"><a href="forumdisplay.php?fid=18">&nbsp; &gt; ◇ 轻松一刻</a></td></tr></table></div>
+<br>
+<div align="center" style="clear: both;"><embed width="461" height="110" src="http://www.flashempire.com/myfe/upload/flash/155/1542729_1182663827.swf" type="application/x-shockwave-flash"></embed></div><br><br>
+</div>
+
+<div class="maintable" style="color: #666; clear: both;">
+当前时区 GMT+8, 现在时间是 2008-6-22 22:39<br><br></div>
+
+<div class="footerline"><div><a href="#top"><img border="0" src="images/default/footer_top.gif" alt="" /></a></div></div>
+<table cellspacing="0" cellpadding="0" border="0" width="100%" class="altbg1" style="padding: 5px 0px;">
+<tr><td width="80" style="padding-left: 30px">
+<a href="http://www.discuz.net" target="_blank"><img src="images/default/discuz_icon.gif" border="0" alt="" /></a>&nbsp;&nbsp;&nbsp;
+<a href="http://www.alipay.com" target="_blank"><img src="images/default/alipay_icon.gif" border="0" alt="&#26412;&#35770;&#22363;&#25903;&#20184;&#24179;&#21488;&#30001;&#25903;&#20184;&#23453;&#25552;&#20379;
+&#25658;&#25163;&#25171;&#36896;&#23433;&#20840;&#35802;&#20449;&#30340;&#20132;&#26131;&#31038;&#21306;" /></a></td>
+<td style="font-size: 11px">
+Powered by <a href="http://www.discuz.net" target="_blank" style="color: blue"><b>Discuz!</b></a> <b style="color:#68d300">5.0.0</b>
+&nbsp;&copy; 2001-2006 <a href="http://www.comsenz.com" target="_blank">Comsenz Inc.</a>
+<br>Processed in 0.035289 second(s), 8 queries
+</td>
+<td valign="bottom" align="right" style="padding-right: 30px">
+<div class="right" style="font: 9px Arial; position: relative; top: -5px; padding-right: 7px; color: #FFFFFF"><a href="#top">TOP</a></div><br>
+<a href="member.php?action=clearcookies&amp;formhash=b7cc92b9">清除 Cookies</a> - <a href="mailto:wangyan3265@163.com">联系我们</a> - <a href="http://www.linuxexpress.com.cn" target="_blank">开源快讯</a>
+ - <a href="archiver/" target="_blank">Archiver</a>
+ - <a href="wap/" target="_blank">WAP</a>
+<select onchange="if(this.options[this.selectedIndex].value != '') {
+var thisurl = document.URL.replace(/[&?]styleid=.+?&amp;sid=.+?$/i, '');
+window.location=(thisurl.replace(/\#.+$/, '')+(thisurl.match(/\?/) ? '&amp;' : '?')+'styleid='+this.options[this.selectedIndex].value+'&amp;sid=zTlfHM') }">
+<option value="">界面风格</option>
+<option value="">----------</option>
+<option value="2">Discuz! 5 Default</option>
+</select>
+</td></tr></table>
+<a name="bottom"></a>
+<div class="mainborder"></div>
+</center>
+<div class="headermenu_popup" id="memcp_menu" style="display: none">
+<table cellpadding="4" cellspacing="0" border="0">
+<tr><td class="popupmenu_option"><a href="memcp.php">控制面板首页</a></td></tr><tr><td class="popupmenu_option"><a href="memcp.php?action=profile">编辑个人资料</a></td></tr><tr><td class="popupmenu_option"><a href="memcp.php?action=credits">积分交易</a></td></tr><tr><td class="popupmenu_option"><a href="memcp.php?action=usergroups">公众用户组</a></td></tr><tr><td class="popupmenu_option"><a href="memcp.php?action=buddylist">好友列表</a></td></tr>
+</table></div>
+<div class="headermenu_popup" id="stats_menu" style="display: none">
+<table cellpadding="4" cellspacing="0" border="0">
+<tr><td class="popupmenu_option"><a href="stats.php">基本概况</a></td></tr>
+<tr><td class="popupmenu_option"><a href="stats.php?type=views">流量统计</a></td></tr><tr><td class="popupmenu_option"><a href="stats.php?type=agent">客户软件</a></td></tr><tr><td class="popupmenu_option"><a href="stats.php?type=posts">发帖量记录</a></td></tr>
+<tr><td class="popupmenu_option"><a href="stats.php?type=forumsrank">论坛排行</a></td></tr><tr><td class="popupmenu_option"><a href="stats.php?type=threadsrank">主题排行</a></td></tr><tr><td class="popupmenu_option"><a href="stats.php?type=postsrank">发帖排行</a></td></tr><tr><td class="popupmenu_option"><a href="stats.php?type=creditsrank">积分排行</a></td></tr>
+<tr><td class="popupmenu_option"><a href="stats.php?type=onlinetime">在线时间</a></td></tr>
+<tr><td class="popupmenu_option"><a href="stats.php?type=team">管理团队</a></td></tr>
+<tr><td class="popupmenu_option"><a href="stats.php?type=modworks">管理统计</a></td></tr>
+</table></div>
+</body></html>

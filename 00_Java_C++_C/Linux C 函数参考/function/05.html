@@ -1,0 +1,2044 @@
+<html>
+<head>
+<title>Untitled Document</title>
+</head>
+<body>
+<table>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc41></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      bcmp（比较内存内容） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcmp，strcasecmp，strcmp，strcoll，strncmp，strncasecmp<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int bcmp ( const void *s1,const 
+      void * s2,int n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcmp()用来比较s1和s2所指的内存区间前n个字节，若参数n为0，则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数s1 和s2 所指的内存内容都完全相同则返回0 值，否则返回非零值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 建议使用memcmp()取代。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考memcmp()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc42></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      bcopy（拷贝内存内容） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memccpy，memcpy，memmove，strcpy，ctrncpy<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void bcopy ( const void *src,void 
+      *dest ,int n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcopy()与memcpy()一样都是用来拷贝src所指的内存内容前n个字节到dest所指的地址，不过参数src与dest在传给函数时是相反的位置。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 建议使用memcpy()取代<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char dest[30]=”string(a)”;<br>
+      char src[30]=”string\0string”;<br>
+      int i;<br>
+      bcopy(src,dest,30);/* src指针放在前*/<br>
+      printf(bcopy(): “)<br>
+      for(i=0;i&lt;30;i++)<br>
+      printf(“%c”,dest[i]);<br>
+      memcpy(dest src,30); /*dest指针放在钱*/<br>
+      printf(‘\nmemcpy() : “);<br>
+      for(i=0;i&lt;30;i++)<br>
+      printf(“%c”,dest[i]);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcopy() : string string<br>
+      memcpy() :string sring<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc43></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      bzero（将一段内存内容全清为零） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memset，swab<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void bzero(void *s,int n)；<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bzero()会将参数s所指的内存区域前n个字节，全部设为零值。相当于调用memset((void*)s,0,size_tn);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 建议使用memset取代<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考memset()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc44></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      index（查找字符串中第一个出现的指定字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> rindex，srechr，strrchr<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char * index( const char *s, int 
+      c);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> index()用来找出参数s字符串中第一个出现的参数c地址，然后将该字符出现的地址返回。字符串结束字符(NULL)也视为字符串一部分。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 如果找到指定的字符则返回该字符所在地址，否则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *s =”0123456789012345678901234567890”;<br>
+      char *p;<br>
+      p =index(s,’5’);<br>
+      printf(%s\n”,p);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 5.68E+25<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc45></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      memccpy（拷贝内存内容） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcopy，memcpy，memmove，strcpy，strncpy<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void * memccpy(void *dest, const 
+      void * src, int c,size_t n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memccpy()用来拷贝src所指的内存内容前n个字节到dest所指的地址上。与memcpy()不同的是，memccpy()会在复制时检查参数c是否出现，若是则返回dest中值为c的下一个字节地址。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回指向dest中值为c的下一个字节指针。返回值为0表示在src所指内存前n个字节中没有值为c的字节。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char a[]="string[a]";<br>
+      char b[]="string(b)";<br>
+      memccpy(a,b,'B',sizeof(b));<br>
+      printf("memccpy():%s\n",a);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memccpy():string(b)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc46></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      memchr（在某一内存范围中查找一特定字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> index，rindex，strchr，strpbrk，strrchr，strsep，strspn，strstr<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void * memchr(const void *s,int 
+      c,size_t n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memchr()从头开始搜寻s所指的内存内容前n个字节，直到发现第一个值为c的字节，则返回指向该字节的指针。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 如果找到指定的字节则返回该字节的指针，否则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *s="0123456789012345678901234567890";<br>
+      char *p;<br>
+      p=memchr(s,'5',10);<br>
+      printf("%s\n",p);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 5.68E+25<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc47></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      memcmp（比较内存内容） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcmp，strcasecmp，strcmp，strcoll，strncmp，strncasecmp<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int memcmp (const void *s1,const 
+      void *s2,size_t n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memcmp()用来比较s1和s2所指的内存区间前n个字符。字符串大小的比较是以ASCII码表上的顺序来决定，次顺序亦为字符的值。memcmp()首先将s1第一个字符值减去s2第一个字符的值，若差为0则再继续比较下个字符，若差值不为0则将差值返回。例如，字符串"Ac"和"ba"比较则会返回字符'A'(65)和'b'(98)的差值(－33)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数s1和s2所指的内存内容都完全相同则返回0值。s1若大于s2则返回大于0的值。s1若小于s2则返回小于0的值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *a ="aBcDeF";<br>
+      char *b="AbCdEf";<br>
+      char *c="aacdef";<br>
+      char *d="aBcDeF";<br>
+      printf("memcmp(a,b):%d\n",memcmp((void*)a,(void*) b,6));<br>
+      printf("memcmp(a,c):%d\n",memcmp((void*)a,(void*) c,6));<br>
+      printf("memcmp(a,d):%d\n",memcmp((void*)a,(void*) d,6));<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memcmp(a,b):1 /*字符串a&gt;字符串b，返回1*/<br>
+      memcmp(a,c):-1 /* 字符串a&lt;字符串c,返回－1*/<br>
+      memcmp(a,d):0 /*字符串a＝字符串d，返回0*/<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc48></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      memcpy（拷贝内存内容） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcopy，memccpy，memcpy，memmove，strcpy，strncpy<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void * memcpy (void * dest ,const 
+      void *src, size_t n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memcpy()用来拷贝src所指的内存内容前n个字节到dest所指的内存地址上。与strcpy()不同的是，memcpy()会完整的复制n个字节，不会因为遇到字符串结束'\0'而结束。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回指向dest的指针。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 指针src和dest所指的内存区域不可重叠。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char a[30]="string (a)";<br>
+      char b[30]="string\0string";<br>
+      int i;<br>
+      strcpy(a,b);<br>
+      printf("strcpy():");<br>
+      for(i=0;i&lt;30;i++)<br>
+      printf("%c",a[i]);<br>
+      memcpy(a,b,30);<br>
+      printf("\nmemcpy() :");<br>
+      for(i=0;i&lt;30;i++)<br>
+      printf("%c",a[i]);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcpy() : string a )<br>
+      memcpy() : string string<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc49></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      memmove（拷贝内存内容） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcopy，memccpy，memcpy，strcpy，strncpy<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void * memmove(void *dest,const 
+      void *src,size_t n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memmove()与memcpy()一样都是用来拷贝src所指的内存内容前n个字节到dest所指的地址上。不同的是，当src和dest所指的内存区域重叠时，memmove()仍然可以正确的处理，不过执行效率上会比使用memcpy()略慢些。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回指向dest的指针。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 指针src和dest所指的内存区域可以重叠。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考memcpy()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc50></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      memset（将一段内存空间填入某值） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bzero，swab<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void * memset (void *s ,int c, 
+      size_t n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> memset()会将参数s所指的内存区域前n个字节以参数c填入，然后返回指向s的指针。在编写程序时，若需要将某一数组作初始化，memset()会相当方便。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回指向s的指针。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参数c虽声明为int， 但必须是unsigned char 
+      ，所以范围在0到255之间。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char s[30];<br>
+      memset (s,'A',sizeof(s));<br>
+      s[30]='\0';<br>
+      printf("%s\n",s);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc51></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      rindex（查找字符串中最后一个出现的指定字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> index，memchr，strchr，strrchr<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char * rindex( const char *s,int 
+      c);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> rindex()用来找出参数s字符串中最后一个出现的参数c地址，然后将该字符出现的地址返回。字符串结束字符(NULL)也视为字符串一部分。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 如果找到指定的字符则返回该字符所在的地址，否则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h&gt;<br>
+      mian()<br>
+      {<br>
+      char *s ="0123456789012345678901234567890";<br>
+      char *p;<br>
+      p=rindex(s,'5');<br>
+      printf("%s\n",p);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 567890<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc52></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strcasecmp（忽略大小写比较字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcmp，memcmp，strcmp，strcoll，strncmp<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int strcasecmp (const char *s1, 
+      const char *s2);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcasecmp()用来比较参数s1和s2字符串，比较时会自动忽略大小写的差异。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数s1和s2字符串相同则返回0。s1长度大于s2长度则返回大于0 
+      的值，s1 长度若小于s2 长度则返回小于0的值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *a="aBcDeF";<br>
+      char *b="AbCdEf";<br>
+      if(!strcasecmp(a,b))<br>
+      printf("%s=%s\n",a,b);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> aBcDeF=AbCdEf<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc53></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strcat（连接两字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcopy，memccpy，memcpy，strcpy，strncpy<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char *strcat (char *dest,const 
+      char *src);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcat()会将参数src字符串拷贝到参数dest所指的字符串尾。第一个参数dest要有足够的空间来容纳要拷贝的字符串。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回参数dest的字符串起始地址<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h.&gt;<br>
+      main()<br>
+      {<br>
+      char a[30]="string(1)";<br>
+      char b[]="string(2)";<br>
+      printf("before strcat() : %s\n",a);<br>
+      printf("after strcat() : %s\n",strcat(a,b));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> before strcat () : string(1)<br>
+      after strcat () : string(1)string(2)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc54></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strchr（查找字符串中第一个出现的指定字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> index，memchr，rinex，strbrk，strsep，strspn，strstr，strtok<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char * strchr (const char *s,int 
+      c);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strchr()用来找出参数s字符串中第一个出现的参数c地址，然后将该字符出现的地址返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 如果找到指定的字符则返回该字符所在地址，否则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *s=0123456789012345678901234567890”;<br>
+      char *p;<br>
+      p=strchr(s,'5');<br>
+      printf("%s\n",p);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 5.68E+25<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc55></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strcmp（比较字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcmp，memcmp，strcasecmp，strncasecmp，strcoll<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int strcmp(const char *s1,const 
+      char *s2);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcmp()用来比较参数s1和s2字符串。字符串大小的比较是以ASCII 
+      码表上的顺序来决定，此顺序亦为字符的值。strcmp()首先将s1第一个字符值减去s2第一个字符值，若差值为0则再继续比较下个字符，若差值不为0则将差值返回。例如字符串"Ac"和"ba"比较则会返回字符"A"(65)和'b'(98)的差值(－33)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数s1和s2字符串相同则返回0。s1若大于s2则返回大于0的值。s1若小于s2则返回小于0 
+      的值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *a="aBcDeF";<br>
+      char *b="AbCdEf";<br>
+      char *c="aacdef";<br>
+      char *d="aBcDeF";<br>
+      printf("strcmp(a,b) : %d\n",strcmp(a,b));<br>
+      printf("strcmp(a,c) : %d\n",strcmp(a,c));<br>
+      printf("strcmp(a,d) : %d\n",strcmp(a,d));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcmp(a,b) : 32<br>
+      strcmp(a,c) :-31<br>
+      strcmp(a,d) : 0<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc56></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strcoll（采用目前区域的字符排列次序来比较字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcmp，bcmp，memcmp，strcasecmp，strncasecmp<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int strcoll( const char *s1, const 
+      char *s2);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcoll()会依环境变量LC_COLLATE所指定的文字排列次序来比较s1和s2 
+      字符串。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数s1和s2字符串相同则返回0。s1若大于s2则返回大于0的值。s1若小于s2则返回小于0 
+      的值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若LC_COLLATE为"POSIX"或"C"，则strcoll()与strcmp()作用完全相同。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考strcmp()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc57></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strcpy（拷贝字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcopy，memcpy，memccpy，memmove<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char *strcpy(char *dest,const 
+      char *src);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcpy()会将参数src字符串拷贝至参数dest所指的地址。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回参数dest的字符串起始地址。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 如果参数dest所指的内存空间不够大，可能会造成缓冲溢出(buffer 
+      Overflow)的错误情况，在编写程序时请特别留意，或者用strncpy()来取代。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char a[30]="string(1)";<br>
+      char b[]="string(2)";<br>
+      printf("before strcpy() :%s\n",a);<br>
+      printf("after strcpy() :%s\n",strcpy(a,b));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> before strcpy() :string(1)<br>
+      after strcpy() :string(2)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc58></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strcspn（返回字符串中连续不含指定字符串内容的字符数） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strspn<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #inclued&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> size_t strcspn ( const char *s,const 
+      char * reject);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcspn()从参数s字符串的开头计算连续的字符，而这些字符都完全不在参数reject 
+      所指的字符串中。简单地说，若strcspn()返回的数值为n，则代表字符串s开头连续有n个字符都不含字符串reject内的字符。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回字符串s开头连续不含字符串reject内的字符数目。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *str="Linux was first developed for 386/486-based pcs.";<br>
+      printf("%d\n",strcspn(str," "));<br>
+      printf("%d\n",strcspn(str,"/-"));<br>
+      printf("%d\n",strcspn(str,"1234567890"));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 5 /*只计算到“ ”的出现，所以返回“Linux”的长度*/<br>
+      33 /*计算到出现“/”或“－”，所以返回到“6”的长度*/<br>
+      30 /* 计算到出现数字字符为止，所以返回“3”出现前的长度*/<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc59></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strdup（复制字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> calloc，malloc，realloc，free<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char * strdup( const char *s);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strdup()会先用maolloc()配置与参数s字符串相同的空间大小，然后将参数s字符串的内容复制到该内存地址，然后把该地址返回。该地址最后可以利用free()来释放。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回一字符串指针，该指针指向复制后的新字符串地址。若返回NULL表示内存不足。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char a[]="strdup";<br>
+      char *b;<br>
+      b=strdup(a);<br>
+      printf("b[ ]=\"%s\"\n",b);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> b[ ]="strdup"<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc60></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strlen（返回字符串长度） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> size_t strlen (const char *s);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strlen()用来计算指定的字符串s的长度，不包括结束字符"\0"。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回字符串s的字符数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /*取得字符串str的长度*/<br>
+      #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *str = "12345678";<br>
+      printf("str length = %d\n", strlen(str));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> str length = 8<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc61></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strncasecmp（忽略大小写比较字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcmp，memcmp，strcmp，strcoll，strncmp<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int strncasecmp(const char *s1,const 
+      char *s2,size_t n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strncasecmp()用来比较参数s1和s2字符串前n个字符，比较时会自动忽略大小写的差异。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 若参数s1和s2 字符串相同则返回0。s1 若大于s2则返回大于0的值，s1若小于s2则返回小于0 
+      的值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *a="aBcDeF";<br>
+      char *b="AbCdEf";<br>
+      if(!strncasecmp(a,b))<br>
+      printf("%s =%s\n",a,b);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> aBcDef=AbCdEf<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc62></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strncat（连接两字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcopy，memccpy，memecpy，strcpy，strncpy<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #inclue &lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char * strncat(char *dest,const 
+      char *src,size_t n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strncat()会将参数src字符串拷贝n个字符到参数dest所指的字符串尾。第一个参数dest要有足够的空间来容纳要拷贝的字符串。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回参数dest的字符串起始地址。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char a[30]="string(1)";<br>
+      char b[]="string(2)";<br>
+      printf("before strnact() :%s\n", a);<br>
+      printf("after strncat() :%s\n", strncat(a,b,6));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> before strnact() : string(1)<br>
+      after strncat() : string(1) string<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc63></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strncpy（拷贝字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bcopy，memccpy，memcpy，memmove<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char * strncpy(char *dest,const 
+      char *src,size_t n);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strncpy()会将参数src字符串拷贝前n个字符至参数dest所指的地址。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回参数dest的字符串起始地址。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #inclue &lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char a[30]="string(1)";<br>
+      char b[]="string(2)";<br>
+      printf("before strncpy() : %s\n",a);<br>
+      printf("after strncpy() : %s\n",strncpy(a,b,6));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> before strncpy() : string(1)<br>
+      after strncpy() : string(1)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc64></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strpbrk（查找字符串中第一个出现的指定字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> index，memchr，rindex，strpbrk，strsep，strspn，strstr，strtok<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;include.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char *strpbrk(const char *s,const 
+      char *accept);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strpbrk()用来找出参数s 字符串中最先出现存在参数accept 
+      字符串中的任意字符。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 如果找到指定的字符则返回该字符所在地址，否则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *s="0123456789012345678901234567890";<br>
+      char *p;<br>
+      p=strpbrk(s,"a1 839"); /*1会最先在s字符串中找到*/<br>
+      printf("%s\n",p);<br>
+      p=strprk(s,"4398");/*3 会最先在s 字符串中找到*/<br>
+      printf("%s\n",p);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 1.23E+29<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc65></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strrchr（查找字符串中最后出现的指定字符） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> index，memchr，rindex，strpbrk，strsep，strspn，strstr，strtok<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char * strrchr(const char *s, 
+      int c);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strrchr()用来找出参数s字符串中最后一个出现的参数c地址，然后将该字符出现的地址返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 如果找到指定的字符则返回该字符所在地址，否则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *s="0123456789012345678901234567890";<br>
+      char *p;<br>
+      p=strrchr(s,'5');<br>
+      printf("%s\n",p);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 567890<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc66></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strspn（返回字符串中连续不含指定字符串内容的字符数） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strcspn，strchr，strpbrk，strsep，strstr<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> size_t strspn (const char *s,const 
+      char * accept);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strspn()从参数s 字符串的开头计算连续的字符，而这些字符都完全是accept 
+      所指字符串中的字符。简单的说，若strspn()返回的数值为n，则代表字符串s 开头连续有n 个字符都是属于字符串accept内的字符。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回字符串s开头连续包含字符串accept内的字符数目。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char *str="Linux was first developed for 386/486-based PCs.";<br>
+      char *t1="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";<br>
+      printf("%d\n",strspn(str,t1));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 5 /*计算大小写字母。不包含“ ”，所以返回Linux的长度。*/<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc67></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strstr（在一字符串中查找指定的字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> index，memchr，rindex，strchr，strpbrk，strsep，strspn，strtok<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char *strstr(const char *haystack,const 
+      char *needle);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strstr()会从字符串haystack 中搜寻字符串needle，并将第一次出现的地址返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回指定字符串第一次出现的地址，否则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char * s="012345678901234567890123456789";<br>
+      char *p;<br>
+      p= strstr(s,"901");<br>
+      printf("%s\n",p);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 9.01E+21<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc68></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      strtok（分割字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> index，memchr，rindex，strpbrk，strsep，strspn，strstr<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char * strtok(char *s,const char 
+      *delim);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> strtok()用来将字符串分割成一个个片段。参数s指向欲分割的字符串，参数delim则为分割字符串，当strtok()在参数s的字符串中发现到参数delim的分割字符时则会将该字符改为\0 
+      字符。在第一次调用时，strtok()必需给予参数s字符串，往后的调用则将参数s设置成NULL。每次调用成功则返回下一个分割后的字符串指针。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回下一个分割后的字符串指针，如果已无从分割则返回NULL。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      char s[]="ab-cd : ef;gh :i-jkl;mnop;qrs-tu: vwx-y;z";<br>
+      char *delim="-: ";<br>
+      char *p;<br>
+      printf("%s ";strtok(s,delim));<br>
+      while((p=strtok(NULL,delim)))printf("%s ",p);<br>
+      printf("\n");<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> ab cd ef;gh i jkl;mnop;qrs tu 
+      vwx y;z /*－与:字符已经被\0 字符取代*/<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+      </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

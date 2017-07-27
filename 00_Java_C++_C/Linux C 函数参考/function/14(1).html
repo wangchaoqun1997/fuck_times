@@ -1,0 +1,1912 @@
+<html>
+<head>
+<title>Untitled Document</title>
+</head>
+<body>
+<table width="100%">
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc263></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      accept（接受socket连线） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> socket，bind，listen，connect<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int accept(int s,struct sockaddr 
+      * addr,int * addrlen);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> accept()用来接受参数s的socket连线。参数s的socket必需先经bind()、listen()函数处理过，当有连线进来时accept()会返回一个新的socket处理代码，往后的数据传送与读取就是经由新的socket处理，而原来参数s的socket能继续使用accept()来接受新的连线要求。连线成功时，参数addr所指的结构会被系统填入远程主机的地址数据，参数addrlen为scokaddr的结构长度。关于结构sockaddr的定义请参考bind()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回新的socket处理代码，失败返回-1，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s 非合法socket处理代码。<br>
+      EFAULT 参数addr指针指向无法存取的内存空间。<br>
+      ENOTSOCK 参数s为一文件描述词，非socket。<br>
+      EOPNOTSUPP 指定的socket并非SOCK_STREAM。<br>
+      EPERM 防火墙拒绝此连线。<br>
+      ENOBUFS 系统的缓冲内存不足。<br>
+      ENOMEM 核心内存不足。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考listen()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc264></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      bind（对socket定位） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> socket，accept，connect，listen<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int bind(int sockfd,struct sockaddr 
+      * my_addr,int addrlen);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> bind()用来设置给参数sockfd的socket一个名称。此名称由参数my_addr指向一sockaddr结构，对于不同的socket 
+      domain定义了一个通用的数据结构<br>
+      struct sockaddr<br>
+      {<br>
+      unsigned short int sa_family;<br>
+      char sa_data[14];<br>
+      };<br>
+      sa_family 为调用socket（）时的domain参数，即AF_xxxx值。<br>
+      sa_data 最多使用14个字符长度。<br>
+      此sockaddr结构会因使用不同的socket domain而有不同结构定义，例如使用AF_INET domain，其socketaddr结构定义便为<br>
+      struct socketaddr_in<br>
+      {<br>
+      unsigned short int sin_family;<br>
+      uint16_t sin_port;<br>
+      struct in_addr sin_addr;<br>
+      unsigned char sin_zero[8];<br>
+      };<br>
+      struct in_addr<br>
+      {<br>
+      uint32_t s_addr;<br>
+      };<br>
+      sin_family 即为sa_family<br>
+      sin_port 为使用的port编号<br>
+      sin_addr.s_addr 为IP 地址<br>
+      sin_zero 未使用。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 参数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> addrlen为sockaddr的结构长度。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回0，失败返回-1，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数sockfd 非合法socket处理代码。<br>
+      EACCESS 权限不足<br>
+      ENOTSOCK 参数sockfd为一文件描述词，非socket。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考listen()<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc265></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      connect（建立socket连线） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> socket，bind，listen<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int connect (int sockfd,struct 
+      sockaddr * serv_addr,int addrlen);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> connect()用来将参数sockfd 的socket 连至参数serv_addr 
+      指定的网络地址。结构sockaddr请参考bind()。参数addrlen为sockaddr的结构长度。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回0，失败返回-1，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数sockfd 非合法socket处理代码<br>
+      EFAULT 参数serv_addr指针指向无法存取的内存空间<br>
+      ENOTSOCK 参数sockfd为一文件描述词，非socket。<br>
+      EISCONN 参数sockfd的socket已是连线状态<br>
+      ECONNREFUSED 连线要求被server端拒绝。<br>
+      ETIMEDOUT 企图连线的操作超过限定时间仍未有响应。<br>
+      ENETUNREACH 无法传送数据包至指定的主机。<br>
+      EAFNOSUPPORT sockaddr结构的sa_family不正确。<br>
+      EALREADY socket为不可阻断且先前的连线操作还未完成。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /* 利用socket的TCP client<br>
+      此程序会连线TCP server，并将键盘输入的字符串传送给server。<br>
+      TCP server范例请参考listen（）。<br>
+      */<br>
+      #include&lt;sys/stat.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      #include&lt;netinet/in.h&gt;<br>
+      #include&lt;arpa/inet.h&gt;<br>
+      #define PORT 1234<br>
+      #define SERVER_IP “127.0.0.1”<br>
+      main()<br>
+      {<br>
+      int s;<br>
+      struct sockaddr_in addr;<br>
+      char buffer[256];<br>
+      if((s = socket(AF_INET,SOCK_STREAM,0))&lt;0){<br>
+      perror(“socket”);<br>
+      exit(1);<br>
+      }<br>
+      /* 填写sockaddr_in结构*/<br>
+      bzero(&addr,sizeof(addr));<br>
+      addr.sin_family = AF_INET;<br>
+      addr.sin_port=htons(PORT);<br>
+      addr.sin_addr.s_addr = inet_addr(SERVER_IP);<br>
+      /* 尝试连线*/<br>
+      if(connect(s,&addr,sizeof(addr))&lt;0){<br>
+      perror(“connect”);<br>
+      exit(1);<br>
+      }<br>
+      /* 接收由server端传来的信息*/<br>
+      recv(s,buffer,sizeof(buffer),0);<br>
+      printf(“%s\n”,buffer);<br>
+      while(1){<br>
+      bzero(buffer,sizeof(buffer));<br>
+      /* 从标准输入设备取得字符串*/<br>
+      read(STDIN_FILENO,buffer,sizeof(buffer));<br>
+      /* 将字符串传给server端*/<br>
+      if(send(s,buffer,sizeof(buffer),0)&lt;0){<br>
+      perror(“send”);<br>
+      exit(1);<br>
+      }<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> $ ./connect<br>
+      Welcome to server!<br>
+      hi I am client! /*键盘输入*/<br>
+      /*&lt;Ctrl+C&gt;中断程序*/<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc266></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      endprotoent（结束网络协议数据的读取） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> getprotoent，getprotobyname，getprotobynumber，setprotoent<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;netdb.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void endprotoent(void);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> endprotoent()用来关闭由getprotoent()打开的文件。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考getprotoent()<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc267></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      endservent（结束网络服务数据的读取） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> getservent，getservbyname，getservbyport，setservent<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;netdb.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void endservent(void);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> endservent()用来关闭由getservent()所打开的文件。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考getservent()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc268></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      getsockopt（取得socket状态） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> setsockopt<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int getsockopt(int s,int level,int 
+      optname,void* optval,socklen_t* optlen);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> getsockopt()会将参数s所指定的socket状态返回。参数optname代表欲取得何种选项状态，而参数optval则指向欲保存结果的内存地址，参数optlen则为该空间的大小。参数level、optname请参考setsockopt()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回0，若有错误则返回-1，错误原因存于errno<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s 并非合法的socket处理代码<br>
+      ENOTSOCK 参数s为一文件描述词，非socket<br>
+      ENOPROTOOPT 参数optname指定的选项不正确<br>
+      EFAULT 参数optval指针指向无法存取的内存空间<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      main()<br>
+      {<br>
+      int s,optval,optlen = sizeof(int);<br>
+      if((s = socket(AF_INET,SOCK_STREAM,0))&lt;0) perror(“socket”);<br>
+      getsockopt(s,SOL_SOCKET,SO_TYPE,&optval,&optlen);<br>
+      printf(“optval = %d\n”,optval);<br>
+      close(s);}<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> optval = 1 /*SOCK_STREAM的定义正是此值*/<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc269></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      htonl（将32位主机字符顺序转换成网络字符顺序） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> htons，ntohl，ntohs<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;netinet/in.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> unsigned long int htonl(unsigned 
+      long int hostlong);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> htonl（）用来将参数指定的32位hostlong 转换成网络字符顺序。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回对应的网络字符顺序。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考getservbyport()或connect()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc270></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      htons（将16位主机字符顺序转换成网络字符顺序） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> htonl，ntohl，ntohs<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;netinet/in.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> unsigned short int htons(unsigned 
+      short int hostshort);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> htons()用来将参数指定的16位hostshort转换成网络字符顺序。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回对应的网络字符顺序。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考connect()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc271></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      inet_addr（将网络地址转成二进制的数字） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> inet_aton，inet_ntoa<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/socket.h&gt;<br>
+      #include&lt;netinet/in.h&gt;<br>
+      #include&lt;arpa/inet.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> unsigned long int inet_addr(const 
+      char *cp);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> inet_addr()用来将参数cp所指的网络地址字符串转换成网络所使用的二进制数字。网络地址字符串是以数字和点组成的字符串，例如:“163.13.132.68”。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回对应的网络二进制的数字，失败返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc272></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      inet_aton（将网络地址转成网络二进制的数字） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> inet_addr，inet_ntoa<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/scoket.h&gt;<br>
+      #include&lt;netinet/in.h&gt;<br>
+      #include&lt;arpa/inet.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int inet_aton(const char * cp,struct 
+      in_addr *inp);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> inet_aton()用来将参数cp所指的网络地址字符串转换成网络使用的二进制的数字，然后存于参数inp所指的in_addr结构中。<br>
+      结构in_addr定义如下<br>
+      struct in_addr<br>
+      {<br>
+      unsigned long int s_addr;<br>
+      };<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回非0值，失败则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc273></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      inet_ntoa（将网络二进制的数字转换成网络地址） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> inet_addr，inet_aton<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/socket.h&gt;<br>
+      #include&lt;netinet/in.h&gt;<br>
+      #include&lt;arpa/inet.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> char * inet_ntoa(struct in_addr 
+      in);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> inet_ntoa()用来将参数in所指的网络二进制的数字转换成网络地址，然后将指向此网络地址字符串的指针返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回字符串指针，失败则返回NULL。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc274></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      listen（等待连接） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> socket，bind，accept，connect<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int listen(int s,int backlog);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> listen()用来等待参数s 的socket连线。参数backlog指定同时能处理的最大连接要求，如果连接数目达此上限则client端将收到ECONNREFUSED的错误。Listen()并未开始接收连线，只是设置socket为listen模式，真正接收client端连线的是accept()。通常listen()会在socket()，bind()之后调用，接着才调用accept()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回0，失败返回-1，错误原因存于errno<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> listen()只适用SOCK_STREAM或SOCK_SEQPACKET的socket类型。如果socket为AF_INET则参数backlog 
+      最大值可设至128。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数sockfd非合法socket处理代码<br>
+      EACCESS 权限不足<br>
+      EOPNOTSUPP 指定的socket并未支援listen模式。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      #include&lt;netinet/in.h&gt;<br>
+      #include&lt;arpa/inet.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      #define PORT 1234<br>
+      #define MAXSOCKFD 10<br>
+      main()<br>
+      {<br>
+      int sockfd,newsockfd,is_connected[MAXSOCKFD],fd;<br>
+      struct sockaddr_in addr;<br>
+      int addr_len = sizeof(struct sockaddr_in);<br>
+      fd_set readfds;<br>
+      char buffer[256];<br>
+      char msg[ ] =”Welcome to server!”;<br>
+      if ((sockfd = socket(AF_INET,SOCK_STREAM,0))&lt;0){<br>
+      perror(“socket”);<br>
+      exit(1);<br>
+      }<br>
+      bzero(&addr,sizeof(addr));<br>
+      addr.sin_family =AF_INET;<br>
+      addr.sin_port = htons(PORT);<br>
+      addr.sin_addr.s_addr = htonl(INADDR_ANY);<br>
+      if(bind(sockfd,&addr,sizeof(addr))&lt;0){<br>
+      perror(“connect”);<br>
+      exit(1);<br>
+      }<br>
+      if(listen(sockfd,3)&lt;0){<br>
+      perror(“listen”);<br>
+      exit(1);<br>
+      }<br>
+      for(fd=0;fd&lt;MAXSOCKFD;fd++)<br>
+      is_connected[fd]=0;<br>
+      while(1){<br>
+      FD_ZERO(&readfds);<br>
+      FD_SET(sockfd,&readfds);<br>
+      for(fd=0;fd&lt;MAXSOCKFD;fd++)<br>
+      if(is_connected[fd]) FD_SET(fd,&readfds);<br>
+      if(!select(MAXSOCKFD,&readfds,NULL,NULL,NULL))continue;<br>
+      for(fd=0;fd&lt;MAXSOCKFD;fd++)<br>
+      if(FD_ISSET(fd,&readfds)){<br>
+      if(sockfd = =fd){<br>
+      if((newsockfd = accept (sockfd,&addr,&addr_len))&lt;0)<br>
+      perror(“accept”);<br>
+      write(newsockfd,msg,sizeof(msg));<br>
+      is_connected[newsockfd] =1;<br>
+      printf(“cnnect from %s\n”,inet_ntoa(addr.sin_addr));<br>
+      }else{<br>
+      bzero(buffer,sizeof(buffer));<br>
+      if(read(fd,buffer,sizeof(buffer))&lt;=0){<br>
+      printf(“connect closed.\n”);<br>
+      is_connected[fd]=0;<br>
+      close(fd);<br>
+      }else<br>
+      printf(“%s”,buffer);<br>
+      }<br>
+      }<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> $ ./listen<br>
+      connect from 127.0.0.1<br>
+      hi I am client<br>
+      connected closed.<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc275></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      ntohl（将32位网络字符顺序转换成主机字符顺序） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> htonl，htons，ntohs<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;netinet/in.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> unsigned long int ntohl(unsigned 
+      long int netlong);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> ntohl()用来将参数指定的32位netlong转换成主机字符顺序。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回对应的主机字符顺序。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考getservent()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc276></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      ntohs（将16位网络字符顺序转换成主机字符顺序） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> htonl，htons，ntohl<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;netinet/in.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> unsigned short int ntohs(unsigned 
+      short int netshort);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> ntohs()用来将参数指定的16位netshort转换成主机字符顺序。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 返回对应的主机顺序。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考getservent()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc277></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      recv（经socket接收数据） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> recvfrom，recvmsg，send，sendto，socket<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int recv(int s,void *buf,int len,unsigned 
+      int flags);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> recv()用来接收远端主机经指定的socket传来的数据，并把数据存到由参数buf 
+      指向的内存空间，参数len为可接收数据的最大长度。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 参数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> flags一般设0。其他数值定义如下:<br>
+      MSG_OOB 接收以out-of-band 送出的数据。<br>
+      MSG_PEEK 返回来的数据并不会在系统内删除，如果再调用recv()会返回相同的数据内容。<br>
+      MSG_WAITALL强迫接收到len大小的数据后才能返回，除非有错误或信号产生。<br>
+      MSG_NOSIGNAL此操作不愿被SIGPIPE信号中断返回值成功则返回接收到的字符数，失败返回-1，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s非合法的socket处理代码<br>
+      EFAULT 参数中有一指针指向无法存取的内存空间<br>
+      ENOTSOCK 参数s为一文件描述词，非socket。<br>
+      EINTR 被信号所中断<br>
+      EAGAIN 此动作会令进程阻断，但参数s的socket为不可阻断<br>
+      ENOBUFS 系统的缓冲内存不足。<br>
+      ENOMEM 核心内存不足<br>
+      EINVAL 传给系统调用的参数不正确。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考listen()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc278></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      recvfrom（经socket接收数据） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> recv，recvmsg，send，sendto，socket<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int recvfrom(int s,void *buf,int 
+      len,unsigned int flags ,struct sockaddr *from ,int *fromlen);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> recv()用来接收远程主机经指定的socket 传来的数据，并把数据存到由参数buf 
+      指向的内存空间，参数len 为可接收数据的最大长度。参数flags 一般设0，其他数值定义请参考recv()。参数from用来指定欲传送的网络地址，结构sockaddr 
+      请参考bind()。参数fromlen为sockaddr的结构长度。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回接收到的字符数，失败则返回-1，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s非合法的socket处理代码<br>
+      EFAULT 参数中有一指针指向无法存取的内存空间。<br>
+      ENOTSOCK 参数s为一文件描述词，非socket。<br>
+      EINTR 被信号所中断。<br>
+      EAGAIN 此动作会令进程阻断，但参数s的socket为不可阻断。<br>
+      ENOBUFS 系统的缓冲内存不足<br>
+      ENOMEM 核心内存不足<br>
+      EINVAL 传给系统调用的参数不正确。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> /*利用socket的UDP client<br>
+      此程序会连线UDP server，并将键盘输入的字符串传给server。<br>
+      UDP server 范例请参考sendto（）。<br>
+      */<br>
+      #include&lt;sys/stat.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      #include&lt;sys/typs.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      #include&lt;netinet/in.h&gt;<br>
+      #include&lt;arpa/inet.h&gt;<br>
+      #define PORT 2345<br>
+      #define SERVER_IP “127.0.0.1”<br>
+      main()<br>
+      {<br>
+      int s,len;<br>
+      struct sockaddr_in addr;<br>
+      int addr_len =sizeof(struct sockaddr_in);<br>
+      char buffer[256];<br>
+      /* 建立socket*/<br>
+      if((s = socket(AF_INET,SOCK_DGRAM,0))&lt;0){<br>
+      perror(“socket”);<br>
+      exit(1);<br>
+      }<br>
+      /* 填写sockaddr_in*/<br>
+      bzero(&addr,sizeof(addr));<br>
+      addr.sin_family = AF_INET;<br>
+      addr.sin_port = htons(PORT);<br>
+      addr.sin_addr.s_addr = inet_addr(SERVER_IP);<br>
+      while(1){<br>
+      bzero(buffer,sizeof(buffer));<br>
+      /* 从标准输入设备取得字符串*/<br>
+      len =read(STDIN_FILENO,buffer,sizeof(buffer));<br>
+      /* 将字符串传送给server端*/<br>
+      sendto(s,buffer,len,0,&addr,addr_len);<br>
+      /* 接收server端返回的字符串*/<br>
+      len = recvfrom(s,buffer,sizeof(buffer),0,&addr,&addr_len);<br>
+      printf(“receive: %s”,buffer);<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> (先执行udp server 再执行udp client)<br>
+      hello /*从键盘输入字符串*/<br>
+      receive: hello /*server端返回来的字符串*/<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc279></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      recvmsg（经socket接收数据） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> recv，recvfrom，send，sendto，sendmsg，socket<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socktet.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int recvmsg(int s,struct msghdr 
+      *msg,unsigned int flags);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> recvmsg()用来接收远程主机经指定的socket传来的数据。参数s为已建立好连线的socket，如果利用UDP协议则不需经过连线操作。参数msg指向欲连线的数据结构内容，参数flags一般设0，详细描述请参考send()。关于结构msghdr的定义请参考sendmsg()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回接收到的字符数，失败则返回-1，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s非合法的socket处理代码。<br>
+      EFAULT 参数中有一指针指向无法存取的内存空间<br>
+      ENOTSOCK 参数s为一文件描述词，非socket。<br>
+      EINTR 被信号所中断。<br>
+      EAGAIN 此操作会令进程阻断，但参数s的socket为不可阻断。<br>
+      ENOBUFS 系统的缓冲内存不足<br>
+      ENOMEM 核心内存不足<br>
+      EINVAL 传给系统调用的参数不正确。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考recvfrom()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc280></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      send（经socket传送数据） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> sendto，sendmsg，recv，recvfrom，socket<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int send(int s,const void * msg,int 
+      len,unsigned int falgs);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> send()用来将数据由指定的socket 传给对方主机。参数s为已建立好连接的socket。参数msg指向欲连线的数据内容，参数len则为数据长度。参数flags一般设0，其他数值定义如下<br>
+      MSG_OOB 传送的数据以out-of-band 送出。<br>
+      MSG_DONTROUTE 取消路由表查询<br>
+      MSG_DONTWAIT 设置为不可阻断运作<br>
+      MSG_NOSIGNAL 此动作不愿被SIGPIPE 信号中断。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回实际传送出去的字符数，失败返回-1。错误原因存于errno<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s 非合法的socket处理代码。<br>
+      EFAULT 参数中有一指针指向无法存取的内存空间<br>
+      ENOTSOCK 参数s为一文件描述词，非socket。<br>
+      EINTR 被信号所中断。<br>
+      EAGAIN 此操作会令进程阻断，但参数s的socket为不可阻断。<br>
+      ENOBUFS 系统的缓冲内存不足<br>
+      ENOMEM 核心内存不足<br>
+      EINVAL 传给系统调用的参数不正确。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考connect()<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc281></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      sendmsg（经socket传送数据） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> send，sendto，recv，recvfrom，recvmsg，socket<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int sendmsg(int s,const strcut 
+      msghdr *msg,unsigned int flags);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> sendmsg()用来将数据由指定的socket传给对方主机。参数s为已建立好连线的socket，如果利用UDP协议则不需经过连线操作。参数msg 
+      指向欲连线的数据结构内容，参数flags一般默认为0，详细描述请参考send()。<br>
+      结构msghdr定义如下<br>
+      struct msghdr<br>
+      {<br>
+      void *msg_name; /*Address to send to /receive from . */<br>
+      socklen_t msg_namelen; /* Length of addres data */<br>
+      strcut iovec * msg_iov; /* Vector of data to send/receive into */<br>
+      size_t msg_iovlen; /* Number of elements in the vector */<br>
+      void * msg_control; /* Ancillary dat */<br>
+      size_t msg_controllen; /* Ancillary data buffer length */<br>
+      int msg_flags; /* Flags on received message */<br>
+      };<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回实际传送出去的字符数，失败返回-1，错误原因存于errno<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s 非合法的socket处理代码。<br>
+      EFAULT 参数中有一指针指向无法存取的内存空间<br>
+      ENOTSOCK 参数s为一文件描述词，非socket。<br>
+      EINTR 被信号所中断。<br>
+      EAGAIN 此操作会令进程阻断，但参数s的socket为不可阻断。<br>
+      ENOBUFS 系统的缓冲内存不足<br>
+      ENOMEM 核心内存不足<br>
+      EINVAL 传给系统调用的参数不正确。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考sendto()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc282></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      sendto（经socket传送数据） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> send , sendmsg,recv , recvfrom 
+      , socket<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt; sys/types.h &gt;<br>
+      #include &lt; sys/socket.h &gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int sendto ( int s , const void 
+      * msg, int len, unsigned int flags, const <br>
+      struct sockaddr * to , int tolen ) ;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> sendto() 用来将数据由指定的socket传给对方主机。参数s为已建好连线的socket,如果利用UDP协议则不需经过连线操作。参数msg指向欲连线的数据内容，参数flags 
+      一般设0，详细描述请参考send()。参数to用来指定欲传送的网络地址，结构sockaddr请参考bind()。参数tolen为sockaddr的结果长度。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回实际传送出去的字符数，失败返回－1，错误原因存于errno 
+      中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s非法的socket处理代码。<br>
+      EFAULT 参数中有一指针指向无法存取的内存空间。<br>
+      WNOTSOCK canshu s为一文件描述词，非socket。<br>
+      EINTR 被信号所中断。<br>
+      EAGAIN 此动作会令进程阻断，但参数s的soket为补课阻断的。<br>
+      ENOBUFS 系统的缓冲内存不足。<br>
+      EINVAL 传给系统调用的参数不正确。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt; sys/types.h &gt;<br>
+      #include &lt; sys/socket.h &gt;<br>
+      # include &lt;netinet.in.h&gt;<br>
+      #include &lt;arpa.inet.h&gt;<br>
+      #define PORT 2345 /*使用的port*/<br>
+      main(){<br>
+      int sockfd,len;<br>
+      struct sockaddr_in addr;<br>
+      char buffer[256];<br>
+      /*建立socket*/<br>
+      if(sockfd=socket (AF_INET,SOCK_DGRAM,0))&lt;0){<br>
+      perror (“socket”);<br>
+      exit(1);<br>
+      }<br>
+      /*填写sockaddr_in 结构*/<br>
+      bzero ( &addr, sizeof(addr) );<br>
+      addr.sin_family=AF_INET;<br>
+      addr.sin_port=htons(PORT);<br>
+      addr.sin_addr=hton1(INADDR_ANY) ;<br>
+      if (bind(sockfd, &addr, sizeof(addr))&lt;0){<br>
+      perror(“connect”);<br>
+      exit(1);<br>
+      }<br>
+      while(1){<br>
+      bezro(buffer,sizeof(buffer));<br>
+      len = recvfrom(socket,buffer,sizeof(buffer), 0 , &addr &addr_len);<br>
+      /*显示client端的网络地址*/<br>
+      printf(“receive from %s\n “ , inet_ntoa( addr.sin_addr));<br>
+      /*将字串返回给client端*/<br>
+      sendto(sockfd,buffer,len,0,&addr,addr_len);”<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 请参考recvfrom()<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc283></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      setprotoent（打开网络协议的数据文件） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> getprotobyname, getprotobynumber, 
+      endprotoent<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt;netdb.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void setprotoent (int stayopen);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> setprotoent()用来打开/etc/protocols， 
+      如果参数stayopen值为1，则接下来的getprotobyname()或getprotobynumber()将不会自动关闭此文件。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc284></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      setservent（打开主机网络服务的数据文件） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> getservent, getservbyname, getservbyport, 
+      endservent<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include &lt; netdb.h &gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> void setservent (int stayopen);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> setservent()用来打开/etc/services，如果参数stayopen值为1，则接下来的getservbyname()或getservbyport()将补回自动关闭文件。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc285></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      setsockopt（设置socket状态） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> getsockopt<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int setsockopt(int s,int level,int 
+      optname,const void * optval,,socklen_toptlen);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> setsockopt()用来设置参数s所指定的socket状态。参数level代表欲设置的网络层，一般设成SOL_SOCKET以存取socket层。参数optname代表欲设置的选项，有下列几种数值:<br>
+      SO_DEBUG 打开或关闭排错模式<br>
+      SO_REUSEADDR 允许在bind（）过程中本地地址可重复使用<br>
+      SO_TYPE 返回socket形态。<br>
+      SO_ERROR 返回socket已发生的错误原因<br>
+      SO_DONTROUTE 送出的数据包不要利用路由设备来传输。<br>
+      SO_BROADCAST 使用广播方式传送<br>
+      SO_SNDBUF 设置送出的暂存区大小<br>
+      SO_RCVBUF 设置接收的暂存区大小<br>
+      SO_KEEPALIVE 定期确定连线是否已终止。<br>
+      SO_OOBINLINE 当接收到OOB 数据时会马上送至标准输入设备<br>
+      SO_LINGER 确保数据安全且可靠的传送出去。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 参数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> optval代表欲设置的值，参数optlen则为optval的长度。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回0，若有错误则返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s并非合法的socket处理代码<br>
+      ENOTSOCK 参数s为一文件描述词，非socket<br>
+      ENOPROTOOPT 参数optname指定的选项不正确。<br>
+      EFAULT 参数optval指针指向无法存取的内存空间。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考getsockopt()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc286></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      shutdown（终止socket通信） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> socket，connect<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int shutdown(int s,int how);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> shutdown()用来终止参数s所指定的socket连线。参数s是连线中的socket处理代码，参数how有下列几种情况:<br>
+      how=0 终止读取操作。<br>
+      how=1 终止传送操作<br>
+      how=2 终止读取及传送操作<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回0，失败返回-1，错误原因存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EBADF 参数s不是有效的socket处理代码<br>
+      ENOTSOCK 参数s为一文件描述词，非socket<br>
+      ENOTCONN 参数s指定的socket并未连线<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc287></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> <br>
+      socket（建立一个socket通信） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> accept，bind，connect，listen<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/socket.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> int socket(int domain,int type,int 
+      protocol);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> socket()用来建立一个新的socket，也就是向系统注册，通知系统建立一通信端口。参数domain 
+      指定使用何种的地址类型，完整的定义在/usr/include/bits/socket.h 内，底下是常见的协议:<br>
+      PF_UNIX/PF_LOCAL/AF_UNIX/AF_LOCAL UNIX 进程通信协议<br>
+      PF_INET?AF_INET Ipv4网络协议<br>
+      PF_INET6/AF_INET6 Ipv6 网络协议<br>
+      PF_IPX/AF_IPX IPX-Novell协议<br>
+      PF_NETLINK/AF_NETLINK 核心用户接口装置<br>
+      PF_X25/AF_X25 ITU-T X.25/ISO-8208 协议<br>
+      PF_AX25/AF_AX25 业余无线AX.25协议<br>
+      PF_ATMPVC/AF_ATMPVC 存取原始ATM PVCs<br>
+      PF_APPLETALK/AF_APPLETALK appletalk（DDP）协议<br>
+      PF_PACKET/AF_PACKET 初级封包接口<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 参数 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> type有下列几种数值:<br>
+      SOCK_STREAM 提供双向连续且可信赖的数据流，即TCP。支持<br>
+      OOB 机制，在所有数据传送前必须使用connect()来建立连线状态。<br>
+      SOCK_DGRAM 使用不连续不可信赖的数据包连接<br>
+      SOCK_SEQPACKET 提供连续可信赖的数据包连接<br>
+      SOCK_RAW 提供原始网络协议存取<br>
+      SOCK_RDM 提供可信赖的数据包连接<br>
+      SOCK_PACKET 提供和网络驱动程序直接通信。<br>
+      protocol用来指定socket所使用的传输协议编号，通常此参考不用管它，设为0即可。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 成功则返回socket处理代码，失败返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> EPROTONOSUPPORT 参数domain指定的类型不支持参数type或protocol指定的协议<br>
+      ENFILE 核心内存不足，无法建立新的socket结构<br>
+      EMFILE 进程文件表溢出，无法再建立新的socket<br>
+      EACCESS 权限不足，无法建立type或protocol指定的协议<br>
+      ENOBUFS/ENOMEM 内存不足<br>
+      EINVAL 参数domain/type/protocol不合法<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td valign="top"> <font face='宋体' size='2'> 参考connect()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+      </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,945 @@
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+</head>
+
+<body>
+<table width="100%">
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc133></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      close（关闭文件） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，fcntl，shutdown，unlink，fclose<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int close(int fd);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 当使用完文件后若已不再需要则可使用close()关闭该文件，二close()会让数据写回磁盘，并释放该文件所占用的资源。参数fd为先前由open()或creat()所返回的文件描述词。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 若文件顺利关闭则返回0，发生错误时返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF 参数fd 非有效的文件描述词或该文件已关闭。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 虽然在进程结束时，系统会自动关闭已打开的文件，但仍建议自行关闭文件，并确实检查返回值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参考open()<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc134></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      creat（建立文件） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> read，write，fcntl，close，link，stat，umask，unlink，fopen<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int creat(const char * pathname, mode_tmode);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参数pathname指向欲建立的文件路径字符串。Creat()相当于使用下列的调用方式调用open()<br>
+      open(const char * pathname ,(O_CREAT|O_WRONLY|O_TRUNC));<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 关于参数mode请参考open（）函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> creat()会返回新的文件描述词，若有错误发生则会返回-1，并把错误代码设给errno。<br>
+      EEXIST 参数pathname所指的文件已存在。<br>
+      EACCESS 参数pathname 所指定的文件不符合所要求测试的权限<br>
+      EROFS 欲打开写入权限的文件存在于只读文件系统内<br>
+      EFAULT 参数pathname 指针超出可存取的内存空间<br>
+      EINVAL 参数mode 不正确。<br>
+      ENAMETOOLONG 参数pathname太长。<br>
+      ENOTDIR 参数pathname为一目录<br>
+      ENOMEM 核心内存不足<br>
+      ELOOP 参数pathname有过多符号连接问题。<br>
+      EMFILE 已达到进程可同时打开的文件数上限<br>
+      ENFILE 已达到系统可同时打开的文件数上限<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> creat()无法建立特别的装置文件，如果需要请使用mknod()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 请参考open()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc135></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      dup（复制文件描述词） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，close，fcntl，dup2<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int dup (int oldfd);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> dup()用来复制参数oldfd所指的文件描述词，并将它返回。此新的文件描述词和参数oldfd指的是同一个文件，共享所有的锁定、读写位置和各项权限或旗标。例如，当利用lseek()对某个文件描述词作用时，另一个文件描述词的读写位置也会随着改变。不过，文件描述词之间并不共享close-on-exec旗标。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 当复制成功时，则返回最小及尚未使用的文件描述词。若有错误则返回-1，errno会存放错误代码。错误代码EBADF参数fd非有效的文件描述词，或该文件已关闭。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc136></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      dup2（复制文件描述词） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，close，fcntl，dup<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int dup2(int odlfd,int newfd);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> dup2()用来复制参数oldfd所指的文件描述词，并将它拷贝至参数newfd后一块返回。若参数newfd为一已打开的文件描述词，则newfd所指的文件会先被关闭。dup2()所复制的文件描述词，与原来的文件描述词共享各种文件状态，详情可参考dup()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 当复制成功时，则返回最小及尚未使用的文件描述词。若有错误则返回-1，errno会存放错误代码。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> dup2()相当于调用fcntl(oldfd，F_DUPFD，newfd)；请参考fcntl()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EBADF 参数fd 非有效的文件描述词，或该文件已关闭<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc137></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      fcntl（文件描述词操作） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，flock<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int fcntl(int fd , int cmd);<br>
+      int fcntl(int fd,int cmd,long arg);<br>
+      int fcntl(int fd,int cmd,struct flock * lock);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fcntl()用来操作文件描述词的一些特性。参数fd代表欲设置的文件描述词，参数cmd代表欲操作的指令。<br>
+      有以下几种情况:<br>
+      F_DUPFD用来查找大于或等于参数arg的最小且仍未使用的文件描述词，并且复制参数fd的文件描述词。执行成功则返回新复制的文件描述词。请参考dup2()。F_GETFD取得close-on-exec旗标。若此旗标的FD_CLOEXEC位为0，代表在调用exec()相关函数时文件将不会关闭。<br>
+      F_SETFD 设置close-on-exec 旗标。该旗标以参数arg 的FD_CLOEXEC位决定。<br>
+      F_GETFL 取得文件描述词状态旗标，此旗标为open（）的参数flags。<br>
+      F_SETFL 设置文件描述词状态旗标，参数arg为新旗标，但只允许O_APPEND、O_NONBLOCK和O_ASYNC位的改变，其他位的改变将不受影响。<br>
+      F_GETLK 取得文件锁定的状态。<br>
+      F_SETLK 设置文件锁定的状态。此时flcok 结构的l_type 值必须是F_RDLCK、F_WRLCK或F_UNLCK。如果无法建立锁定，则返回-1，错误代码为EACCES 
+      或EAGAIN。<br>
+      F_SETLKW F_SETLK 作用相同，但是无法建立锁定时，此调用会一直等到锁定动作成功为止。若在等待锁定的过程中被信号中断时，会立即返回-1，错误代码为EINTR。参数lock指针为flock 
+      结构指针，定义如下<br>
+      struct flcok<br>
+      {<br>
+      short int l_type; /* 锁定的状态*/<br>
+      short int l_whence;/*决定l_start位置*/<br>
+      off_t l_start; /*锁定区域的开头位置*/<br>
+      off_t l_len; /*锁定区域的大小*/<br>
+      pid_t l_pid; /*锁定动作的进程*/<br>
+      };<br>
+      l_type 有三种状态:<br>
+      F_RDLCK 建立一个供读取用的锁定<br>
+      F_WRLCK 建立一个供写入用的锁定<br>
+      F_UNLCK 删除之前建立的锁定<br>
+      l_whence 也有三种方式:<br>
+      SEEK_SET 以文件开头为锁定的起始位置。<br>
+      SEEK_CUR 以目前文件读写位置为锁定的起始位置<br>
+      SEEK_END 以文件结尾为锁定的起始位置。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回0，若有错误则返回-1，错误原因存于errno.<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc138></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      flock（锁定文件或解除锁定） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open,fcntl<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/file.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int flock(int fd,int operation);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> flock()会依参数operation所指定的方式对参数fd所指的文件做各种锁定或解除锁定的动作。此函数只能锁定整个文件，无法锁定文件的某一区域。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 参数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> operation有下列四种情况:<br>
+      LOCK_SH 建立共享锁定。多个进程可同时对同一个文件作共享锁定。<br>
+      LOCK_EX 建立互斥锁定。一个文件同时只有一个互斥锁定。<br>
+      LOCK_UN 解除文件锁定状态。<br>
+      LOCK_NB 无法建立锁定时，此操作可不被阻断，马上返回进程。通常与LOCK_SH或LOCK_EX 做OR(|)组合。<br>
+      单一文件无法同时建立共享锁定和互斥锁定，而当使用dup()或fork()时文件描述词不会继承此种锁定。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 返回0表示成功，若有错误则返回-1，错误代码存于errno。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc139></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      fsync（将缓冲区数据写回磁盘） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sync<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int fsync(int fd);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fsync()负责将参数fd所指的文件数据，由系统缓冲区写回磁盘，以确保数据同步。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 成功则返回0，失败返回-1，errno为错误代码。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc140></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      lseek（移动文件的读写位置） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> dup，open，fseek<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> off_t lseek(int fildes,off_t offset ,int whence);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 每一个已打开的文件都有一个读写位置，当打开文件时通常其读写位置是指向文件开头，若是以附加的方式打开文件(如O_APPEND)，则读写位置会指向文件尾。当read()或write()时，读写位置会随之增加，lseek()便是用来控制该文件的读写位置。参数fildes 
+      为已打开的文件描述词，参数offset 为根据参数whence来移动读写位置的位移数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 参数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> whence为下列其中一种:<br>
+      SEEK_SET 参数offset即为新的读写位置。<br>
+      SEEK_CUR 以目前的读写位置往后增加offset个位移量。<br>
+      SEEK_END 将读写位置指向文件尾后再增加offset个位移量。<br>
+      当whence 值为SEEK_CUR 或SEEK_END时，参数offet允许负值的出现。<br>
+      下列是教特别的使用方式:<br>
+      1) 欲将读写位置移到文件开头时:lseek（int fildes,0,SEEK_SET）；<br>
+      2) 欲将读写位置移到文件尾时:lseek（int fildes，0,SEEK_END）；<br>
+      3) 想要取得目前文件位置时:lseek（int fildes，0,SEEK_CUR）；<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 当调用成功时则返回目前的读写位置，也就是距离文件开头多少个字节。若有错误则返回-1，errno 
+      会存放错误代码。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> Linux系统不允许lseek（）对tty装置作用，此项动作会令lseek（）返回ESPIPE。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参考本函数说明<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc141></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      mkstemp（建立唯一的临时文件） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> mktemp<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int mkstemp(char * template);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> mkstemp()用来建立唯一的临时文件。参数template 所指的文件名称字符串中最后六个字符必须是XXXXXX。Mkstemp()会以可读写模式和0600 
+      权限来打开该文件，如果该文件不存在则会建立该文件。打开该文件后其文件描述词会返回。文件顺利打开后返回可读写的文件描述词。若果文件打开失败则返回NULL，并把错误代码存在errno 
+      中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EINVAL 参数template 字符串最后六个字符非XXXXXX。EEXIST 无法建立临时文件。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参数template所指的文件名称字符串必须声明为数组，如:<br>
+      char template[ ] =”template-XXXXXX”;<br>
+      千万不可以使用下列的表达方式<br>
+      char *template = “template-XXXXXX”;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdlib.h&gt;<br>
+      main( )<br>
+      {<br>
+      int fd;<br>
+      char template[ ]=”template-XXXXXX”;<br>
+      fd=mkstemp(template);<br>
+      printf(“template = %s\n”,template);<br>
+      close(fd);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> template = template-lgZcbo<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc142></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      open（打开文件） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> read，write，fcntl，close，link，stat，umask，unlink，fopen<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int open( const char * pathname, int flags);<br>
+      int open( const char * pathname,int flags, mode_t mode);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参数pathname 指向欲打开的文件路径字符串。下列是参数flags 所能使用的旗标:<br>
+      O_RDONLY 以只读方式打开文件<br>
+      O_WRONLY 以只写方式打开文件<br>
+      O_RDWR 以可读写方式打开文件。上述三种旗标是互斥的，也就是不可同时使用，但可与下列的旗标利用OR(|)运算符组合。<br>
+      O_CREAT 若欲打开的文件不存在则自动建立该文件。<br>
+      O_EXCL 如果O_CREAT 也被设置，此指令会去检查文件是否存在。文件若不存在则建立该文件，否则将导致打开文件错误。此外，若O_CREAT与O_EXCL同时设置，并且欲打开的文件为符号连接，则会打开文件失败。<br>
+      O_NOCTTY 如果欲打开的文件为终端机设备时，则不会将该终端机当成进程控制终端机。<br>
+      O_TRUNC 若文件存在并且以可写的方式打开时，此旗标会令文件长度清为0，而原来存于该文件的资料也会消失。<br>
+      O_APPEND 当读写文件时会从文件尾开始移动，也就是所写入的数据会以附加的方式加入到文件后面。<br>
+      O_NONBLOCK 以不可阻断的方式打开文件，也就是无论有无数据读取或等待，都会立即返回进程之中。<br>
+      O_NDELAY 同O_NONBLOCK。<br>
+      O_SYNC 以同步的方式打开文件。<br>
+      O_NOFOLLOW 如果参数pathname 所指的文件为一符号连接，则会令打开文件失败。<br>
+      O_DIRECTORY 如果参数pathname 所指的文件并非为一目录，则会令打开文件失败。<br>
+      此为Linux2.2以后特有的旗标，以避免一些系统安全问题。参数mode 则有下列数种组合，只有在建立新文件时才会生效，此外真正建文件时的权限会受到umask值所影响，因此该文件权限应该为（mode-umaks）。<br>
+      S_IRWXU00700 权限，代表该文件所有者具有可读、可写及可执行的权限。<br>
+      S_IRUSR 或S_IREAD，00400权限，代表该文件所有者具有可读取的权限。<br>
+      S_IWUSR 或S_IWRITE，00200 权限，代表该文件所有者具有可写入的权限。<br>
+      S_IXUSR 或S_IEXEC，00100 权限，代表该文件所有者具有可执行的权限。<br>
+      S_IRWXG 00070权限，代表该文件用户组具有可读、可写及可执行的权限。<br>
+      S_IRGRP 00040 权限，代表该文件用户组具有可读的权限。<br>
+      S_IWGRP 00020权限，代表该文件用户组具有可写入的权限。<br>
+      S_IXGRP 00010 权限，代表该文件用户组具有可执行的权限。<br>
+      S_IRWXO 00007权限，代表其他用户具有可读、可写及可执行的权限。<br>
+      S_IROTH 00004 权限，代表其他用户具有可读的权限<br>
+      S_IWOTH 00002权限，代表其他用户具有可写入的权限。<br>
+      S_IXOTH 00001 权限，代表其他用户具有可执行的权限。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 若所有欲核查的权限都通过了检查则返回0 值，表示成功，只要有一个权限被禁止则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EEXIST 参数pathname 所指的文件已存在，却使用了O_CREAT和O_EXCL旗标。<br>
+      EACCESS 参数pathname所指的文件不符合所要求测试的权限。<br>
+      EROFS 欲测试写入权限的文件存在于只读文件系统内。<br>
+      EFAULT 参数pathname指针超出可存取内存空间。<br>
+      EINVAL 参数mode 不正确。<br>
+      ENAMETOOLONG 参数pathname太长。<br>
+      ENOTDIR 参数pathname不是目录。<br>
+      ENOMEM 核心内存不足。<br>
+      ELOOP 参数pathname有过多符号连接问题。<br>
+      EIO I/O 存取错误。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 使用access()作用户认证方面的判断要特别小心，例如在access()后再作open()空文件可能会造成系统安全上的问题。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      main()<br>
+      {<br>
+      int fd,size;<br>
+      char s [ ]=”Linux Programmer!\n”,buffer[80];<br>
+      fd=open(“/tmp/temp”,O_WRONLY|O_CREAT);<br>
+      write(fd,s,sizeof(s));<br>
+      close(fd);<br>
+      fd=open(“/tmp/temp”,O_RDONLY);<br>
+      size=read(fd,buffer,sizeof(buffer));<br>
+      close(fd);<br>
+      printf(“%s”,buffer);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> Linux Programmer!<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc143></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      read（由已打开的文件读取数据） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> readdir，write，fcntl，close，lseek，readlink，fread<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> ssize_t read(int fd,void * buf ,size_t count);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> read()会把参数fd 所指的文件传送count个字节到buf指针所指的内存中。若参数count为0，则read()不会有作用并返回0。返回值为实际读取到的字节数，如果返回0，表示已到达文件尾或是无可读取的数据，此外文件读写位置会随读取到的字节移动。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 如果顺利read()会返回实际读到的字节数，最好能将返回值与参数count 作比较，若返回的字节数比要求读取的字节数少，则有可能读到了文件尾、从管道(pipe)或终端机读取，或者是read()被信号中断了读取动作。当有错误发生时则返回-1，错误代码存入errno中，而文件读写位置则无法预期。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EINTR 此调用被信号所中断。<br>
+      EAGAIN 当使用不可阻断I/O 时（O_NONBLOCK），若无数据可读取则返回此值。<br>
+      EBADF 参数fd 非有效的文件描述词，或该文件已关闭。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参考open（）。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc144></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sync（将缓冲区数据写回磁盘） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> fsync<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int sync(void)<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sync()负责将系统缓冲区数据写回磁盘，以确保数据同步。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc145></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      write（将数据写入已打开的文件内） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> open，read，fcntl，close，lseek，sync，fsync，fwrite<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> ssize_t write (int fd,const void * buf,size_t 
+      count);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> write()会把参数buf所指的内存写入count个字节到参数fd所指的文件内。当然，文件读写位置也会随之移动。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 如果顺利write()会返回实际写入的字节数。当有错误发生时则返回-1，错误代码存入errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EINTR 此调用被信号所中断。<br>
+      EAGAIN 当使用不可阻断I/O 时（O_NONBLOCK），若无数据可读取则返回此值。<br>
+      EADF 参数fd非有效的文件描述词，或该文件已关闭。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 请参考open（）。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+      </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

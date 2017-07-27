@@ -1,0 +1,1435 @@
+<html>
+<head>
+<title>Untitled Document</title>
+</head>
+<body>
+<table width="100%">
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc242></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      alarm（设置信号传送闹钟） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> signal，sleep<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> unsigned int alarm(unsigned int seconds);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> alarm()用来设置信号SIGALRM在经过参数seconds指定的秒数后传送给目前的进程。如果参数seconds 
+      为0，则之前设置的闹钟会被取消，并将剩下的时间返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 返回之前闹钟的剩余秒数，如果之前未设闹钟则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      #include&lt;signal.h&gt;<br>
+      void handler() {<br>
+      printf(“hello\n”);<br>
+      }<br>
+      main()<br>
+      {<br>
+      int i;<br>
+      signal(SIGALRM,handler);<br>
+      alarm(5);<br>
+      for(i=1;i&lt;7;i++){<br>
+      printf(“sleep %d ...\n”,i);<br>
+      sleep(1);<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sleep 1 ...<br>
+      sleep 2 ...<br>
+      sleep 3 ...<br>
+      sleep 4 ...<br>
+      sleep 5 ...<br>
+      hello<br>
+      sleep 6 ...<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc243></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      kill（传送信号给指定的进程） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> raise，signal<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int kill(pid_t pid,int sig);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> kill()可以用来送参数sig指定的信号给参数pid指定的进程。参数pid有几种情况:<br>
+      pid&gt;0 将信号传给进程识别码为pid 的进程。<br>
+      pid=0 将信号传给和目前进程相同进程组的所有进程<br>
+      pid=-1 将信号广播传送给系统内所有的进程<br>
+      pid&lt;0 将信号传给进程组识别码为pid绝对值的所有进程<br>
+      参数sig代表的信号编号可参考附录D<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，如果有错误则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EINVAL 参数sig 不合法<br>
+      ESRCH 参数pid 所指定的进程或进程组不存在<br>
+      EPERM 权限不够无法传送信号给指定进程<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      #include&lt;signal.h&gt;<br>
+      #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/wait.h&gt;<br>
+      main()<br>
+      {<br>
+      pid_t pid;<br>
+      int status;<br>
+      if(!(pid= fork())){<br>
+      printf(“Hi I am child process!\n”);<br>
+      sleep(10);<br>
+      return;<br>
+      }<br>
+      else{<br>
+      printf(“send signal to child process (%d) \n”,pid);<br>
+      sleep(1);<br>
+      kill(pid ,SIGABRT);<br>
+      wait(&status);<br>
+      if(WIFSIGNALED(status))<br>
+      printf(“chile process receive signal %d\n”,WTERMSIG(status));<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sen signal to child process(3170)<br>
+      Hi I am child process!<br>
+      child process receive signal 6<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc244></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      pause（让进程暂停直到信号出现） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> kill，signal，sleep<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int pause(void);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> pause()会令目前的进程暂停（进入睡眠状态），直到被信号(signal)所中断。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 只返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EINTR 有信号到达中断了此函数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc245></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sigaction（查询或设置信号处理方式） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> signal，sigprocmask，sigpending，sigsuspend<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int sigaction(int signum,const struct sigaction 
+      *act ,struct sigaction *oldact);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigaction()会依参数signum指定的信号编号来设置该信号的处理函数。参数signum可以指定SIGKILL和SIGSTOP以外的所有信号。<br>
+      如参数结构sigaction定义如下<br>
+      struct sigaction<br>
+      {<br>
+      void (*sa_handler) (int);<br>
+      sigset_t sa_mask;<br>
+      int sa_flags;<br>
+      void (*sa_restorer) (void);<br>
+      }<br>
+      sa_handler此参数和signal()的参数handler相同，代表新的信号处理函数，其他意义请参考signal()。<br>
+      sa_mask 用来设置在处理该信号时暂时将sa_mask 指定的信号搁置。<br>
+      sa_restorer 此参数没有使用。<br>
+      sa_flags 用来设置信号处理的其他相关操作，下列的数值可用。<br>
+      OR 运算（|）组合<br>
+      A_NOCLDSTOP : 如果参数signum为SIGCHLD，则当子进程暂停时并不会通知父进程<br>
+      SA_ONESHOT/SA_RESETHAND:当调用新的信号处理函数前，将此信号处理方式改为系统预设的方式。<br>
+      SA_RESTART:被信号中断的系统调用会自行重启<br>
+      SA_NOMASK/SA_NODEFER:在处理此信号未结束前不理会此信号的再次到来。<br>
+      如果参数oldact不是NULL指针，则原来的信号处理方式会由此结构sigaction 返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，如果有错误则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EINVAL 参数signum 不合法， 或是企图拦截SIGKILL/SIGSTOPSIGKILL信号<br>
+      EFAULT 参数act，oldact指针地址无法存取。<br>
+      EINTR 此调用被中断<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      #include&lt;signal.h&gt;<br>
+      void show_handler(struct sigaction * act)<br>
+      {<br>
+      switch (act-&gt;sa_flags)<br>
+      {<br>
+      case SIG_DFL:printf(“Default action\n”);break;<br>
+      case SIG_IGN:printf(“Ignore the signal\n”);break;<br>
+      default: printf(“0x%x\n”,act-&gt;sa_handler);<br>
+      }<br>
+      }<br>
+      main()<br>
+      {<br>
+      int i;<br>
+      struct sigaction act,oldact;<br>
+      act.sa_handler = show_handler;<br>
+      act.sa_flags = SA_ONESHOT|SA_NOMASK;<br>
+      sigaction(SIGUSR1,&act,&oldact);<br>
+      for(i=5;i&lt;15;i++)<br>
+      {<br>
+      printf(“sa_handler of signal %2d =”.i);<br>
+      sigaction(i,NULL,&oldact);<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sa_handler of signal 5 = Default action<br>
+      sa_handler of signal 6= Default action<br>
+      sa_handler of signal 7 = Default action<br>
+      sa_handler of signal 8 = Default action<br>
+      sa_handler of signal 9 = Default action<br>
+      sa_handler of signal 10 = 0x8048400<br>
+      sa_handler of signal 11 = Default action<br>
+      sa_handler of signal 12 = Default action<br>
+      sa_handler of signal 13 = Default action<br>
+      sa_handler of signal 14 = Default action<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc246></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sigaddset（增加一个信号至信号集） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigemptyset，sigfillset，sigdelset，sigismember<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int sigaddset(sigset_t *set,int signum);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigaddset()用来将参数signum 代表的信号加入至参数set 信号集里。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，如果有错误则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EFAULT 参数set指针地址无法存取<br>
+      EINVAL 参数signum非合法的信号编号<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc247></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sigdelset（从信号集里删除一个信号） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigemptyset，sigfillset，sigaddset，sigismember<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int sigdelset(sigset_t * set,int signum);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigdelset()用来将参数signum代表的信号从参数set信号集里删除。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，如果有错误则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EFAULT 参数set指针地址无法存取<br>
+      EINVAL 参数signum非合法的信号编号<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc248></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sigemptyset（初始化信号集） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigaddset，sigfillset，sigdelset，sigismember<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int sigemptyset(sigset_t *set);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigemptyset()用来将参数set信号集初始化并清空。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，如果有错误则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EFAULT 参数set指针地址无法存取<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc249></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sigfillset（将所有信号加入至信号集） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigempty，sigaddset，sigdelset，sigismember<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int sigfillset(sigset_t * set);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigfillset()用来将参数set信号集初始化，然后把所有的信号加入到此信号集里。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，如果有错误则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EFAULT 参数set指针地址无法存取<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc250></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sigismember（测试某个信号是否已加入至信号集里） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigemptyset，sigfillset，sigaddset，sigdelset<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int sigismember(const sigset_t *set,int signum);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigismember()用来测试参数signum 代表的信号是否已加入至参数set信号集里。如果信号集里已有该信号则返回1，否则返回0。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 信号集已有该信号则返回1，没有则返回0。如果有错误则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EFAULT 参数set指针地址无法存取<br>
+      EINVAL 参数signum 非合法的信号编号<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc251></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      signal（设置信号处理方式） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigaction，kill，raise<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> void (*signal(int signum,void(* handler)(int)))(int);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> signal()会依参数signum 指定的信号编号来设置该信号的处理函数。当指定的信号到达时就会跳转到参数handler指定的函数执行。如果参数handler不是函数指针，则必须是下列两个常数之一:<br>
+      SIG_IGN 忽略参数signum指定的信号。<br>
+      SIG_DFL 将参数signum 指定的信号重设为核心预设的信号处理方式。<br>
+      关于信号的编号和说明，请参考附录D<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 返回先前的信号处理函数指针，如果有错误则返回SIG_ERR(-1)。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 附加说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 在信号发生跳转到自定的handler处理函数执行后，系统会自动将此处理函数换回原来系统预设的处理方式，如果要改变此操作请改用sigaction()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参考alarm()或raise()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc252></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sigpending（查询被搁置的信号） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> signal，sigaction，sigprocmask，sigsuspend<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int sigpending(sigset_t *set);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigpending()会将被搁置的信号集合由参数set指针返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值执 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 行成功则返回0，如果有错误则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EFAULT 参数set指针地址无法存取<br>
+      EINTR 此调用被中断。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc253></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sigprocmask（查询或设置信号遮罩） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> signal，sigaction，sigpending，sigsuspend<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;signal.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int sigprocmask(int how,const sigset_t *set,sigset_t 
+      * oldset);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sigprocmask()可以用来改变目前的信号遮罩，其操作依参数how来决定<br>
+      SIG_BLOCK 新的信号遮罩由目前的信号遮罩和参数set 指定的信号遮罩作联集<br>
+      SIG_UNBLOCK 将目前的信号遮罩删除掉参数set指定的信号遮罩<br>
+      SIG_SETMASK 将目前的信号遮罩设成参数set指定的信号遮罩。<br>
+      如果参数oldset不是NULL指针，那么目前的信号遮罩会由此指针返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 执行成功则返回0，如果有错误则返回-1。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EFAULT 参数set，oldset指针地址无法存取。<br>
+      EINTR 此调用被中断<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc254></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      sleep（让进程暂停执行一段时间） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> signal，alarm<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> unsigned int sleep(unsigned int seconds);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> sleep()会令目前的进程暂停，直到达到参数seconds 所指定的时间，或是被信号所中断。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 若进程暂停到参数seconds 所指定的时间则返回0，若有信号中断则返回剩余秒数。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc255></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      ferror（检查文件流是否有错误发生） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> clearerr，perror<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdio.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int ferror(FILE *stream);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> ferror()用来检查参数stream所指定的文件流是否发生了错误情况，如有错误发生则返回非0值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 如果文件流有错误发生则返回非0值。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc256></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      perror（打印出错误原因信息字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> strerror<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdio.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> void perror(const char *s);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> perror()用来将上一个函数发生错误的原因输出到标准错误(stderr)。参数s所指的字符串会先打印出，后面再加上错误原因字符串。此错误原因依照全局变量errno的值来决定要输出的字符串。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdio.h&gt;<br>
+      main()<br>
+      {<br>
+      FILE *fp;<br>
+      fp = fopen(“/tmp/noexist”,”r+”);<br>
+      if(fp = =NULL) perror(“fopen”);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> $ ./perror<br>
+      fopen : No such file or diretory<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc257></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      strerror（返回错误原因的描述字符串） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> perror<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;string.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> char * strerror(int errnum);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> strerror()用来依参数errnum的错误代码来查询其错误原因的描述字符串，然后将该字符串指针返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 返回描述错误原因的字符串指针。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /* 显示错误代码0 至9 的错误原因描述*/<br>
+      #include&lt;string.h&gt;<br>
+      main()<br>
+      {<br>
+      int i;<br>
+      for(i=0;i&lt;10;i++)<br>
+      printf(“%d : %s\n”,i,strerror(i));<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 0 : Success<br>
+      1 : Operation not permitted<br>
+      2 : No such file or directory<br>
+      3 : No such process<br>
+      4 : Interrupted system call<br>
+      5 : Input/output error<br>
+      6 : Device not configured<br>
+      7 : Argument list too long<br>
+      8 : Exec format error<br>
+      9 : Bad file descriptor<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc258></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      mkfifo（建立具名管道） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> pipe，popen，open，umask<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int mkfifo(const char * pathname,mode_t mode);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> mkfifo()会依参数pathname建立特殊的FIFO文件，该文件必须不存在，而参数mode为该文件的权限（mode%~umask），因此umask值也会影响到FIFO文件的权限。Mkfifo()建立的FIFO文件其他进程都可以用读写一般文件的方式存取。当使用open()来打开FIFO文件时，O_NONBLOCK旗标会有影响<br>
+      1、当使用O_NONBLOCK 旗标时，打开FIFO 文件来读取的操作会立刻返回，但是若还没有其他进程打开FIFO 文件来读取，则写入的操作会返回ENXIO 
+      错误代码。<br>
+      2、没有使用O_NONBLOCK 旗标时，打开FIFO 来读取的操作会等到其他进程打开FIFO文件来写入才正常返回。同样地，打开FIFO文件来写入的操作会等到其他进程打开FIFO 
+      文件来读取后才正常返回。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 若成功则返回0，否则返回-1，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EACCESS 参数pathname所指定的目录路径无可执行的权限<br>
+      EEXIST 参数pathname所指定的文件已存在。<br>
+      ENAMETOOLONG 参数pathname的路径名称太长。<br>
+      ENOENT 参数pathname包含的目录不存在<br>
+      ENOSPC 文件系统的剩余空间不足<br>
+      ENOTDIR 参数pathname路径中的目录存在但却非真正的目录。<br>
+      EROFS 参数pathname指定的文件存在于只读文件系统内。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;sys/types.h&gt;<br>
+      #include&lt;sys/stat.h&gt;<br>
+      #include&lt;fcntl.h&gt;<br>
+      main()<br>
+      {<br>
+      char buffer[80];<br>
+      int fd;<br>
+      unlink(FIFO);<br>
+      mkfifo(FIFO,0666);<br>
+      if(fork()&gt;0){<br>
+      char s[ ] = “hello!\n”;<br>
+      fd = open (FIFO,O_WRONLY);<br>
+      write(fd,s,sizeof(s));<br>
+      close(fd);<br>
+      }<br>
+      else{<br>
+      fd= open(FIFO,O_RDONLY);<br>
+      read(fd,buffer,80);<br>
+      printf(“%s”,buffer);<br>
+      close(fd);<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> hello!<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc259></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      pclose（关闭管道I/O） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> popen<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdio.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int pclose(FILE * stream);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> pclose()用来关闭由popen所建立的管道及文件指针。参数stream为先前由popen()所返回的文件指针。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 返回子进程的结束状态。如果有错误则返回-1，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> ECHILD pclose()无法取得子进程的结束状态。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 参考popen()。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc260></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      pipe（建立管道） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> mkfifo，popen，read，write，fork<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;unistd.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> int pipe(int filedes[2]);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> pipe()会建立管道，并将文件描述词由参数filedes数组返回。filedes[0]为管道里的读取端，filedes[1]则为管道的写入端。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 若成功则返回零，否则返回-1，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EMFILE 进程已用完文件描述词最大量。<br>
+      ENFILE 系统已无文件描述词可用。<br>
+      EFAULT 参数filedes数组地址不合法。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> /* 父进程借管道将字符串“hello!\n”传给子进程并显示*/<br>
+      #include &lt;unistd.h&gt;<br>
+      main()<br>
+      {<br>
+      int filedes[2];<br>
+      char buffer[80];<br>
+      pipe(filedes);<br>
+      if(fork()&gt;0){<br>
+      /* 父进程*/<br>
+      char s[ ] = “hello!\n”;<br>
+      write(filedes[1],s,sizeof(s));<br>
+      }<br>
+      else{<br>
+      /*子进程*/<br>
+      read(filedes[0],buffer,80);<br>
+      printf(“%s”,buffer);<br>
+      }<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> hello!<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+        <font face='宋体' size='2'><a name=linuxc261></a></font> </div>
+    </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> <br>
+        </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> <br>
+      popen（建立管道I/O） </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 相关函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> pipe，mkfifo，pclose，fork，system，fopen<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 表头文件 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdio.h&gt;<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 定义函数 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> FILE * popen( const char * command,const char 
+      * type);<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 函数说明 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> popen()会调用fork()产生子进程，然后从子进程中调用/bin/sh -c来执行参数command的指令。参数type可使用“r”代表读取，“w”代表写入。依照此type值，popen()会建立管道连到子进程的标准输出设备或标准输入设备，然后返回一个文件指针。随后进程便可利用此文件指针来读取子进程的输出设备或是写入到子进程的标准输入设备中。此外，所有使用文件指针(FILE*)操作的函数也都可以使用，除了fclose()以外。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 返回值 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 若成功则返回文件指针，否则返回NULL，错误原因存于errno中。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 错误代码 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> EINVAL参数type不合法。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 注意事项 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> 在编写具SUID/SGID权限的程序时请尽量避免使用popen()，popen()会继承环境变量，通过环境变量可能会造成系统安全的问题。<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 范例 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> #include&lt;stdio.h&gt;<br>
+      main()<br>
+      {<br>
+      FILE * fp;<br>
+      char buffer[80];<br>
+      fp=popen(“cat /etc/passwd”,”r”);<br>
+      fgets(buffer,sizeof(buffer),fp);<br>
+      printf(“%s”,buffer);<br>
+      pclose(fp);<br>
+      }<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top"> 
+      <div align="right"><font face='宋体' size='2'> 执行 </font> </div>
+    </td>
+    <td> <font face='宋体' size='2'> root :x:0 0: root: /root: /bin/bash<br>
+      </font> </td>
+  </tr>
+  <tr> 
+    <td width="80" valign="top">　 
+      <div align="right"><br>
+      </div>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,1 @@
+v9_test/mt658292_kk/code/prebuilts/gcc/linux-x86/arm/arm-eabi-4.7/bin/arm-eabi-ar -r libmyjob.a myfunc.o myproc.o

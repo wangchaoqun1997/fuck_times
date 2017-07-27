@@ -1,0 +1,38 @@
+1:整体介绍一下,使用的接口
+
+整体介绍:
+	1)终端是内核读取文件内容
+	2)处理读到的数据
+
+使用的接口如下:
+//wangcq327 add start
+	
+	struct filp * fp=NULL;
+	mm_segment_t fs;
+	loff_t pos = 0;
+	char buf[200]={0};
+	char *p=NULL;
+	
+	fp = filp_open(GESTURE_SWITCH_FILE ,O_RDONLY , 0);
+	
+	if(IS_ERR(fp)){
+		printk("wangcq327 --- touchpanle Open file fail !!\n");
+	}else{
+		fs = get_fs();//get old fs;
+		set_fs(KERNEL_DS);
+		vfs_read(fp,buf,sizeof(buf),&pos);
+
+		.......
+		
+		filp_close(fp,NULL);
+		set_fs(fs);
+	}
+	
+//wangcq327 add end
+
+
+
+2:介绍例子
+
+1):v9 手势
+2)v19 T卡升级TP固件
