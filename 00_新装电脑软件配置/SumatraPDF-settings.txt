@@ -1,0 +1,3410 @@
+﻿# For documentation, see http://www.sumatrapdfreader.org/settings3.2.html
+
+MainWindowBackground = #c7edcc
+EscToExit = false
+ReuseInstance = false
+UseSysColors = false
+RestoreSession = true
+
+FixedPageUI [
+	TextColor = #000000
+	BackgroundColor = #c7edcc
+	SelectionColor = #f5fc0c
+	WindowMargin = 2 4 2 4
+	PageSpacing = 4 4
+]
+EbookUI [
+	FontName = Georgia
+	FontSize = 12.5
+	TextColor = #5f4b32
+	BackgroundColor = #c7edcc
+	UseFixedPageUI = false
+]
+ComicBookUI [
+	WindowMargin = 0 0 0 0
+	PageSpacing = 4 4
+	CbxMangaMode = false
+]
+ChmUI [
+	UseFixedPageUI = false
+]
+ExternalViewers [
+]
+ShowMenubar = true
+ReloadModifiedDocuments = true
+FullPathInTitle = false
+ZoomLevels = 8.33 12.5 18 25 33.33 50 66.67 75 100 125 150 200 300 400 600 800 1000 1200 1600 2000 2400 3200 4800 6400
+ZoomIncrement = 0
+
+PrinterDefaults [
+	PrintScale = shrink
+]
+ForwardSearch [
+	HighlightOffset = 0
+	HighlightWidth = 15
+	HighlightColor = #6581ff
+	HighlightPermanent = false
+]
+CustomScreenDPI = 0
+
+RememberStatePerDocument = true
+UiLanguage = cn
+ShowToolbar = true
+ShowFavorites = false
+AssociateSilently = false
+CheckForUpdates = true
+RememberOpenedFiles = true
+EnableTeXEnhancements = false
+DefaultDisplayMode = automatic
+DefaultZoom = fit page
+WindowState = 1
+WindowPos = 172 55 1465 1059
+ShowToc = true
+SidebarDx = 355
+TocDy = 0
+ShowStartPage = true
+UseTabs = true
+
+FileStates [
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\疯狂java讲义_读后总结.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 25
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = false
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = X:\00_github\fuck_times\00_who am I.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = false
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\baiduyunguanjia\onlinedit\cache\e67c24e43a1bc02ecb17230ef790c871\Power_ePAPR_APPROVED_v1.1.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 479
+		PageNo = 2
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\C++ java\C++Primer.Plus（第6版）中文带完整书签.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 283
+		PageNo = 369
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 240 261
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\C++ java\C++ Primer Plus中文版第5版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 2
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\Android(卷2)(带全目录完整版)邓凡平.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 3
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 406
+		PageNo = 8
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 24 69 91 124 151
+	]
+	[
+		FilePath = X:\00_github\fuck_times\linux内核函数.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 2
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\Head First设计模式.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 4
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 307
+		PageNo = 353
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = false
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\深入理解ANDROID 卷3.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 4
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 61
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\LINUX内核源代码情景分析%28上%29.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 503
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\Linux 设备驱动开发详解(第2版)高清.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\[疯狂JAVA讲义].李刚.高清扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 5
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 2342
+		PageNo = 801
+		Zoom = 25
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = X:\00_github\fuck_times\10_Linux_Shell常用命令及驱动常用函数\VIM用户手册.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 63
+		PageNo = 351
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\net\fuck_times\13_Linux_Base\系统_00_uboot\嵌入式BootLoader技术内幕.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = false
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = X:\00_github\fuck_times\xxxxxxxxxxxxxxxxxx\Power_ePAPR_APPROVED_v1.1.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 70
+		PageNo = 8
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = X:\00_github\fuck_times\xxxxxxxxxxxxxxxxxx\三大数据结构关系图.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = false
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\baiduyunguanjia\onlinedit\cache\5d1139d9d9c9ef2ef7bec390ffc177f1\三大数据结构关系图.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = false
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\net\fuck_times\13_Linux_Base\系统_00_uboot\u-boot启动代码详解.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = false
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\C++ java\第12章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 376
+		PageNo = 35
+		Zoom = 50
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = false
+		SidebarDx = 229
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\download\个人信用报告.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 2
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1575 1059
+		ShowToc = false
+		SidebarDx = 153
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\00_future\others\tensorflow_manual_cn.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\UML\UML2.0实战教程(Trufun).pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 203
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = true
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\Linux_input子系统\input.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 172 55 1465 1059
+		ShowToc = false
+		SidebarDx = 355
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\王超群v1.8_20161126.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 441 32 1575 1059
+		ShowToc = false
+		SidebarDx = 153
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\download\王超群v1.8_20161126.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 879 11 908 1059
+		ShowToc = false
+		SidebarDx = 153
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\Android：卷I 邓凡平著 PDF扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 112
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 74 5 1526 1059
+		ShowToc = true
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\download\reborn.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 73 8 1636 1066
+		ShowToc = true
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\OOP_设计模式\Head First设计模式.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 56
+		PageNo = 37
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 67 5 1136 1064
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\00_future\人民邮电出版社.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = single page
+		ScrollPos = -1 -1
+		PageNo = 119
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 103 0 1098 1080
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\UNIX环境高级编程第二版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 55
+		PageNo = 460
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 129 17 699 1016
+		ShowToc = true
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\download\AT043TN24_V.7.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 30
+		PageNo = 10
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 899 146 693 883
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\download\Android硬件信息客户化配置设计.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 470
+		PageNo = 16
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 82 54 893 906
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\01_BOOOOOOOKs\C++ java\[疯狂JAVA讲义].李刚.高清扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 363
+		PageNo = 202
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 82 54 893 906
+		ShowToc = true
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\01_works\m67\m68\PCA9535_PCA9535C_实际使用.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 72
+		PageNo = 7
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 82 54 893 906
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\00_future\Unity 5.x 从入门到精通.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = 195 1273
+		PageNo = 76
+		Zoom = 100
+		Rotation = 0
+		WindowState = 1
+		WindowPos = -1 0 1064 1080
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 24 25 61 140 182
+	]
+	[
+		FilePath = D:\01_works\MT6797_Camera_Design_Notice_V1.0.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 566
+		PageNo = 12
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 103 0 1098 1080
+		ShowToc = false
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\00_future\C#入门经典  第6版[扫描版PDF电子书].pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 2
+		PageNo = 42
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 64 0 756 1080
+		ShowToc = false
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\01_works\OV5648_CSP3_DS_1.1_WPI.PDF
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 441
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 86 0 1146 1080
+		ShowToc = false
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\01_works\SP5407 spec_commercial 1.2 - CSP.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 320
+		PageNo = 3
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 86 0 1146 1080
+		ShowToc = false
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\01_works\XC6130数字图像处理芯片_V1.0.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 455
+		PageNo = 1
+		Zoom = 150
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 86 0 1146 1080
+		ShowToc = false
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\CameraTuning_20160705\00_基础资料_必看\CCT2.0_SOP.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = 0 38
+		PageNo = 5
+		Zoom = 100
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1332 0 588 1080
+		ShowToc = false
+		SidebarDx = 344
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\CameraTuning_20160705\03_AE\[FAQ18203][Camera_Tuning]CCT工具调试AE_PLine_table.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 345 46 795 1061
+		ShowToc = false
+		SidebarDx = 344
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\360zip$$Temp\360$$5\SEC_S5K3L8XXM6-FGX9 ApprovalSheet_Ver0.03.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 697
+		PageNo = 7
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 73 1 730 1061
+		ShowToc = true
+		SidebarDx = 344
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\深入理解ANDROID 卷3.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 214
+		PageNo = 3
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 63 14 719 1061
+		ShowToc = false
+		SidebarDx = 344
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\MT6757_Hal_1_3rd_Party_Algorithm_Porting_Guide.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 479
+		PageNo = 51
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 95 48 1585 970
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\Camera_SW_Introduction_MT6753.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = ebe803674cdb9121d03696683a2f4ff451f88d91c168f5d4ff12eac48949ea2100000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 578
+		PageNo = 42
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 95 48 1585 970
+		ShowToc = true
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\HAL1_switch_to_HAL3.2.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 4d86da632d5eb2e624248aced949d01ea00489e1b97ad94eb8b002345feb2b2900000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 312
+		PageNo = 5
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 1030 111 842 1100
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\Hal1%26Hal3区别.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 6cb9ff7e044adf060c677411524a518f01bdd7b8c8f0c6a89faf68c9c626d89b00000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 246
+		PageNo = 7
+		Zoom = 125
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 189 30 1645 1100
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\Android：卷I 邓凡平著 PDF扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 415
+		PageNo = 29
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 345 46 795 1061
+		ShowToc = false
+		SidebarDx = 344
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 12 15 22 25 37 49 62 70 73 124 144
+	]
+	[
+		FilePath = D:\02_sources\Github\tensorflow-zh\tex_pdf\tensorflow_manual_cn.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 82
+		PageNo = 205
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 345 46 795 1061
+		ShowToc = true
+		SidebarDx = 344
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 1 21 80 138
+	]
+	[
+		FilePath = D:\02_sources\C++ java\[疯狂JAVA讲义].李刚.高清扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 433
+		PageNo = 804
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 345 46 795 1061
+		ShowToc = false
+		SidebarDx = 344
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\%5bCustomer_training%5dCamera_Hal_Introduction.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 3ac734f3a2e3eba7dd990761cccb20605e4475c5da55ac6c15f7146a1742dea100000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 189 30 1645 1100
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\%5bCustomer_training%5dCamera_ImageIO_Introduction (1).pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = b250d9e6ceb0ab8278338178eaee6e5d4ffb2a40d253260fc1a474dff27d0b0100000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 189 30 1645 1100
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\%5bCustomer_training%5dCamera_ImageIO_Introduction (2).pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = a0538c52e00b6f974616ea17a5684b6ccde357e5ed336cc796bfb82440dbcaf900000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 189 30 1645 1100
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\[Customer_training] Camera_Preview_Introduction.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 625e1020825ce2b628b5ee3cf503b5b18e834ab496e75409e804ef5616e3f27600000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 160
+		PageNo = 45
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 95 48 1585 884
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\[Customer_training] Camera_Hal_Introduction.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 3ac734f3a2e3eba7dd990761cccb20605e4475c5da55ac6c15f7146a1742dea100000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 338
+		PageNo = 47
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 95 48 1585 884
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\[Customer_training] Camera_ImageIO_Introduction.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 4bf0083db088dc6d0e209e5bac8f06ac7f15823663df799d333f162b34cca3ea00000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 55
+		PageNo = 29
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 95 48 1585 884
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\%5bCustomer_training%5dCamera_ImageIO_Introduction.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 4bf0083db088dc6d0e209e5bac8f06ac7f15823663df799d333f162b34cca3ea00000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 189 30 1645 1100
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\%5bCustomer_training%5dCamera_Normal_Shot_Introduction.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = ecd77f85e0f0dc1cbf813494a82e6a30d854bdec4fdd509be86b6e275c764b2400000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 189 30 1645 1100
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\MTKCAMEA\%5bCustomer_training%5dCamera_Preview_Introduction.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 520
+		PageNo = 14
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 189 30 1645 1100
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\MTK_camera驱动流程总结.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 667
+		PageNo = 4
+		Zoom = 125
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 349 317 845 1080
+		ShowToc = true
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++ java\第12章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 320
+		PageNo = 33
+		Zoom = 66.67
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 349 317 845 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++ java\第13章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 349 317 845 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++ java\第14章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 349 317 845 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\Driver_All_in_One_V1.0_MT6735_6753.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 2c5e4d6873ce1e629982fafacb1d860eafd053239d607481d15e9ec06871d74e00000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 190
+		PageNo = 81
+		Zoom = 75
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 349 317 845 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\WeChat Files\wangchaoqun1997\Files\HX8399-C_DS_temporary_v00.06_150714.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 743
+		PageNo = 171
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 189 30 1645 1100
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\Driver_All_in_One_V0.1_Android_M.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 333
+		PageNo = 13
+		Zoom = 75
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 349 317 845 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\camera深层学习\MTK6235+Camera架构及其500万摄像头软解码实现ov5642.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 502
+		PageNo = 39
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 349 317 845 1080
+		ShowToc = true
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\360zip$$Temp\360$$1\WD3169-V1.2.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 845 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\360zip$$Temp\360$$0\WAS4732D.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 845 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\360zip$$Temp\360$$0\SEC_S5K3L8XXM6-FGX9 ApprovalSheet_Ver0.03.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 845 1080
+		ShowToc = true
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++ java\C++Primer.Plus（第6版）中文带完整书签.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 507
+		PageNo = 595
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 845 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 371 385
+	]
+	[
+		FilePath = D:\下载文件\第一行代码——Android.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 680
+		PageNo = 349
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 895 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\360zip$$Temp\360$$2\WD3169-V1.2.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 67 0 744 1080
+		ShowToc = false
+		SidebarDx = 242
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\360zip$$Temp\360$$1\WAS4732D.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 67 0 744 1080
+		ShowToc = false
+		SidebarDx = 242
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\Tencent Files\719502447\FileRecv\151021【Invision】ECX331DB(E)Ver.1.97.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 743
+		PageNo = 6
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 499 166 1126 771
+		ShowToc = true
+		SidebarDx = 311
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\Android：卷I 邓凡平著 PDF扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = 185 15
+		PageNo = 19
+		Zoom = 125
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 86 0 1146 1080
+		ShowToc = true
+		SidebarDx = 219
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 79
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\360zip$$Temp\360$$2\HX8399-C_DS_temporary_v00.06_150714.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 805
+		PageNo = 7
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 67 0 1351 1080
+		ShowToc = false
+		SidebarDx = 345
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\CameraTuning_20160705\Camera Hal Introduction.pptx.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = ed22975caf839af5193d423efd4228a9729eb13a633beb75695a0118b4a4c75b00000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 156
+		PageNo = 14
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 86 0 1146 1080
+		ShowToc = false
+		SidebarDx = 219
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\WeChat Files\wangchaoqun1997\Files\PIP_Customization_MT6595.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 1ef34c6a408f9dbbfe273b553a5d223c6960e814eee1e89254a6b69bed2b5b1400000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 11
+		PageNo = 13
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 499 166 1126 771
+		ShowToc = false
+		SidebarDx = 311
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\WeChat Files\wangchaoqun1997\Files\Camera_Preview_design_MT6582_MT6592_unencryped.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 271
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 499 166 1126 771
+		ShowToc = false
+		SidebarDx = 311
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++\第12章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 474
+		PageNo = 35
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 499 166 1126 771
+		ShowToc = false
+		SidebarDx = 311
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++\C++ Primer Plus中文版第5版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 2121
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 499 166 1126 771
+		ShowToc = true
+		SidebarDx = 311
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++\C++Primer.Plus（第6版）中文带完整书签.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 22
+		PageNo = 387
+		Zoom = 125
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 499 166 1126 771
+		ShowToc = true
+		SidebarDx = 311
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 261 427 434
+	]
+	[
+		FilePath = D:\02_sources\C++\第11章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 40
+		PageNo = 117
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 201 18 770 1088
+		ShowToc = false
+		SidebarDx = 175
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++\第10章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 201 18 770 1088
+		ShowToc = false
+		SidebarDx = 175
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\深入理解ANDROID 卷3.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 281
+		PageNo = 3
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 929 1080
+		ShowToc = true
+		SidebarDx = 151
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\Android(卷2)(带全目录完整版)邓凡平.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = 84 311
+		PageNo = 451
+		Zoom = 100
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 512 68 1200 1100
+		ShowToc = true
+		SidebarDx = 289
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++\第13章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 785 0 1135 1080
+		ShowToc = false
+		SidebarDx = 289
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++\第14章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1128 0 792 1080
+		ShowToc = false
+		SidebarDx = 289
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\CameraTuning_20160705\00_基础资料_必看\Customer_Camera_Tuning_Introduction-MT6575_77_W1248.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 0edf12a99de22e5677b24a4838c84c48231e31f2d61b29944416362ef67be8c500000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 315
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 512 68 1000 1100
+		ShowToc = false
+		SidebarDx = 289
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\sensor_all_in_one.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 422
+		PageNo = 4
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 542 203 1200 1080
+		ShowToc = false
+		SidebarDx = 289
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\C++Primer.Plus（第6版）中文带完整书签.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 100
+		PageNo = 16
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 785 0 1135 1080
+		ShowToc = true
+		SidebarDx = 289
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 385 542
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\CameraTuning_20160705\08_ISP_ANR_EE_CCR\MT6732_52_ISP_Tuning_Introduction-Customer.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 74eea9fd92b05552a11e8519c57aadd31e6086c9c33b40e1eafbfe0336c77e0a00000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 333
+		PageNo = 13
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 991 0 929 1080
+		ShowToc = true
+		SidebarDx = 151
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\CameraTuning_20160705\00_基础资料_必看\Customer_Camera_Tuning_Introduction-MT6589_Basic.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 6d544b61cca4d1f8a446528812b5639f67857aa1a2c5e5a956001497d57d17da00000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 315
+		PageNo = 2
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 991 0 929 1080
+		ShowToc = false
+		SidebarDx = 151
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\CameraTuning_20160705\00_基础资料_必看\Camera_Basic_Training_II_MT6575.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 0e1a9b7911caa69690787eb3d1ba80fa67aa969cfd08b011a4f23506ea224e2200000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 393
+		PageNo = 31
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1068 0 852 1080
+		ShowToc = false
+		SidebarDx = 151
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\CameraTuning_20160705\00_基础资料_必看\Camera_Basic_Training_I_Camera_MT6575.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = b6dba3c22845ae50f4eb80cc4a59f304b6c0df833abb4d99d6299fd7c90dcc3f00000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 246
+		PageNo = 24
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1068 0 852 1080
+		ShowToc = false
+		SidebarDx = 151
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\download\C++Primer.Plus（第6版）中文带完整书签.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 215
+		PageNo = 219
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 175 -9 1228 1080
+		ShowToc = true
+		SidebarDx = 226
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\02_MTK_Camera\CameraTuning_20160705\00_基础资料_必看\CCT_User_Manual_SC.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 724
+		PageNo = 2
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 1068 0 844 1080
+		ShowToc = true
+		SidebarDx = 151
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\download\[C.Primer.Plus（第6版）中文版].（美）普拉达.扫描版(ED2000.COM).pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 175 -9 1228 1080
+		ShowToc = false
+		SidebarDx = 226
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\download\星火英语.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 463
+		PageNo = 10
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 175 -9 1228 1080
+		ShowToc = false
+		SidebarDx = 226
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\download\★星火英语：四级词汇必背（乱序版）.马德高.扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 162
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 175 -9 1228 1080
+		ShowToc = true
+		SidebarDx = 226
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\works\OV5648_CSP3_DS_1.1_WPI.PDF
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 209
+		PageNo = 32
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 175 -9 1228 1080
+		ShowToc = false
+		SidebarDx = 226
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\works\GC1024 DataSheet_V1.0_Released_20151014.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 33
+		PageNo = 17
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 175 -9 1228 1080
+		ShowToc = false
+		SidebarDx = 226
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\[疯狂JAVA讲义].李刚.高清扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 47
+		PageNo = 168
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 175 -9 1228 1080
+		ShowToc = true
+		SidebarDx = 226
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\C++Primer.Plus（第6版）中文带完整书签.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 125
+		PageNo = 594
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 175 -9 1228 1080
+		ShowToc = true
+		SidebarDx = 226
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 182 216 371 372 385
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\C++ Primer Plus中文版第5版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 172
+		PageNo = 242
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 175 -9 1228 1080
+		ShowToc = true
+		SidebarDx = 226
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\[C.Primer.Plus（第6版）中文版].（美）普拉达.扫描版(ED2000.COM).pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 55
+		PageNo = 786
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 63 0 935 1080
+		ShowToc = false
+		SidebarDx = 281
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\LINUX内核源代码情景分析%28上%29.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 230
+		PageNo = 425
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 63 0 935 1080
+		ShowToc = true
+		SidebarDx = 281
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\works\MT6797 LTE-A Smartphone Application Processor Functional Specification V1.5 .pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 111
+		PageNo = 138
+		Zoom = 125
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 63 0 935 1080
+		ShowToc = true
+		SidebarDx = 281
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 4 11 78 155
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\Tencent Files\719502447\FileRecv\MobileFile\multimedia_driver_development_and_bringup_guide_-.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 62
+		PageNo = 10
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = true
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\第9章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 8
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\第7章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\第8章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 311
+		PageNo = 12
+		Zoom = 50
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\第14章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = 50
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\第13章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = 75
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\第12章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\360zip$$Temp\360$$0\710大学英语星火式词汇1-4级巧记速记.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 351
+		PageNo = 387
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1422 1080
+		ShowToc = false
+		SidebarDx = 361
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\第10章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = 29 -1
+		PageNo = 1
+		Zoom = 50
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\G30P\GC1024 DataSheet_V1.0_Released_20151014.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 815
+		PageNo = 16
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\第11章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 147 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\Tencent Files\719502447\FileRecv\XC6130数字图像处理芯片_V1.0(1).pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 324
+		PageNo = 2
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 1032 1080
+		ShowToc = false
+		SidebarDx = 220
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\第5章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 694 9 1190 1005
+		ShowToc = false
+		SidebarDx = 269
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\WeChat Files\wangchaoqun1997\FavTemp\c76ee387\fc55a5911323c3a8d1726cc685e280c7.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 430
+		PageNo = 31
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 1055 1080
+		ShowToc = true
+		SidebarDx = 240
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\[疯狂JAVA讲义].李刚.高清扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 910
+		PageNo = 166
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 1033 1080
+		ShowToc = true
+		SidebarDx = 267
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\WeChat Files\wangchaoqun1997\Files\camera_sensor_module_bringup_app_note.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 384
+		PageNo = 15
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 43 0 1396 1080
+		ShowToc = true
+		SidebarDx = 248
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\WeChat Files\wangchaoqun1997\Files\multimedia_driver_development_and_bringup_guide_-_camera.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 36
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 43 0 1396 1080
+		ShowToc = true
+		SidebarDx = 248
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\WeChat Files\wangchaoqun1997\Files\multimedia_driver_development_and_bringup_guide_-_camera_-_simplified_chinese.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 190
+		PageNo = 44
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 43 0 1396 1080
+		ShowToc = true
+		SidebarDx = 248
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\Camera_CTS_SOP.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 65d6f9b4d5dc047306889221ec007afe0c4d4e72c458ac707ce945b3fde3775600000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 166
+		PageNo = 41
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 43 0 1207 1080
+		ShowToc = false
+		SidebarDx = 248
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\Tencent Files\719502447\FileRecv\Stereo_Camera_Add_Feature_Pipe_Node_MT6797.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		DecryptionKey = 8038b68a677933e9859602034152f05299842d6f00c6f3cab170fd02bc0fa3df00000000000000000000000000000000
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 464
+		PageNo = 2
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 43 0 1104 1080
+		ShowToc = false
+		SidebarDx = 248
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\Tencent Files\719502447\FileRecv\MT6797 LTE-A Smartphone Application Processor Functional Specification V1.5 .pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 642
+		PageNo = 2
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 43 0 1104 1080
+		ShowToc = true
+		SidebarDx = 248
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\Tencent Files\719502447\FileRecv\MT6797_Camera_Design_Notice_V1.0.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 285
+		PageNo = 3
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 43 0 1104 1080
+		ShowToc = false
+		SidebarDx = 248
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\第9章 (1).pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 509
+		PageNo = 119
+		Zoom = 50
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 498 -11 922 1013
+		ShowToc = false
+		SidebarDx = 263
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\第9章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 522
+		PageNo = 123
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 929 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\第8章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous facing
+		ScrollPos = -1 522
+		PageNo = 75
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 929 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\C++\第7章.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 295
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 178 1 857 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\input子系统\input.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 172
+		PageNo = 3
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 178 1 1110 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\[疯狂JAVA讲义].李刚.高清扫描版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 1534 1080
+		ShowToc = true
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\资料\input子系统\Input子系统较好文章\input.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 91
+		PageNo = 22
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 178 1 1110 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\G30\XC6130数字图像处理芯片_V1.0.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 178 1 1110 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\Linux 设备驱动开发详解(第2版)高清.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 613
+		Zoom = 125
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 178 1 1110 1080
+		ShowToc = true
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\AT043TN24_V.7.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 618
+		PageNo = 23
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 138 44 744 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\mt6573_LCM_Customer_Document.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 332
+		PageNo = 8
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 138 44 744 1080
+		ShowToc = true
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\MIPI-DSI-协议相关1.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 120
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 138 44 744 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\2.4寸TFT-LCD彩屏说明.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 806
+		PageNo = 6
+		Zoom = 66.67
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 138 44 744 1080
+		ShowToc = true
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\C++ Primer Plus中文版第5版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 788
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 178 1 857 1080
+		ShowToc = true
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\TFT-LCD工作原理_谢崇凯(最全版本)LCD驱动必看.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 64
+		PageNo = 66
+		Zoom = 100
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 178 1 1110 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\Tencent Files\719502447\FileRecv\XC6130数字图像处理芯片_V1.0.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 248
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 178 1 1110 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Documents\Tencent Files\719502447\FileRecv\GC1024 DataSheet_V1.0_Released_20151014.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 145
+		PageNo = 10
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 178 1 1110 1080
+		ShowToc = false
+		SidebarDx = 204
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\软件宏控制SOP .pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 82 54 893 906
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\[FAQ03891]如何在User版本开启串口(Uart),抓取上层Log,开启输入控制台.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 82 54 893 906
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Roaming\Foxmail7\Temp-3984-20170626170826\Attach\PCA9535_PCA9535C_实际使用.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = -1 0 1064 1080
+		ShowToc = true
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\PowerDebugSOP_Standby.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 46
+		PageNo = 29
+		Zoom = 100
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1 2 1438 1068
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Roaming\Foxmail7\Temp-3968-20170620090833\Attach\PCA9535_PCA9535C_实际使用.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 284
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 70 146 763 855
+		ShowToc = true
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\Head First设计模式.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 865
+		PageNo = 651
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 103 0 1098 1080
+		ShowToc = true
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\副本体检项目.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 250
+		PageNo = 4
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 103 0 1098 1080
+		ShowToc = false
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\Unity 5.x 从入门到精通.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 458
+		PageNo = 302
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 103 0 1098 1080
+		ShowToc = true
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 182 207
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\AppData\Local\Temp\360zip$$Temp\360$$3\mtk_fardcamera.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 25
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 231 7 1064 1080
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\下载文件\瑞慈体检报告-王超群.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 312 138 1064 1080
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\瑞慈体检报告-王超群.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 82
+		PageNo = 3
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 312 138 1064 1080
+		ShowToc = false
+		SidebarDx = 298
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\未来学习\Csap\C#入门经典  第6版[扫描版PDF电子书].pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 207
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 66 2 730 1068
+		ShowToc = true
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 6 18 27 43 62 232 256 274 300
+	]
+	[
+		FilePath = D:\02_sources\未来学习\C#\C#入门经典  第6版[扫描版PDF电子书].pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 1574
+		PageNo = 34
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 71 1 785 1080
+		ShowToc = false
+		SidebarDx = 286
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\未来学习\人民邮电出版社.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 111
+		PageNo = 90
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 735 1080
+		ShowToc = false
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = C:\Users\wangchaoqun-pc\Desktop\Unity 4.x从入门到精通 官方教材（完整版）.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 282
+		PageNo = 46
+		Zoom = fit width
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 62 0 735 1080
+		ShowToc = true
+		SidebarDx = 221
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\02_sources\第一行代码+Android+第2版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = true
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 408
+		PageNo = 9
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 73 1 730 1061
+		ShowToc = false
+		SidebarDx = 344
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+]
+SessionData [
+]
+TimeOfLastUpdateCheck = 0 0
+OpenCountWeek = 342
+
+# Settings after this line have not been recognized by the current version
