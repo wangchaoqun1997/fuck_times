@@ -1,0 +1,2008 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0056)http://blog.csdn.net/u012827296/article/details/51236614 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" async="" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/qcfm"></script><script type="text/javascript" async="" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/qcfm(1)"></script>  
+
+            <link rel="canonical" href="http://blog.csdn.net/u012827296/article/details/51236614"> 
+ <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://blog.csdn.net/u012827296/article/details/51236614#">
+       
+    <title>Handler运行机制 - maimingliang
+        - 博客频道 - CSDN.NET</title>
+    
+    <meta name="description" content="Handler原理分析">
+   
+    <script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/hm.js.下载"></script><script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/blog_static_head.min.js.下载" type="text/javascript"></script>
+
+    
+        <!--new top-->
+       
+       
+        <!--new top-->
+    
+      <!-- ad begin -->
+         
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/style.css">
+
+    
+
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/u012827296/rss/list">
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/blue.css">
+ 
+
+
+    <link href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/csdn_public_blog_detail.min.css" type="text/css" rel="stylesheet">
+     
+         <link rel="stylesheet" href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/csdn_blog_detail.min.css">
+
+     <script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/fuckadblock.js.下载" type="text/javascript" charset="utf-8"></script>
+         <script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/block.js.下载" type="text/javascript" charset="utf-8"></script>
+
+
+<script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/share.js.下载"></script><link rel="stylesheet" type="text/css" href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/job_reco.css"><link href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/bdsstyle.css" rel="stylesheet" type="text/css"><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><link rel="stylesheet" type="text/css" href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/style(1).css"><link rel="stylesheet" type="text/css" href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/style(2).css"><script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/logger.js.下载"></script><link rel="stylesheet" href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/share_style0_16.css"></head>
+
+
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><div id="MathJax_Message" style="display: none;"></div><iframe frameborder="0" style="display: none;" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/saved_resource.html"></iframe><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar_logo" class="img blog-icon"></a></div>          <div class="pull-right login-wrap ">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="http://passport.csdn.net/account/mobileregister?ref=toolbar&amp;action=mobileRegister">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search" id="toolbar_search" method="get" target="_blank">                      <input type="hidden" value="toolbar" name="ref" accesskey="2">                      <div class="border">                        <input placeholder="搜索" type="text" value="" name="q" accesskey="2"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label"><span class="red_txt">*</span>标题</label>                          <div class="col-sm-10">                            <input id="inputTitle" type="text" placeholder="" class="title form-control">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group" style="display:none;">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input id="input-url" type="text" placeholder="" class="url form-control">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" type="text" class="form-control tag">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">位置</label>                        <div class="col-sm-10">                          <div class="my_lib_box">                            个人主页&nbsp;-&nbsp;<a href="http://my.csdn.net/" target="_blank">我的知识</a>                          </div>                          <div class="checkbox">                            <div class="pull-left">                              <label>                                <input type="checkbox" name="share" class="save_lib_map" checked="checked">同时保存至：                              </label>                            </div>                            <div class="pull-left">                              <div class="dropdown">                                <button id="toolbar_sele_map" type="button">                                  选择知识图谱                                  <i class="fa fa-chevron-down"></i>                                </button>                                <div class="top_arr"></div>                                <div class="outside">                                  <ul class="dropdown-menu" id="toolbar_Design_knowledge"><li>选择知识图谱</li></ul>                                </div>                              </div>                            </div>                            <div class="pull-left new_txt">                              <a href="http://lib.csdn.net/my/create/structure" target="_blank">新建？</a>                            </div>                          </div>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left" style="display:none">                            <div class="checkbox">                              <label>                                <input type="checkbox" name="share" checked="checked" class="share">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"><div class="icon-hasnotes" style=""></div></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note" style="left: -212px; top: 14351px; display: none;">                      <div class="box"><div class="notifications notice_list_con curr">  <div class="menu_title">    <span class="title"><a href="http://msg.csdn.net/letters" target="_blank" class="read_all">查看所有私信</a><a href="http://msg.csdn.net/" target="_blank" class="go_all">查看所有通知</a></span>  </div>  <div class="loading"></div>  <div class="empty">暂没有新通知</div>  <div class="notice_content" style="overflow-y: auto; max-height: 270px;"></div></div><div class="notifications detail_con" style="display: none">  <div class="menu_title">    <span class="title">      <a class="go_back" href="javascript:void 0;">返回通知列表</a>      <a class="notifications_page_none nextnote" href="javascript:void 0;">下一条</a>      <a class="notifications_page prvnote" href="javascript:void 0;">上一条</a>    </span>  </div>  <div class="notice_content" style="overflow-y: scroll; height: 250px;"></div></div><div class="error"></div></div>                    <iframe src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/saved_resource(1).html" frameborder="0" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix" style="display:none;"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt style="border: none;"><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/2_wangchaoqun1997.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="avatar"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/2_wangchaoqun1997.jpg"></a></dt>                        <dd class="info" style="border: none;"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname">wangchaoqun1997</a><span class="dec">驱动 linux驱动 android驱动 driver</span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="http://my.csdn.net/my/account/changepwd?ref=toolbar" class="pull-left"><span class="icon-cog"></span>帐号设置</a><a href="https://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-left" style="margin-left:132px; width:18px; height:27px; white-space:nowrap; overflow:hidden;"><span class="icon-signout"></span><span class="out">退出</span></a></div>                  </div>                </div>              </li>              <li class="apps">                <div id="chasnew123" class="hasnew" style="display: none;"></div>                <div id="cappsarea123" class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd> <a href="http://lib.csdn.net/?ref=toolbar" target="_blank">知识库</a></dd>                      <dd><a href="http://ask.csdn.net/?ref=toolbar" target="_blank">技术问答</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                      <dd style="display:none"> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd style="display:none"> <a href="http://job.csdn.net/?ref=toolbar" target="_blank">JOB<img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="http://edu.csdn.net/?ref=toolbar" target="_blank">学院<img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://huiyi.csdn.net/?ref=toolbar" target="_blank">活动</a></dd>                      <dd> <a href="http://www.csto.com/?ref=toolbar" target="_blank">CSTO</a></dd>                      <dd> <a href="http://mall.csdn.net/?ref=toolbar" target="_blank">C币兑换<img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://cto.csdn.net/?ref=toolbar" target="_blank">CTO俱乐部</a></dd>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+       
+
+
+
+    <!-- 广告位开始 -->
+        
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/html.js.下载" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/u012827296">maimingliang</a></h2>
+            <h3>念念不忘，必有回响。不忘初心，方得始终</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/u012827296?viewmode=contents"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_mulu&#39;])">
+                    <img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/u012827296?viewmode=list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_zhaiyao&#39;])">
+                    <img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/u012827296/rss/list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_RSS&#39;])">
+                    <img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "u012827296";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/u012827296";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "wangchaoqun1997";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+
+<a href="http://bss.csdn.net/m/topic/community_IoT/index" target="_blank">
+<font color="blue"><strong>【CSDN 技术主题月】物联网全栈开发</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/turingbooks/article/details/72416875" target="_blank">
+<font color="red"><strong>【评论送书】5月书讯：流畅的Python </strong></font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/72844981" target="_blank">
+<font color="blue"><strong>CSDN日报20170602 ——《程序员、技术主管和架构师》
+</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://powerai.csdn.net/finance" target="_blank">
+<font color="red"><strong>IBM PowerAI人工智能马拉</strong></font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+
+
+
+
+
+
+<script type="text/javascript" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/category.js.下载"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=Handler%e8%bf%90%e8%a1%8c%e6%9c%ba%e5%88%b6&u=http://blog.csdn.net/u012827296/article/details/51236614"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/u012827296/article/details/51236614">
+        Handler运行机制            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href="http://www.csdn.net/tag/%e7%ba%bf%e7%a8%8b" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">线程</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2016-04-24 22:52</span>
+            <span class="link_view" title="阅读次数">5409人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="http://blog.csdn.net/u012827296/article/details/51236614#comments" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_pinglun&#39;])">评论</a>(2)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle(&#39;Handler%e8%bf%90%e8%a1%8c%e6%9c%ba%e5%88%b6&#39;,&#39;51236614&#39;);return false;" title="收藏" target="_blank">收藏</a></span>
+             <span class="link_report"> <a href="http://blog.csdn.net/u012827296/article/details/51236614#report" onclick="javascript:report(51236614,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody" style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label onclick="GetCategoryArticles(&#39;6065795&#39;,&#39;u012827296&#39;,&#39;top&#39;,&#39;51236614&#39;);">
+                        <span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_fenlei&#39;]);">Android 源码分析系列<em>（7）</em></span>
+                      <img class="arrow-down" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a href="http://blog.csdn.net/u012827296/article/category/6065795" target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_6065795">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+        <div class="bog_copyright">         
+            <p class="copyright_p">版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+
+<div style="clear:both"></div><div style="border:solid 1px #ccc; background:#eee; float:left; min-width:200px;padding:4px 10px;"><p style="text-align:right;margin:0;"><span style="float:left;">目录<a href="http://blog.csdn.net/u012827296/article/details/51236614#" title="系统根据文章中H1到H6标签自动生成文章目录">(?)</a></span><a href="http://blog.csdn.net/u012827296/article/details/51236614#" onclick="javascript:return openct(this);" title="展开">[+]</a></p><ol style="display:none;margin-left:14px;padding-left:14px;line-height:160%;"><li><a href="http://blog.csdn.net/u012827296/article/details/51236614#t0">Handler的运行机制</a></li><ol><li><a href="http://blog.csdn.net/u012827296/article/details/51236614#t1">Handler的作用</a></li><li><a href="http://blog.csdn.net/u012827296/article/details/51236614#t2">Handler的使用</a></li><li><a href="http://blog.csdn.net/u012827296/article/details/51236614#t3">Handler的源码分析</a></li><li><a href="http://blog.csdn.net/u012827296/article/details/51236614#t4">MessageQueue的工作原理</a></li><li><a href="http://blog.csdn.net/u012827296/article/details/51236614#t5">Looper的工作原理</a></li><li><a href="http://blog.csdn.net/u012827296/article/details/51236614#t6">Handler的运行机制</a></li></ol></ol></div><div style="clear:both"></div><div id="article_content" class="article_content tracking-ad" data-mod="popu_307" data-dsm="post">
+        <div class="markdown_views"><h2 id="handler的运行机制"><a name="t0" target="_blank"></a>Handler的运行机制</h2>
+
+
+
+<h3 id="handler的作用"><a name="t1" target="_blank"></a>Handler的作用：</h3>
+
+<p>当我们需要在子线程处理耗时的操作（例如访问网络，<a href="http://lib.csdn.net/base/mysql" class="replace_word" title="MySQL知识库" target="_blank" style="color:#df3434; font-weight:bold;">数据库</a>的操作），而当耗时的操作完成后，需要更新UI，这就需要使用Handler来处理，因为子线程不能做更新UI的操作。Handler能帮我们很容易的把任务（在子线程处理）切换回它所在的线程。简单理解，Handler就是解决线程和线程之间的通信的。</p>
+
+
+
+<h3 id="handler的使用"><a name="t2" target="_blank"></a>Handler的使用</h3>
+
+<p>使用的handler的两种形式： <br>
+1.在主线程使用handler； <br>
+2.在子线程使用handler。        </p>
+
+<p>在主线程使用handler的示例：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">    <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestHandlerActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AppCompatActivity</span> {</span>
+
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TAG = <span class="hljs-string">"TestHandlerActivity"</span>;
+
+        <span class="hljs-keyword">private</span> Handler mHandler = <span class="hljs-keyword">new</span> Handler(){
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleMessage</span>(Message msg) {
+                <span class="hljs-keyword">super</span>.handleMessage(msg);
+                <span class="hljs-comment">//获得刚才发送的Message对象，然后在这里进行UI操作</span>
+                Log.e(TAG,<span class="hljs-string">"------------&gt; msg.what = "</span> + msg.what);
+            }
+        };
+
+
+        <span class="hljs-annotation">@Override</span>
+        <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+            <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_handler_test);
+            initData();
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initData</span>() {
+
+            <span class="hljs-comment">//开启一个线程模拟处理耗时的操作</span>
+            <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() {
+                <span class="hljs-annotation">@Override</span>
+                <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>() {
+
+                    SystemClock.sleep(<span class="hljs-number">2000</span>);
+                    <span class="hljs-comment">//通过Handler发送一个消息切换回主线程（mHandler所在的线程）</span>
+                    mHandler.sendEmptyMessage(<span class="hljs-number">0</span>);
+                }
+            }).start();
+
+        }   </code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li></ul><div class="save_code tracking-ad" data-mod="popu_249"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li></ul></pre>
+
+<p><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/20160417192159801" alt="这里写图片描述" title=""></p>
+
+<p>在主线程使用handler很简单，只需在主线程创建一个handler对象，在子线程通过在主线程创建的handler对象发送Message，在handleMessage（）方法中接受这个Message对象进行处理。通过handler很容易的从子线程切换回主线程了。</p>
+
+<p>那么来看看在子线程中使用是否也是如此。</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering"> <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestHandlerActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AppCompatActivity</span> {</span>
+
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TAG = <span class="hljs-string">"TestHandlerActivity"</span>;
+        <span class="hljs-comment">//主线程中的handler</span>
+        <span class="hljs-keyword">private</span> Handler mHandler = <span class="hljs-keyword">new</span> Handler(){
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleMessage</span>(Message msg) {
+                <span class="hljs-keyword">super</span>.handleMessage(msg);
+                <span class="hljs-comment">//获得刚才发送的Message对象，然后在这里进行UI操作</span>
+                Log.e(TAG,<span class="hljs-string">"------------&gt; msg.what = "</span> + msg.what);
+            }
+        };
+        <span class="hljs-comment">//子线程中的handler</span>
+        <span class="hljs-keyword">private</span> Handler mHandlerThread = <span class="hljs-keyword">null</span>;
+
+        <span class="hljs-annotation">@Override</span>
+        <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+            <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_handler_test);
+            initData();
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initData</span>() {
+
+            <span class="hljs-comment">//开启一个线程模拟处理耗时的操作</span>
+            <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() {
+                <span class="hljs-annotation">@Override</span>
+                <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>() {
+
+                    SystemClock.sleep(<span class="hljs-number">2000</span>);
+                    <span class="hljs-comment">//通过Handler发送一个消息切换回主线程（mHandler所在的线程）</span>
+                    mHandler.sendEmptyMessage(<span class="hljs-number">0</span>);
+                    <span class="hljs-comment">//在子线程中创建Handler</span>
+                    mHandlerThread = <span class="hljs-keyword">new</span> Handler(){
+                        <span class="hljs-annotation">@Override</span>
+                        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleMessage</span>(Message msg) {
+                            <span class="hljs-keyword">super</span>.handleMessage(msg);
+                            Log.e(<span class="hljs-string">"sub thread"</span>,<span class="hljs-string">"---------&gt; msg.what = "</span> + msg.what);
+                        }
+                    };
+
+                    mHandlerThread.sendEmptyMessage(<span class="hljs-number">1</span>);
+                }
+            }).start();
+
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li></ul></pre>
+
+<p><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/20160417192248099" alt="这里写图片描述" title=""></p>
+
+<p>程序崩溃了。报的错误是没有在子线程调用Looper.prepare()的方法。而为什么在主线程中使用不会报错？通过源码的分析可以解析这个问题。</p>
+
+<p>在子线程中正确的使用Handler应该是这样的。</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering"> <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">TestHandlerActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">AppCompatActivity</span> {</span>
+
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> String TAG = <span class="hljs-string">"TestHandlerActivity"</span>;
+
+        <span class="hljs-comment">//主线程的Handler</span>
+        <span class="hljs-keyword">private</span> Handler mHandler = <span class="hljs-keyword">new</span> Handler(){
+            <span class="hljs-annotation">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleMessage</span>(Message msg) {
+                <span class="hljs-keyword">super</span>.handleMessage(msg);
+                <span class="hljs-comment">//获得刚才发送的Message对象，然后在这里进行UI操作</span>
+                Log.e(TAG,<span class="hljs-string">"------------&gt; msg.what = "</span> + msg.what);
+            }
+        };
+        <span class="hljs-comment">//子线程中的Handler</span>
+        <span class="hljs-keyword">private</span> Handler mHandlerThread = <span class="hljs-keyword">null</span>;
+
+        <span class="hljs-annotation">@Override</span>
+        <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title">onCreate</span>(Bundle savedInstanceState) {
+            <span class="hljs-keyword">super</span>.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_handler_test);
+            initData();
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">initData</span>() {
+
+            <span class="hljs-comment">//开启一个线程模拟处理耗时的操作</span>
+            <span class="hljs-keyword">new</span> Thread(<span class="hljs-keyword">new</span> Runnable() {
+                <span class="hljs-annotation">@Override</span>
+                <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span>() {
+
+                    SystemClock.sleep(<span class="hljs-number">2000</span>);
+                    <span class="hljs-comment">//通过Handler发送一个消息切换回主线程（mHandler所在的线程）</span>
+                    mHandler.sendEmptyMessage(<span class="hljs-number">0</span>);
+
+                    <span class="hljs-comment">//调用Looper.prepare（）方法</span>
+                    Looper.prepare();
+
+                    mHandlerThread = <span class="hljs-keyword">new</span> Handler(){
+                        <span class="hljs-annotation">@Override</span>
+                        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleMessage</span>(Message msg) {
+                            <span class="hljs-keyword">super</span>.handleMessage(msg);
+                            Log.e(<span class="hljs-string">"sub thread"</span>,<span class="hljs-string">"---------&gt; msg.what = "</span> + msg.what);
+                        }
+                    };
+
+                    mHandlerThread.sendEmptyMessage(<span class="hljs-number">1</span>);
+
+                    <span class="hljs-comment">//调用Looper.loop（）方法</span>
+                    Looper.loop();
+                }
+            }).start();
+
+        }
+</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li><li>54</li><li>55</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li><li>54</li><li>55</li></ul></pre>
+
+<p><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/20160417192312084" alt="这里写图片描述" title=""></p>
+
+<p>可以看到，通过调用Looper.prepare()运行正常，handleMessage方法中就可以接收到发送的Message。</p>
+
+<p>至于为什么要调用这个方法呢？去看看源码。</p>
+
+
+
+<h3 id="handler的源码分析"><a name="t3" target="_blank"></a>Handler的源码分析</h3>
+
+<p>Handler的消息处理主要有五个部分组成，Message，Handler，Message Queue，Looper和ThreadLocal。首先简要的了解这些对象的概念</p>
+
+<p>Message：Message是在线程之间传递的消息，它可以在内部携带少量的数据，用于线程之间交换数据。Message有四个常用的字段，what字段，arg1字段，arg2字段，obj字段。what，arg1，arg2可以携带整型数据，obj可以携带object对象。</p>
+
+<p>Handler：它主要用于发送和处理消息的发送消息一般使用sendMessage（）方法,还有其他的一系列sendXXX的方法，但最终都是调用了sendMessageAtTime方法，除了sendMessageAtFrontOfQueue（）这个方法</p>
+
+<p>而发出的消息经过一系列的辗转处理后，最终会传递到Handler的handleMessage方法中。</p>
+
+<p>Message Queue：MessageQueue是消息队列的意思，它主要用于存放所有通过Handler发送的消息，这部分的消息会一直存在于消息队列中，等待被处理。每个线程中只会有一个MessageQueue对象。</p>
+
+<p>Looper：每个线程通过Handler发送的消息都保存在，MessageQueue中，Looper通过调用loop（）的方法，就会进入到一个无限循环当中，然后每当发现Message Queue中存在一条消息，就会将它取出，并传递到Handler的handleMessage（）方法中。每个线程中只会有一个Looper对象。</p>
+
+<p>ThreadLocal：MessageQueue对象，和Looper对象在每个线程中都只会有一个对象，怎么能保证它只有一个对象，就通过ThreadLocal来保存。Thread Local是一个线程内部的数据存储类，通过它可以在指定线程中存储数据，数据存储以后，只有在指定线程中可以获取到存储到数据，对于其他线程来说则无法获取到数据。</p>
+
+<p>了解了这些基本概念后，我们深入源码来了解Handler的工作机制。</p>
+
+
+
+<h3 id="messagequeue的工作原理"><a name="t4" target="_blank"></a>MessageQueue的工作原理</h3>
+
+<p>MessageQueue消息队列是通过一个单链表的<a href="http://lib.csdn.net/base/datastructure" class="replace_word" title="算法与数据结构知识库" target="_blank" style="color:#df3434; font-weight:bold;">数据结构</a>来维护消息列表的。下面主要看enqueueMessage方法和next（）方法。如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">    <span class="hljs-keyword">boolean</span> enqueueMessage(Message msg, <span class="hljs-keyword">long</span> when) {
+            <span class="hljs-keyword">if</span> (msg.target == <span class="hljs-keyword">null</span>) {
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">"Message must have a target."</span>);
+            }
+            <span class="hljs-keyword">if</span> (msg.isInUse()) {
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(msg + <span class="hljs-string">" This message is already in use."</span>);
+            }
+
+            <span class="hljs-keyword">synchronized</span> (<span class="hljs-keyword">this</span>) {
+                <span class="hljs-keyword">if</span> (mQuitting) {
+                    IllegalStateException e = <span class="hljs-keyword">new</span> IllegalStateException(
+                            msg.target + <span class="hljs-string">" sending message to a Handler on a dead thread"</span>);
+                    Log.w(TAG, e.getMessage(), e);
+                    msg.recycle();
+                    <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+                }
+
+                msg.markInUse();
+                msg.when = when;
+                Message p = mMessages;
+                <span class="hljs-keyword">boolean</span> needWake;
+                <span class="hljs-keyword">if</span> (p == <span class="hljs-keyword">null</span> || when == <span class="hljs-number">0</span> || when &lt; p.when) {
+                    <span class="hljs-comment">// New head, wake up the event queue if blocked.</span>
+                    msg.next = p;
+                    mMessages = msg;
+                    needWake = mBlocked;
+                } <span class="hljs-keyword">else</span> {
+                    <span class="hljs-comment">// Inserted within the middle of the queue.  Usually we don't have to wake</span>
+                    <span class="hljs-comment">// up the event queue unless there is a barrier at the head of the queue</span>
+                    <span class="hljs-comment">// and the message is the earliest asynchronous message in the queue.</span>
+                    needWake = mBlocked &amp;&amp; p.target == <span class="hljs-keyword">null</span> &amp;&amp; msg.isAsynchronous();
+                    Message prev;
+                    <span class="hljs-keyword">for</span> (;;) {
+                        prev = p;
+                        p = p.next;
+                        <span class="hljs-keyword">if</span> (p == <span class="hljs-keyword">null</span> || when &lt; p.when) {
+                            <span class="hljs-keyword">break</span>;
+                        }
+                        <span class="hljs-keyword">if</span> (needWake &amp;&amp; p.isAsynchronous()) {
+                            needWake = <span class="hljs-keyword">false</span>;
+                        }
+                    }
+                    msg.next = p; <span class="hljs-comment">// invariant: p == prev.next</span>
+                    prev.next = msg;
+                }
+
+                <span class="hljs-comment">// We can assume mPtr != 0 because mQuitting is false.</span>
+                <span class="hljs-keyword">if</span> (needWake) {
+                    nativeWake(mPtr);
+                }
+            }
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li></ul></pre>
+
+<p>可以看出，在这个方法里主要是根据时间的顺序向单链表中插入一条消息。</p>
+
+<p>next（）方法。如下</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs coffeescript has-numbering">    Message next() {
+            <span class="hljs-regexp">//</span> Return here <span class="hljs-keyword">if</span> the message <span class="hljs-keyword">loop</span> has already quit <span class="hljs-keyword">and</span> been disposed.
+            <span class="hljs-regexp">//</span> This can happen <span class="hljs-keyword">if</span> the application tries to restart a looper after quit
+            <span class="hljs-regexp">//</span> which <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> supported.
+            final long ptr = mPtr;
+            <span class="hljs-keyword">if</span> (ptr == <span class="hljs-number">0</span>) {
+                <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+            }
+
+            int pendingIdleHandlerCount = -<span class="hljs-number">1</span>; <span class="hljs-regexp">//</span> -<span class="hljs-number">1</span> only during first iteration
+            int nextPollTimeoutMillis = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">for</span> (;;) {
+                <span class="hljs-keyword">if</span> (nextPollTimeoutMillis != <span class="hljs-number">0</span>) {
+                    Binder.flushPendingCommands();
+                }
+
+                nativePollOnce(ptr, nextPollTimeoutMillis);
+
+                synchronized (<span class="hljs-keyword">this</span>) {
+                    <span class="hljs-regexp">//</span> Try to retrieve the next message.  Return <span class="hljs-keyword">if</span> found.
+                    final long now = SystemClock.uptimeMillis();
+                    Message prevMsg = <span class="hljs-literal">null</span>;
+                    Message msg = mMessages;
+                    <span class="hljs-keyword">if</span> (msg != <span class="hljs-literal">null</span> &amp;&amp; msg.target == <span class="hljs-literal">null</span>) {
+                        <span class="hljs-regexp">//</span> Stalled <span class="hljs-keyword">by</span> a barrier.  Find the next asynchronous message <span class="hljs-keyword">in</span> the queue.
+                        <span class="hljs-keyword">do</span> {
+                            prevMsg = msg;
+                            msg = msg.next;
+                        } <span class="hljs-keyword">while</span> (msg != <span class="hljs-literal">null</span> &amp;&amp; !msg.isAsynchronous());
+                    }
+                    <span class="hljs-keyword">if</span> (msg != <span class="hljs-literal">null</span>) {
+                        <span class="hljs-keyword">if</span> (now &lt; msg.<span class="hljs-keyword">when</span>) {
+                            <span class="hljs-regexp">//</span> Next message <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> ready.  Set a timeout to wake up <span class="hljs-keyword">when</span> it <span class="hljs-keyword">is</span> ready.
+                            nextPollTimeoutMillis = (int) Math.min(msg.<span class="hljs-keyword">when</span> - now, Integer.MAX_VALUE);
+                        } <span class="hljs-keyword">else</span> {
+                            <span class="hljs-regexp">//</span> Got a message.
+                            mBlocked = <span class="hljs-literal">false</span>;
+                            <span class="hljs-keyword">if</span> (prevMsg != <span class="hljs-literal">null</span>) {
+                                prevMsg.next = msg.next;
+                            } <span class="hljs-keyword">else</span> {
+                                mMessages = msg.next;
+                            }
+                            msg.next = <span class="hljs-literal">null</span>;
+                            <span class="hljs-keyword">if</span> (DEBUG) Log.v(TAG, <span class="hljs-string">"Returning message: "</span> + msg);
+                            msg.markInUse();
+                            <span class="hljs-keyword">return</span> msg;
+                        }
+                    } <span class="hljs-keyword">else</span> {
+                        <span class="hljs-regexp">//</span> No more messages.
+                        nextPollTimeoutMillis = -<span class="hljs-number">1</span>;
+                    }
+
+                    <span class="hljs-regexp">//</span> Process the quit message now that all pending messages have been handled.
+                    <span class="hljs-keyword">if</span> (mQuitting) {
+                        dispose();
+                        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+                    }
+
+                    <span class="hljs-regexp">//</span> If first time idle, <span class="hljs-keyword">then</span> get the number <span class="hljs-keyword">of</span> idlers to run.
+                    <span class="hljs-regexp">//</span> Idle handles only run <span class="hljs-keyword">if</span> the queue <span class="hljs-keyword">is</span> empty <span class="hljs-keyword">or</span> <span class="hljs-keyword">if</span> the first message
+                    <span class="hljs-regexp">//</span> <span class="hljs-keyword">in</span> the queue (possibly a barrier) <span class="hljs-keyword">is</span> due to be handled <span class="hljs-keyword">in</span> the future.
+                    <span class="hljs-keyword">if</span> (pendingIdleHandlerCount &lt; <span class="hljs-number">0</span>
+                            &amp;&amp; (mMessages == <span class="hljs-literal">null</span> || now &lt; mMessages.<span class="hljs-keyword">when</span>)) {
+                        pendingIdleHandlerCount = mIdleHandlers.size();
+                    }
+                    <span class="hljs-keyword">if</span> (pendingIdleHandlerCount &lt;= <span class="hljs-number">0</span>) {
+                        <span class="hljs-regexp">//</span> No idle handlers to run.  Loop <span class="hljs-keyword">and</span> wait some more.
+                        mBlocked = <span class="hljs-literal">true</span>;
+                        <span class="hljs-keyword">continue</span>;
+                    }
+
+                    <span class="hljs-keyword">if</span> (mPendingIdleHandlers == <span class="hljs-literal">null</span>) {
+                        mPendingIdleHandlers = <span class="hljs-keyword">new</span> IdleHandler[Math.max(pendingIdleHandlerCount, <span class="hljs-number">4</span>)];
+                    }
+                    mPendingIdleHandlers = mIdleHandlers.toArray(mPendingIdleHandlers);
+                }
+
+                <span class="hljs-regexp">//</span> Run the idle handlers.
+                <span class="hljs-regexp">//</span> We only ever reach <span class="hljs-keyword">this</span> code block during the first iteration.
+                <span class="hljs-keyword">for</span> (int i = <span class="hljs-number">0</span>; i &lt; pendingIdleHandlerCount; i++) {
+                    final IdleHandler idler = mPendingIdleHandlers[i];
+                    mPendingIdleHandlers[i] = <span class="hljs-literal">null</span>; <span class="hljs-regexp">//</span> release the reference to the handler
+
+                    boolean keep = <span class="hljs-literal">false</span>;
+                    <span class="hljs-keyword">try</span> {
+                        keep = idler.queueIdle();
+                    } <span class="hljs-keyword">catch</span> (Throwable t) {
+                        Log.wtf(TAG, <span class="hljs-string">"IdleHandler threw exception"</span>, t);
+                    }
+
+                    <span class="hljs-keyword">if</span> (!keep) {
+                        synchronized (<span class="hljs-keyword">this</span>) {
+                            mIdleHandlers.remove(idler);
+                        }
+                    }
+                }
+
+                <span class="hljs-regexp">//</span> Reset the idle handler count to <span class="hljs-number">0</span> so we <span class="hljs-keyword">do</span> <span class="hljs-keyword">not</span> run them again.
+                pendingIdleHandlerCount = <span class="hljs-number">0</span>;
+
+                <span class="hljs-regexp">//</span> While calling an idle handler, a <span class="hljs-keyword">new</span> message could have been delivered
+                <span class="hljs-regexp">//</span> so go back <span class="hljs-keyword">and</span> look again <span class="hljs-keyword">for</span> a pending message without waiting.
+                nextPollTimeoutMillis = <span class="hljs-number">0</span>;
+            }
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li><li>54</li><li>55</li><li>56</li><li>57</li><li>58</li><li>59</li><li>60</li><li>61</li><li>62</li><li>63</li><li>64</li><li>65</li><li>66</li><li>67</li><li>68</li><li>69</li><li>70</li><li>71</li><li>72</li><li>73</li><li>74</li><li>75</li><li>76</li><li>77</li><li>78</li><li>79</li><li>80</li><li>81</li><li>82</li><li>83</li><li>84</li><li>85</li><li>86</li><li>87</li><li>88</li><li>89</li><li>90</li><li>91</li><li>92</li><li>93</li><li>94</li><li>95</li><li>96</li><li>97</li><li>98</li><li>99</li><li>100</li><li>101</li><li>102</li><li>103</li><li>104</li><li>105</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li><li>54</li><li>55</li><li>56</li><li>57</li><li>58</li><li>59</li><li>60</li><li>61</li><li>62</li><li>63</li><li>64</li><li>65</li><li>66</li><li>67</li><li>68</li><li>69</li><li>70</li><li>71</li><li>72</li><li>73</li><li>74</li><li>75</li><li>76</li><li>77</li><li>78</li><li>79</li><li>80</li><li>81</li><li>82</li><li>83</li><li>84</li><li>85</li><li>86</li><li>87</li><li>88</li><li>89</li><li>90</li><li>91</li><li>92</li><li>93</li><li>94</li><li>95</li><li>96</li><li>97</li><li>98</li><li>99</li><li>100</li><li>101</li><li>102</li><li>103</li><li>104</li><li>105</li></ul></pre>
+
+<p>在next方法是一个无限循环的方法，如果有消息返回这条消息并从链表中移除，而没有消息则一直阻塞在这里。</p>
+
+
+
+<h3 id="looper的工作原理"><a name="t5" target="_blank"></a>Looper的工作原理</h3>
+
+<p>每个程序都有一个入口，而<a href="http://lib.csdn.net/base/android" class="replace_word" title="Android知识库" target="_blank" style="color:#df3434; font-weight:bold;">Android</a>程序是基于<a href="http://lib.csdn.net/base/javase" class="replace_word" title="Java SE知识库" target="_blank" style="color:#df3434; font-weight:bold;">Java</a>的，java的程序入口是静态的main函数，因此Android程序的入口也应该为静态的main函数，在android程序中这个静态的main在ActivityThread类中。我们来看一下这个main方法，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">     <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span>(String[] args) {
+            SamplingProfilerIntegration.start();
+
+            <span class="hljs-comment">// CloseGuard defaults to true and can be quite spammy.  We</span>
+            <span class="hljs-comment">// disable it here, but selectively enable it later (via</span>
+            <span class="hljs-comment">// StrictMode) on debug builds, but using DropBox, not logs.</span>
+            CloseGuard.setEnabled(<span class="hljs-keyword">false</span>);
+
+            Environment.initForCurrentUser();
+
+            <span class="hljs-comment">// Set the reporter for event logging in libcore</span>
+            EventLogger.setReporter(<span class="hljs-keyword">new</span> EventLoggingReporter());
+
+            Security.addProvider(<span class="hljs-keyword">new</span> AndroidKeyStoreProvider());
+
+            <span class="hljs-comment">// Make sure TrustedCertificateStore looks in the right place for CA certificates</span>
+            <span class="hljs-keyword">final</span> File configDir = Environment.getUserConfigDirectory(UserHandle.myUserId());
+            TrustedCertificateStore.setDefaultUserDirectory(configDir);
+
+            Process.setArgV0(<span class="hljs-string">"&lt;pre-initialized&gt;"</span>);
+            <span class="hljs-comment">//######</span>
+            Looper.prepareMainLooper();
+
+            ActivityThread thread = <span class="hljs-keyword">new</span> ActivityThread();
+            thread.attach(<span class="hljs-keyword">false</span>);
+
+            <span class="hljs-keyword">if</span> (sMainThreadHandler == <span class="hljs-keyword">null</span>) {
+                sMainThreadHandler = thread.getHandler();
+            }
+
+            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">false</span>) {
+                Looper.myLooper().setMessageLogging(<span class="hljs-keyword">new</span>
+                        LogPrinter(Log.DEBUG, <span class="hljs-string">"ActivityThread"</span>));
+            }
+
+            Looper.loop();
+
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"Main thread loop unexpectedly exited"</span>);
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li></ul></pre>
+
+<p>在main方法中系统调用了 Looper.prepareMainLooper();来创建主线程的Looper以及MessageQueue，并通过Looper.loop（）来开启主线程的消息循环。来看看Looper.prepareMainLooper()是怎么创建出这两个对象的。如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">     <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">prepareMainLooper</span>() {
+            prepare(<span class="hljs-keyword">false</span>);
+            <span class="hljs-keyword">synchronized</span> (Looper.class) {
+                <span class="hljs-keyword">if</span> (sMainLooper != <span class="hljs-keyword">null</span>) {
+                    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(<span class="hljs-string">"The main Looper has already been prepared."</span>);
+                }
+                sMainLooper = myLooper();
+            }
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li></ul></pre>
+
+<p>可以看到，在这个方法中调用了  prepare(false);方法和 myLooper();方法，我在进入这个两个方法中，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs cs has-numbering">     <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">prepare</span>(boolean quitAllowed) {
+            <span class="hljs-keyword">if</span> (sThreadLocal.<span class="hljs-keyword">get</span>() != <span class="hljs-keyword">null</span>) {
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"Only one Looper may be created per thread"</span>);
+            }
+            sThreadLocal.<span class="hljs-keyword">set</span>(<span class="hljs-keyword">new</span> Looper(quitAllowed));
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ul></pre>
+
+<p>在这里可以看出，sThreadLocal对象保存了一个Looper对象，首先判断是否已经存在Looper对象了，以防止被调用两次。sThreadLocal对象是ThreadLocal类型，因此保证了每个线程中只有一个Looper对象。Looper对象是什么创建的，我们进入看看，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">  <span class="hljs-keyword">private</span> <span class="hljs-title">Looper</span>(<span class="hljs-keyword">boolean</span> quitAllowed) {
+            mQueue = <span class="hljs-keyword">new</span> MessageQueue(quitAllowed);
+            mThread = Thread.currentThread();
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li></ul></pre>
+
+<p>可以看出，这里在Looper构造函数中创建出了一个MessageQueue对象和保存了当前线程。从上面可以看出一个线程中只有一个Looper对象，而Message Queue对象是在Looper构造函数创建出来的，因此每一个线程也只会有一个MessageQueue对象。</p>
+
+<p>对prepare方法还有一个重载的方法：如下</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs cs has-numbering">  <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">prepare</span>() {
+            prepare(<span class="hljs-keyword">true</span>);
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets_01.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li></ul></pre>
+
+<p>prepare()仅仅是对prepare(boolean quitAllowed) 的封装而已，在这里就很好解释了在主线程为什么不用调用Looper.prepare（）方法了。因为在主线程启动的时候系统已经帮我们自动调用了Looper.prepare()方法。</p>
+
+<p>在Looper.prepareMainLooper（）方法中还调用了一个方法myLooper()，我们进去看看，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">        <span class="hljs-javadoc">/**
+         * Return the Looper object associated with the current thread.  Returns
+         * null if the calling thread is not associated with a Looper.
+         */</span>
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Looper <span class="hljs-title">myLooper</span>() {
+            <span class="hljs-keyword">return</span> sThreadLocal.get();
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ul></pre>
+
+<p>在调用prepare（）方法中在当前线程保存一个Looper对象sThreadLocal.set(new Looper(quitAllowed));my Looper（）方法就是取出当前线程的Looper对象，保存在sMainLooper引用中。</p>
+
+<p>在main（）方法中还调用了Looper.loop()方法，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">loop</span>() {
+            <span class="hljs-keyword">final</span> Looper me = myLooper();
+            <span class="hljs-keyword">if</span> (me == <span class="hljs-keyword">null</span>) {
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(<span class="hljs-string">"No Looper; Looper.prepare() wasn't called on this thread."</span>);
+            }
+            <span class="hljs-keyword">final</span> MessageQueue queue = me.mQueue;
+
+            <span class="hljs-comment">// Make sure the identity of this thread is that of the local process,</span>
+            <span class="hljs-comment">// and keep track of what that identity token actually is.</span>
+            Binder.clearCallingIdentity();
+            <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> ident = Binder.clearCallingIdentity();
+
+            <span class="hljs-keyword">for</span> (;;) {
+                Message msg = queue.next(); <span class="hljs-comment">// might block</span>
+                <span class="hljs-keyword">if</span> (msg == <span class="hljs-keyword">null</span>) {
+                    <span class="hljs-comment">// No message indicates that the message queue is quitting.</span>
+                    <span class="hljs-keyword">return</span>;
+                }
+
+                <span class="hljs-comment">// This must be in a local variable, in case a UI event sets the logger</span>
+                Printer logging = me.mLogging;
+                <span class="hljs-keyword">if</span> (logging != <span class="hljs-keyword">null</span>) {
+                    logging.println(<span class="hljs-string">"&gt;&gt;&gt;&gt;&gt; Dispatching to "</span> + msg.target + <span class="hljs-string">" "</span> +
+                            msg.callback + <span class="hljs-string">": "</span> + msg.what);
+                }
+
+                msg.target.dispatchMessage(msg);
+
+                <span class="hljs-keyword">if</span> (logging != <span class="hljs-keyword">null</span>) {
+                    logging.println(<span class="hljs-string">"&lt;&lt;&lt;&lt;&lt; Finished to "</span> + msg.target + <span class="hljs-string">" "</span> + msg.callback);
+                }
+
+                <span class="hljs-comment">// Make sure that during the course of dispatching the</span>
+                <span class="hljs-comment">// identity of the thread wasn't corrupted.</span>
+                <span class="hljs-keyword">final</span> <span class="hljs-keyword">long</span> newIdent = Binder.clearCallingIdentity();
+                <span class="hljs-keyword">if</span> (ident != newIdent) {
+                    Log.wtf(TAG, <span class="hljs-string">"Thread identity changed from 0x"</span>
+                            + Long.toHexString(ident) + <span class="hljs-string">" to 0x"</span>
+                            + Long.toHexString(newIdent) + <span class="hljs-string">" while dispatching to "</span>
+                            + msg.target.getClass().getName() + <span class="hljs-string">" "</span>
+                            + msg.callback + <span class="hljs-string">" what="</span> + msg.what);
+                }
+
+                msg.recycle();
+            }
+    }
+</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li></ul></pre>
+
+<p>在这个方法里，进入一个无限循环，不断的从MessageQueue的next方法获取消息，而next方法是一个阻塞操作，当没有消息的时候一直在阻塞，当有消息通过            msg.target.dispatchMessage(msg);这里的msg.target其实就是发送给这条消息的Handler对象。</p>
+
+
+
+<h3 id="handler的运行机制-1"><a name="t6" target="_blank"></a>Handler的运行机制</h3>
+
+<p>看看Handler的构造方法。如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs cs has-numbering">    <span class="hljs-keyword">public</span> <span class="hljs-title">Handler</span>(Callback callback) {
+            <span class="hljs-keyword">this</span>(callback, <span class="hljs-keyword">false</span>);
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-title">Handler</span>(Looper looper) {
+            <span class="hljs-keyword">this</span>(looper, <span class="hljs-keyword">null</span>, <span class="hljs-keyword">false</span>);
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-title">Handler</span>(Looper looper, Callback callback) {
+            <span class="hljs-keyword">this</span>(looper, callback, <span class="hljs-keyword">false</span>);
+        }
+</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li></ul></pre>
+
+<p>我们去看看没有Looper 对象的构造方法：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs cs has-numbering">     <span class="hljs-keyword">public</span> <span class="hljs-title">Handler</span>(Callback callback, boolean <span class="hljs-keyword">async</span>) {
+            <span class="hljs-keyword">if</span> (FIND_POTENTIAL_LEAKS) {
+                final Class&lt;? extends Handler&gt; klass = getClass();
+                <span class="hljs-keyword">if</span> ((klass.isAnonymousClass() || klass.isMemberClass() || klass.isLocalClass()) &amp;&amp;
+                        (klass.getModifiers() &amp; Modifier.STATIC) == <span class="hljs-number">0</span>) {
+                    Log.w(TAG, <span class="hljs-string">"The following Handler class should be static or leaks might occur: "</span> +
+                        klass.getCanonicalName());
+                }
+            }
+
+            mLooper = Looper.myLooper();
+            <span class="hljs-keyword">if</span> (mLooper == <span class="hljs-keyword">null</span>) {
+                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> RuntimeException(
+                    <span class="hljs-string">"Can't create handler inside thread that has not called Looper.prepare()"</span>);
+            }
+            mQueue = mLooper.mQueue;
+            mCallback = callback;
+            mAsynchronous = <span class="hljs-keyword">async</span>;
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li></ul></pre>
+
+<p>可以看到，到looper对象为null，抛出 “Can’t create handler inside thread that has not called Looper.prepare()”异常由这里可以知道，当我们在子线程使用Handler的时候要手动调用Looper.prepare()创建一个Looper对象，之所以主线程不用，是系统启动的时候帮我们自动调用了Looper.prepare()方法。</p>
+
+<p>handler的工作主要包含发送和接收过程。消息的发送主要通过post和send的一系列方法，而post的一系列方法是最终是通过send的一系列方法来实现的。而send的一系列方法最终是通过sendMessageAtTime方法来实现的，除了sendMessageAtFrontOfQueue（）这个方法。去看看这些一系列send的方法，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">sendMessage</span>(Message msg)
+        {
+            <span class="hljs-keyword">return</span> sendMessageDelayed(msg, <span class="hljs-number">0</span>);
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">sendEmptyMessage</span>(<span class="hljs-keyword">int</span> what)
+        {
+            <span class="hljs-keyword">return</span> sendEmptyMessageDelayed(what, <span class="hljs-number">0</span>);
+        }  
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">sendEmptyMessageAtTime</span>(<span class="hljs-keyword">int</span> what, <span class="hljs-keyword">long</span> uptimeMillis) {
+            Message msg = Message.obtain();
+            msg.what = what;
+            <span class="hljs-keyword">return</span> sendMessageAtTime(msg, uptimeMillis);
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">sendMessageDelayed</span>(Message msg, <span class="hljs-keyword">long</span> delayMillis)
+        {
+            <span class="hljs-keyword">if</span> (delayMillis &lt; <span class="hljs-number">0</span>) {
+                delayMillis = <span class="hljs-number">0</span>;
+            }
+            <span class="hljs-keyword">return</span> sendMessageAtTime(msg, SystemClock.uptimeMillis() + delayMillis);
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">sendMessageAtTime</span>(Message msg, <span class="hljs-keyword">long</span> uptimeMillis) {
+            MessageQueue queue = mQueue;
+            <span class="hljs-keyword">if</span> (queue == <span class="hljs-keyword">null</span>) {
+                RuntimeException e = <span class="hljs-keyword">new</span> RuntimeException(
+                        <span class="hljs-keyword">this</span> + <span class="hljs-string">" sendMessageAtTime() called with no mQueue"</span>);
+                Log.w(<span class="hljs-string">"Looper"</span>, e.getMessage(), e);
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+            }
+            <span class="hljs-keyword">return</span> enqueueMessage(queue, msg, uptimeMillis);
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">sendMessageAtFrontOfQueue</span>(Message msg) {
+            MessageQueue queue = mQueue;
+            <span class="hljs-keyword">if</span> (queue == <span class="hljs-keyword">null</span>) {
+                RuntimeException e = <span class="hljs-keyword">new</span> RuntimeException(
+                    <span class="hljs-keyword">this</span> + <span class="hljs-string">" sendMessageAtTime() called with no mQueue"</span>);
+                Log.w(<span class="hljs-string">"Looper"</span>, e.getMessage(), e);
+                <span class="hljs-keyword">return</span> <span class="hljs-keyword">false</span>;
+            }
+            <span class="hljs-keyword">return</span> enqueueMessage(queue, msg, <span class="hljs-number">0</span>);
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">enqueueMessage</span>(MessageQueue queue, Message msg, <span class="hljs-keyword">long</span> uptimeMillis) {
+            msg.target = <span class="hljs-keyword">this</span>;
+            <span class="hljs-keyword">if</span> (mAsynchronous) {
+                msg.setAsynchronous(<span class="hljs-keyword">true</span>);
+            }
+            <span class="hljs-keyword">return</span> queue.enqueueMessage(msg, uptimeMillis);
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li></ul></pre>
+
+<p>可以看出，handler发送一条消息其实就是在消息队列插入一条消息。在Looper的loop方法中，从Message Queue中取出消息调msg.target.dispatchMessage(msg);这里其实就是调用了Handler的dispatchMessage(msg)方法，进去看看，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">      <span class="hljs-javadoc">/**
+         * Handle system messages here.
+         */</span>
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">dispatchMessage</span>(Message msg) {
+            <span class="hljs-keyword">if</span> (msg.callback != <span class="hljs-keyword">null</span>) {
+                handleCallback(msg);
+            } <span class="hljs-keyword">else</span> {
+                <span class="hljs-keyword">if</span> (mCallback != <span class="hljs-keyword">null</span>) {
+                    <span class="hljs-keyword">if</span> (mCallback.handleMessage(msg)) {
+                        <span class="hljs-keyword">return</span>;
+                    }
+                }
+                handleMessage(msg);
+            }
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li></ul></pre>
+
+<p>判断msg.callback是否为空，不为空调用 handleCallback(msg);来处理消息。其实callback是一个Runnable对象，就是Handler发送post消息传过来的对象。</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">     <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">post</span>(Runnable r)
+        {
+           <span class="hljs-keyword">return</span>  sendMessageDelayed(getPostMessage(r), <span class="hljs-number">0</span>);
+        }
+
+         <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">postAtTime</span>(Runnable r, <span class="hljs-keyword">long</span> uptimeMillis)
+        {
+            <span class="hljs-keyword">return</span> sendMessageAtTime(getPostMessage(r), uptimeMillis);
+        }
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">postAtTime</span>(Runnable r, Object token, <span class="hljs-keyword">long</span> uptimeMillis)
+        {
+            <span class="hljs-keyword">return</span> sendMessageAtTime(getPostMessage(r, token), uptimeMillis);
+        }
+
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">postDelayed</span>(Runnable r, <span class="hljs-keyword">long</span> delayMillis)
+        {
+            <span class="hljs-keyword">return</span> sendMessageDelayed(getPostMessage(r), delayMillis);
+        }
+
+
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">postAtFrontOfQueue</span>(Runnable r)
+        {
+            <span class="hljs-keyword">return</span> sendMessageAtFrontOfQueue(getPostMessage(r));
+        }
+
+        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Message <span class="hljs-title">getPostMessage</span>(Runnable r) {
+            Message m = Message.obtain();
+            m.callback = r;
+            <span class="hljs-keyword">return</span> m;
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li></ul></pre>
+
+<p>进去handleCallback方法看看怎么处理消息的，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs cs has-numbering">      <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">handleCallback</span>(Message message) {
+            message.callback.run();
+        }
+</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets_01.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li></ul></pre>
+
+<p>可以看出，其实就是回调Runnable对象的run方法。Activity的runOnUiThread，View的postDelayed方法也是同样的原理，我们先看看runOnUiThread方法，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">runOnUiThread</span>(Runnable action) {
+            <span class="hljs-keyword">if</span> (Thread.currentThread() != mUiThread) {
+                mHandler.post(action);
+            } <span class="hljs-keyword">else</span> {
+                action.run();
+            }
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ul></pre>
+
+<p>View的postDelayed方法。如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering"> <span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">postDelayed</span>(Runnable action, <span class="hljs-keyword">long</span> delayMillis) {
+            <span class="hljs-keyword">final</span> AttachInfo attachInfo = mAttachInfo;
+            <span class="hljs-keyword">if</span> (attachInfo != <span class="hljs-keyword">null</span>) {
+                <span class="hljs-keyword">return</span> attachInfo.mHandler.postDelayed(action, delayMillis);
+            }
+            <span class="hljs-comment">// Assume that post will succeed later</span>
+            ViewRootImpl.getRunQueue().postDelayed(action, delayMillis);
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">true</span>;
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li></ul></pre>
+
+<p>实质上都是在UI线程中执行了Runnable的run方法。</p>
+
+<p>如果msg.callback是否为null，判断mCallback是否为null？mCallback是一个接口，如下：</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering">       <span class="hljs-javadoc">/**
+         * Callback interface you can use when instantiating a Handler to avoid
+         * having to implement your own subclass of Handler.
+         *
+         *<span class="hljs-javadoctag"> @param</span> msg A {@link android.os.Message Message} object
+         *<span class="hljs-javadoctag"> @return</span> True if no further handling is desired
+         */</span>
+        <span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Callback</span> {</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">boolean</span> <span class="hljs-title">handleMessage</span>(Message msg);
+        }</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li></ul></pre>
+
+<p>CallBack其实提供了另一种使用Handler的方式，可以派生子类重写handleMessage（）方法，也可以通过设置CallBack来实现。</p>
+
+<p>我们梳理一下我们在主线程使用Handler的过程。</p>
+
+<p>首先在主线程创建一个Handler对象 ，并重写handleMessage（）方法。然后当在子线程中需要进行更新UI的操作，我们就创建一个Message对象，并通过handler发送这条消息出去。之后这条消息被加入到MessageQueue队列中等待被处理，通过Looper对象会一直尝试从Message Queue中取出待处理的消息，最后分发会Handler的handler Message（）方法中。</p>
+
+<p><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/20160417192621814" alt="这里写图片描述" title=""></p>
+
+<p>END…</p></div>
+        <script type="text/javascript">
+            $(function () {
+                $('pre.prettyprint code').each(function () {
+                    var lines = $(this).text().split('\n').length;
+                    var $numbering = $('<ul></ul>').addClass('pre-numbering').hide();
+                    $(this).addClass('has-numbering').parent().append($numbering);
+                    for (i = 1; i <= lines; i++) {
+                        $numbering.append($('<li></li>').text(i));
+                    };
+                    $numbering.fadeIn(1700);
+                });
+            });
+        </script>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad bdshare-button-style0-16" style="float: right;" data-mod="popu_172" data-bd-bind="1496452818888">
+<a href="http://blog.csdn.net/u012827296/article/details/51236614#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important" target="_blank"></a>
+<a href="http://blog.csdn.net/u012827296/article/details/51236614#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间" style="background-position:0 -52px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/u012827296/article/details/51236614#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博" style="background-position:0 -104px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/u012827296/article/details/51236614#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博" style="background-position:0 -260px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/u012827296/article/details/51236614#" class="bds_renren" data-cmd="renren" title="分享到人人网" style="background-position:0 -208px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/u012827296/article/details/51236614#" class="bds_weixin" data-cmd="weixin" title="分享到微信" style="background-position:0 -1612px !important" target="_blank"></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   
+
+    
+<!--172.16.140.11-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+
+
+ 
+
+
+        <div id="digg" articleid="51236614">
+            <dl id="btnDigg" class="digg digg_enable" onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>4</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_enable" onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>1</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" target="_blank">&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" target="_blank">&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;]);location.href=&#39;/u012827296/article/details/50506768&#39;;">上一篇</span><a href="http://blog.csdn.net/u012827296/article/details/50506768" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;])">Activity，ContextImpl，PhoneWindow对象创建总结</a></li>
+                <li class="next_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;]);location.href=&#39;/u012827296/article/details/51259006&#39;;">下一篇</span><a href="http://blog.csdn.net/u012827296/article/details/51259006" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;])">Binder工作机制</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+            <div class="similar_article">
+                    <h4></h4>
+                    <div class="similar_c" style="margin:20px 0px 0px 0px">
+                        <div class="similar_c_t">
+                          &nbsp;&nbsp;相关文章推荐
+                        </div>
+                   
+                        <div class="similar_wrap tracking-ad" data-mod="popu_36" style="max-height:195px;">                       
+                            <ul class="similar_list fl">    
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/fightingXia/article/details/70478117" title="Handler的运行机制" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">Handler的运行机制</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/Dnnis/article/details/53781608" title="Handler运行机制源码分析" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">Handler运行机制源码分析</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/TOYOTA11/article/details/54583038" title="终于明白了Handler的运行机制" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">终于明白了Handler的运行机制</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/duolaimila/article/details/53608196" title="android消息机制(handler运行机制)解析" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">android消息机制(handler运行机制)解析</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/qq_33671877/article/details/53432430" title="Android 消息机制--Handler运行机制（一）" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">Android 消息机制--Handler运行机制（一）</a>
+                                   </li>
+                            </ul>
+                              <ul class="similar_list fr">      
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/zhang_xinxiu/article/details/10851417" title="ASP.NET之旅--浅谈Asp.net的运行机制（二）" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">ASP.NET之旅--浅谈Asp.net的运行机制（二）</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/liyantianmin/article/details/46948963" title="源码深度解析SpringMvc请求运行机制" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">源码深度解析SpringMvc请求运行机制</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/cxzhq2002/article/details/1561699" title="ASP.NET运行机制和图片盗链问题 " strategy="SearchAlgorithm" target="_blank" style="width: 290px;">ASP.NET运行机制和图片盗链问题 </a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/JOHNCOOLS/article/details/757688" title="ASP.NET运行机制和图片盗链问题" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">ASP.NET运行机制和图片盗链问题</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yongyinmg/article/details/16826893" title="MVC运行机制" strategy="SearchAlgorithm" target="_blank" style="width: 290px;">MVC运行机制</a>
+                                   </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+      
+</div>
+
+     <div>
+           
+
+         <script type="text/javascript">
+             /*博客内容页下方Banner1-960*90，创建于2016-12-13*/
+             var cpro_id = "u2843955";
+        </script>
+        <script type="text/javascript" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2843955_0"><iframe id="iframeu2843955_0" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/qcfm.html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+    </div>
+
+<div id="suggest">
+
+</div>
+         <script language="javascript" type="text/javascript">     
+             $(function(){
+                 $.get("/u012827296/svc/GetSuggestContent/51236614",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ 
+
+<div id="relate" data-mod="popu_218" class="tracking-ad" style="display: block;">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c"><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/android"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/1455589744328_328.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/android">Android知识库</a></h4><p><label><span>34502</span><em>关注</em><i>|</i><span>3045</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/go"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/1471395508721_721.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/go">Go知识库</a></h4><p><label><span>2335</span><em>关注</em><i>|</i><span>982</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/javase"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/1453169124297_297.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/javase">Java SE知识库</a></h4><p><label><span>26537</span><em>关注</em><i>|</i><span>578</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/mysql"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/1454051093684_684.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/mysql">MySQL知识库</a></h4><p><label><span>22649</span><em>关注</em><i>|</i><span>1471</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/javaee"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/1456818035722_722.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/javaee">Java EE知识库</a></h4><p><label><span>18686</span><em>关注</em><i>|</i><span>1399</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/java"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/1453701371636_636.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/java">Java 知识库</a></h4><p><label><span>27371</span><em>关注</em><i>|</i><span>3698</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/datastructure"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/1461035533512_512.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/datastructure">算法与数据结构知识库</a></h4><p><label><span>16585</span><em>关注</em><i>|</i><span>2320</span><em>收录</em></label></p></dd></dl></div>
+</div>
+ 
+
+<dl class="blog-ass-articl tracking-ad" id="res-relatived" data-mod="popu_84"> 
+    <div class="embody embody_b" id="libkeyparent" style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+    
+    <div id="adCollege"> 
+    <div><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3670" title="Android核心技术——AndroidUI组件" strategy="v4:content" target="_blank">Android核心技术——AndroidUI组件</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/793" title="Android开源项目实践之UI篇" strategy="v4:content" target="_blank">Android开源项目实践之UI篇</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/2347" title="【Android APP开发】Android高级商业布局快速实现" strategy="v4:content" target="_blank">【Android APP开发】Android高级商业布局快速实现</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3004" title="Android之数据存储" strategy="v4:content" target="_blank">Android之数据存储</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/476" title="Unity UI从零到精通" strategy="v4:content" target="_blank">Unity UI从零到精通</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4461" title="Android高级程序开发" strategy="v4:content" target="_blank">Android高级程序开发</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3376" title="Android SQLite 性能优化——显示使用事务" strategy="v4:content" target="_blank">Android SQLite 性能优化——显示使用事务</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1685" title="老郭全套iOS开发课程【UI技术】" strategy="v4:content" target="_blank">老郭全套iOS开发课程【UI技术】</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4753" title="Android MVP实践" strategy="v4:content" target="_blank">Android MVP实践</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/545" title="Android入门实战教程" strategy="v4:content" target="_blank">Android入门实战教程</a></dd></div></div>  
+
+    
+
+     <script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/job_reco.js.下载" type="text/javascript"></script> 
+     <script type="text/javascript">
+         csdn.position.showEdu({
+             sourceType: "blog",
+             searchType: "detail",
+             searchKey: "51236614",
+                username: "wangchaoqun1997",
+                recordcount: "10",
+                containerId: "adCollege" //容器DIV的id。 
+            });  
+        </script> 
+   
+</dl>
+
+
+
+
+
+    <div id="ad_cen">        
+                <div>
+                                    <div class="tracking-ad" data-view="true" data-mod="ad_popu_199" data-mtp="43" data-order="114" data-con="ad_content_1843" style="width: 960px; height: 90px;">
+                                             <script type="text/javascript">
+                                                 /*博客内容页下方Banner2-960*90，创建于,2016-11-28*/
+                                                 var cpro_id = "u2831143";
+                                            </script>
+                                            <script type="text/javascript" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2831143_0"><iframe id="iframeu2831143_0" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/qcfm(2).html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+                                   </div>
+                    </div>
+    </div>  
+
+        <!-- 广告位开始 -->
+        <!-- 广告位结束 -->
+<div class="tracking-ad" data-view="true" data-mod="ad_popu_72" data-mtp="62" data-order="40" data-con="ad_content_2072">
+                 <script id="popuLayer_js_q" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/popuLayer.js.下载" defer="defer" type="text/javascript"></script>
+            <div id="layerd" style="position: fixed; bottom: 0px; right: 0px; line-height: 0px; z-index: 1000; width: 300px; height: 278px; display: none;">
+    	            <div class="J_close layer_close" style="display:;background-color:#efefef;padding:0px;color:#333;font:12px/24px Helvetica,Tahoma,Arial,sans-serif;text-align:right;">关闭</div><!-- 广告占位容器 --><div id="cpro_u2895327"><iframe id="iframeu2895327_0" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/qcfm(3).html" width="300" height="250" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:300px;height:250px" allowtransparency="true"></iframe></div></div>
+            <script>  document.getElementById("popuLayer_js_q").onload=function(){      var styObjd=styObj={width:"300px","height":parseInt(250)+28};window.CSDN.Layer.PopuLayer("#layerd",{storageName:"layerd",styleObj:styObjd,total:50,expoire:1000*60});  }</script><!-- 投放代码 --><script type="text/javascript">                /*服务器频道首页置顶Banner960*90，创建于2014-7-3*/    (window.cproArray = window.cproArray || []).push({        id: "u2895327"      });  </script>  <script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script>
+     
+</div>
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list"><dl class="comment_item comment_topic" id="comment_item_6849260"><dt class="comment_head" floor="2">2楼 <span class="user"><a class="username" href="http://blog.csdn.net/k5722166" target="_blank">k5722166</a> <span class="ptime">2017-05-22 10:05发表</span>  <a href="http://blog.csdn.net/u012827296/article/details/51236614#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6849260" username="k5722166"> <a href="http://blog.csdn.net/u012827296/article/details/51236614#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/u012827296/article/details/51236614#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/k5722166" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/3_k5722166.jpg" width="40" height="40"></a></dd><dd class="comment_body">顶一个，解释的很清楚</dd></dl><dl class="comment_item comment_topic" id="comment_item_6466734"><dt class="comment_head" floor="1">1楼 <span class="user"><a class="username" href="http://blog.csdn.net/axthree" target="_blank">cPlusPlus小学生</a> <span class="ptime">2016-12-06 22:28发表</span>  <a href="http://blog.csdn.net/u012827296/article/details/51236614#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6466734" username="axthree"> <a href="http://blog.csdn.net/u012827296/article/details/51236614#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/u012827296/article/details/51236614#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/axthree" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/3_axthree.jpg" width="40" height="40"></a></dd><dd class="comment_body">这都没评论？   顶一</dd></dl><div class="clear"></div></div>
+    <div id="comment_bar" style="display: none;">
+    </div>
+    <div id="comment_form"><a name="commentbox"></a><a name="reply"></a><a name="quote"></a><form action="http://blog.csdn.net/u012827296/comment/submit?id=51236614" method="post" onsubmit="return subform(this);"><div class="commentform"><div class="panel_head">发表评论</div><ul><li class="left">用 户 名：</li><li class="right">wangchaoqun1997</li></ul><ul><li class="left">评论内容：</li><li class="right" style="position:relative;"><div id="ubbtools"><a href="http://blog.csdn.net/u012827296/article/details/51236614#insertcode" code="code"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/code.gif" border="0" alt="插入代码" title="插入代码"></a></div><div id="lang_list" style="position: absolute; top: 28px; left: 0px; display: none;"><a class="long_name" href="http://blog.csdn.net/u012827296/article/details/51236614#html">HTML/XML</a><a class="long_name" href="http://blog.csdn.net/u012827296/article/details/51236614#objc">objective-c</a><a class="zhong_name" href="http://blog.csdn.net/u012827296/article/details/51236614#delphi">Delphi</a><a class="zhong_name" href="http://blog.csdn.net/u012827296/article/details/51236614#ruby">Ruby</a><a href="http://blog.csdn.net/u012827296/article/details/51236614#php">PHP</a><a class="duan_name" href="http://blog.csdn.net/u012827296/article/details/51236614#csharp">C#</a><a style=" border-right: none;" class="duan_name" href="http://blog.csdn.net/u012827296/article/details/51236614#cpp">C++</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/u012827296/article/details/51236614#javascript">JavaScript</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/u012827296/article/details/51236614#vb">Visual Basic</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/u012827296/article/details/51236614#python">Python</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/u012827296/article/details/51236614#java">Java</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/u012827296/article/details/51236614#css">CSS</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/u012827296/article/details/51236614#sql">SQL</a><a style="border:none;" class="duan_name" href="http://blog.csdn.net/u012827296/article/details/51236614#plain">其它</a></div><textarea class="comment_content" name="comment_content" id="comment_content" style="width: 400px; height: 200px;"></textarea></li></ul><ul><input type="hidden" id="comment_replyId" name="comment_replyId"><input type="hidden" id="comment_userId" name="comment_userId" value="521203"><input type="hidden" id="commentId" name="commentId" value=""><input type="submit" class="comment_btn" value="提交">&nbsp;&nbsp;<span id="tip_comment" style="color: Red; display: none;"></span></ul></div></form></div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '51236614';
+    var commentscount = 2;
+    var islock = false
+</script>
+
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top" style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop" style="display: none;" title="返回顶部" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_huidaodingbu&#39;])">         
+         <img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="">
+
+    <h5>
+        <a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+    <div class="classify">
+<a title="全部主题" href="http://www.csdn.net/tag" target="_blank" onclick="LogClickCount(this,336);">全部主题</a>
+<a title="Hadoop" href="http://g.csdn.net/5272865" target="_blank" onclick="LogClickCount(this,336);">Hadoop</a>
+<a title="AWS" href="http://g.csdn.net/5272866" target="_blank" onclick="LogClickCount(this,336);">AWS</a>
+<a title="移动游戏" href="http://g.csdn.net/5272870" target="_blank" onclick="LogClickCount(this,336);">移动游戏</a>
+<a title="Java" href="http://g.csdn.net/5272871" target="_blank" onclick="LogClickCount(this,336);">Java</a>
+<a title="Android" href="http://g.csdn.net/5272872" target="_blank" onclick="LogClickCount(this,336);">Android</a>
+<a title="iOS" href="http://g.csdn.net/5272873" target="_blank" onclick="LogClickCount(this,336);">iOS</a>
+<a title="Swift" href="http://g.csdn.net/5272868" target="_blank" onclick="LogClickCount(this,336);">Swift</a>
+<a title="智能硬件" href="http://g.csdn.net/5272869" target="_blank" onclick="LogClickCount(this,336);">智能硬件</a>
+<a title="Docker" href="http://g.csdn.net/5272867" target="_blank" onclick="LogClickCount(this,336);">Docker</a>
+<a title="OpenStack" href="http://g.csdn.net/5272925" target="_blank" onclick="LogClickCount(this,336);">OpenStack</a>
+<a title="VPN" href="http://www.csdn.net/tag/vpn" target="_blank" onclick="LogClickCount(this,336);">VPN</a>
+<a title="Spark" href="http://g.csdn.net/5272924" target="_blank" onclick="LogClickCount(this,336);">Spark</a>
+<a title="ERP" href="http://www.csdn.net/tag/erp" target="_blank" onclick="LogClickCount(this,336);">ERP</a>
+<a title="IE10" href="http://www.csdn.net/tag/ie10" target="_blank" onclick="LogClickCount(this,336);">IE10</a>
+<a title="Eclipse" href="http://www.csdn.net/tag/eclipse" target="_blank" onclick="LogClickCount(this,336);">Eclipse</a>
+<a title="CRM" href="http://www.csdn.net/tag/crm" target="_blank" onclick="LogClickCount(this,336);">CRM</a>
+<a title="JavaScript" href="http://www.csdn.net/tag/javascript" target="_blank" onclick="LogClickCount(this,336);">JavaScript</a>
+<a title="数据库" href="http://www.csdn.net/tag/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" onclick="LogClickCount(this,336);">数据库</a>
+<a title="Ubuntu" href="http://www.csdn.net/tag/ubuntu" target="_blank" onclick="LogClickCount(this,336);">Ubuntu</a>
+<a title="NFC" href="http://www.csdn.net/tag/nfc" target="_blank" onclick="LogClickCount(this,336);">NFC</a>
+<a title="WAP" href="http://www.csdn.net/tag/wap" target="_blank" onclick="LogClickCount(this,336);">WAP</a>
+<a title="jQuery" href="http://www.csdn.net/tag/jquery" target="_blank" onclick="LogClickCount(this,336);">jQuery</a>
+<a title="BI" href="http://www.csdn.net/tag/bi" target="_blank" onclick="LogClickCount(this,336);">BI</a>
+<a title="HTML5" href="http://www.csdn.net/tag/html5" target="_blank" onclick="LogClickCount(this,336);">HTML5</a>
+<a title="Spring" href="http://www.csdn.net/tag/spring" target="_blank" onclick="LogClickCount(this,336);">Spring</a>
+<a title="Apache" href="http://www.csdn.net/tag/apache" target="_blank" onclick="LogClickCount(this,336);">Apache</a>
+<a title=".NET" href="http://www.csdn.net/tag/.net" target="_blank" onclick="LogClickCount(this,336);">.NET</a>
+<a title="API" href="http://www.csdn.net/tag/api" target="_blank" onclick="LogClickCount(this,336);">API</a>
+<a title="HTML" href="http://www.csdn.net/tag/html" target="_blank" onclick="LogClickCount(this,336);">HTML</a>
+<a title="SDK" href="http://www.csdn.net/tag/sdk" target="_blank" onclick="LogClickCount(this,336);">SDK</a>
+<a title="IIS" href="http://www.csdn.net/tag/iis" target="_blank" onclick="LogClickCount(this,336);">IIS</a>
+<a title="Fedora" href="http://www.csdn.net/tag/fedora" target="_blank" onclick="LogClickCount(this,336);">Fedora</a>
+<a title="XML" href="http://www.csdn.net/tag/xml" target="_blank" onclick="LogClickCount(this,336);">XML</a>
+<a title="LBS" href="http://www.csdn.net/tag/lbs" target="_blank" onclick="LogClickCount(this,336);">LBS</a>
+<a title="Unity" href="http://www.csdn.net/tag/unity" target="_blank" onclick="LogClickCount(this,336);">Unity</a>
+<a title="Splashtop" href="http://www.csdn.net/tag/splashtop" target="_blank" onclick="LogClickCount(this,336);">Splashtop</a>
+<a title="UML" href="http://www.csdn.net/tag/uml" target="_blank" onclick="LogClickCount(this,336);">UML</a>
+<a title="components" href="http://www.csdn.net/tag/components" target="_blank" onclick="LogClickCount(this,336);">components</a>
+<a title="Windows Mobile" href="http://www.csdn.net/tag/windowsmobile" target="_blank" onclick="LogClickCount(this,336);">Windows Mobile</a>
+<a title="Rails" href="http://www.csdn.net/tag/rails" target="_blank" onclick="LogClickCount(this,336);">Rails</a>
+<a title="QEMU" href="http://www.csdn.net/tag/qemu" target="_blank" onclick="LogClickCount(this,336);">QEMU</a>
+<a title="KDE" href="http://www.csdn.net/tag/kde" target="_blank" onclick="LogClickCount(this,336);">KDE</a>
+<a title="Cassandra" href="http://www.csdn.net/tag/cassandra" target="_blank" onclick="LogClickCount(this,336);">Cassandra</a>
+<a title="CloudStack" href="http://www.csdn.net/tag/cloudstack" target="_blank" onclick="LogClickCount(this,336);">CloudStack</a>
+<a title="FTC" href="http://www.csdn.net/tag/ftc" target="_blank" onclick="LogClickCount(this,336);">FTC</a>
+<a title="coremail" href="http://www.csdn.net/tag/coremail" target="_blank" onclick="LogClickCount(this,336);">coremail</a>
+<a title="OPhone " href="http://www.csdn.net/tag/ophone" target="_blank" onclick="LogClickCount(this,336);">OPhone </a>
+<a title="CouchBase" href="http://www.csdn.net/tag/couchbase" target="_blank" onclick="LogClickCount(this,336);">CouchBase</a>
+<a title="云计算" href="http://www.csdn.net/tag/%E4%BA%91%E8%AE%A1%E7%AE%97" target="_blank" onclick="LogClickCount(this,336);">云计算</a>
+<a title="iOS6" href="http://www.csdn.net/tag/iOS6" target="_blank" onclick="LogClickCount(this,336);">iOS6</a>
+<a title="Rackspace " href="http://www.csdn.net/tag/rackspace" target="_blank" onclick="LogClickCount(this,336);">Rackspace </a>
+<a title="Web App" href="http://www.csdn.net/tag/webapp" target="_blank" onclick="LogClickCount(this,336);">Web App</a>
+<a title="SpringSide" href="http://www.csdn.net/tag/springside" target="_blank" onclick="LogClickCount(this,336);">SpringSide</a>
+<a title="Maemo" href="http://www.csdn.net/tag/maemo" target="_blank" onclick="LogClickCount(this,336);">Maemo</a>
+<a title="Compuware" href="http://www.csdn.net/tag/compuware" target="_blank" onclick="LogClickCount(this,336);">Compuware</a>
+<a title="大数据" href="http://www.csdn.net/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE" target="_blank" onclick="LogClickCount(this,336);">大数据</a>
+<a title="aptech" href="http://www.csdn.net/tag/aptech" target="_blank" onclick="LogClickCount(this,336);">aptech</a>
+<a title="Perl" href="http://www.csdn.net/tag/perl" target="_blank" onclick="LogClickCount(this,336);">Perl</a>
+<a title="Tornado" href="http://www.csdn.net/tag/tornado" target="_blank" onclick="LogClickCount(this,336);">Tornado</a>
+<a title="Ruby" href="http://www.csdn.net/tag/ruby" target="_blank" onclick="LogClickCount(this,336);">Ruby</a>
+<a title="Hibernate" href="http://www.csdn.net/tag/hibernate" target="_blank" onclick="LogClickCount(this,336);">Hibernate</a>
+<a title="ThinkPHP" href="http://www.csdn.net/tag/thinkphp" target="_blank" onclick="LogClickCount(this,336);">ThinkPHP</a>
+<a title="HBase" href="http://www.csdn.net/tag/hbase" target="_blank" onclick="LogClickCount(this,336);">HBase</a>
+<a title="Pure" href="http://www.csdn.net/tag/pure" target="_blank" onclick="LogClickCount(this,336);">Pure</a>
+<a title="Solr" href="http://www.csdn.net/tag/solr" target="_blank" onclick="LogClickCount(this,336);">Solr</a>
+<a title="Angular" href="http://www.csdn.net/tag/angular" target="_blank" onclick="LogClickCount(this,336);">Angular</a>
+<a title="Cloud Foundry" href="http://www.csdn.net/tag/cloudfoundry" target="_blank" onclick="LogClickCount(this,336);">Cloud Foundry</a>
+<a title="Redis" href="http://www.csdn.net/tag/redis" target="_blank" onclick="LogClickCount(this,336);">Redis</a>
+<a title="Scala" href="http://www.csdn.net/tag/scala" target="_blank" onclick="LogClickCount(this,336);">Scala</a>
+<a title="Django" href="http://www.csdn.net/tag/django" target="_blank" onclick="LogClickCount(this,336);">Django</a>
+<a title="Bootstrap" href="http://www.csdn.net/tag/bootstrap" target="_blank" onclick="LogClickCount(this,336);">Bootstrap</a>
+    </div>
+
+</div>
+  <script type="text/javascript">     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/u012827296/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+    var articletitle='Handler运行机制';
+
+</script>
+
+
+
+
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/u012827296" target="_blank">
+    <img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/1_u012827296.jpg" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/u012827296" class="user_name" target="_blank">麦明亮</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter" title="[发私信]" onclick="window.open(&#39;http://msg.csdn.net/letters/model?receiver=u012827296&#39;,&#39;_blank&#39;,&#39;height=350,width=700&#39;);_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_sixin&#39;])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>32502次</span></li>
+    <li>积分：<span>438</span> </li>    
+    <li>等级： <span style="position:relative;display:inline-block;z-index:1">
+            <img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/blog2.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：438 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>14篇</span></li>
+    <li>转载：<span>1篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>4条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search csdn-tracking-statistics" target="_blank" data-mod="popu_306">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字"></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog">
+        <input type="hidden" name="q" id="inputQ">
+        <input type="hidden" name="t" value="blog">
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+   
+    $(function () {
+        $("#btnSubmit").unbind("click");
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {           
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            if ($("#inputSearch").val() == "") {               
+                alert("请录入搜索关键词！");                         
+                return false;
+            }
+            //var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";           
+            var url = "https://www.baidu.com/s?wd=" + encodeURIComponent($("#inputSearch").val()) + "%20site%3Ablog.csdn.net"
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="http://blog.csdn.net/u012827296/article/category/6065795" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Android 源码分析系列</a><span>(8)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/u012827296/article/category/6211813" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">android</a><span>(7)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list"><li><a href="http://blog.csdn.net/u012827296/article/month/2016/10">2016年10月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/u012827296/article/month/2016/09">2016年09月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/u012827296/article/month/2016/05">2016年05月</a><span>(6)</span></li><li><a href="http://blog.csdn.net/u012827296/article/month/2016/04">2016年04月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/u012827296/article/month/2016/02">2016年02月</a><span>(1)</span></li><span class="hidelist" style="display:none;"><li><a href="http://blog.csdn.net/u012827296/article/month/2016/01">2016年01月</a><span>(3)</span></li></span><div id="archive_list_button" class="list_closed">展开</div></div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51259006" title="Binder工作机制">Binder工作机制</a><span>(11751)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51236614" title="Handler运行机制">Handler运行机制</a><span>(5376)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51208792" title="Android事件分发机制详解">Android事件分发机制详解</a><span>(3847)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/50508889" title="Context对象创建详解">Context对象创建详解</a><span>(1293)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51285783" title="android获取高校教务系统的数据原理分析">android获取高校教务系统的数据原理分析</a><span>(1278)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/50510913" title="Activity的启动过程详解">Activity的启动过程详解</a><span>(1197)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/50616947" title="DecorView对象的创建详解">DecorView对象的创建详解</a><span>(1085)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51332503" title="ActivityManagerService基本概念">ActivityManagerService基本概念</a><span>(984)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/50513319" title="PhoneWindow对象的创建">PhoneWindow对象的创建</a><span>(976)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51295883" title="Retrofit使用">Retrofit使用</a><span>(675)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51236614" title="Handler运行机制">Handler运行机制</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/52695118" title="Android仿微信录制短视频">Android仿微信录制短视频</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/50510913" title="Activity的启动过程详解">Activity的启动过程详解</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51295883" title="Retrofit使用">Retrofit使用</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51285783" title="android获取高校教务系统的数据原理分析">android获取高校教务系统的数据原理分析</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51259006" title="Binder工作机制">Binder工作机制</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/51208792" title="Android事件分发机制详解">Android事件分发机制详解</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/50616947" title="DecorView对象的创建详解">DecorView对象的创建详解</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/50513319" title="PhoneWindow对象的创建">PhoneWindow对象的创建</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/u012827296/article/details/52725532" title="Android 发布项目到 JCenter 遇到的各种坑">Android 发布项目到 JCenter 遇到的各种坑</a><span>(0)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/turingbooks/article/details/72416875" target="_blank">* 5月书讯：流畅的Python，终于等到你！</a></li>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/72765950" target="_blank">* CSDN日报20170526 ——《论程序员的时代焦虑与焦虑的缓解》 </a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/70483088" target="_blank">* Android中带你开发一款自动爆破签名校验工具kstools</a></li>
+<li><a href="http://blog.csdn.net/guolin_blog/article/details/54895665" target="_blank">* Android图片加载框架最全解析——深入探究Glide的缓存机制</a></li>
+<li><a href="http://blog.csdn.net/lmj623565791/article/details/72667669" target="_blank">* Android 热修复 Tinker Gradle Plugin解析</a></li>
+<li><a href="http://blog.csdn.net/puppet_master/article/details/72455945" target="_blank">* Unity Shader-死亡溶解效果</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="http://blog.csdn.net/u012827296/article/details/51236614#comments">Handler运行机制</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/k5722166" class="user_name">k5722166</a>:
+顶一个，解释的很清楚
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/u012827296/article/details/52695118#comments">Android仿微信录制短视频</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/zhongfateng" class="user_name">zhongfateng</a>:
+问下，如何修改录像出来的视频比例改为 16:9
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/u012827296/article/details/52695118#comments">Handler运行机制</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/axthree" class="user_name">cPlusPlus小学生</a>:
+这都没评论？   顶一
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/u012827296/article/details/50510913#comments">Activity的启动过程详解</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/ouhuanquan" class="user_name">ouhuanquan</a>:
+详细，挺不错的，之前一直找不到android的入口在哪，现在算是了解个大概了，谢谢分享
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                 <!-- 广告位开始 --> 
+                <!-- 广告位结束 -->
+                   <div class="tracking-ad" data-view="true" data-mod="ad_popu_189" data-mtp="63" data-order="40" data-con="ad_content_1259" style="width: 250px; height: 250px;">
+                        <div id="nav_show_top_stop" style="width: 250px; height: 250px; z-index: 1000; position: fixed; top: 0px;"><div id="cpro_u2734133"><iframe id="iframeu2734133_0" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/qcfm(4).html" width="250" height="250" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:250px;height:250px" allowtransparency="true"></iframe></div></div>
+                   </div>
+                    <script>    
+                        
+                        setTimeout(function () {
+                            var naviga_offsetTop = 0; function naviga_stay_top() {
+                                var scrollTop = jQuery(document).scrollTop();
+                                if (scrollTop > naviga_offsetTop) {
+                                    jQuery("#nav_show_top_stop").css({ "position": "fixed" });
+                                    jQuery("#nav_show_top_stop").css({ "top": "0px" });
+                                } else { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": naviga_offsetTop - scrollTop + "px" }); }
+                            }
+                            function onload_function() {
+                                naviga_offsetTop = jQuery("#nav_show_top_stop").position().top;
+                                jQuery(window).bind("scroll", naviga_stay_top); jQuery(window).bind("mousewheel", naviga_stay_top);
+                                jQuery(document).bind("scroll", naviga_stay_top); jQuery(document).bind("mousewheel", naviga_stay_top);
+                            } jQuery(document).ready(onload_function);
+                        },200);                                   
+
+                    </script>
+                    <script type="text/javascript">    (window.cproArray = window.cproArray || []).push({ id: "u2734133" });  </script>
+                   <script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script>
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+
+     
+
+   
+   
+     <!--new top-->
+   
+   
+
+    
+    
+    
+   
+
+   
+
+
+       <script type="text/javascript" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/MathJax.js.下载"></script>
+          <script type="text/javascript">
+              //$(function () {
+              //    setTimeout(function () {
+              //        var searchtitletags = articletitle + ',' + $("#tags").html();
+              //        searchService({
+              //            index: 'blog',
+              //            query: searchtitletags,
+              //            from: 5,
+              //            size: 5,
+              //            appendTo: '#res',
+              //            url: 'recommend',
+              //            his: 2,
+              //            client: "blog_cf_enhance",
+              //            tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+              //        });
+              //    }, 1000);
+              //});
+
+         </script>
+
+    <script src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/csdn_blog_detail.min.js.下载" type="text/javascript"></script><link rel="stylesheet" type="text/css" href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/pub_footer_2014.css"><div class="pub_fo"><div id="pub_footerall" class="pub_footer_new"><dl><dt></dt> <dd class="foot_sub_menu"><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a><span>|</span><a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a><span>|</span><a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a><span>|</span><a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a><span>|</span><a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a><span>|</span><a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a><span>|</span><a href="mailto:webmaster@csdn.net">问题报告</a><span>|</span><a target="_blank" href="http://www.csdn.net/friendlink.html">合作伙伴</a><span>|</span><a href="http://bbs.csdn.net/forums/Service" target="_blank">论坛反馈</a></dd><dd class="foot_contact"><a href="javascript:void(0);" target="_blank" class="qq">网站客服</a><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2251809102&amp;site=qq&amp;menu=yes" target="_blank" class="qq">杂志客服</a><a href="http://e.weibo.com/csdnsupport/profile" target="_blank" class="weibo">微博客服</a><a href="mailto:webmaster@csdn.net" class="email" title="联系邮箱">webmaster@csdn.net</a><span class="phone" title="服务热线">400-660-0108</span><span class="interval">|</span><span>北京创新乐知信息技术有限公司 版权所有</span><span class="interval">|</span><span>江苏知之为计算机有限公司</span><span class="interval">|</span><span>江苏乐知网络技术有限公司</span></dd><dd class="foot_copyright"><span>京&nbsp;ICP&nbsp;证&nbsp;09002463&nbsp;号</span><span class="interval">|</span><span>Copyright © 1999-2017, CSDN.NET, All Rights Reserved&nbsp;</span><a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div></div><div id="note1" class="csdn_note" style="display:none; position:absolute; z-index:9999; width:440px">  <span class="notice_top_arrow"><span class="inner"></span></span>  <div class="box"></div></div><div class="csdn_notice_tip" style="position: absolute; z-index: 9990; width: 170px; left: -72px; top: 14344px; display: block;">  <iframe src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/saved_resource(2).html" frameborder="0" scrolling="no" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe>  <div class="tip_text">您有<strong>11</strong>条新通知</div>  <a href="javascript:void 0" class="close2"></a></div><script id="noticeScript" type="text/javascript" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/notify.js.下载"></script><input type="hidden" id="aa_g_data_ids">
+
+    <script type="text/javascript" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/csdn_public_blog_detail.min.js.下载"></script>
+
+    <script type="text/javascript" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/showblogmedal.ashx"></script>
+
+     
+    
+
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334" src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/52b5334.js.下载"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    
+    
+        
+     
+
+    
+          
+    <div class="pop_CA_cover" style="display:none"></div>
+    <div class="pop pop_CA" style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon" id="fapancle" onclick="$(&#39;.pop_CA&#39;).hide();$(&#39;.pop_CA_cover&#39;).hide();"></span>
+          </div>
+          <iframe src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/saved_resource(3).html" id="fa" frameborder="0" width="100%" height="360" scrolling="no"></iframe>
+    </div>
+
+
+        <script type="text/javascript">
+
+            $(function () {
+                var fromjs = $("#fromjs");
+                if (fromjs.length > 0) {
+                    $("#fromjs .markdown_views pre").addClass("prettyprint");
+                    prettyPrint();
+
+                    $('pre.prettyprint code').each(function () {
+                        var lines = $(this).text().split('\n').length;
+                        var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                        $(this).addClass('has-numbering').parent().append($numbering);
+                        for (i = 1; i <= lines; i++) {
+                            $numbering.append($('<li/>').text(i));
+                        };
+                        $numbering.fadeIn(1700);
+                    });
+
+                    $('.pre-numbering li').css("color", "#999");
+                }
+            });
+           
+            $(".markdown_views a[target!='_blank']").attr("target", "_blank");
+
+            $(".toc a[target='_blank']").attr("target", "");
+
+        </script>
+
+
+   
+ <div id="tag-suggest-pop">
+  <div class="relative">
+    <div class="close"></div>
+    <div class="content"></div>
+  </div>
+</div><div id="mask_code"></div><div class="gist_edit"><div class="save_snippets clearfix"><div class="tit"><h3>保存代码片</h3><span>整理和分享保存的代码片，请访问<a href="https://code.csdn.net/snippets_manage" target="_blank">代码笔记</a></span></div><div class="con_form"><ul class="gist_edit_list clearfix"><li><span class="red">*</span><span class="txt">标题</span><input id="form_title" class="form-input" placeholder="Handler运行机制" type="text"></li><li><span class="red">*</span><span class="txt">描述</span><textarea id="form-textarea" class="form-textarea" placeholder="Handler运行机制： http://blog.csdn.net/u012827296/article/details/51236614"></textarea></li><li><span class="red">&nbsp;</span><span class="txt">标签</span><div id="divSearchTags"><span class="label blog_tag"><span>线程</span><a title="Removing tag" href="javascript:;">x</a></span><input id="insertTag" class="insertTag" placeholder="请输入标签，按Enter生成(最多5项)" type="text" value="" name="insertTag" maxlength="21" style="color: rgb(51, 51, 51);"><input id="OrganTag" class="OrganTag" type="hidden" name="OrganTag" value="线程,"><input id="OldOrganTag" class="OldOrganTag" type="hidden" name="OldOrganTag" value=""><input type="hidden" name="txtSearchTags"></div></li></ul></div><div class="bottom-bar"><a href="javascript:;" class="btn-submit btn-cancel">取消</a><span class="tracking-ad" data-mod="popu_250"><a class="btn-submit btn-confirm" href="javascript:;" target="_blank">确定</a></span></div></div></div><link rel="stylesheet" type="text/css" media="screen" href="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/ask_float_fonts_css-6b30a53970eb5c3a2a045e3df585b475.css"><div data-mod="popu_64" class="csdn-tracking-statistics" chg-blk="0"><a id="com-quick-reply" title="快速回复" style="top:469px"></a><a id="com-quick-collect" title="我要收藏" style="top:507px"></a><a id="com-d-top-a" style="top: 545px; display: inline;" title="返回顶部" onclick=""></a> </div><div class="pop_edit ask_second comm_ask_second"><h3>提问</h3><span class="ask_float_span">您的问题将会被发布在“<a class="ask_float_channel" href="http://ask.csdn.net/" target="_blank" style="cursor:pointer">技术问答</a>”频道</span><a href="http://blog.csdn.net/u012827296/article/details/51236614#" nodetype="close" class="close">×</a><div class="context"><div class="err_div"><span class="err_ico"></span><span class="err_txt">该问题已存在，请勿重复提问</span></div><div class="input_div"><input id="askInputSecond" type="text" style="font-size:14px;" placeholder="问题标题"></div><div class="cm_box"><div class="cm_dialog"></div> <div class="pop_cm cm_add_link"><input type="text" placeholder="链接内容" id="af_cm_link_txt"><input type="text" placeholder="链接地址" id="af_cm_link_url"><input type="text" placeholder="链接提示" id="af_cm_link_tit"><div class="text-right"><span class="btn btn-default btn-sm" id="add_link_btn">插入链接</span> </div> </div><div class="pop_cm cm_add_img"><div class="nav-tabs"><a class="img_tab active" href="http://blog.csdn.net/u012827296/article/details/51236614#tab_upload">本地上传</a><a class="img_tab" href="http://blog.csdn.net/u012827296/article/details/51236614#tab_weburl">网络图片</a></div><div class="tab_panel active" id="tab_upload"><div class="set_img"><iframe src="./Handler运行机制 - maimingliang - 博客频道 - CSDN.NET_files/upload.html"></iframe></div></div><div class="tab_panel" id="tab_weburl"><input type="text" placeholder="图片地址" id="af_cm_img_url"><input type="text" placeholder="图片说明" id="af_cm_img_alt"><div class="text-right"><span class="btn btn-default btn-sm" id="add_img_btn">插入图片</span> </div></div> </div></div> <textarea id="editor_all" rows="8" style="display: none;"></textarea><div class="editor-toolbar"><i class="separator">|</i><a class="icon-headline" title="标题一（Ctrl+Alt+1）"></a><a class="icon-heading" title="标题二（Ctrl+Alt+2）"></a><a class="icon-bold" title="粗体（Ctrl+B）"></a><a class="icon-italic" title="斜体（Ctrl+I）"></a><i class="separator">|</i><a class="icon-quote-left" title="引用（Ctrl+’）"></a><a class="icon-code" title="插入代码片（Ctrl+,）"></a><a class="icon-list-ul" title="无序列表（Ctrl+L）"></a><a class="icon-list-ol" title="有序列表（Ctrl+Alt+L）"></a><i class="separator">|</i><a class="icon-link" title="添加链接（Ctrl+K）"></a><a class="icon-picture" title="添加图片（Ctrl+Alt+I）"></a><i class="separator">|</i><a class="icon-reply" title="撤退（Ctrl+Z）"></a><a class="icon-share-alt" title="前进（Ctrl+Shift+Z）"></a><i class="separator">|</i><a class="icon-info" href="http://ask.csdn.net/pages/markdown" target="_blank" title="markdown语法参考"></a><a class="icon-preview" title="预览"></a><i class="separator">|</i></div><div class="CodeMirror cm-s-paper CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none; font-size: 4px;" tabindex="0"></textarea></div><div class="CodeMirror-hscrollbar"><div style="height: 1px;"></div></div><div class="CodeMirror-vscrollbar"><div style="width: 1px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-gutter-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="min-width: 33px;"><div style="position: relative;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre>&nbsp;<span style="display: inline-block; width: 1px; margin-right: -1px;">&nbsp;</span></pre></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"></div><div class="CodeMirror-cursor" style="visibility: hidden;">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor" style="visibility: hidden;">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px;"></div><div class="CodeMirror-gutters" style="display: none;"></div></div></div><div class="editor-statusbar"><span class="lines">0</span><span class="words">0</span><span class="cursor">0:0</span></div><div class="div_tags clearfix"><div id="divSearchTags" class="tags_con"><input type="text"></div><input type="hidden" name="txtSearchTags"></div><div id="ask2_tagRecomm_div" class="drt_tagRecomm tracking-ad" data-mod="popu_73"><span class="drt_tit">推荐标签：</span></div></div><div class="success"><div class="left_area"><input id="chk_cb" type="checkbox"><span class="wyxs">我要悬赏</span><input id="cb_num" class="cb_num" readonly="true"><span class="phib_rii"><span> 币</span></span></div><a href="http://blog.csdn.net/u012827296/article/details/51236614#" nodetype="cancel" class="cancel">取消</a><a href="http://blog.csdn.net/u012827296/article/details/51236614#" nodetype="ok" class="ok">发布</a></div></div><div id="common_ask_div_sc" class="searchContainer"><div class="sTitle">可能存在类似的问题：</div><div class="sFooter"><a class="sFirstNewAsk">我想提一个新问题</a></div></div><div style="position:fixed; top:0; left:0; overflow:hidden;"><input style="position:absolute; left:-300px;" type="text" value="" id="focus_retriever" readonly="true"></div></body></html>

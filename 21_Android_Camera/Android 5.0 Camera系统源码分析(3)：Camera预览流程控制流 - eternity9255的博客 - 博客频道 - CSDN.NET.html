@@ -1,0 +1,1976 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0058)http://blog.csdn.net/eternity9255/article/details/52790962 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+
+            <link rel="canonical" href="http://blog.csdn.net/eternity9255/article/details/52790962"> 
+ <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://blog.csdn.net/eternity9255/article/details/52790962#">
+       
+    <title>Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客
+        - 博客频道 - CSDN.NET</title>
+    
+    <meta name="description" content="本文分析的是Android系统源码，从frameworks层到hal层，记录了Camera进入预览模式的重点代码，主要为控制流程的代码，有关图像buffer的传递暂不涉及，硬件平台基于mt6735。由于某些函数比较复杂，在贴出代码时会适当对其进行简化。这里将分析app层令Camera进入预览模式的两个重点api：setPreviewDisplay和startPreview">
+
+    <meta name="keywords" content="mtk,Android,Camera">
+
+   
+    <script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/hm.js.下载"></script><script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/blog_static_head.min.js.下载" type="text/javascript"></script>
+
+    
+        <!--new top-->
+       
+       
+        <!--new top-->
+    
+      <!-- ad begin -->
+         
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/style.css">
+
+    
+
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/eternity9255/rss/list">
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/default.css">
+ 
+
+
+
+
+    <link href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/csdn_public_blog_detail.min.css" type="text/css" rel="stylesheet">
+     
+         <link rel="stylesheet" href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/csdn_blog_detail.min.css">
+
+     <script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/fuckadblock.js.下载" type="text/javascript" charset="utf-8"></script>
+         <script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/block.js.下载" type="text/javascript" charset="utf-8"></script>
+
+
+    <!-- 请置于所有广告位代码之前 --> 
+            <script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ds.js.下载"></script>
+
+<script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/share.js.下载"></script><link href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/bdsstyle.css" rel="stylesheet" type="text/css"><link rel="stylesheet" type="text/css" href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/job_reco.css"><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><link rel="stylesheet" type="text/css" href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/style(1).css"><link rel="stylesheet" type="text/css" href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/style(2).css"><script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/logger.js.下载"></script><link rel="stylesheet" href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/share_style0_16.css"></head>
+
+
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><div id="MathJax_Message" style="display: none;"></div><iframe frameborder="0" style="display: none;" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/saved_resource.html"></iframe><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar_logo" class="img blog-icon"></a></div>          <div class="pull-right login-wrap ">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="http://passport.csdn.net/account/mobileregister?ref=toolbar&amp;action=mobileRegister">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search" id="toolbar_search" method="get" target="_blank">                      <input type="hidden" value="toolbar" name="ref" accesskey="2">                      <div class="border">                        <input placeholder="搜索" type="text" value="" name="q" accesskey="2"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label"><span class="red_txt">*</span>标题</label>                          <div class="col-sm-10">                            <input id="inputTitle" type="text" placeholder="" class="title form-control">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group" style="display:none;">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input id="input-url" type="text" placeholder="" class="url form-control">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" type="text" class="form-control tag">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">位置</label>                        <div class="col-sm-10">                          <div class="my_lib_box">                            个人主页&nbsp;-&nbsp;<a href="http://my.csdn.net/" target="_blank">我的知识</a>                          </div>                          <div class="checkbox">                            <div class="pull-left">                              <label>                                <input type="checkbox" name="share" class="save_lib_map" checked="checked">同时保存至：                              </label>                            </div>                            <div class="pull-left">                              <div class="dropdown">                                <button id="toolbar_sele_map" type="button">                                  选择知识图谱                                  <i class="fa fa-chevron-down"></i>                                </button>                                <div class="top_arr"></div>                                <div class="outside">                                  <ul class="dropdown-menu" id="toolbar_Design_knowledge"><li>选择知识图谱</li></ul>                                </div>                              </div>                            </div>                            <div class="pull-left new_txt">                              <a href="http://lib.csdn.net/my/create/structure" target="_blank">新建？</a>                            </div>                          </div>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left" style="display:none">                            <div class="checkbox">                              <label>                                <input type="checkbox" name="share" checked="checked" class="share">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"><div class="icon-hasnotes" style=""></div></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note" style="left: -212px; top: 12174px; display: none;">                      <div class="box"><div class="notifications notice_list_con curr">  <div class="menu_title">    <span class="title"><a href="http://msg.csdn.net/letters" target="_blank" class="read_all">查看所有私信</a><a href="http://msg.csdn.net/" target="_blank" class="go_all">查看所有通知</a></span>  </div>  <div class="loading"></div>  <div class="empty">暂没有新通知</div>  <div class="notice_content" style="overflow-y: auto; max-height: 270px;"></div></div><div class="notifications detail_con" style="display: none">  <div class="menu_title">    <span class="title">      <a class="go_back" href="javascript:void 0;">返回通知列表</a>      <a class="notifications_page_none nextnote" href="javascript:void 0;">下一条</a>      <a class="notifications_page prvnote" href="javascript:void 0;">上一条</a>    </span>  </div>  <div class="notice_content" style="overflow-y: scroll; height: 250px;"></div></div><div class="error"></div></div>                    <iframe src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/saved_resource(1).html" frameborder="0" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix" style="display:none;"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt style="border: none;"><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/2_wangchaoqun1997.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="avatar"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/2_wangchaoqun1997.jpg"></a></dt>                        <dd class="info" style="border: none;"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname">wangchaoqun1997</a><span class="dec">驱动 linux驱动 android驱动 driver</span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="http://my.csdn.net/my/account/changepwd?ref=toolbar" class="pull-left"><span class="icon-cog"></span>帐号设置</a><a href="https://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-left" style="margin-left:132px; width:18px; height:27px; white-space:nowrap; overflow:hidden;"><span class="icon-signout"></span><span class="out">退出</span></a></div>                  </div>                </div>              </li>              <li class="apps">                <div id="chasnew123" class="hasnew" style="display: none;"></div>                <div id="cappsarea123" class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd> <a href="http://lib.csdn.net/?ref=toolbar" target="_blank">知识库</a></dd>                      <dd><a href="http://ask.csdn.net/?ref=toolbar" target="_blank">技术问答</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                      <dd style="display:none"> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd style="display:none"> <a href="http://job.csdn.net/?ref=toolbar" target="_blank">JOB<img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="http://edu.csdn.net/?ref=toolbar" target="_blank">学院<img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://huiyi.csdn.net/?ref=toolbar" target="_blank">活动</a></dd>                      <dd> <a href="http://www.csto.com/?ref=toolbar" target="_blank">CSTO</a></dd>                      <dd> <a href="http://mall.csdn.net/?ref=toolbar" target="_blank">C币兑换<img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://cto.csdn.net/?ref=toolbar" target="_blank">CTO俱乐部</a></dd>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+       
+
+
+
+    <!-- 广告位开始 -->
+        
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/html.js.下载" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/eternity9255">eternity9255的博客</a></h2>
+            <h3></h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/eternity9255?viewmode=contents"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_mulu&#39;])">
+                    <img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/eternity9255?viewmode=list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_zhaiyao&#39;])">
+                    <img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/eternity9255/rss/list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_RSS&#39;])">
+                    <img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "eternity9255";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/eternity9255";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "wangchaoqun1997";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+
+<a href="http://bss.csdn.net/m/topic/community_IoT/index" target="_blank">
+<font color="red"><strong>【CSDN 技术主题月】物联网全栈开发</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/broadview2006/article/details/72901572" target="_blank">
+<font color="blue"><strong>【评论送书】每周荐书：JVM、Nginx、小程序</strong></font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<a href="http://blog.csdn.net/broadview2006/article/details/72901572" target="_blank">
+<font color="red"><strong>【评论送书】每周荐书：JVM、Nginx、小程序</strong></font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+
+
+
+
+
+
+<script type="text/javascript" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/category.js.下载"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=Android+5.0+Camera%e7%b3%bb%e7%bb%9f%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90(3)%ef%bc%9aCamera%e9%a2%84%e8%a7%88%e6%b5%81%e7%a8%8b%e6%8e%a7%e5%88%b6%e6%b5%81&u=http://blog.csdn.net/eternity9255/article/details/52790962"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/eternity9255/article/details/52790962">
+        Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href="http://www.csdn.net/tag/mtk" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">mtk</a><a href="http://www.csdn.net/tag/Android" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">Android</a><a href="http://www.csdn.net/tag/Camera" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">Camera</a><a href="http://www.csdn.net/tag/%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">源码分析</a><a href="http://www.csdn.net/tag/%e8%b0%83%e7%94%a8%e6%b5%81%e7%a8%8b" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">调用流程</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2016-10-11 19:28</span>
+            <span class="link_view" title="阅读次数">1268人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="http://blog.csdn.net/eternity9255/article/details/52790962#comments" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_pinglun&#39;])">评论</a>(0)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle(&#39;Android+5.0+Camera%e7%b3%bb%e7%bb%9f%e6%ba%90%e7%a0%81%e5%88%86%e6%9e%90(3)%ef%bc%9aCamera%e9%a2%84%e8%a7%88%e6%b5%81%e7%a8%8b%e6%8e%a7%e5%88%b6%e6%b5%81&#39;,&#39;52790962&#39;);return false;" title="收藏" target="_blank">收藏</a></span>
+             <span class="link_report"> <a href="http://blog.csdn.net/eternity9255/article/details/52790962#report" onclick="javascript:report(52790962,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody" style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+        <div class="bog_copyright">         
+            <p class="copyright_p">版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+
+<div style="clear:both"></div><div style="border:solid 1px #ccc; background:#eee; float:left; min-width:200px;padding:4px 10px;"><p style="text-align:right;margin:0;"><span style="float:left;">目录<a href="http://blog.csdn.net/eternity9255/article/details/52790962#" title="系统根据文章中H1到H6标签自动生成文章目录">(?)</a></span><a href="http://blog.csdn.net/eternity9255/article/details/52790962#" onclick="javascript:return openct(this);" title="展开">[+]</a></p><ol style="display:none;margin-left:14px;padding-left:14px;line-height:160%;"><li><a href="http://blog.csdn.net/eternity9255/article/details/52790962#t0">前言</a></li><li><a href="http://blog.csdn.net/eternity9255/article/details/52790962#t1">APP层</a></li><li><a href="http://blog.csdn.net/eternity9255/article/details/52790962#t2">setPreviewDisplay函数分析</a></li><ol><li><a href="http://blog.csdn.net/eternity9255/article/details/52790962#t3">1 frameworks层</a></li><li><a href="http://blog.csdn.net/eternity9255/article/details/52790962#t4">2 Hal层</a></li></ol><li><a href="http://blog.csdn.net/eternity9255/article/details/52790962#t5">startPreview函数分析</a></li><ol><li><a href="http://blog.csdn.net/eternity9255/article/details/52790962#t6">1 Cam1DeviceBasestartPreview函数分析</a></li><li><a href="http://blog.csdn.net/eternity9255/article/details/52790962#t7">2 mpCamAdapter-startPreview函数分析</a></li></ol><li><a href="http://blog.csdn.net/eternity9255/article/details/52790962#t8">总结</a></li></ol></div><div style="clear:both"></div><div id="article_content" class="article_content tracking-ad" data-mod="popu_307" data-dsm="post">
+        <div class="markdown_views"><h1 id="1-前言"><a name="t0" target="_blank"></a>1. 前言</h1>
+
+<p>本文分析的是<a href="http://lib.csdn.net/base/android" class="replace_word" title="Android知识库" target="_blank" style="color:#df3434; font-weight:bold;">Android</a>系统源码，从frameworks层到hal层，记录了Camera进入预览模式的重点代码，主要为控制流程的代码，有关图像buffer的传递暂不涉及，硬件平台基于mt6735。由于某些函数比较复杂，在贴出代码时会适当对其进行简化。</p>
+
+
+
+<h1 id="2-app层"><a name="t1" target="_blank"></a>2. APP层</h1>
+
+<p>这里将分析app层令Camera进入预览模式的两个重点api：setPreviewDisplay和startPreview</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs avrasm has-numbering">mCamera<span class="hljs-preprocessor">.setPreviewDisplay</span>(mSurfaceHolder)<span class="hljs-comment">;</span>
+mCamera<span class="hljs-preprocessor">.startPreview</span>()<span class="hljs-comment">;</span></code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets_01.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li></ul></pre>
+
+
+
+<h1 id="3-setpreviewdisplay函数分析"><a name="t2" target="_blank"></a>3. setPreviewDisplay函数分析</h1>
+
+<p>预览图像最终是要在lcd上显示的，想要在lcd上显示图像就需要用到Surface 。填充Surface有两种方法，一种是注册callback函数，预览数据将在callback函数中返回，得到数据后再把它送到Surface里面；另一种是在开始预览之前就为底层设置好Surface，底层获取数据后直接把数据送到Surface里面，为底层设置好Surface就是setPreviewDisplay的作用，</p>
+
+
+
+<h2 id="31-frameworks层"><a name="t3" target="_blank"></a>3.1 frameworks层</h2>
+
+<p>先来看frameworks层的实现</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setPreviewDisplay</span>(SurfaceHolder holder) <span class="hljs-keyword">throws</span> IOException {
+    <span class="hljs-keyword">if</span> (holder != <span class="hljs-keyword">null</span>) {
+        setPreviewSurface(holder.getSurface());
+    } <span class="hljs-keyword">else</span> {
+        setPreviewSurface((Surface)<span class="hljs-keyword">null</span>);
+    }    
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li></ul></pre>
+
+<p>setPreviewSurface是一个jni函数，它的实现在android_hardware_Camera.cpp中</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs mel has-numbering">static void android_hardware_Camera_setPreviewSurface(JNIEnv <span class="hljs-variable">*env</span>, jobject thiz, jobject jSurface)
+{
+    sp&lt;Camera&gt; <span class="hljs-keyword">camera</span> = get_native_camera(<span class="hljs-keyword">env</span>, thiz, NULL);
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">camera</span> == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span>;
+
+    sp&lt;IGraphicBufferProducer&gt; gbp; 
+    sp&lt;Surface&gt; <span class="hljs-keyword">surface</span>;
+    <span class="hljs-keyword">if</span> (jSurface) {
+        <span class="hljs-keyword">surface</span> = android_view_Surface_getSurface(<span class="hljs-keyword">env</span>, jSurface);
+        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">surface</span> != NULL) {
+            gbp = <span class="hljs-keyword">surface</span>-&gt;getIGraphicBufferProducer();
+        }    
+    }    
+
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">camera</span>-&gt;setPreviewTarget(gbp) != NO_ERROR) {
+        jniThrowException(<span class="hljs-keyword">env</span>, <span class="hljs-string">"java/io/IOException"</span>, <span class="hljs-string">"setPreviewTexture failed"</span>);
+    }    
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li></ul></pre>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs livecodeserver has-numbering">// pass <span class="hljs-operator">the</span> buffered IGraphicBufferProducer <span class="hljs-built_in">to</span> <span class="hljs-operator">the</span> camera service 
+status_t Camera::setPreviewTarget(const sp&lt;IGraphicBufferProducer&gt;&amp; bufferProducer) 
+{ 
+    sp &lt;ICamera&gt; c = mCamera; 
+    <span class="hljs-constant">return</span> c-&gt;setPreviewTarget(bufferProducer); 
+} </code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ul></pre>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs coffeescript has-numbering"><span class="hljs-regexp">//</span> set the buffer consumer that the preview will use 
+status_t <span class="hljs-attribute">CameraClient</span>::setPreviewTarget( 
+        <span class="hljs-reserved">const</span> sp&lt;IGraphicBufferProducer&gt;&amp; bufferProducer) { 
+    sp&lt;IBinder&gt; binder; 
+    sp&lt;ANativeWindow&gt; <span class="hljs-built_in">window</span>; 
+    <span class="hljs-keyword">if</span> (bufferProducer != <span class="hljs-number">0</span>) { 
+        binder = bufferProducer-&gt;asBinder(); 
+        <span class="hljs-built_in">window</span> = <span class="hljs-keyword">new</span> Surface(bufferProducer, <span class="hljs-regexp">/*controlledByApp*/</span> <span class="hljs-literal">true</span>); 
+    } 
+    <span class="hljs-keyword">return</span> setPreviewWindow(binder, <span class="hljs-built_in">window</span>); 
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li></ul></pre>
+
+<p>ANativeWindow顾名思义“本地窗口”，Surface类继承了ANativeWindow类。按照网上的说法，ANativeWindow类是连接OpenGL和Android窗口系统的桥梁，即OpenGL需要通过ANativeWindow类来间接地操作Android窗口系统。但我们接下来要操作ANativeWindow的不是OpenGL，而是CameraClient</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs livecodeserver has-numbering">status_t CameraClient::setPreviewWindow(const sp&lt;IBinder&gt;&amp; binder, 
+        const sp&lt;ANativeWindow&gt;&amp; window) {
+    <span class="hljs-keyword">if</span> (window != <span class="hljs-number">0</span>) { 
+        <span class="hljs-built_in">result</span> = native_window_api_connect(window.<span class="hljs-built_in">get</span>(), NATIVE_WINDOW_API_CAMERA); 
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">result</span> != NO_ERROR) { 
+            ALOGE(<span class="hljs-string">"native_window_api_connect failed: %s (%d)"</span>, strerror(-<span class="hljs-built_in">result</span>), 
+                    <span class="hljs-built_in">result</span>); 
+            <span class="hljs-constant">return</span> <span class="hljs-built_in">result</span>; 
+        } 
+    } 
+
+   <span class="hljs-comment"> // If preview has been already started, register preview buffers now. </span>
+    <span class="hljs-keyword">if</span> (mHardware-&gt;previewEnabled()) { 
+        <span class="hljs-keyword">if</span> (window != <span class="hljs-number">0</span>) { 
+            native_window_set_scaling_mode(window.<span class="hljs-built_in">get</span>(), 
+                    NATIVE_WINDOW_SCALING_MODE_SCALE_TO_WINDOW); 
+            native_window_set_buffers_transform(window.<span class="hljs-built_in">get</span>(), mOrientation); 
+            <span class="hljs-built_in">result</span> = mHardware-&gt;setPreviewWindow(window); 
+        } 
+    } 
+    <span class="hljs-constant">return</span> <span class="hljs-built_in">result</span>; 
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li></ul></pre>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs java has-numbering"><span class="hljs-javadoc">/** Set the ANativeWindow to which preview frames are sent */</span> 
+status_t setPreviewWindow(<span class="hljs-keyword">const</span> sp&lt;ANativeWindow&gt;&amp; buf) 
+{ 
+    mPreviewWindow = buf; 
+    mHalPreviewWindow.user = <span class="hljs-keyword">this</span>; 
+    <span class="hljs-keyword">return</span> mDevice-&gt;ops-&gt;set_preview_window(mDevice, 
+               buf.get() ? &amp;mHalPreviewWindow.nw : <span class="hljs-number">0</span>); 
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li></ul></pre>
+
+<p>ANativeWindow最终保存在mPreviewWindow变量中，而传到Hal层的则是mHalPreviewWindow.nw 操作集，Hal层将通过它来间接的操作mPreviewWindow。</p>
+
+
+
+<div class="sequence-diagram"><svg height="340.09375" version="1.1" width="1007.5" xmlns="http://www.w3.org/2000/svg" style="overflow: hidden; position: relative; left: -0.5px; top: -0.28125px;"><desc style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">Created with Raphaël 2.1.0</desc><defs style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><path stroke-linecap="round" d="M5,0 0,2.5 5,5z" id="raphael-marker-block" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><marker id="raphael-marker-endblock55" markerHeight="5" markerWidth="5" orient="auto" refX="2.5" refY="2.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#raphael-marker-block" transform="rotate(180 2.5 2.5) scale(1,1)" stroke-width="1.0000" fill="#000" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></use></marker></defs><rect x="10" y="20" width="42.5" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="20" y="30.03125" width="22.5" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="31.25" y="37.5234375" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">app</tspan></text><rect x="10" y="285.046875" width="42.5" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="20" y="295.078125" width="22.5" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="31.25" y="302.5703125" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">app</tspan></text><path fill="none" stroke="#000000" d="M31.25,55.046875L31.25,285.046875" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="127.5" y="20" width="102.5" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="137.5" y="30.03125" width="82.5" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="178.75" y="37.5234375" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">Camera.java</tspan></text><rect x="127.5" y="285.046875" width="102.5" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="137.5" y="295.078125" width="82.5" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="178.75" y="302.5703125" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">Camera.java</tspan></text><path fill="none" stroke="#000000" d="M178.75,55.046875L178.75,285.046875" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="250" y="20" width="222.5" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="260" y="30" width="202.5" height="15.046875" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="361.25" y="37.5234375" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.484375" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">android_hardware_Camera.cpp</tspan></text><rect x="250" y="285.046875" width="222.5" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="260" y="295.046875" width="202.5" height="15.046875" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="361.25" y="302.5703125" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.484375" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">android_hardware_Camera.cpp</tspan></text><path fill="none" stroke="#000000" d="M361.25,55.046875L361.25,285.046875" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="492.5" y="20" width="95" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="502.5" y="30.03125" width="75" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="540" y="37.5234375" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">Camera.cpp</tspan></text><rect x="492.5" y="285.046875" width="95" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="502.5" y="295.078125" width="75" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="540" y="302.5703125" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">Camera.cpp</tspan></text><path fill="none" stroke="#000000" d="M540,55.046875L540,285.046875" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="610" y="20" width="140" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="620" y="30.03125" width="120" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="680" y="37.5234375" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">CameraClient.cpp</tspan></text><rect x="610" y="285.046875" width="140" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="620" y="295.078125" width="120" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="680" y="302.5703125" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">CameraClient.cpp</tspan></text><path fill="none" stroke="#000000" d="M680,55.046875L680,285.046875" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="770" y="20" width="207.5" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="780" y="30.03125" width="187.5" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="873.75" y="37.5234375" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">CameraHardwareInterface.h</tspan></text><rect x="770" y="285.046875" width="207.5" height="35.046875" r="0" rx="0" ry="0" fill="none" stroke="#000000" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><rect x="780" y="295.078125" width="187.5" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="873.75" y="302.5703125" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5078125" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">CameraHardwareInterface.h</tspan></text><path fill="none" stroke="#000000" d="M873.75,55.046875L873.75,285.046875" stroke-width="2" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="41.25" y="72.546875" width="127.5" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="105" y="80.046875" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">setPreviewDisplay</tspan></text><path fill="none" stroke="#000000" d="M31.25,90.046875C31.25,90.046875,147.99246549606323,90.046875,173.75789245124906,90.046875" stroke-width="2" marker-end="url(#raphael-marker-endblock55)" stroke-dasharray="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="206.25" y="107.546875" width="127.5" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="270" y="115.046875" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">setPreviewSurface</tspan></text><path fill="none" stroke="#000000" d="M178.75,125.046875C178.75,125.046875,326.94415107369423,125.046875,356.2501233319199,125.046875" stroke-width="2" marker-end="url(#raphael-marker-endblock55)" stroke-dasharray="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="390.625" y="142.546875" width="120" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="450.625" y="150.046875" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">setPreviewTarget</tspan></text><path fill="none" stroke="#000000" d="M361.25,160.046875C361.25,160.046875,506.08463518321514,160.046875,535.0091301978318,160.046875" stroke-width="2" marker-end="url(#raphael-marker-endblock55)" stroke-dasharray="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="550" y="177.546875" width="120" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="610" y="185.046875" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">setPreviewTarget</tspan></text><path fill="none" stroke="#000000" d="M540,195.046875C540,195.046875,650.0172126293182,195.046875,674.9967067077523,195.046875" stroke-width="2" marker-end="url(#raphael-marker-endblock55)" stroke-dasharray="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="705" y="215.046875" width="120" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="765" y="222.546875" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">setPreviewWindow</tspan></text><path fill="none" stroke="#000000" d="M680,210.046875L700,210.046875" stroke-width="2" stroke-dasharray="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><path fill="none" stroke="#000000" d="M700,210.046875L700,240.046875" stroke-width="2" stroke-dasharray="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><path fill="none" stroke="#000000" d="M700,240.046875C700,240.046875,690.9191131591797,240.046875,684.9952533841133,240.046875" stroke-width="2" stroke-dasharray="0" marker-end="url(#raphael-marker-endblock55)" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path><rect x="716.875" y="247.546875" width="120" height="15" r="0" rx="0" ry="0" fill="#ffffff" stroke="none" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></rect><text x="776.875" y="255.046875" text-anchor="middle" font="10px &quot;Arial&quot;" stroke="none" fill="#000000" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); text-anchor: middle; font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 16px; line-height: normal; font-family: &quot;Andale Mono&quot;, monospace;" font-size="16px" font-family="Andale Mono, monospace"><tspan dy="5.5" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);">setPreviewWindow</tspan></text><path fill="none" stroke="#000000" d="M680,265.046875C680,265.046875,838.3540733903646,265.046875,868.7413540751368,265.046875" stroke-width="2" marker-end="url(#raphael-marker-endblock55)" stroke-dasharray="0" style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></path></svg></div>
+
+<p>mDevice就是上篇博文<a href="http://blog.csdn.net/eternity9255/article/details/52126392" target="_blank">Camera打开流程</a>中最后讲到的从Hal返回的mDevice对象，而它的ops指针指向的是gCameraDevOps结构体，从这里开始进入Hal层</p>
+
+
+
+<h2 id="32-hal层"><a name="t4" target="_blank"></a>3.2 Hal层</h2>
+
+<p>gCameraDevOps就在Cam1Device.cpp中定义</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs bash has-numbering">static mtk_camera_device_ops const
+gCameraDevOps = 
+{
+    <span class="hljs-comment">#define OPS(name) name: camera_##name</span>
+
+    {   
+        OPS(<span class="hljs-keyword">set</span>_preview_window), 
+        OPS(<span class="hljs-keyword">set</span>_callbacks), 
+        OPS(enable_msg_<span class="hljs-built_in">type</span>), 
+        OPS(disable_msg_<span class="hljs-built_in">type</span>), 
+        OPS(msg_<span class="hljs-built_in">type</span>_enabled), 
+        OPS(start_preview), 
+        OPS(stop_preview), 
+        OPS(preview_enabled), 
+        OPS(store_meta_data_<span class="hljs-keyword">in</span>_buffers), 
+        OPS(start_recording), 
+        OPS(stop_recording), 
+        OPS(recording_enabled), 
+        OPS(release_recording_frame), 
+        OPS(auto_focus), 
+        OPS(cancel_auto_focus), 
+        OPS(take_picture), 
+        OPS(cancel_picture), 
+        OPS(<span class="hljs-keyword">set</span>_parameters), 
+        OPS(get_parameters), 
+        OPS(put_parameters), 
+        OPS(send_command), 
+        OPS(release), 
+        OPS(dump)
+    },  
+    OPS(mtk_<span class="hljs-keyword">set</span>_callbacks),
+
+    <span class="hljs-comment">#undef  OPS</span>
+};</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li></ul></pre>
+
+<p>可以看到有关Camera的所有操作都这这里，接着看函数set_preview_window的实现</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs cs has-numbering"><span class="hljs-comment">//  Implementation of camera_device_ops</span>
+<span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> camera_set_preview_window(
+    <span class="hljs-keyword">struct</span> camera_device * device,
+    <span class="hljs-keyword">struct</span> preview_stream_ops *window
+)   
+{   
+    <span class="hljs-keyword">int</span> err = -EINVAL;
+
+    Cam1Device*<span class="hljs-keyword">const</span> pDev = Cam1Device::getDevice(device);
+    <span class="hljs-keyword">if</span>  ( pDev )
+    {
+        err = pDev-&gt;setPreviewWindow(window);
+    }
+
+    <span class="hljs-keyword">return</span>  err;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li></ul></pre>
+
+<p>Cam1Device::getDevice函数获取到的将是DefaultCam1Device对象，而setPreviewWindow函数则在它的父类Cam1DeviceBase中实现</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs markdown has-numbering">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>
+ *  Set the preview<span class="hljs-emphasis">_stream_</span>ops to which preview frames are sent.
+ <span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/
+status_t
+Cam1DeviceBase::
+setPreviewWindow(preview<span class="hljs-emphasis">_stream_</span>ops* window)
+{   
+<span class="hljs-code">    status_t status = initDisplayClient(window);</span>
+<span class="hljs-code">    if  ( OK == status &amp;&amp; previewEnabled() &amp;&amp; mpDisplayClient != 0 )</span>
+<span class="hljs-code">    {</span>
+<span class="hljs-code">        status = enableDisplayClient();</span>
+<span class="hljs-code">    }</span>
+
+<span class="hljs-code">    return  status;</span>
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li></ul></pre>
+
+<p>第9行，初始化DisplayClient <br>
+第11行，通知DisplayClient开始工作 <br>
+重点关注下函数initDisplayClient 的实现</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs lasso has-numbering">status_t
+Cam1DeviceBase<span class="hljs-tag">::
+initDisplayClient</span>(preview_stream_ops<span class="hljs-subst">*</span> window)
+{
+    status_t status <span class="hljs-subst">=</span> OK;
+    Size previewSize;
+
+    <span class="hljs-comment">//  [1] Check to see whether the passed window is NULL or not.</span>
+    <span class="hljs-keyword">if</span>  ( <span class="hljs-subst">!</span> window )
+    {
+        <span class="hljs-keyword">if</span>  ( mpDisplayClient <span class="hljs-subst">!=</span> <span class="hljs-number">0</span> )
+        {
+            mpDisplayClient<span class="hljs-subst">-&gt;</span>uninit();
+            mpDisplayClient<span class="hljs-built_in">.</span>clear();
+        }
+        status <span class="hljs-subst">=</span> OK;
+        goto lbExit;
+    }
+
+    <span class="hljs-comment">//  [2] Get preview size.</span>
+    <span class="hljs-keyword">if</span>  ( <span class="hljs-subst">!</span> queryPreviewSize(previewSize<span class="hljs-built_in">.</span>width, previewSize<span class="hljs-built_in">.</span>height) )
+    {
+        status <span class="hljs-subst">=</span> DEAD_OBJECT;
+        goto lbExit;
+    }
+    <span class="hljs-comment">//  [3] Initialize Display Client.</span>
+    <span class="hljs-keyword">if</span>  ( mpDisplayClient <span class="hljs-subst">!=</span> <span class="hljs-number">0</span> )
+    {
+        <span class="hljs-attribute">...</span><span class="hljs-attribute">...</span>
+    }
+    <span class="hljs-comment">//  [3.1] create a Display Client.</span>
+    mpDisplayClient <span class="hljs-subst">=</span> IDisplayClient<span class="hljs-tag">::createInstance</span>();
+    <span class="hljs-keyword">if</span>  ( mpDisplayClient <span class="hljs-subst">==</span> <span class="hljs-number">0</span> )
+    {
+        MY_LOGE(<span class="hljs-string">"Cannot create mpDisplayClient"</span>);
+        status <span class="hljs-subst">=</span> NO_MEMORY;
+        goto lbExit;
+    }
+    <span class="hljs-comment">//  [3.2] initialize the newly-created Display Client.</span>
+    <span class="hljs-keyword">if</span>  ( <span class="hljs-subst">!</span> mpDisplayClient<span class="hljs-subst">-&gt;</span>init() )
+    {
+        MY_LOGE(<span class="hljs-string">"mpDisplayClient init() failed"</span>);
+        mpDisplayClient<span class="hljs-subst">-&gt;</span>uninit();
+        mpDisplayClient<span class="hljs-built_in">.</span>clear();
+        status <span class="hljs-subst">=</span> NO_MEMORY;
+        goto lbExit;
+    }
+    <span class="hljs-comment">//  [3.3] set preview_stream_ops &amp; related window info.</span>
+    <span class="hljs-keyword">if</span>  ( <span class="hljs-subst">!</span> mpDisplayClient<span class="hljs-subst">-&gt;</span>setWindow(window, previewSize<span class="hljs-built_in">.</span>width, previewSize<span class="hljs-built_in">.</span>height, queryDisplayBufCount()) )
+    {
+        status <span class="hljs-subst">=</span> INVALID_OPERATION;
+        goto lbExit;
+    }
+    <span class="hljs-comment">//  [3.4] set Image Buffer Provider Client if it exist.</span>
+    <span class="hljs-keyword">if</span>  ( mpCamAdapter <span class="hljs-subst">!=</span> <span class="hljs-number">0</span> <span class="hljs-subst">&amp;&amp;</span> <span class="hljs-subst">!</span> mpDisplayClient<span class="hljs-subst">-&gt;</span>setImgBufProviderClient(mpCamAdapter) )
+    {
+        status <span class="hljs-subst">=</span> INVALID_OPERATION;
+        goto lbExit;
+    }
+
+    status <span class="hljs-subst">=</span> OK;
+
+lbExit:
+    <span class="hljs-keyword">if</span>  ( OK <span class="hljs-subst">!=</span> status )
+    {
+        MY_LOGD(<span class="hljs-string">"Cleanup..."</span>);
+        <span class="hljs-attribute">...</span><span class="hljs-attribute">...</span>
+    }
+
+    <span class="hljs-keyword">return</span>  status;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li><li>54</li><li>55</li><li>56</li><li>57</li><li>58</li><li>59</li><li>60</li><li>61</li><li>62</li><li>63</li><li>64</li><li>65</li><li>66</li><li>67</li><li>68</li><li>69</li><li>70</li><li>71</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li><li>54</li><li>55</li><li>56</li><li>57</li><li>58</li><li>59</li><li>60</li><li>61</li><li>62</li><li>63</li><li>64</li><li>65</li><li>66</li><li>67</li><li>68</li><li>69</li><li>70</li><li>71</li></ul></pre>
+
+<p>initDisplayClient函数都做了些什么事情注释已经写得很清楚 <br>
+第31-47行，创建并初始化DisplayClient，其中DisplayClient是图像消费者，由它负责将图像数据送往Surface <br>
+第48-53行，DisplayClient想要操作Surface只能通过preview_stream_ops，也就是从上层传下来mHalPreviewWindow.nw操作集，setWindow函数会通过preview_stream_ops对Surface设置一些参数，并把preview_stream_ops保存在DisplayClient的mpStreamOps变量中，以后用到的时候才找得到。 <br>
+第54-59行，DisplayClient作为消费者，那么就会有生产者，也就是CamAdapter。由CamAdapter提供图像数据，再由DisplayClient将数据送往Surface。但由于这个时候的 mpCamAdapter 为空，所以这里的setImgBufProviderClient函数暂时不会被调用。</p>
+
+<p><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/20161013225804978" alt="setPreviewDisplay Hal" title=""></p>
+
+
+
+<h1 id="4-startpreview函数分析"><a name="t5" target="_blank"></a>4. startPreview函数分析</h1>
+
+<p>app层通过调用startPreview函数来进入预览模式，与setPreviewWindow的流程一样，最终会调到Cam1DeviceBase的startPreview函数</p>
+
+
+
+<h2 id="41-cam1devicebasestartpreview函数分析"><a name="t6" target="_blank"></a>4.1 Cam1DeviceBase::startPreview函数分析</h2>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs markdown has-numbering">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>
+ *  Start preview mode.
+ <span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>/
+status_t
+Cam1DeviceBase::
+startPreview()
+{
+<span class="hljs-code">    status_t status = OK;</span>
+
+<span class="hljs-code">    if  ( ! onStartPreview() )</span>
+<span class="hljs-code">    {    </span>
+<span class="hljs-code">        MY_LOGE("onStartPreviewLocked() fail");</span>
+<span class="hljs-code">        status = INVALID_OPERATION;</span>
+<span class="hljs-code">        goto lbExit;</span>
+<span class="hljs-code">    }    </span>
+
+<span class="hljs-code">    if  ( mpDisplayClient == 0 )</span>
+<span class="hljs-code">    {    </span>
+<span class="hljs-code">        MY_LOGD("DisplayClient is not ready.");</span>
+<span class="hljs-code">    }</span>
+<span class="hljs-code">    else if ( OK != (status = enableDisplayClient()) )</span>
+<span class="hljs-code">    {</span>
+<span class="hljs-code">        goto lbExit;</span>
+<span class="hljs-code">    }</span>
+
+<span class="hljs-code">    ......</span>
+
+<span class="hljs-code">    //  startPreview in Camera Adapter.</span>
+<span class="hljs-code">    {</span>
+<span class="hljs-code">        status = mpCamAdapter-&gt;startPreview();</span>
+<span class="hljs-code">        if  ( OK != status )</span>
+<span class="hljs-code">        {</span>
+<span class="hljs-code">            MY_LOGE("startPreview() in CameraAdapter returns: [%s(%d)]", ::strerror(-status), -status);</span>
+<span class="hljs-code">            goto lbExit;</span>
+<span class="hljs-code">        }</span>
+<span class="hljs-code">    }</span>
+
+<span class="hljs-code">    ......</span>
+
+<span class="hljs-code">    status = OK;</span>
+lbExit:
+<span class="hljs-code">    if  ( OK != status )</span>
+<span class="hljs-code">    {</span>
+<span class="hljs-code">        ......</span>
+<span class="hljs-code">    }</span>
+
+<span class="hljs-code">    MY_LOGI("- status(%d)", status);</span>
+<span class="hljs-code">    return  status;</span>
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li></ul></pre>
+
+<p>第10行， onStartPreview函数主要就是创建并初始化 CameraAdapter <br>
+第21行， 通知DisplayClient开始工作 <br>
+第30行， mpCamAdapter-&gt;startPreview函数工作量巨大，包含了初始化buffer、3A，设置ISP和sensor驱动进入预览模式等工作。</p>
+
+<p>先看CameraAdapter的初始化</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs lasso has-numbering">DefaultCam1Device<span class="hljs-tag">::
+onStartPreview</span>()
+{
+    bool ret <span class="hljs-subst">=</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-attribute">...</span><span class="hljs-attribute">...</span>
+
+    <span class="hljs-comment">//  (2) Initialize Camera Adapter.</span>
+    <span class="hljs-keyword">if</span>  ( <span class="hljs-subst">!</span> initCameraAdapter() )
+    {       
+        MY_LOGE(<span class="hljs-string">"NULL Camera Adapter"</span>);
+        goto lbExit;
+    }
+    <span class="hljs-comment">//</span>
+    ret <span class="hljs-subst">=</span> <span class="hljs-literal">true</span>;
+lbExit: 
+    <span class="hljs-keyword">return</span> ret;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li></ul></pre>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs lasso has-numbering">bool    
+Cam1DeviceBase<span class="hljs-tag">::
+initCameraAdapter</span>()
+{   
+    bool ret <span class="hljs-subst">=</span> <span class="hljs-literal">false</span>;
+
+    <span class="hljs-comment">//  Create &amp; init a new CamAdapter.</span>
+    mpCamAdapter <span class="hljs-subst">=</span> ICamAdapter<span class="hljs-tag">::createInstance</span>(mDevName, mi4OpenId, mpParamsMgr);
+    <span class="hljs-keyword">if</span>  ( mpCamAdapter <span class="hljs-subst">!=</span> <span class="hljs-number">0</span> <span class="hljs-subst">&amp;&amp;</span> mpCamAdapter<span class="hljs-subst">-&gt;</span>init() )
+    {
+        <span class="hljs-comment">//  (.1) init.</span>
+        mpCamAdapter<span class="hljs-subst">-&gt;</span>setCallbacks(mpCamMsgCbInfo);
+        mpCamAdapter<span class="hljs-subst">-&gt;</span>enableMsgType(mpCamMsgCbInfo<span class="hljs-subst">-&gt;</span>mMsgEnabled);
+
+        <span class="hljs-comment">//  (.2) Invoke its setParameters</span>
+        <span class="hljs-keyword">if</span>  ( OK <span class="hljs-subst">!=</span> mpCamAdapter<span class="hljs-subst">-&gt;</span>setParameters() )
+        {
+            <span class="hljs-comment">//  If fail, it should destroy instance before return.</span>
+            MY_LOGE(<span class="hljs-string">"mpCamAdapter-&gt;setParameters() fail"</span>);
+            goto lbExit;
+        }
+
+        <span class="hljs-comment">//  (.3) Send to-do commands.</span>
+        {
+            Mutex<span class="hljs-tag">::Autolock</span> _lock(mTodoCmdMapLock);
+            for (size_t i <span class="hljs-subst">=</span> <span class="hljs-number">0</span>; i <span class="hljs-subst">&lt;</span> mTodoCmdMap<span class="hljs-built_in">.</span>size(); i<span class="hljs-subst">++</span>)
+            {
+                CommandInfo const<span class="hljs-subst">&amp;</span> rCmdInfo <span class="hljs-subst">=</span> mTodoCmdMap<span class="hljs-built_in">.</span>valueAt(i);
+                MY_LOGD(<span class="hljs-string">"send queued cmd(%#x),args(%d,%d)"</span>, rCmdInfo<span class="hljs-built_in">.</span>cmd, rCmdInfo<span class="hljs-built_in">.</span>arg1, rCmdInfo<span class="hljs-built_in">.</span>arg2);
+                mpCamAdapter<span class="hljs-subst">-&gt;</span>sendCommand(rCmdInfo<span class="hljs-built_in">.</span>cmd, rCmdInfo<span class="hljs-built_in">.</span>arg1, rCmdInfo<span class="hljs-built_in">.</span>arg2);
+            }
+            mTodoCmdMap<span class="hljs-built_in">.</span>clear();
+        }
+
+        <span class="hljs-comment">//  (.4) [DisplayClient] set Image Buffer Provider Client if needed.</span>
+        <span class="hljs-keyword">if</span>  ( mpDisplayClient <span class="hljs-subst">!=</span> <span class="hljs-number">0</span> <span class="hljs-subst">&amp;&amp;</span> <span class="hljs-subst">!</span> mpDisplayClient<span class="hljs-subst">-&gt;</span>setImgBufProviderClient(mpCamAdapter) )
+        {
+            MY_LOGE(<span class="hljs-string">"mpDisplayClient-&gt;setImgBufProviderClient() fail"</span>);
+            goto lbExit;
+        }
+    }
+
+    ret <span class="hljs-subst">=</span> <span class="hljs-literal">true</span>;
+lbExit:
+    <span class="hljs-keyword">return</span> ret;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li></ul></pre>
+
+<p>创建CamAdapter实例并对它进行初始化。其中第35-40行，之前在setPreviewWindow里没机会调用的mpDisplayClient-&gt;setImgBufProviderClient函数将在这里调用。DisplayClient和CamAdapter将会通过setImgBufProviderClient函数关联起来，也就是告诉DisplayClient图像数据将由CamAdapter提供。至于CamAdpter如何获取图像数据和DisplayClient如何将数据送往Surface将在以后解析。</p>
+
+<p><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/20161013231322116" alt="startPreview Hal 1" title=""></p>
+
+
+
+<h2 id="42-mpcamadapter-startpreview函数分析"><a name="t7" target="_blank"></a>4.2 mpCamAdapter-&gt;startPreview函数分析</h2>
+
+<p>既然数据由CamAdapter提供，那么怎么告诉它开始向DisplayClient提供数据呢，还的继续分析mpCamAdapter-&gt;startPreview函数</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs coffeescript has-numbering">status_t
+<span class="hljs-attribute">CamAdapter</span>::
+startPreview()
+{
+    <span class="hljs-keyword">return</span>  mpStateManager-&gt;getCurrentState<span class="hljs-function"><span class="hljs-params">()</span>-&gt;</span>onStartPreview(<span class="hljs-keyword">this</span>);
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ul></pre>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs lasso has-numbering">status_t
+StateIdle<span class="hljs-tag">::
+onStartPreview</span>(IStateHandler<span class="hljs-subst">*</span> pHandler)
+{
+    <span class="hljs-attribute">...</span><span class="hljs-attribute">...</span>
+    status <span class="hljs-subst">=</span> pHandler<span class="hljs-subst">-&gt;</span>onHandleStartPreview();
+    <span class="hljs-attribute">...</span><span class="hljs-attribute">...</span>
+    <span class="hljs-keyword">return</span>  status;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li></ul></pre>
+
+<p>mpStateManager-&gt;getCurrentState函数获取到的是idle状态，在上文提到 mpCamAdapter-&gt;init函数中设置。而 StateIdle::onStartPreview函数将会回调CamAdapter的onHandleStartPreview函数，这个函数很长，非常长，相当长。</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs markdown has-numbering">/<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>
+<span class="hljs-bullet">*   </span>CamAdapter::startPreview() -&gt; IState::onStartPreview() -&gt; 
+<span class="hljs-bullet">*   </span>IStateHandler::onHandleStartPreview() -&gt; CamAdapter::onHandleStartPreview()
+<span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-strong">*****</span><span class="hljs-emphasis">***</span>*/
+status_t
+CamAdapter::
+onHandleStartPreview()
+{
+<span class="hljs-code">    ......</span>
+
+<span class="hljs-code">    mpPass2Node = Pass2Node::createInstance(PASS2_FEATURE);</span>
+<span class="hljs-code">    mpCamGraph          = ICamGraph::createInstance(</span>
+<span class="hljs-code">                                        getOpenId(),</span>
+<span class="hljs-code">                                        mUserName.string());</span>
+<span class="hljs-code">    mpPass1Node         = Pass1Node::createInstance(p1NodeInitCfg);</span>
+<span class="hljs-code">    mpCamGraph-&gt;setBufferHandler(   PASS1_RESIZEDRAW,   mpAllocBufHdl);</span>
+<span class="hljs-code">    mpCamGraph-&gt;setBufferHandler(   PASS1_FULLRAW,      mpAllocBufHdl);</span>
+<span class="hljs-code">    mpCamGraph-&gt;connectData(    PASS1_RESIZEDRAW,   CONTROL_RESIZEDRAW, mpPass1Node,        mpDefaultCtrlNode);</span>
+<span class="hljs-code">    mpCamGraph-&gt;connectData(    CONTROL_PRV_SRC,    PASS2_PRV_SRC,      mpDefaultCtrlNode,  mpPass2Node); </span>
+<span class="hljs-code">    mpCamGraph-&gt;connectNotify(  PASS1_START_ISP,    mpPass1Node,        mpDefaultCtrlNode);</span>
+<span class="hljs-code">    mpCamGraph-&gt;connectNotify(  PASS1_STOP_ISP,     mpPass1Node,        mpDefaultCtrlNode);</span>
+<span class="hljs-code">    mpCamGraph-&gt;connectNotify(  PASS1_EOF,          mpPass1Node,        mpDefaultCtrlNode);</span>
+
+<span class="hljs-code">    if ( !mpCamGraph-&gt;init() ) {</span>
+<span class="hljs-code">        ......</span>
+<span class="hljs-code">    }</span>
+<span class="hljs-code">    if ( !mpCamGraph-&gt;start() ) {</span>
+<span class="hljs-code">        ......</span>
+<span class="hljs-code">    }</span>
+lbExit:
+<span class="hljs-code">    ......</span>
+<span class="hljs-code">    return ret;</span>
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li></ul></pre>
+
+<p>暂时先把那些乱七八糟的参数设置的代码忽略掉，重点关注下 Pass1Node、 Pass2Node和DefaultCtlNode，以及作为各个Node通讯的桥梁的CamGraph。</p>
+
+<p><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/20161013231728071" alt="CamNode" title=""></p>
+
+<p>CamGraph代表了整个系统，而使用不同的Node来描述不同的buffer处理， 所有的Node都需要连接到CamGraph。各个Node之间的通讯就需要用到 connectData和 connectNotify函数， connectData为两个node之间buffer传输的连接，而 connectNotify为两个node之间消息传输的连接。</p>
+
+<p>例如第18行调用了connectData(PASS1_RESIZEDRAW, CONTROL_RESIZEDRAW, mpPass1Node,mpDefaultCtrlNode)之后Pass1Node和DefaultCtrlNode就连接在一起，事件是 PASS1_RESIZEDRAW，也就是说当Pass1Node调用handlePostBuffer(PASS1_RESIZEDRAW, buffer)的时候，DefaultCtrlNode里面的onPostBuffer函数将会接受到Pass1Node的buffer。</p>
+
+<p>同理第20行调用了connectNotify(  PASS1_START_ISP,    mpPass1Node,        mpDefaultCtrlNode)，事件是 PASS1_START_ISP，当Pass1Node调用handleNotify(PASS1_START_ISP)的时候，DefaultCtrlNode里面的onNotify函数将会接收到 PASS1_START_ISP消息。</p>
+
+<p>connectData和connectNotify的不同之处在于，一个可以传输整个buffer，但只能一对一连接，一个只能传输消息，但可以一对多连接，这两个函数的实现这里就不解析了，里面各种子类、父类的关系比较复杂，整理起来比较麻烦。需要关注的是 mpCamGraph-&gt;init和 mpCamGraph-&gt;start这两个函数，先来看看init</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs erlang has-numbering"><span class="hljs-variable">MBOOL</span>
+<span class="hljs-variable">ICamGraph</span>::
+<span class="hljs-function"><span class="hljs-title">init</span><span class="hljs-params">()</span>
+{
+    <span class="hljs-title">return</span> <span class="hljs-title">mpImpl</span>-&gt;</span><span class="hljs-function_name">init</span>();
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ul></pre>
+
+<p>这里的 mpImpl指的是ICamGraphImpl</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs cpp has-numbering">MBOOL
+ICamGraphImpl::
+init()
+{
+    Mutex::Autolock _l(mLock);
+    MY_LOGD(<span class="hljs-string">"init +"</span>);
+    MY_ASSERT_STATE( mState == State_Connected, mState );
+
+    MBOOL ret = MTRUE;
+    <span class="hljs-stl_container"><span class="hljs-built_in">vector</span>&lt; ICamNodeImpl* &gt;</span>::const_iterator iter;
+    <span class="hljs-keyword">for</span>( iter = mvNodeImpls.begin(); iter != mvNodeImpls.end(); iter++ )
+    {
+        MY_ASSERT_NODE_OP( ret, (*iter), init );
+    }
+
+lbExit:
+    <span class="hljs-keyword">if</span>( !ret )
+    {
+        ......
+    }
+    <span class="hljs-keyword">else</span>
+    {
+        mState = State_Initiated;
+    }
+    MY_LOGD(<span class="hljs-string">"init -"</span>);
+    <span class="hljs-keyword">return</span> ret;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li></ul></pre>
+
+<p>mvNodeImpls里保存的是ICamThreadImpl对象， 每一个ICamThreadImpl代表一个CamNode，例如Pass1Node。这个函数所做的事情就是循环遍历所有的ICamThreadImpl，并且调用它们的init函数</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs lasso has-numbering">MBOOL
+ICamThreadImpl<span class="hljs-tag">::
+init</span>()
+{
+    Mutex<span class="hljs-tag">::Autolock</span> _l(mLock);
+    MY_ASSERT_STATE( mState <span class="hljs-subst">==</span> State_Connected, mState );
+
+    MY_LOGV(<span class="hljs-string">"init"</span>);
+    MY_ASSERT( mpSelf<span class="hljs-subst">-&gt;</span>onInit() );
+    MY_ASSERT( mpThread<span class="hljs-subst">-&gt;</span>createThread() 
+            <span class="hljs-subst">&amp;&amp;</span> mpThread<span class="hljs-subst">-&gt;</span>sendThreadCmd(TCmd_Sync)
+            <span class="hljs-subst">&amp;&amp;</span> mpThread<span class="hljs-subst">-&gt;</span>sendThreadCmd(TCmd_Init)
+            <span class="hljs-subst">&amp;&amp;</span> mpThread<span class="hljs-subst">-&gt;</span>sendThreadCmd(TCmd_Sync));
+
+    mState <span class="hljs-subst">=</span> State_Initiated;
+    <span class="hljs-keyword">return</span> MTRUE;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li></ul></pre>
+
+<p>ICamThreadImpl里的mySelf成员就指向了它所代表的CamNode，例如Pass1Node。也就是说接下来所有保存在 mvNodeImpls里面的CamNode的onInit函数都会被调用。保存在mvNodeImpls里面的CamNode有很多，例如Pass1Node、Pass2Node、DefaultCtrlNode等。Pass1Node负责和Sensor Driver、ISP Driver打交道，进入预览模式的重点工作都由它来完成，所以这里只分析Pass1Node，来看看Pass1Node的onInit函数</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs lasso has-numbering">MBOOL
+Pass1NodeImpl<span class="hljs-tag">::
+onInit</span>()
+{
+    <span class="hljs-attribute">...</span><span class="hljs-attribute">...</span>
+    mpIspSyncCtrlHw <span class="hljs-subst">=</span> IspSyncControlHw<span class="hljs-tag">::createInstance</span>(getSensorIdx());
+    mpIspSyncCtrlHw<span class="hljs-subst">-&gt;</span>setIspEnquePeriod(mIspEnquePeriod);
+    mpIspSyncCtrlHw<span class="hljs-subst">-&gt;</span>setSensorInfo(
+            mInitCfg<span class="hljs-built_in">.</span>muScenario,
+            sensorSize<span class="hljs-built_in">.</span>w,
+            sensorSize<span class="hljs-built_in">.</span>h,
+            mSensorInfo<span class="hljs-built_in">.</span>sensorType);
+    <span class="hljs-attribute">...</span><span class="hljs-attribute">...</span>
+    mpCamIO <span class="hljs-subst">=</span> (IHalCamIO<span class="hljs-subst">*</span>)INormalPipe<span class="hljs-tag">::createInstance</span>(getSensorIdx(), getName(), mIspEnquePeriod);
+    <span class="hljs-keyword">if</span>( <span class="hljs-subst">!</span>mpCamIO )
+    {
+        MY_LOGE(<span class="hljs-string">"create NormalPipe failed"</span>);
+        goto lbExit;
+    }
+    <span class="hljs-keyword">if</span>( <span class="hljs-subst">!</span>mpCamIO<span class="hljs-subst">-&gt;</span>init() )
+    {
+        MY_LOGE(<span class="hljs-string">"camio init failed"</span>);
+        goto lbExit;
+    }
+    ret <span class="hljs-subst">=</span> MTRUE;
+lbExit:
+    <span class="hljs-keyword">return</span> ret;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li></ul></pre>
+
+<p>主要就是对IspSyncCtrl和CamIO进行初始化，一个用来和ISP打交道，另一个用来和驱动打交道</p>
+
+<p>回到onHandleStartPreview函数，在执行完mpCamGraph-&gt;init函数之后就到 mpCamGraph-&gt;start函数了。和mpCamGraph-&gt;init的流程一样，mpCamGraph-&gt;start所做的事情就是循环遍历所有的CamNode，并且回调它们的onStart函数，直接看Pass1Node的onStart函数</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs cpp has-numbering">MBOOL
+Pass1NodeImpl::
+onStart()
+{
+    <span class="hljs-stl_container"><span class="hljs-built_in">list</span>&lt;HwPortConfig_t&gt;</span> lHwPortCfg;
+    <span class="hljs-keyword">if</span>( !getHwPortConfig(&amp;lHwPortCfg) )
+    {
+        MY_LOGE(<span class="hljs-string">"getHwPortConfig failed"</span>);
+        <span class="hljs-keyword">goto</span> lbExit;
+    }
+
+    <span class="hljs-keyword">if</span>( !startHw(lHwPortCfg) )
+    {
+        MY_LOGE(<span class="hljs-string">"startHw failed"</span>);
+        <span class="hljs-keyword">goto</span> lbExit;
+    }
+    ret = MTRUE;
+lbExit:
+    FUNC_END;
+    <span class="hljs-keyword">return</span> ret;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li></ul></pre>
+
+<p>接着看startHw函数的实现</p>
+
+
+
+<pre class="prettyprint" name="code"><code class="hljs cpp has-numbering">MBOOL
+Pass1NodeImpl::
+startHw(<span class="hljs-stl_container"><span class="hljs-built_in">list</span>&lt;HwPortConfig_t&gt;</span> &amp; plPortCfg)
+{
+    <span class="hljs-comment">// 1. Allocated ring buffers.</span>
+    <span class="hljs-keyword">if</span>( pthread_create(&amp;mThreadHandle, NULL, doThreadAllocBuf, &amp;th_data) != <span class="hljs-number">0</span> )
+    {
+        MY_LOGE(<span class="hljs-string">"pthread create failed"</span>);
+        <span class="hljs-keyword">goto</span> lbExit;
+    }
+
+    <span class="hljs-comment">// 2. Lock Pass1 HW</span>
+    <span class="hljs-keyword">if</span>( !mpIspSyncCtrlHw-&gt;lockHw(IspSyncControlHw::HW_PASS1) )
+    {
+        MY_LOGE(<span class="hljs-string">"isp sync lock pass1 failed"</span>);
+        <span class="hljs-keyword">goto</span> lbExit;
+    }
+
+    ......
+    <span class="hljs-comment">// 3. Configure RRZO and IMGO</span>
+    <span class="hljs-keyword">if</span>( !mpCamIO-&gt;configPipe(halCamIOinitParam) ) {
+        MY_LOGE(<span class="hljs-string">"configPipe failed"</span>);
+        <span class="hljs-keyword">goto</span> lbExit;
+    }
+
+    newMagicNum = mpIspSyncCtrlHw-&gt;getMagicNum(MTRUE);
+    <span class="hljs-keyword">if</span>( !configFrame(newMagicNum) ) {
+        MY_LOGE(<span class="hljs-string">"configFrame failed"</span>);
+        <span class="hljs-keyword">goto</span> lbExit;
+    }
+
+    <span class="hljs-comment">// 4. Send PASS1_START_ISP event</span>
+    handleNotify(PASS1_START_ISP, newMagicNum, <span class="hljs-number">0</span>);
+
+    ......
+    <span class="hljs-comment">// 5. Enque buffer</span>
+    <span class="hljs-keyword">if</span>( !mpCamIO-&gt;enque(halCamIOQBuf) ) {
+        MY_LOGE(<span class="hljs-string">"enque failed"</span>);
+        <span class="hljs-keyword">goto</span> lbExit;
+    }
+
+    <span class="hljs-comment">// 6. Start ISP</span>
+    <span class="hljs-keyword">if</span>( !mpCamIO-&gt;start() ) {
+        MY_LOGE(<span class="hljs-string">"start failed"</span>);
+        <span class="hljs-keyword">goto</span> lbExit;
+    }
+
+    ret = MTRUE;
+lbExit:
+    <span class="hljs-keyword">if</span>( !ret ) {
+        ......
+    }
+    <span class="hljs-keyword">return</span> ret;
+}</code><ul class="pre-numbering" style="opacity: 0;"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li><li>54</li></ul><div class="save_code tracking-ad" data-mod="popu_249" style="display: none;"><a href="javascript:;" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/save_snippets.png"></a></div><ul class="pre-numbering"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li><li>7</li><li>8</li><li>9</li><li>10</li><li>11</li><li>12</li><li>13</li><li>14</li><li>15</li><li>16</li><li>17</li><li>18</li><li>19</li><li>20</li><li>21</li><li>22</li><li>23</li><li>24</li><li>25</li><li>26</li><li>27</li><li>28</li><li>29</li><li>30</li><li>31</li><li>32</li><li>33</li><li>34</li><li>35</li><li>36</li><li>37</li><li>38</li><li>39</li><li>40</li><li>41</li><li>42</li><li>43</li><li>44</li><li>45</li><li>46</li><li>47</li><li>48</li><li>49</li><li>50</li><li>51</li><li>52</li><li>53</li><li>54</li></ul></pre>
+
+<p>这个函数做的事情比较多，上面标记的每个步骤都很复杂 <br>
+第5-10行：创建一个线程来分配ring buffers，用于存放从驱动获取到的图像数据 <br>
+第20-24行：配置ISP和Sensor驱动预览相关的参数，记得sensor驱动中(例如imx214mipiraw_Sensor.c)的preview_setting函数吗，就是在这个时候被调用的 <br>
+<img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/20161013233506111" alt="preview_setting" title=""> <br>
+第33行：发送PASS1_START_ISP事件，其它的CamNode接收到该事件后会做相应的处理，例如DefaultCtlNode，会通知Hal3A进入CameraPreview状态 <br>
+第42-46行：让ISP开始工作，到这里准备工作都已经完成，Camera已经进入了预览模式，接下来就是不断获取图像数据，并将它送到显示器了。</p>
+
+<p><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/20161013232009725" alt="startPreview Hal 2" title=""></p>
+
+
+
+<h1 id="5-总结"><a name="t8" target="_blank"></a>5. 总结</h1>
+
+<p>setPreviewWindow函数就是为hal层准备好Surface，hal层只能通过上层传下来的mHalPreviewWindow.nw来间接的操作Surface，而mHalPreviewWindow.nw保存在DisplayClient里面，也就是说DisplayClient是lcd显示图像的关键</p>
+
+<p>startPreview函数的工作重点在CamAdapter，它代表Camera硬件，由它提供图像数据给DisplayClient。CamAdapter包含了多个CamNode，不同的CamNode用来描述不同的buffer处理，例如Pass1Node，它负责和驱动打交道，进入预览模式的重点工作都在它的startHw函数里面完成。</p></div>
+        <script type="text/javascript">
+            $(function () {
+                $('pre.prettyprint code').each(function () {
+                    var lines = $(this).text().split('\n').length;
+                    var $numbering = $('<ul></ul>').addClass('pre-numbering').hide();
+                    $(this).addClass('has-numbering').parent().append($numbering);
+                    for (i = 1; i <= lines; i++) {
+                        $numbering.append($('<li></li>').text(i));
+                    };
+                    $numbering.fadeIn(1700);
+                });
+            });
+        </script>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad bdshare-button-style0-16" style="float: right;" data-mod="popu_172" data-bd-bind="1496890607250">
+<a href="http://blog.csdn.net/eternity9255/article/details/52790962#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important" target="_blank"></a>
+<a href="http://blog.csdn.net/eternity9255/article/details/52790962#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间" style="background-position:0 -52px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/eternity9255/article/details/52790962#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博" style="background-position:0 -104px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/eternity9255/article/details/52790962#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博" style="background-position:0 -260px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/eternity9255/article/details/52790962#" class="bds_renren" data-cmd="renren" title="分享到人人网" style="background-position:0 -208px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/eternity9255/article/details/52790962#" class="bds_weixin" data-cmd="weixin" title="分享到微信" style="background-position:0 -1612px !important" target="_blank"></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   
+
+    
+<!--172.16.140.15-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+
+
+ 
+
+
+        <div id="digg" articleid="52790962">
+            <dl id="btnDigg" class="digg digg_enable" onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>1</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_enable" onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" target="_blank">&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" target="_blank">&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;]);location.href=&#39;/eternity9255/article/details/52126392&#39;;">上一篇</span><a href="http://blog.csdn.net/eternity9255/article/details/52126392" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;])">Android 5.0 Camera系统源码分析(2)：Camera打开流程</a></li>
+                <li class="next_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;]);location.href=&#39;/eternity9255/article/details/52838696&#39;;">下一篇</span><a href="http://blog.csdn.net/eternity9255/article/details/52838696" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;])">Android 5.0 Camera系统源码分析(4)：Camera预览流程数据流</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+            <div class="similar_article">
+                    <h4></h4>
+                    <div class="similar_c" style="margin:20px 0px 0px 0px">
+                        <div class="similar_c_t">
+                          &nbsp;&nbsp;相关文章推荐
+                        </div>
+                   
+                        <div class="similar_wrap tracking-ad" data-mod="popu_36" style="max-height:195px;">                       
+                            <ul class="similar_list fl">    
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/eternity9255/article/details/52848775" title="Android 5.0 Camera系统源码分析(5)：Camera预览3A流程" strategy="recommend_sim_new" target="_blank" style="width: 290px;">Android 5.0 Camera系统源码分析(5)：Camera预览3A流程</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yangzhihuiguming/article/details/51800227" title="android6.0源码分析之Camera API2.0下的初始化流程分析" strategy="recommend_sim_new" target="_blank" style="width: 290px;">android6.0源码分析之Camera API2.0下的初始化流程分析</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yangzhihuiguming/article/details/51800587" title="android6.0源码分析之Camera API2.0下的Preview(预览)流程分析" strategy="recommend_sim_new" target="_blank" style="width: 290px;">android6.0源码分析之Camera API2.0下的Preview(预览)流程分析</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/lb377463323/article/details/52740411" title="Android Camera2教程之打开相机、开启预览、实现PreviewCallback、拍照" strategy="recommend_sim_new" target="_blank" style="width: 290px;">Android Camera2教程之打开相机、开启预览、实现PreviewCallback、拍照</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yangzhihuiguming/article/details/51831888" title="android6.0源码分析之Camera2 HAL分析" strategy="recommend_sim_new" target="_blank" style="width: 290px;">android6.0源码分析之Camera2 HAL分析</a>
+                                   </li>
+                            </ul>
+                              <ul class="similar_list fr">      
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yanzi1225627/article/details/33028041" title="玩转Android Camera开发(一):Surfaceview预览Camera,基础拍照功能完整demo" strategy="recommend_sim_new" target="_blank" style="width: 290px;">玩转Android Camera开发(一):Surfaceview预览Camera,基础拍照功能完整demo</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yangzhihuiguming/article/details/51382267" title="android6.0源码分析之Camera API2.0简介" strategy="recommend_sim_new" target="_blank" style="width: 290px;">android6.0源码分析之Camera API2.0简介</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/zhudaozhuan/article/details/50819499" title="android 6.0 SystemUI源码分析(3)-Recent Panel加载显示流程" strategy="recommend_sim_new" target="_blank" style="width: 290px;">android 6.0 SystemUI源码分析(3)-Recent Panel加载显示流程</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/OnafioO/article/details/52022438" title="Android开发实践：掌握Camera的预览方向和拍照方向" strategy="recommend_sim_new" target="_blank" style="width: 290px;">Android开发实践：掌握Camera的预览方向和拍照方向</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/twoconk/article/details/52220338" title="Android Camera预览时输出的帧率控制" strategy="recommend_sim_new" target="_blank" style="width: 290px;">Android Camera预览时输出的帧率控制</a>
+                                   </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+      
+</div>
+
+     <div>
+           
+
+       
+                           
+            <!-- 广告位：PC端-博客内容页-banner1-960*90 --> 
+            <script> 
+                (function() { 
+                    var s = "_" + Math.random().toString(36).slice(2); 
+                    document.write('<div id="' + s + '"></div>'); 
+                    (window.slotbydup=window.slotbydup || []).push({ 
+                        id: '4228013', 
+                        container: s, 
+                        size: '0,0', 
+                        display: 'inlay-fix' 
+                    }); 
+                })(); 
+            </script><div id="_bvmw2kdgpek"></div><script charset="utf-8" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ncgm"></script><script type="text/javascript">
+    /*博客内容页下方Banner1-960*90，创建于2016-12-13*/
+    var cpro_id = "u2843955";
+</script>
+<script type="text/javascript" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2843955_0"><iframe id="iframeu2843955_0" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ncgm.html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+    </div>
+
+<div id="suggest">
+
+</div>
+         <script language="javascript" type="text/javascript">     
+             $(function(){
+                 $.get("/eternity9255/svc/GetSuggestContent/52790962",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ 
+
+<div id="relate" data-mod="popu_218" class="tracking-ad" style="display: block;">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c"><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/android"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/1455589744328_328.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/android">Android知识库</a></h4><p><label><span>34720</span><em>关注</em><i>|</i><span>3135</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/java"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/1453701371636_636.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/java">Java 知识库</a></h4><p><label><span>27751</span><em>关注</em><i>|</i><span>3746</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/javaee"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/1456818035722_722.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/javaee">Java EE知识库</a></h4><p><label><span>18907</span><em>关注</em><i>|</i><span>1408</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/javase"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/1453169124297_297.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/javase">Java SE知识库</a></h4><p><label><span>26672</span><em>关注</em><i>|</i><span>578</span><em>收录</em></label></p></dd></dl></div>
+</div>
+ 
+
+<dl class="blog-ass-articl tracking-ad" id="res-relatived" data-mod="popu_84"> 
+    <div class="embody embody_b" id="libkeyparent" style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+    
+    <div id="adCollege"> 
+    <div><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4505" title="C++中搭建Lua脚本系统开发框架,并实现OpenGL调用" strategy="v4:content" target="_blank">C++中搭建Lua脚本系统开发框架,并实现OpenGL调用</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1478" title="Android底层技术：HAL驱动开发" strategy="v4:content" target="_blank">Android底层技术：HAL驱动开发</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4351" title="Windows Server 2012 DHCP Server 管理" strategy="v4:content" target="_blank">Windows Server 2012 DHCP Server 管理</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/370" title="Windows Server 2012 DHCP Server 管理" strategy="v4:content" target="_blank">Windows Server 2012 DHCP Server 管理</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3161" title="I2C总线和触摸屏驱动移植实战-linux驱动开发第9部分" strategy="v4:content" target="_blank">I2C总线和触摸屏驱动移植实战-linux驱动开发第9部分</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/2430" title="Android驱动深度开发视频教程" strategy="v4:content" target="_blank">Android驱动深度开发视频教程</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1479" title="Android底层技术：Linux驱动框架与开发" strategy="v4:content" target="_blank">Android底层技术：Linux驱动框架与开发</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4693" title="Mui,h5+,CastApp-APP实战项目-仿e袋洗-O2O类" strategy="v4:content" target="_blank">Mui,h5+,CastApp-APP实战项目-仿e袋洗-O2O类</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/4702" title="Mui,h5+,CastApp-APP实战项目-仿今日头条" strategy="v4:content" target="_blank">Mui,h5+,CastApp-APP实战项目-仿今日头条</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3642" title="Android开发高级组件与框架——APP上线" strategy="v4:content" target="_blank">Android开发高级组件与框架——APP上线</a></dd></div></div>  
+
+    
+
+     <script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/job_reco.js.下载" type="text/javascript"></script> 
+     <script type="text/javascript">
+         csdn.position.showEdu({
+             sourceType: "blog",
+             searchType: "detail",
+             searchKey: "52790962",
+                username: "wangchaoqun1997",
+                recordcount: "10",
+                containerId: "adCollege" //容器DIV的id。 
+            });  
+        </script> 
+   
+</dl>
+
+
+
+
+
+    <div id="ad_cen">        
+                <div>
+                                    <div class="tracking-ad" data-view="true" data-mod="ad_popu_199" data-mtp="43" data-order="114" data-con="ad_content_1843" style="width: 960px; height: 90px;">
+                                             <script type="text/javascript">
+                                                 /*博客内容页下方Banner2-960*90，创建于,2016-11-28*/
+                                                 var cpro_id = "u2831143";
+                                            </script>
+                                            <script type="text/javascript" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2831143_0"><iframe id="iframeu2831143_0" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ncgm(1).html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+                                   </div>
+                    </div>
+    </div>  
+
+        <!-- 广告位开始 -->
+        <!-- 广告位结束 -->
+<div class="tracking-ad" data-view="true" data-mod="ad_popu_72" data-mtp="62" data-order="40" data-con="ad_content_2072">
+                 <script id="popuLayer_js_q" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/popuLayer.js.下载" defer="defer" type="text/javascript"></script>
+            <div id="layerd" style="position: fixed; bottom: 0px; right: 0px; line-height: 0px; z-index: 1000; width: 300px; height: 278px; display: none;">
+    	            <div class="J_close layer_close" style="display:;background-color:#efefef;padding:0px;color:#333;font:12px/24px Helvetica,Tahoma,Arial,sans-serif;text-align:right;">关闭</div><!-- 广告占位容器 --><div id="cpro_u2895327"><iframe id="iframeu2895327_0" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ncgm(2).html" width="300" height="250" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:300px;height:250px" allowtransparency="true"></iframe></div></div>
+            <script>  document.getElementById("popuLayer_js_q").onload=function(){      var styObjd=styObj={width:"300px","height":parseInt(250)+28};window.CSDN.Layer.PopuLayer("#layerd",{storageName:"layerd",styleObj:styObjd,total:50,expoire:1000*60});  }</script><!-- 投放代码 --><script type="text/javascript">                /*服务器频道首页置顶Banner960*90，创建于2014-7-3*/    (window.cproArray = window.cproArray || []).push({        id: "u2895327"      });  </script>  <script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script>
+     
+</div>
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list"><br>&nbsp;&nbsp;暂无评论<br><br><div class="clear"></div></div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form"><a name="commentbox"></a><a name="reply"></a><a name="quote"></a><form action="http://blog.csdn.net/eternity9255/comment/submit?id=52790962" method="post" onsubmit="return subform(this);"><div class="commentform"><div class="panel_head">发表评论</div><ul><li class="left">用 户 名：</li><li class="right">wangchaoqun1997</li></ul><ul><li class="left">评论内容：</li><li class="right" style="position:relative;"><div id="ubbtools"><a href="http://blog.csdn.net/eternity9255/article/details/52790962#insertcode" code="code"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/code.gif" border="0" alt="插入代码" title="插入代码"></a></div><div id="lang_list" style="position: absolute; top: 28px; left: 0px; display: none;"><a class="long_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#html">HTML/XML</a><a class="long_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#objc">objective-c</a><a class="zhong_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#delphi">Delphi</a><a class="zhong_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#ruby">Ruby</a><a href="http://blog.csdn.net/eternity9255/article/details/52790962#php">PHP</a><a class="duan_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#csharp">C#</a><a style=" border-right: none;" class="duan_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#cpp">C++</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#javascript">JavaScript</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#vb">Visual Basic</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#python">Python</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#java">Java</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#css">CSS</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#sql">SQL</a><a style="border:none;" class="duan_name" href="http://blog.csdn.net/eternity9255/article/details/52790962#plain">其它</a></div><textarea class="comment_content" name="comment_content" id="comment_content" style="width: 400px; height: 200px;"></textarea></li></ul><ul><input type="hidden" id="comment_replyId" name="comment_replyId"><input type="hidden" id="comment_userId" name="comment_userId" value="521203"><input type="hidden" id="commentId" name="commentId" value=""><input type="submit" class="comment_btn" value="提交">&nbsp;&nbsp;<span id="tip_comment" style="color: Red; display: none;"></span></ul></div></form></div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '52790962';
+    var commentscount = 0;
+    var islock = false
+</script>
+
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top" style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop" style="display: none;" title="返回顶部" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_huidaodingbu&#39;])">         
+         <img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="">
+
+    <h5>
+        <a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+    <div class="classify">
+<a title="全部主题" href="http://www.csdn.net/tag" target="_blank" onclick="LogClickCount(this,336);">全部主题</a>
+<a title="Hadoop" href="http://g.csdn.net/5272865" target="_blank" onclick="LogClickCount(this,336);">Hadoop</a>
+<a title="AWS" href="http://g.csdn.net/5272866" target="_blank" onclick="LogClickCount(this,336);">AWS</a>
+<a title="移动游戏" href="http://g.csdn.net/5272870" target="_blank" onclick="LogClickCount(this,336);">移动游戏</a>
+<a title="Java" href="http://g.csdn.net/5272871" target="_blank" onclick="LogClickCount(this,336);">Java</a>
+<a title="Android" href="http://g.csdn.net/5272872" target="_blank" onclick="LogClickCount(this,336);">Android</a>
+<a title="iOS" href="http://g.csdn.net/5272873" target="_blank" onclick="LogClickCount(this,336);">iOS</a>
+<a title="Swift" href="http://g.csdn.net/5272868" target="_blank" onclick="LogClickCount(this,336);">Swift</a>
+<a title="智能硬件" href="http://g.csdn.net/5272869" target="_blank" onclick="LogClickCount(this,336);">智能硬件</a>
+<a title="Docker" href="http://g.csdn.net/5272867" target="_blank" onclick="LogClickCount(this,336);">Docker</a>
+<a title="OpenStack" href="http://g.csdn.net/5272925" target="_blank" onclick="LogClickCount(this,336);">OpenStack</a>
+<a title="VPN" href="http://www.csdn.net/tag/vpn" target="_blank" onclick="LogClickCount(this,336);">VPN</a>
+<a title="Spark" href="http://g.csdn.net/5272924" target="_blank" onclick="LogClickCount(this,336);">Spark</a>
+<a title="ERP" href="http://www.csdn.net/tag/erp" target="_blank" onclick="LogClickCount(this,336);">ERP</a>
+<a title="IE10" href="http://www.csdn.net/tag/ie10" target="_blank" onclick="LogClickCount(this,336);">IE10</a>
+<a title="Eclipse" href="http://www.csdn.net/tag/eclipse" target="_blank" onclick="LogClickCount(this,336);">Eclipse</a>
+<a title="CRM" href="http://www.csdn.net/tag/crm" target="_blank" onclick="LogClickCount(this,336);">CRM</a>
+<a title="JavaScript" href="http://www.csdn.net/tag/javascript" target="_blank" onclick="LogClickCount(this,336);">JavaScript</a>
+<a title="数据库" href="http://www.csdn.net/tag/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" onclick="LogClickCount(this,336);">数据库</a>
+<a title="Ubuntu" href="http://www.csdn.net/tag/ubuntu" target="_blank" onclick="LogClickCount(this,336);">Ubuntu</a>
+<a title="NFC" href="http://www.csdn.net/tag/nfc" target="_blank" onclick="LogClickCount(this,336);">NFC</a>
+<a title="WAP" href="http://www.csdn.net/tag/wap" target="_blank" onclick="LogClickCount(this,336);">WAP</a>
+<a title="jQuery" href="http://www.csdn.net/tag/jquery" target="_blank" onclick="LogClickCount(this,336);">jQuery</a>
+<a title="BI" href="http://www.csdn.net/tag/bi" target="_blank" onclick="LogClickCount(this,336);">BI</a>
+<a title="HTML5" href="http://www.csdn.net/tag/html5" target="_blank" onclick="LogClickCount(this,336);">HTML5</a>
+<a title="Spring" href="http://www.csdn.net/tag/spring" target="_blank" onclick="LogClickCount(this,336);">Spring</a>
+<a title="Apache" href="http://www.csdn.net/tag/apache" target="_blank" onclick="LogClickCount(this,336);">Apache</a>
+<a title=".NET" href="http://www.csdn.net/tag/.net" target="_blank" onclick="LogClickCount(this,336);">.NET</a>
+<a title="API" href="http://www.csdn.net/tag/api" target="_blank" onclick="LogClickCount(this,336);">API</a>
+<a title="HTML" href="http://www.csdn.net/tag/html" target="_blank" onclick="LogClickCount(this,336);">HTML</a>
+<a title="SDK" href="http://www.csdn.net/tag/sdk" target="_blank" onclick="LogClickCount(this,336);">SDK</a>
+<a title="IIS" href="http://www.csdn.net/tag/iis" target="_blank" onclick="LogClickCount(this,336);">IIS</a>
+<a title="Fedora" href="http://www.csdn.net/tag/fedora" target="_blank" onclick="LogClickCount(this,336);">Fedora</a>
+<a title="XML" href="http://www.csdn.net/tag/xml" target="_blank" onclick="LogClickCount(this,336);">XML</a>
+<a title="LBS" href="http://www.csdn.net/tag/lbs" target="_blank" onclick="LogClickCount(this,336);">LBS</a>
+<a title="Unity" href="http://www.csdn.net/tag/unity" target="_blank" onclick="LogClickCount(this,336);">Unity</a>
+<a title="Splashtop" href="http://www.csdn.net/tag/splashtop" target="_blank" onclick="LogClickCount(this,336);">Splashtop</a>
+<a title="UML" href="http://www.csdn.net/tag/uml" target="_blank" onclick="LogClickCount(this,336);">UML</a>
+<a title="components" href="http://www.csdn.net/tag/components" target="_blank" onclick="LogClickCount(this,336);">components</a>
+<a title="Windows Mobile" href="http://www.csdn.net/tag/windowsmobile" target="_blank" onclick="LogClickCount(this,336);">Windows Mobile</a>
+<a title="Rails" href="http://www.csdn.net/tag/rails" target="_blank" onclick="LogClickCount(this,336);">Rails</a>
+<a title="QEMU" href="http://www.csdn.net/tag/qemu" target="_blank" onclick="LogClickCount(this,336);">QEMU</a>
+<a title="KDE" href="http://www.csdn.net/tag/kde" target="_blank" onclick="LogClickCount(this,336);">KDE</a>
+<a title="Cassandra" href="http://www.csdn.net/tag/cassandra" target="_blank" onclick="LogClickCount(this,336);">Cassandra</a>
+<a title="CloudStack" href="http://www.csdn.net/tag/cloudstack" target="_blank" onclick="LogClickCount(this,336);">CloudStack</a>
+<a title="FTC" href="http://www.csdn.net/tag/ftc" target="_blank" onclick="LogClickCount(this,336);">FTC</a>
+<a title="coremail" href="http://www.csdn.net/tag/coremail" target="_blank" onclick="LogClickCount(this,336);">coremail</a>
+<a title="OPhone " href="http://www.csdn.net/tag/ophone" target="_blank" onclick="LogClickCount(this,336);">OPhone </a>
+<a title="CouchBase" href="http://www.csdn.net/tag/couchbase" target="_blank" onclick="LogClickCount(this,336);">CouchBase</a>
+<a title="云计算" href="http://www.csdn.net/tag/%E4%BA%91%E8%AE%A1%E7%AE%97" target="_blank" onclick="LogClickCount(this,336);">云计算</a>
+<a title="iOS6" href="http://www.csdn.net/tag/iOS6" target="_blank" onclick="LogClickCount(this,336);">iOS6</a>
+<a title="Rackspace " href="http://www.csdn.net/tag/rackspace" target="_blank" onclick="LogClickCount(this,336);">Rackspace </a>
+<a title="Web App" href="http://www.csdn.net/tag/webapp" target="_blank" onclick="LogClickCount(this,336);">Web App</a>
+<a title="SpringSide" href="http://www.csdn.net/tag/springside" target="_blank" onclick="LogClickCount(this,336);">SpringSide</a>
+<a title="Maemo" href="http://www.csdn.net/tag/maemo" target="_blank" onclick="LogClickCount(this,336);">Maemo</a>
+<a title="Compuware" href="http://www.csdn.net/tag/compuware" target="_blank" onclick="LogClickCount(this,336);">Compuware</a>
+<a title="大数据" href="http://www.csdn.net/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE" target="_blank" onclick="LogClickCount(this,336);">大数据</a>
+<a title="aptech" href="http://www.csdn.net/tag/aptech" target="_blank" onclick="LogClickCount(this,336);">aptech</a>
+<a title="Perl" href="http://www.csdn.net/tag/perl" target="_blank" onclick="LogClickCount(this,336);">Perl</a>
+<a title="Tornado" href="http://www.csdn.net/tag/tornado" target="_blank" onclick="LogClickCount(this,336);">Tornado</a>
+<a title="Ruby" href="http://www.csdn.net/tag/ruby" target="_blank" onclick="LogClickCount(this,336);">Ruby</a>
+<a title="Hibernate" href="http://www.csdn.net/tag/hibernate" target="_blank" onclick="LogClickCount(this,336);">Hibernate</a>
+<a title="ThinkPHP" href="http://www.csdn.net/tag/thinkphp" target="_blank" onclick="LogClickCount(this,336);">ThinkPHP</a>
+<a title="HBase" href="http://www.csdn.net/tag/hbase" target="_blank" onclick="LogClickCount(this,336);">HBase</a>
+<a title="Pure" href="http://www.csdn.net/tag/pure" target="_blank" onclick="LogClickCount(this,336);">Pure</a>
+<a title="Solr" href="http://www.csdn.net/tag/solr" target="_blank" onclick="LogClickCount(this,336);">Solr</a>
+<a title="Angular" href="http://www.csdn.net/tag/angular" target="_blank" onclick="LogClickCount(this,336);">Angular</a>
+<a title="Cloud Foundry" href="http://www.csdn.net/tag/cloudfoundry" target="_blank" onclick="LogClickCount(this,336);">Cloud Foundry</a>
+<a title="Redis" href="http://www.csdn.net/tag/redis" target="_blank" onclick="LogClickCount(this,336);">Redis</a>
+<a title="Scala" href="http://www.csdn.net/tag/scala" target="_blank" onclick="LogClickCount(this,336);">Scala</a>
+<a title="Django" href="http://www.csdn.net/tag/django" target="_blank" onclick="LogClickCount(this,336);">Django</a>
+<a title="Bootstrap" href="http://www.csdn.net/tag/bootstrap" target="_blank" onclick="LogClickCount(this,336);">Bootstrap</a>
+    </div>
+
+</div>
+  <script type="text/javascript">     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/eternity9255/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+    var articletitle='Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流';
+
+</script>
+
+
+
+
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/eternity9255" target="_blank">
+    <img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/1_eternity9255.jpg" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/eternity9255" class="user_name" target="_blank">LittleProgrammer2S</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter" title="[发私信]" onclick="window.open(&#39;http://msg.csdn.net/letters/model?receiver=eternity9255&#39;,&#39;_blank&#39;,&#39;height=350,width=700&#39;);_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_sixin&#39;])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>10267次</span></li>
+    <li>积分：<span>180</span> </li>    
+    <li>等级： <span style="position:relative;display:inline-block;z-index:1">
+            <img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/blog2.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：180 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>7篇</span></li>
+    <li>转载：<span>0篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>12条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search csdn-tracking-statistics" target="_blank" data-mod="popu_306">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字"></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog">
+        <input type="hidden" name="q" id="inputQ">
+        <input type="hidden" name="t" value="blog">
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+   
+    $(function () {
+        $("#btnSubmit").unbind("click");
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {           
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            if ($("#inputSearch").val() == "") {               
+                alert("请录入搜索关键词！");                         
+                return false;
+            }
+            //var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";           
+            var url = "https://www.baidu.com/s?wd=" + encodeURIComponent($("#inputSearch").val()) + "%20site%3Ablog.csdn.net"
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="http://blog.csdn.net/eternity9255/article/month/2016/12">2016年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/eternity9255/article/month/2016/11">2016年11月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/eternity9255/article/month/2016/10">2016年10月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/eternity9255/article/month/2016/08">2016年08月</a><span>(2)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52848775" title="Android 5.0 Camera系统源码分析(5)：Camera预览3A流程">Android 5.0 Camera系统源码分析(5)：Camera预览3A流程</a><span>(2467)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52085864" title="Android 5.0 Camera系统源码分析(1)：CameraService启动流程">Android 5.0 Camera系统源码分析(1)：CameraService启动流程</a><span>(1703)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52126392" title="Android 5.0 Camera系统源码分析(2)：Camera打开流程">Android 5.0 Camera系统源码分析(2)：Camera打开流程</a><span>(1471)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/53069037" title="Android USB Camera(1) : 调试记录">Android USB Camera(1) : 调试记录</a><span>(1390)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52790962" title="Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流">Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流</a><span>(1264)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52838696" title="Android 5.0 Camera系统源码分析(4)：Camera预览流程数据流">Android 5.0 Camera系统源码分析(4)：Camera预览流程数据流</a><span>(970)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/53522966" title="Android USB Camera(2) : UVC协议分析">Android USB Camera(2) : UVC协议分析</a><span>(861)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/53069037" title="Android USB Camera(1) : 调试记录">Android USB Camera(1) : 调试记录</a><span>(4)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52126392" title="Android 5.0 Camera系统源码分析(2)：Camera打开流程">Android 5.0 Camera系统源码分析(2)：Camera打开流程</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52848775" title="Android 5.0 Camera系统源码分析(5)：Camera预览3A流程">Android 5.0 Camera系统源码分析(5)：Camera预览3A流程</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52085864" title="Android 5.0 Camera系统源码分析(1)：CameraService启动流程">Android 5.0 Camera系统源码分析(1)：CameraService启动流程</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52790962" title="Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流">Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/52838696" title="Android 5.0 Camera系统源码分析(4)：Camera预览流程数据流">Android 5.0 Camera系统源码分析(4)：Camera预览流程数据流</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/eternity9255/article/details/53522966" title="Android USB Camera(2) : UVC协议分析">Android USB Camera(2) : UVC协议分析</a><span>(0)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/turingbooks/article/details/72416875" target="_blank">* 5月书讯：流畅的Python，终于等到你！</a></li>
+<li><a href="http://blog.csdn.net/kimmking/article/details/72886230" target="_blank">* JSON最佳实践</a></li>
+<li><a href="http://blog.csdn.net/swingwang/article/details/72887367" target="_blank">* InfiniBand技术和协议架构分析</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/72675977" target="_blank">* Android 中解决破解签名验证之后导致的登录授权失效问题</a></li>
+<li><a href="http://blog.csdn.net/poem_qianmo/article/details/72857602" target="_blank">* 《Real-Time Rendering 3rd》 提炼总结——图形渲染与视觉外观</a></li>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/72903038" target="_blank">* CSDN日报20170607 ——《别混淆你想要什么和能否实现》</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/53069037#comments">Android USB Camera(1) : 调试记录</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/super_gao" class="user_name">super_gao</a>:
+@phoenix_wanng:我这边出现了uvcvideo: Non-zero status (-7...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/52085864#comments">Android 5.0 Camera系统源码分析(1)：CameraService启动流程</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/sxl9266" class="user_name">舜何人也</a>:
+老师您好！您在本文framework层、BinderService类、publish函数那段下面写到...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/52085864#comments">Android USB Camera(1) : 调试记录</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/laoliu313" class="user_name">laoliu313</a>:
+jni层把图像保存在pImageBuf，这句话怎么理解，pImageBuffer你是如何定义的，还请...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/52085864#comments">Android USB Camera(1) : 调试记录</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/laoliu313" class="user_name">laoliu313</a>:
+大牛你好！小弟最近在研究基于uvc的UsbCamera，刚看了你这篇帖子，有些疑问想咨询下！请问jn...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/52126392#comments">Android 5.0 Camera系统源码分析(2)：Camera打开流程</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/eternity9255" class="user_name">LittleProgrammer2S</a>:
+@linglan_xingfu:在它的父类CameraBase中实现，代码路径是frameworks...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/52126392#comments">Android 5.0 Camera系统源码分析(2)：Camera打开流程</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/linglan_xingfu" class="user_name">linglan_xingfu</a>:
+楼主您好，我看到getNumberOfCameras的调用，但是Android5.0的camera....
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/52126392#comments">Android USB Camera(1) : 调试记录</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/phoenix_wanng" class="user_name">phoenix_wanng</a>:
+@LittleProgrammer2S,目前正在mtk6735调试uvc camra，遇到的问题和您...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/52126392#comments">Android 5.0 Camera系统源码分析(1)：CameraService启动流程</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/qaserty" class="user_name">qaserty</a>:
+博主太有才了，适用于67平台的，csdn就服你！
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/52848775#comments">Android 5.0 Camera系统源码分析(5)：Camera预览3A流程</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/qiuchengjia" class="user_name">戎码人生</a>:
+博主加油！！！
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/eternity9255/article/details/52848775#comments">Android 5.0 Camera系统源码分析(5)：Camera预览3A流程</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/qiuchengjia" class="user_name">戎码人生</a>:
+博主加油！！！
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                 <!-- 广告位开始 --> 
+                <!-- 广告位结束 -->
+                   <div class="tracking-ad" data-view="true" data-mod="ad_popu_189" data-mtp="63" data-order="40" data-con="ad_content_1259" style="width: 250px; height: 250px;">
+                        <div id="nav_show_top_stop" style="width: 250px; height: 250px; z-index: 1000; position: fixed; top: 0px;"><div id="cpro_u2734133"><iframe id="iframeu2734133_0" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ncgm(3).html" width="250" height="250" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:250px;height:250px" allowtransparency="true"></iframe></div></div>
+                   </div>
+                    <script>    
+                        
+                        setTimeout(function () {
+                            var naviga_offsetTop = 0; function naviga_stay_top() {
+                                var scrollTop = jQuery(document).scrollTop();
+                                if (scrollTop > naviga_offsetTop) {
+                                    jQuery("#nav_show_top_stop").css({ "position": "fixed" });
+                                    jQuery("#nav_show_top_stop").css({ "top": "0px" });
+                                } else { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": naviga_offsetTop - scrollTop + "px" }); }
+                            }
+                            function onload_function() {
+                                naviga_offsetTop = jQuery("#nav_show_top_stop").position().top;
+                                jQuery(window).bind("scroll", naviga_stay_top); jQuery(window).bind("mousewheel", naviga_stay_top);
+                                jQuery(document).bind("scroll", naviga_stay_top); jQuery(document).bind("mousewheel", naviga_stay_top);
+                            } jQuery(document).ready(onload_function);
+                        },200);                                   
+
+                    </script>
+                    <script type="text/javascript">    (window.cproArray = window.cproArray || []).push({ id: "u2734133" });  </script>
+                   <script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script>
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+
+     
+
+   
+   
+     <!--new top-->
+   
+   
+
+    
+    
+    
+   
+
+   
+
+
+       <script type="text/javascript" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/MathJax.js.下载"></script>
+          <script type="text/javascript">
+              //$(function () {
+              //    setTimeout(function () {
+              //        var searchtitletags = articletitle + ',' + $("#tags").html();
+              //        searchService({
+              //            index: 'blog',
+              //            query: searchtitletags,
+              //            from: 5,
+              //            size: 5,
+              //            appendTo: '#res',
+              //            url: 'recommend',
+              //            his: 2,
+              //            client: "blog_cf_enhance",
+              //            tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+              //        });
+              //    }, 1000);
+              //});
+
+         </script>
+    
+    <script src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/csdn_blog_detail.min.js.下载" type="text/javascript"></script><link rel="stylesheet" type="text/css" href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/pub_footer_2014.css"><div class="pub_fo"><div id="pub_footerall" class="pub_footer_new"><dl><dt></dt> <dd class="foot_sub_menu"><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a><span>|</span><a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a><span>|</span><a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a><span>|</span><a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a><span>|</span><a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a><span>|</span><a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a><span>|</span><a href="mailto:webmaster@csdn.net">问题报告</a><span>|</span><a target="_blank" href="http://www.csdn.net/friendlink.html">合作伙伴</a><span>|</span><a href="http://bbs.csdn.net/forums/Service" target="_blank">论坛反馈</a></dd><dd class="foot_contact"><a href="javascript:void(0);" target="_blank" class="qq">网站客服</a><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2251809102&amp;site=qq&amp;menu=yes" target="_blank" class="qq">杂志客服</a><a href="http://e.weibo.com/csdnsupport/profile" target="_blank" class="weibo">微博客服</a><a href="mailto:webmaster@csdn.net" class="email" title="联系邮箱">webmaster@csdn.net</a><span class="phone" title="服务热线">400-660-0108</span><span class="interval">|</span><span>北京创新乐知信息技术有限公司 版权所有</span><span class="interval">|</span><span>江苏知之为计算机有限公司</span><span class="interval">|</span><span>江苏乐知网络技术有限公司</span></dd><dd class="foot_copyright"><span>京&nbsp;ICP&nbsp;证&nbsp;09002463&nbsp;号</span><span class="interval">|</span><span>Copyright © 1999-2017, CSDN.NET, All Rights Reserved&nbsp;</span><a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div></div><div id="note1" class="csdn_note" style="display:none; position:absolute; z-index:9999; width:440px">  <span class="notice_top_arrow"><span class="inner"></span></span>  <div class="box"></div></div><div class="csdn_notice_tip" style="position: absolute; z-index: 9990; width: 170px; left: -72px; top: 12167px; display: block;">  <iframe src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/saved_resource(2).html" frameborder="0" scrolling="no" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe>  <div class="tip_text">您有<strong>11</strong>条新通知</div>  <a href="javascript:void 0" class="close2"></a></div><script id="noticeScript" type="text/javascript" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/notify.js.下载"></script><input type="hidden" id="aa_g_data_ids">
+        
+    <script type="text/javascript" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/csdn_public_blog_detail.min.js.下载"></script>
+
+    <script type="text/javascript" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/showblogmedal.ashx"></script>
+
+     
+    
+
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334" src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/52b5334.js.下载"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   <div><iframe src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/skip.html" style="width: 1px; height: 1px; position: absolute; visibility: hidden;"></iframe></div></div>
+
+    
+    
+        
+     
+
+    
+          
+    <div class="pop_CA_cover" style="display:none"></div>
+    <div class="pop pop_CA" style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon" id="fapancle" onclick="$(&#39;.pop_CA&#39;).hide();$(&#39;.pop_CA_cover&#39;).hide();"></span>
+          </div>
+          <iframe src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/saved_resource(3).html" id="fa" frameborder="0" width="100%" height="360" scrolling="no"></iframe>
+    </div>
+
+
+        <script type="text/javascript">
+
+            $(function () {
+                var fromjs = $("#fromjs");
+                if (fromjs.length > 0) {
+                    $("#fromjs .markdown_views pre").addClass("prettyprint");
+                    prettyPrint();
+
+                    $('pre.prettyprint code').each(function () {
+                        var lines = $(this).text().split('\n').length;
+                        var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                        $(this).addClass('has-numbering').parent().append($numbering);
+                        for (i = 1; i <= lines; i++) {
+                            $numbering.append($('<li/>').text(i));
+                        };
+                        $numbering.fadeIn(1700);
+                    });
+
+                    $('.pre-numbering li').css("color", "#999");
+                }
+            });
+           
+            $(".markdown_views a[target!='_blank']").attr("target", "_blank");
+
+            $(".toc a[target='_blank']").attr("target", "");
+
+        </script>
+
+
+   
+ <div id="tag-suggest-pop">
+  <div class="relative">
+    <div class="close"></div>
+    <div class="content"></div>
+  </div>
+</div><div id="mask_code"></div><div class="gist_edit"><div class="save_snippets clearfix"><div class="tit"><h3>保存代码片</h3><span>整理和分享保存的代码片，请访问<a href="https://code.csdn.net/snippets_manage" target="_blank">代码笔记</a></span></div><div class="con_form"><ul class="gist_edit_list clearfix"><li><span class="red">*</span><span class="txt">标题</span><input id="form_title" class="form-input" placeholder="Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流" type="text"></li><li><span class="red">*</span><span class="txt">描述</span><textarea id="form-textarea" class="form-textarea" placeholder="Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流： http://blog.csdn.net/eternity9255/article/details/52790962"></textarea></li><li><span class="red">&nbsp;</span><span class="txt">标签</span><div id="divSearchTags"><span class="label blog_tag"><span>mtk</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>Android</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>Camera</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>源码分析</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>调用流程</span><a title="Removing tag" href="javascript:;">x</a></span><input id="insertTag" class="insertTag" placeholder="请输入标签，按Enter生成(最多5项)" type="text" value="" name="insertTag" maxlength="21" style="color: rgb(51, 51, 51);"><input id="OrganTag" class="OrganTag" type="hidden" name="OrganTag" value="mtk,Android,Camera,源码分析,调用流程,"><input id="OldOrganTag" class="OldOrganTag" type="hidden" name="OldOrganTag" value=""><input type="hidden" name="txtSearchTags"></div></li></ul></div><div class="bottom-bar"><a href="javascript:;" class="btn-submit btn-cancel">取消</a><span class="tracking-ad" data-mod="popu_250"><a class="btn-submit btn-confirm" href="javascript:;" target="_blank">确定</a></span></div></div></div><link rel="stylesheet" type="text/css" media="screen" href="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/ask_float_fonts_css-6b30a53970eb5c3a2a045e3df585b475.css"><div data-mod="popu_64" class="csdn-tracking-statistics" chg-blk="0"><a id="com-quick-reply" title="快速回复" style="top:469px"></a><a id="com-quick-collect" title="我要收藏" style="top:507px"></a><a id="com-d-top-a" style="top: 545px; display: block;" title="返回顶部" onclick=""></a> </div><div class="pop_edit ask_second comm_ask_second"><h3>提问</h3><span class="ask_float_span">您的问题将会被发布在“<a class="ask_float_channel" href="http://ask.csdn.net/" target="_blank" style="cursor:pointer">技术问答</a>”频道</span><a href="http://blog.csdn.net/eternity9255/article/details/52790962#" nodetype="close" class="close">×</a><div class="context"><div class="err_div"><span class="err_ico"></span><span class="err_txt">该问题已存在，请勿重复提问</span></div><div class="input_div"><input id="askInputSecond" type="text" style="font-size:14px;" placeholder="问题标题"></div><div class="cm_box"><div class="cm_dialog"></div> <div class="pop_cm cm_add_link"><input type="text" placeholder="链接内容" id="af_cm_link_txt"><input type="text" placeholder="链接地址" id="af_cm_link_url"><input type="text" placeholder="链接提示" id="af_cm_link_tit"><div class="text-right"><span class="btn btn-default btn-sm" id="add_link_btn">插入链接</span> </div> </div><div class="pop_cm cm_add_img"><div class="nav-tabs"><a class="img_tab active" href="http://blog.csdn.net/eternity9255/article/details/52790962#tab_upload">本地上传</a><a class="img_tab" href="http://blog.csdn.net/eternity9255/article/details/52790962#tab_weburl">网络图片</a></div><div class="tab_panel active" id="tab_upload"><div class="set_img"><iframe src="./Android 5.0 Camera系统源码分析(3)：Camera预览流程控制流 - eternity9255的博客 - 博客频道 - CSDN.NET_files/upload.html"></iframe></div></div><div class="tab_panel" id="tab_weburl"><input type="text" placeholder="图片地址" id="af_cm_img_url"><input type="text" placeholder="图片说明" id="af_cm_img_alt"><div class="text-right"><span class="btn btn-default btn-sm" id="add_img_btn">插入图片</span> </div></div> </div></div> <textarea id="editor_all" rows="8" style="display: none;"></textarea><div class="editor-toolbar"><i class="separator">|</i><a class="icon-headline" title="标题一（Ctrl+Alt+1）"></a><a class="icon-heading" title="标题二（Ctrl+Alt+2）"></a><a class="icon-bold" title="粗体（Ctrl+B）"></a><a class="icon-italic" title="斜体（Ctrl+I）"></a><i class="separator">|</i><a class="icon-quote-left" title="引用（Ctrl+’）"></a><a class="icon-code" title="插入代码片（Ctrl+,）"></a><a class="icon-list-ul" title="无序列表（Ctrl+L）"></a><a class="icon-list-ol" title="有序列表（Ctrl+Alt+L）"></a><i class="separator">|</i><a class="icon-link" title="添加链接（Ctrl+K）"></a><a class="icon-picture" title="添加图片（Ctrl+Alt+I）"></a><i class="separator">|</i><a class="icon-reply" title="撤退（Ctrl+Z）"></a><a class="icon-share-alt" title="前进（Ctrl+Shift+Z）"></a><i class="separator">|</i><a class="icon-info" href="http://ask.csdn.net/pages/markdown" target="_blank" title="markdown语法参考"></a><a class="icon-preview" title="预览"></a><i class="separator">|</i></div><div class="CodeMirror cm-s-paper CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none; font-size: 4px;" tabindex="0"></textarea></div><div class="CodeMirror-hscrollbar"><div style="height: 1px;"></div></div><div class="CodeMirror-vscrollbar"><div style="width: 1px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-gutter-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="min-width: 33px;"><div style="position: relative;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre>&nbsp;<span style="display: inline-block; width: 1px; margin-right: -1px;">&nbsp;</span></pre></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"></div><div class="CodeMirror-cursor" style="visibility: hidden;">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor" style="visibility: hidden;">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px;"></div><div class="CodeMirror-gutters" style="display: none;"></div></div></div><div class="editor-statusbar"><span class="lines">0</span><span class="words">0</span><span class="cursor">0:0</span></div><div class="div_tags clearfix"><div id="divSearchTags" class="tags_con"><input type="text"></div><input type="hidden" name="txtSearchTags"></div><div id="ask2_tagRecomm_div" class="drt_tagRecomm tracking-ad" data-mod="popu_73"><span class="drt_tit">推荐标签：</span></div></div><div class="success"><div class="left_area"><input id="chk_cb" type="checkbox"><span class="wyxs">我要悬赏</span><input id="cb_num" class="cb_num" readonly="true"><span class="phib_rii"><span> 币</span></span></div><a href="http://blog.csdn.net/eternity9255/article/details/52790962#" nodetype="cancel" class="cancel">取消</a><a href="http://blog.csdn.net/eternity9255/article/details/52790962#" nodetype="ok" class="ok">发布</a></div></div><div id="common_ask_div_sc" class="searchContainer"><div class="sTitle">可能存在类似的问题：</div><div class="sFooter"><a class="sFirstNewAsk">我想提一个新问题</a></div></div><div style="position:fixed; top:0; left:0; overflow:hidden;"><input style="position:absolute; left:-300px;" type="text" value="" id="focus_retriever" readonly="true"></div></body></html>

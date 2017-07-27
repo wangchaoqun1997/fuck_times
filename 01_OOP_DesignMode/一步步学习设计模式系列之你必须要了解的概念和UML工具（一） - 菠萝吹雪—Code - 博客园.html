@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<!-- saved from url=(0053)http://www.cnblogs.com/runningsmallguo/p/6661724.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/bundle-nature.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/bundle-nature-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/runningsmallguo/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/runningsmallguo/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/runningsmallguo/wlwmanifest.xml">
+<script async="" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/encoder.js.下载"></script><script src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'runningsmallguo', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="banner"><div id="bnr_pic">
+<!--done-->
+<div class="header">
+	<div class="headerText">
+		<a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/runningsmallguo/">Code宝宝</a><br>
+	</div><br>
+	<div class="headerDis">现代人变得越来越浮躁，不妨静下心来用音乐洗礼你的心灵!</div>
+</div>
+</div></div>
+<div id="main">
+	<!-- left starts -->
+	<div id="left">
+		<div id="mystats">
+			<br>
+				<div id="blog_stats">
+<!--done-->
+<div class="blogStats">
+随笔 - 8&nbsp;
+文章 - 0&nbsp;
+评论 - 58&nbsp;
+
+</div></div>
+			
+		</div>
+		<div id="mylinks">
+<!--done-->
+<a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a>&nbsp;&nbsp;<a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/runningsmallguo/">首页</a>&nbsp;&nbsp;<a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a>&nbsp;&nbsp;<a id="blog_nav_contact" accesskey="9" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/%E8%8F%A0%E8%90%9D%E5%90%B9%E9%9B%AA%E2%80%94Code">联系</a>&nbsp;&nbsp;<a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a>&nbsp;&nbsp;<a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/runningsmallguo/rss">订阅</a>&nbsp;<a id="blog_nav_rss_image" href="http://www.cnblogs.com/runningsmallguo/rss"><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/xml.gif" alt="订阅"></a></div>
+		<div id="topics">
+			
+<div id="post_detail">
+<div class="post">
+	<div class="postTitle">
+		<h1><a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/runningsmallguo/p/6661724.html">一步步学习设计模式系列之你必须要了解的概念和UML工具（一）</a></h1>
+	</div>
+	<div id="cnblogs_post_body"><h1>一、为什么要学习设计模式</h1>
+<p>使用设计模式的根本原因是为了保持类之间的隔离，防止相互之间了解太多内容；另一个重要的原因是，使用设计模式可以帮助我们避免重复开发。有很多策略能让程序员达到分离类的目的，其中包括封装和继承。一个继承父类的类能访问父类中所有非私有的的东西，如果以一个功能完整的类来继承层次结构，可能会过多的限制自己，也会给特定方法的实现带来累赘。因此<strong>设计模式建议应遵循以下原则</strong>：<span style="color: #ff0000">面向接口编程，而不是针对实现编程</span>；<span style="color: #ff0000">优先使用对象组合，而不是继承。</span></p>
+<h2>（1）面向接口编程，而不是针对实现编程概述：</h2>
+<p>就是在任何类层次结构的顶端定义的是一个抽象类或一个接口，它没有实现方法，但定义了该类所需要支持的方法，这样在所有的派生类中可以自由实现这些方法，能最大限度的满足你的要求。</p>
+<h2>（2）优先使用对象组合，而不是继承概述：</h2>
+<p>这是一种可包含其他对象的对象结构，即把几个对象封装在一个对象中，我们一般会使用继承的方式，而随着你编写比较复杂的程序的时候，你会发现使用对象组合的优点。</p>
+<h1>二、老生常谈之C#基础知识</h1>
+<h2>（1）virtual和override</h2>
+<p>如果基类中有一个方法，而想在派生类中覆盖它，而应该把基类中的方法声明为virtual，它的含义是，让派生类中具有同样函数签名的方法覆盖基类中发方法，而后在派生类中使用override关键字重写基类中的方法。</p>
+<h2>（2）使用new替换方法</h2>
+<p>当不能把基类中的方法声明为virtual时，另一种取代基类中的方法是，使用new 关键字，这样做能隐藏基类中同名的方法（与参数无关）。</p>
+<p>代码示例：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span><span style="color: #000000"> Person
+    {
+        </span><span style="color: #0000ff">public</span> <span style="color: #0000ff">virtual</span> <span style="color: #0000ff">void</span><span style="color: #000000">  SayHello()
+        {
+            Console.WriteLine(</span><span style="color: #800000">"</span><span style="color: #800000">我是地球人</span><span style="color: #800000">"</span><span style="color: #000000">);
+        }
+        </span><span style="color: #0000ff">public</span> <span style="color: #0000ff">void</span><span style="color: #000000"> ChiHeLaSaShui()
+        {
+            Console.WriteLine(</span><span style="color: #800000">"</span><span style="color: #800000">吃喝拉撒睡是每个人都会的技能！</span><span style="color: #800000">"</span><span style="color: #000000">);
+        }
+    }</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff">public</span> <span style="color: #0000ff">class</span><span style="color: #000000"> Chinese : Person
+    {
+        </span><span style="color: #0000ff">public</span> <span style="color: #0000ff">override</span> <span style="color: #0000ff">void</span><span style="color: #000000"> SayHello()
+        {
+            Console.WriteLine(</span><span style="color: #800000">"</span><span style="color: #800000">我是中国人，你好！</span><span style="color: #800000">"</span><span style="color: #000000">);
+        }
+        </span><span style="color: #0000ff">public</span> <span style="color: #0000ff">new</span>  <span style="color: #0000ff">void</span><span style="color: #000000"> ChiHeLaSaShui()
+        {
+            Console.WriteLine(</span><span style="color: #800000">"</span><span style="color: #800000">中国人讲究美食</span><span style="color: #800000">"</span><span style="color: #000000">);
+        }
+    }</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<h2>（3）接口</h2>
+<p>接口本质上是一个规定，即所有实现该接口的类，都要实现接口中定义的方法。</p>
+<h2>（4）抽象类</h2>
+<p>抽象类声明了一个或对个没有实现的方法，如果把一个方法声明为抽象方法，则需要把类也声明为抽象类。</p>
+<h2>（5）UML(Unified Modeling Language)统一建模语言</h2>
+<h3>为什么要建模：建模是为了能够更好地理解正在开发的系统</h3>
+<p>通过建模达到下面的目的<br>1、模型有助于按照实际情况或按照所需的样式对系统进行可视化<br>2、模型能够规约系统的结构或行为<br>3、模型给出了构造系统的模板<br>4、模型对做出的决策进行文档化</p>
+<p>对于一个复杂的系统，如银行、电信系统建模的重要性就越大。如果不能很好的理解一个复杂系统，盲目开发，失败的可能性很大。</p>
+<h3>什么是UML：统一建模语言(Unified Modeling Language , UML) 是一种绘制软件蓝图的标准语言，可以用UML对软件密集的制品进行可视化、详述、构造和文档化。</h3>
+<p>1、可视化：清晰的模型有利于交流<br>2、详述：可以使用uml对分析、设计、实现等决策进行详细描述<br>3、构造：把uml描述映射成编程语言<br>4、文档化：系统的所有细节都可以是uml进行描述。如：项目计划、发布活动等</p>
+<h3>类的UML表示：</h3>
+<p>一群对象(object)享有相同的结构、行为、约束和语义时，称它们是同类(class)的对象。换句话说，定义一个类就相当于描述了一群对象。在类中， 使用属性(attribute)表达对象的结构， 使用操作(operation)表达对象的行为。</p>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403121707847-1732545249.png" alt=""></p>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403121835253-1464521764.png" alt=""></p>
+<p><strong><span style="color: #ff0000">UML预设了四种可见性，分别为公开(public)、私有(private)、保护</span></strong></p>
+<p><strong><span style="color: #ff0000"><em id="__mceDel">(protected)、包(package) 减号(-)为私有可见性，加号(+)为公开可见性，#表示受保护的，静态方法带有下划线，抽象方法写成斜体或带有{abstract}标签。</em></span></strong></p>
+<p><em><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403122401832-136251384.png" alt="" width="175" height="169"><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403122415222-1236250008.png" alt="" width="184" height="178"></em></p>
+<p><span style="color: #ff0000">在UML中抽象类与普通类是同一个类图表示，只是抽象类名字会变成斜体。</span></p>
+<h3>UML中的关系表示：</h3>
+<p>关系是事物之间的联系，在面向对象的建模中，有三种重要的关系是依赖、泛化、关联</p>
+<h4>1）依赖(Dependency)</h4>
+<p>依赖是一种使用关系，一个事物使用另一个事物。在图形上，把依赖画成一条有方向的虚线，指向被依赖的事物。如果被使用的类发生变化,那么另一个类的操作必然受影响。</p>
+<h4>2）泛化(Generalization)</h4>
+<p>在泛化关系中，子类继承了父类的行为和含义，子类也可以增加新的行为和含义或覆盖父类中的行为和含义。在图形上，在泛化画成一个带有空心三角行指向父类。</p>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403123150675-1167767153.png" alt="" width="353" height="165"></p>
+<p>在.Net里面泛化就是继承关系。</p>
+<h4>3）关联(Association)</h4>
+<p>关联是一种结构关系，它指明一个对象与另一个对象间的关系。</p>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403123359910-95784170.png" alt="" width="379" height="91"></p>
+<p>classA和classB相关联</p>
+<p><strong>相互关联体现的是两个类、或者 类与接口之间语义级别的一种强依赖关系，是一种长期的稳定的关系；表现在代码层面，为被关联类以类属性的形式出现在关联类中，也可能是关联类引用了一个类型为被关联类的全局变量。</strong></p>
+<h4><strong>单向关联：</strong></h4>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403124022769-1533231831.png" alt="" width="390" height="79"></p>
+<p>ClassA关联于ClassB</p>
+<p><strong>单向关联表现在代码层面，为被关联类B以类属性的形式出现在关联类 A中，也可能是关联类A引用了一个类型为被关联类B的全局变量；</strong></p>
+<h4>聚合关系(Aggregation)</h4>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403124207082-1388220483.png" alt="" width="417" height="95"></p>
+<p><strong>聚合是关联关系的一种特例，他体现的是整体与部分拥有的关系。此时整体与部分之间是可分离的,他们可以具有各自的生命周期，部分可以属于多个整体对象,也可以为多个整体对象共享；比如汽车与发动机；表现在代码层面，和关联关系是一致的，只能从语义级别来区分。</strong></p>
+<h4>组合关系(Composition)</h4>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403124306707-1662845987.png" alt="" width="411" height="86"></p>
+<p><strong>组合也是关联关系的一种特例,这种关系比聚合更强,也称为强聚合；他同样体现整体与部分间的关系，但此时整体与部分是不可分的，整体的生命周期结束也就意味着部分的生命周期结束；孕妇死了胎儿自然也就死了;表现在代码层面，和关联关系是一致的，只能从语义级别来区分。</strong></p>
+<h4>关联关系的多重性</h4>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403124400113-742447545.png" alt="" width="407" height="87"></p>
+<p><strong>不建议使用双向关联. 关联有两个端点, 在每个端点可以有一个基数, 表示这个关联的类可以有几个实例. </strong><br><strong>常见的基数及含义</strong></p>
+<ul>
+<li><strong>0..1:0 或1 个实例. </strong></li>
+<li><strong>0..*: 对实例的数目没有限制. </strong></li>
+<li><strong>1: 只能有一个实例. </strong></li>
+<li><strong>1..*: 至少有一个实例.</strong></li>
+
+
+
+
+
+
+
+
+</ul>
+<h4><strong>接口</strong></h4>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403124558769-1342763083.png" alt="" width="166" height="169"></p>
+<p><strong>接口(interface)如同契约，负责的类必须负责实现它的公开操作，以及负责维护它的公开属性。</strong></p>
+<p>案例：</p>
+<p><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/896449-20170403124702753-1303714446.png" alt="" style="width: 725px;"></p>
+<p>好了，UML就简单介绍到这里，后面的文章会一一详细介绍23种设计模式。讲的不好，希望大神们多多指教，相互学习，共同进步。</p>
+<p>最后，附上UML工具：链接：http://pan.baidu.com/s/1nva43c1 密码：v65t</p>
+<p>至于如何破解，我就不告诉你了，自己到网上搜。</p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/runningsmallguo/category/957057.html" target="_blank">设计模式</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(6661724,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;f9d0ee8c-6cd9-e511-9fc1-ac853d9f53cc&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/runningsmallguo/" target="_blank"><img src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/20160222220422.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/runningsmallguo/">菠萝吹雪—Code</a><br>
+            <a href="http://home.cnblogs.com/u/runningsmallguo/followees">关注 - 16</a><br>
+            <a href="http://home.cnblogs.com/u/runningsmallguo/followers">粉丝 - 10</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;f9d0ee8c-6cd9-e511-9fc1-ac853d9f53cc&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(6661724,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(6661724,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/runningsmallguo/p/6428221.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/runningsmallguo/p/6428221.html" title="发布于2017-02-22 11:51">（转）Unity控制反转和依赖注入</a><br><a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html" title="发布于2017-06-18 17:01">窥探ASP.Net MVC底层原理 实现跨越Session的分布式TempData</a><br></div>
+</div>
+
+
+	<div class="postDesc">posted on <span id="post-date">2017-04-03 13:00</span> <a href="http://www.cnblogs.com/runningsmallguo/">菠萝吹雪—Code</a> 阅读(<span id="post_view_count">61</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=6661724" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/runningsmallguo/p/6661724.html#" onclick="AddToWz(6661724);return false;">收藏</a></div>
+</div>
+<script type="text/javascript">var allowComments=true,cb_blogId=276960,cb_entryId=6661724,cb_blogApp=currentBlogApp,cb_blogUserGuid='f9d0ee8c-6cd9-e511-9fc1-ac853d9f53cc',cb_entryCreatedDate='2017/4/3 13:00:00';loadViewCount(cb_entryId);</script>
+
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/runningsmallguo/p/6661724.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/runningsmallguo/p/6661724.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="我的AR之旅">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="http://click.aliyun.com/m/21970/" target="_blank">【阿里云】云计算科技红利邀您免费体验！云服务器、云数据库等35+产品，6个月免费使用！</a><br><a href="https://www.qcloud.com/developer/labs?fromSource=gwzcw.236905.236905.236905" target="_blank">【免费】从零开始学编程，开发者专属实验平台免费实践！</a><br><a href="https://www.upyun.com/618?utm_source=cnblogs&amp;utm_medium=referral&amp;utm_content=618" target="_blank">【推荐】又拍云年中大促！现在注册，充值最高送4800元</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://cn.udacity.com/android/?utm_source=cnbolg&amp;utm_medium=referral&amp;utm_campaign=AND03" target="_blank"><img width="300" height="250" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/24442-20170613154413368-1655528381.jpg" alt="Andorid_0613"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/572252/" target="_blank">三星宣布IoT专属芯片Exynos i T200进入量产</a><br> ·  <a href="http://news.cnblogs.com/n/572244/" target="_blank">知名作家六六微博炮轰滴滴疯狂加价：作死</a><br> ·  <a href="http://news.cnblogs.com/n/572241/" target="_blank">支付宝扫码支付竟扫出小学奥数题！5分钟答对免单</a><br> ·  <a href="http://news.cnblogs.com/n/572256/" target="_blank">左手微信，右手QQ，腾讯能否用社交撬动企业服务市场？</a><br> ·  <a href="http://news.cnblogs.com/n/572255/" target="_blank">贾跃亭去造车了，孙宏斌还会不会留下乐视手机?</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="https://www.mtyun.com/activity-anniversary?site=cnblogs&amp;campaign=20170601sales" target="_blank"><img width="468" height="60" src="./一步步学习设计模式系列之你必须要了解的概念和UML工具（一） - 菠萝吹雪—Code - 博客园_files/24442-20170615095125603-13625507.png" alt="美团云"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/570194/" target="_blank">小printf的故事：什么是真正的程序员？</a><br> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+		</div>
+	</div>
+	<!-- left ends -->
+	<!-- right starts -->
+	<div id="right">
+		<!-- 右侧工具部分 -->
+		<div id="right_content">
+	
+			
+<!--done-->
+<h2 class="listtitle">公告</h2>
+<div class="newsItem">
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/runningsmallguo/">菠萝吹雪—Code</a><br>园龄：<a href="http://home.cnblogs.com/u/runningsmallguo/" title="入园时间：2016-02-22">1年4个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/runningsmallguo/followers/">10</a><br>关注：<a href="http://home.cnblogs.com/u/runningsmallguo/followees/">16</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;f9d0ee8c-6cd9-e511-9fc1-ac853d9f53cc&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+	
+			<div id="calendar"><div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&lt;</a></td><td align="center">2017年6月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/07/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td class="CalWeekendDay" align="center">3</td></tr><tr><td class="CalWeekendDay" align="center">4</td><td align="center">5</td><td align="center">6</td><td align="center">7</td><td align="center">8</td><td align="center">9</td><td class="CalWeekendDay" align="center">10</td></tr><tr><td class="CalWeekendDay" align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalWeekendDay" align="center">17</td></tr><tr><td class="CalWeekendDay" align="center"><a href="http://www.cnblogs.com/runningsmallguo/archive/2017/06/18.html"><u>18</u></a></td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td class="CalTodayDay" align="center">22</td><td align="center">23</td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+				<div id="leftcontentcontainer">
+					<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/runningsmallguo/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_toptags" class="sidebar-block"></div><div id="sidebar_categories">
+<!--done-->
+
+		<h1 class="catListTitle">随笔分类</h1>
+		
+				<ul>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_0" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811809.html">ASP.NET(4)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_1" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/977113.html">Dapper源码探索</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_2" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/977094.html">DI、IOC</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_3" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811806.html">JavaScript</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_4" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811807.html">JQuery</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_5" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811810.html">JQueryEasyUI</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_6" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/882200.html">Memcached(2)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_7" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/977095.html">ORM</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_8" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/882199.html">Redis(1)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_9" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/882201.html">大型网站优化(3)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_10" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/957057.html">设计模式(1)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_11" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811808.html">深入理解C#</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_12" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/940915.html">网站维护日常问题(2)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_0_Link_13" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/882202.html">云存储</a>
+				</li>
+			
+				</ul>
+			
+	
+		<h1 class="catListTitle">随笔档案</h1>
+		
+				<ul>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_1_Link_0" class="listitem" href="http://www.cnblogs.com/runningsmallguo/archive/2017/06.html">2017年6月 (1)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_1_Link_1" class="listitem" href="http://www.cnblogs.com/runningsmallguo/archive/2017/04.html">2017年4月 (1)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_1_Link_2" class="listitem" href="http://www.cnblogs.com/runningsmallguo/archive/2017/02.html">2017年2月 (2)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_1_Link_3" class="listitem" href="http://www.cnblogs.com/runningsmallguo/archive/2017/01.html">2017年1月 (1)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_1_Link_4" class="listitem" href="http://www.cnblogs.com/runningsmallguo/archive/2016/12.html">2016年12月 (2)</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_1_Link_5" class="listitem" href="http://www.cnblogs.com/runningsmallguo/archive/2016/06.html">2016年6月 (1)</a>
+				</li>
+			
+				</ul>
+			
+	
+		<h1 class="catListTitle">文章分类</h1>
+		
+				<ul>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_2_Link_0" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811812.html">ASP.NET</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_2_Link_1" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811811.html">C#</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_2_Link_2" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811816.html">CSS3</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_2_Link_3" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811815.html">HTML5</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_2_Link_4" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811814.html">JavaScript</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_2_Link_5" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811813.html">JQuery</a>
+				</li>
+			
+				<li class="catList">
+				 <a id="CatList_LinkList_2_Link_6" class="listitem" href="http://www.cnblogs.com/runningsmallguo/category/811817.html">JQueryEasyUI</a>
+				</li>
+			
+				</ul>
+			
+	
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<h3 class="catListTitle">最新评论</h3>
+<div class="RecentComment" id="RecentComments">
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html#3717096">1. Re:窥探ASP.Net MVC底层原理 实现跨越Session的分布式TempData</a></li>
+        <li class="recent_comment_body">@nele谢谢支持！...</li>
+        <li class="recent_comment_author">--菠萝吹雪—Code</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html#3717041">2. Re:窥探ASP.Net MVC底层原理 实现跨越Session的分布式TempData</a></li>
+        <li class="recent_comment_body">真棒！</li>
+        <li class="recent_comment_author">--nele</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html#3717012">3. Re:窥探ASP.Net MVC底层原理 实现跨越Session的分布式TempData</a></li>
+        <li class="recent_comment_body">@亦续缘觉得还可以，麻烦点下推荐哦。...</li>
+        <li class="recent_comment_author">--菠萝吹雪—Code</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html#3717007">4. Re:窥探ASP.Net MVC底层原理 实现跨越Session的分布式TempData</a></li>
+        <li class="recent_comment_body">分析得很透彻啊！</li>
+        <li class="recent_comment_author">--亦续缘</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html#3716908">5. Re:窥探ASP.Net MVC底层原理 实现跨越Session的分布式TempData</a></li>
+        <li class="recent_comment_body">o</li>
+        <li class="recent_comment_author">--salideng</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/runningsmallguo/p/6239215.html">1. ASP.Net MVC4+Memcached+CodeFirst实现分布式缓存(2753)</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/p/5871412.html">2. 项目中使用Redis的一些总结和体会(1504)</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html">3. 窥探ASP.Net MVC底层原理 实现跨越Session的分布式TempData(454)</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/p/5576968.html">4. 如何在Windows Server 2008 R2没有磁盘清理工具的情况下使用系统提供的磁盘清理工具(322)</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/p/6425678.html">5. （转）Elasticsearch 5 Ik+pinyin分词配置详解(114)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/runningsmallguo/p/6239215.html">1. ASP.Net MVC4+Memcached+CodeFirst实现分布式缓存(52)</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html">2. 窥探ASP.Net MVC底层原理 实现跨越Session的分布式TempData(5)</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/p/5576968.html">3. 如何在Windows Server 2008 R2没有磁盘清理工具的情况下使用系统提供的磁盘清理工具(1)</a></li></ul></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/runningsmallguo/p/6239215.html">1. ASP.Net MVC4+Memcached+CodeFirst实现分布式缓存(18)</a></li><li><a href="http://www.cnblogs.com/runningsmallguo/p/6994896.html">2. 窥探ASP.Net MVC底层原理 实现跨越Session的分布式TempData(10)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+				</div>
+			
+		</div>
+		<!-- //右侧工具部分 -->
+		<div id="footer">
+			
+<!--done-->
+Copyright ©2017 菠萝吹雪—Code
+		</div>
+	</div>
+	<!-- right ends -->
+	<div class="clear"></div>
+	
+</div>
+
+
+
+</body></html>

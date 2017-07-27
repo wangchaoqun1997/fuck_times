@@ -1,0 +1,777 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0063)http://linux.chinaunix.net/techdoc/net/2009/05/05/1110014.shtml -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+
+
+
+<title>Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区</title>
+<meta name="keywords" content="Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区">
+<meta name="description" content="Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术  网络技术 Linux 技术文档">
+
+<link href="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/all.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+
+<!--
+
+.STYLE1 {color: #FF0000}
+
+.STYLE2 {font-size: 14px}
+
+-->
+
+</style>
+
+</head>
+
+
+
+<body>
+
+<table width="950" border="0" align="center" cellpadding="0" cellspacing="0">
+
+  <tbody><tr>
+
+    <td height="27">	<table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse" width="100%">
+	<tbody><tr><form name="login" action="http://linux.chinaunix.net/bbs/logging.php?action=login" method="post"></form>
+	<td><script language="javascript" src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/loginbox.php"></script></td>
+	
+	<td align="right">
+	·<a href="http://www.chinaunix.net/" class="list1">ChinaUnix首页</a>
+
+	·<a href="http://bbs.chinaunix.net/" class="list1">论坛</a>
+	·<a href="http://blog.chinaunix.net/" class="list1">博客</a>&nbsp;
+	</td>
+	</tr>
+	</tbody></table></td>
+
+  </tr>
+
+  <tr>
+
+    <td height="1" bgcolor="#CCCCCC"></td>
+
+  </tr>
+
+  <tr>
+
+    <td><table width="100%" border="0" cellpadding="0" cellspacing="0">
+
+      <tbody><tr>
+
+        <td height="84"><img src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/logo.jpg"></td>
+
+        <td align="right"><iframe src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/iframe.html" width="750" height="80" frameborder="0" scrolling="no"></iframe>
+</td>
+
+      </tr>
+
+    </tbody></table></td>
+
+  </tr>
+
+  <tr>
+
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+      <tbody><tr>
+
+        <td width="3"><img src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/bgtop1.jpg" width="3" height="26"></td>
+
+        <td width="944" background="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/bgtop2.gif" class="whitetop">
+<a href="http://linux.chinaunix.net/" target="_blank">Linux首页</a> |
+<a href="http://linux.chinaunix.net/news/">Linux新闻</a> |
+<a target="_blank" href="http://linux.chinaunix.net/bbs" style="color:red"><b>Linux论坛</b></a> |
+<a href="http://linux.chinaunix.net/techdoc/">Linux文档</a> |
+<a target="_blank" href="http://download.chinaunix.net/disc/linux/">Linux下载</a> |
+<a target="_blank" href="http://blog.chinaunix.net/techart.php?frmid=6">Linux博客</a> |
+<a target="_blank" href="http://search.chinaunix.net/">Linux搜索</a> |
+<a target="_blank" href="http://linux.chinaunix.net/bbs/index.php?gid=68">开源项目孵化平台</a>
+ |
+<a target="_blank" href="http://linux.chinaunix.net/ebook/" style="color:red">《开源时代》</a></td>
+
+        <td width="3" align="right"><img src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/bgtop3.jpg" width="3" height="26"></td>
+
+      </tr>
+
+    </tbody></table></td>
+
+  </tr>
+
+</tbody></table>
+
+<table width="950" border="0" align="center" cellpadding="0" cellspacing="0">
+
+<tbody><tr>
+
+    <td valign="bottom" class="BlkLightblue">
+<a target="_blank" href="http://linux.chinaunix.net/techdoc/beginner/">
+		新手入门</a> | <span lang="zh-cn">
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/install/">
+		安装启动</a> | </span>
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/system/">
+		管理员指南</a> | <a target="_blank" href="http://man.chinaunix.net/">开发手册</a> 
+		| <a target="_blank" href="http://linux.chinaunix.net/techdoc/desktop/">
+		桌面应用</a> |
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/develop/">
+		程序开发</a> |
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/database/">
+		数据库</a> | <span lang="zh-cn">
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/net/">网络技术</a>|
+<a target="_blank" href="http://linux.chinaunix.net/topics/2007-01-25/15/index.shtml">
+CentOS</a></span> |
+<a target="_blank" href="http://linux.chinaunix.net/search2.php?key=fedora&amp;id=0">
+Fedora</a> <span lang="zh-cn">| </span>
+<a target="_blank" href="http://linux.chinaunix.net/search2.php?key=mysql&amp;id=0">
+MySQL</a>
+
+<span lang="zh-cn">| </span>
+<a target="_blank" href="http://linux.chinaunix.net/search2.php?key=apache&amp;id=0">
+Apache</a>
+
+<span lang="zh-cn">| </span>
+<a target="_blank" href="http://linux.chinaunix.net/search2.php?key=ubuntu&amp;id=0">
+<font color="#FF0000">Ubuntu</font></a>
+
+<span lang="zh-cn">| </span>
+<a target="_blank" href="http://linux.chinaunix.net/topics/2008-07-10/18/index.shtml">
+<font color="#FF0000">Gentoo</font></a>| 
+<b>
+<a target="_blank" href="http://linux.chinaunix.net/topics/2008-07-30/19/index.shtml">
+<font color="#FF0000">OSCON08</font></a></b>
+</td>
+
+</tr>
+<tr><td>
+
+</td></tr>
+  <tr>
+
+    <td height="30" valign="bottom">&nbsp;&nbsp;<a href="http://linux.chinaunix.net/">Linux时代</a> &gt;&gt;  <a href="http://linux.chinaunix.net/techdoc/" class="list1">技术文档</a> &gt;&gt; <a href="http://linux.chinaunix.net/techdoc/net/" class="list1">网络技术</a></td>
+
+  </tr>
+
+  <tr>
+
+    <td height="1" bgcolor="#CCCCCC"></td>
+
+  </tr>
+
+  <tr>
+
+    <td height="8"></td>
+
+  </tr>
+
+</tbody></table><table width="950" border="0" align="center" cellpadding="0" cellspacing="0">
+
+  <tbody><tr>
+
+    <td valign="top" class="BLKtext"><table width="660" border="0" align="center" cellpadding="0" cellspacing="0">
+
+      <tbody><tr>
+
+        <td height="8">&nbsp;</td>
+
+      </tr>
+
+      <tr>
+
+        <td height="30" class="Ftext1">Android的IPC机制Binder的各个部分</td>
+
+      </tr>
+
+      <tr>
+
+        <td><table width="80%" border="0" align="center" cellpadding="0" cellspacing="0">
+
+          <tbody><tr>
+
+            <td height="1" bgcolor="#CCCCCC"></td>
+
+          </tr>
+
+        </tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td height="40" align="center">来源: 
+ ChinaUnix博客 　日期：
+2009.05.05 09:18　(共有<span class="STYLE1" id="postcount"></span>条评论)  <a href="http://linux.chinaunix.net/bbs/thread-1110014-1-1.html" target="_blank">我要评论</a></td>
+
+      </tr>
+
+      <tr>
+
+        <td>&nbsp;</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="F14">
+<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <font color="&quot;#000000&quot;">第一部分 </font>Binder的组成<br>
+<font color="&quot;#000000&quot;">1.1 </font>驱动程序部分<font color="&quot;#000000&quot;">驱动程序的部分在以下的文件夹中：</font><br>
+<u><font color="&quot;#0000ff&quot;">kernel/include/linux/binder.h</font></u><br>
+<u><font color="&quot;#0000ff&quot;">kernel/drivers/android/binder.c</font></u><br>
+<font color="&quot;#000000&quot;"><br>
+&nbsp; &nbsp; binder</font>驱动程序是一个miscdevice，主设备号为10，此设备号使用动态获得（MISC_DYNAMIC_MINOR），其设备的节点为：<br>
+<font color="&quot;#0000ff&quot;">/dev/binder</font><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; binder</font><font color="&quot;#000000&quot;">驱动程序会在proc文件系统中建立自己的信息，其文件夹为</font><u><font color="&quot;#0000ff&quot;">/proc/binde</font></u><font color="&quot;#000000&quot;">，其中包含如下内容：</font><br>
+<font color="&quot;#000000&quot;">proc</font>目录：调用Binder各个进程的内容<br>
+<font color="&quot;#000000&quot;">state</font>文件：使用函数binder_read_proc_state<br>
+<font color="&quot;#000000&quot;">stats</font>文件：使用函数binder_read_proc_stats<br>
+<font color="&quot;#000000&quot;">transactions</font>文件：使用函数binder_read_proc_transactions<br>
+<font color="&quot;#000000&quot;">transaction_log</font>文件：使用函数binder_read_proc_transaction_log，其参数为binder_transaction_log (类型为struct binder_transaction_log)<br>
+<font color="&quot;#000000&quot;">failed_transaction_log</font>文件：使用函数binder_read_proc_transaction_log 其参数为<br>
+binder_transaction_log_failed (类型为struct binder_transaction_log)<br>
+<font color="&quot;#000000&quot;"><br>
+</font>&nbsp; &nbsp; 在binder文件被打开后，其私有数据（private_data）的类型：<br>
+<font color="&quot;#000000&quot;"><b>struct binder_proc</b></font><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 在这个数据结构中，主要包含了当前进程、进程ID、内存映射信息、Binder的统计信息和线程信息等。</font><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 在用户空间对Binder驱动程序进行控制主要使用的接口是mmap、poll和ioctl，ioctl主要使用的ID为：</font><br>
+<font color="&quot;#000000&quot;">#define BINDER_WRITE_READ&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;_IOWR('b', 1, struct binder_write_read)<br>
+#define BINDER_SET_IDLE_TIMEOUT&nbsp;&nbsp;_IOW('b', 3, int64_t)<br>
+#define BINDER_SET_MAX_THREADS&nbsp; &nbsp;_IOW('b', 5, size_t)<br>
+#define BINDER_SET_IDLE_PRIORITY _IOW('b', 6, int)<br>
+#define BINDER_SET_CONTEXT_MGR&nbsp; &nbsp;_IOW('b', 7, int)<br>
+#define BINDER_THREAD_EXIT&nbsp; &nbsp;&nbsp; &nbsp; _IOW('b', 8, int)<br>
+#define BINDER_VERSION&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;_IOWR('b', 9, struct binder_version)</font><br>
+&nbsp; &nbsp; BR_XXX等宏为BinderDriverReturnProtocol，表示Binder驱动返回协议。<br>
+&nbsp; &nbsp; BC_XXX等宏为BinderDriverCommandProtocol，表示Binder驱动命令协议。<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; </font>binder_thread是Binder驱动程序中使用的另外一个重要的数据结构，数据结构的定义如下所示：<br>
+<font color="&quot;#008000&quot;">struct binder_thread {<br>
+&nbsp; &nbsp;&nbsp; &nbsp;struct binder_proc *proc;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;struct rb_node rb_node;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;int pid;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;int looper;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;struct binder_transaction *transaction_stack;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;struct list_head todo;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;uint32_t return_error;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;uint32_t return_error2;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;wait_queue_head_t wait;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;struct binder_stats stats;<br>
+};</font><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; </font>binder_thread 的各个成员信息是从rb_node中得出。<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; </font>BINDER_WRITE_READ是最重要的ioctl，它使用一个数据结构binder_write_read定义读写的数据。<br>
+<font color="&quot;#008000&quot;">struct binder_write_read {<br>
+&nbsp; &nbsp;&nbsp;&nbsp;signed long write_size; <br>
+&nbsp; &nbsp;&nbsp;&nbsp;signed long write_consumed; <br>
+&nbsp; &nbsp;&nbsp;&nbsp;unsigned long write_buffer;<br>
+&nbsp; &nbsp;&nbsp;&nbsp;signed long read_size; <br>
+&nbsp; &nbsp;&nbsp;&nbsp;signed long read_consumed; <br>
+&nbsp; &nbsp;&nbsp;&nbsp;unsigned long read_buffer;<br>
+};</font><br>
+1.2 servicemanager部分<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;servicemanager</font>是一个守护进程，用于这个进程的和/dev/binder通讯，从而达到管理系统中各个服务的作用。<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</font>可执行程序的路径：<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</font><font color="&quot;#ff0000&quot;">/system/bin/</font><font color="&quot;#ff0000&quot;">servicemanager</font><font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</font><br>
+<font color="&quot;#000000&quot;">开源版本</font>文件的路径：<br>
+<u><font color="&quot;#0000ff&quot;">frameworks/base/cmds/servicemanager/binder.h<br>
+frameworks/base/cmds/servicemanager/binder.c<br>
+frameworks/base/cmds/servicemanager/service_manager.c</font></u><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp; </font>程序执行的流程：<br>
+<font color="&quot;#000000&quot;"><br>
+open()</font>：打开binder驱动<br>
+<font color="&quot;#000000&quot;"><br>
+mmap()</font>：映射一个128*1024字节的内存<br>
+<font color="&quot;#000000&quot;"><br>
+ioctl(BINDER_SET_CONTEXT_MGR)</font>：设置上下文为mgr<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp; </font>进入主循环binder_loop()<font color="&quot;#000000&quot;"><br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; ioctl(BINDER_WRITE_READ)</font>，读取<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;binder_parse()</font>进入binder处理过程循环处理<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;binder_parse()</font>的处理，调用返回值：<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</font>当处理BR_TRANSACTION的时候，调用svcmgr_handler()处理增加服务、检查服务等工作。各种服务存放在一个链表（svclist）中。其中调用binder_等开头的函数，又会调用ioctl的各种命令。<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</font>处理BR_REPLY的时候，填充binder_io类型的数据结<br>
+1.3 binder的库的部分<font color="&quot;#000000&quot;"><br>
+</font><font color="&quot;#000000&quot;">&nbsp; &nbsp; binder</font>相关的文件作为Android的uitls库的一部分，这个库编译后的名称为libutils.so，是Android系统中的一个公共库。<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 主要文件的路径如下所示：</font><br>
+<u><font color="&quot;#0000ff&quot;">frameworks/base/include/utils/* </font></u><br>
+<u><font color="&quot;#0000ff&quot;">frameworks/base/libs/utils/*</font></u><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; </font><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 主要的类为：</font><br>
+<font color="&quot;#000000&quot;"><b>RefBase.h</b> :</font><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 引用计数，定义类</font>RefBase。<br>
+<font color="&quot;#000000&quot;"><b>Parcel.h</b> :</font><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 为在</font>IPC中传输的数据定义容器，定义类<b>Parcel</b><br>
+<font color="&quot;#000000&quot;"><b>I</b><b>Binder.h</b></font>：<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; </font>Binder对象的抽象接口， 定义类IBinder<br>
+<font color="&quot;#000000&quot;"><b>Binder.h</b></font>：<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; </font>Binder对象的基本功能， 定义类Binder和BpRefBase<br>
+<font color="&quot;#000000&quot;"><b>BpBinder.h</b></font><b>：</b><br>
+<font color="&quot;#000000&quot;">BpBinder</font>的功能，定义类BpBinder<br>
+<font color="&quot;#000000&quot;"><b>I</b><b>Interface.h</b></font>：<br>
+<font color="&quot;#000000&quot;">为抽象经过</font>Binder的接口定义通用类，<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 定义类</font>IInterface，类模板BnInterface，类模板BpInterface<br>
+<b><font color="&quot;#000000&quot;">ProcessState.h</font></b><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 表示进程状态的类，定义类</font>ProcessState<br>
+<b><font color="&quot;#000000&quot;">IPCThreadState.h</font></b><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 表示</font>IPC线程的状态，定义类<b>IPCThreadState</b><br>
+<font color="&quot;#000000&quot;">各个类之间的关系如下所示：</font><br>
+<img src="http://www.androidin.com/bbs/images/default/attachimg.gif" border="0" onload="if(this.width&gt;screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.alt=&#39;Click here to open new window\nCTRL+Mouse wheel to zoom in/out&#39;;}" onmouseover="if(this.width&gt;screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.style.cursor=&#39;hand&#39;; this.alt=&#39;Click here to open new window\nCTRL+Mouse wheel to zoom in/out&#39;;}" onclick="if(!this.resized) {return true;} else {window.open(&#39;http://www.androidin.com/bbs/images/default/attachimg.gif&#39;);}" onmousewheel="return imgzoom(this);" alt=""><br>
+ <br>
+<img src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/d0cb7475-69bf-41b2-9c40-49ccd452271e.jpg" border="0" onload="if(this.width&gt;screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.alt=&#39;Click here to open new window\nCTRL+Mouse wheel to zoom in/out&#39;;}" onmouseover="if(this.width&gt;screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.style.cursor=&#39;hand&#39;; this.alt=&#39;Click here to open new window\nCTRL+Mouse wheel to zoom in/out&#39;;}" onclick="if(!this.resized) {return true;} else {window.open(&#39;http://image4.it168.com/2009/3/31/d0cb7475-69bf-41b2-9c40-49ccd452271e.jpg&#39;);}" onmousewheel="return imgzoom(this);" alt=""><br>
+ <br>
+&nbsp; &nbsp; 在IInterface.h中定义的BnInterface和BpInterface是两个重要的模版，这是为各种程序中使用的。<br>
+<font color="&quot;#008000&quot;">BnInterface模版的定义如下所示：<br>
+template<br>
+class BnInterface : public INTERFACE, public BBinder<br>
+{<br>
+public:<br>
+&nbsp; &nbsp; virtual sp&nbsp;&nbsp;queryLocalInterface(const String16&amp; _descriptor);<br>
+&nbsp; &nbsp; virtual String16&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;getInterfaceDescriptor() const;<br>
+protected:<br>
+&nbsp; &nbsp; virtual IBinder*&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;onAsBinder();<br>
+};</font><br>
+&nbsp; &nbsp;&nbsp;&nbsp;BnInterface模版的定义如下所示：<br>
+<font color="&quot;#008000&quot;">template<br>
+class BpInterface : public INTERFACE, public BpRefBase<br>
+{<br>
+public:<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; BpInterface(const sp&amp; remote);<br>
+protected:<br>
+&nbsp; &nbsp; virtual IBinder*&nbsp; &nbsp; onAsBinder();<br>
+};<br>
+</font>&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;这两个模版在使用的时候，起到得作用实际上都是双继承：使用者定义一个接口INTERFACE，然后使用BnInterface和BpInterface两个模版结合自己的接口，构建自己的BnXXX和BpXXX两个类。<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;DECLARE_META_INTERFACE和IMPLEMENT_META_INTERFACE两个宏用于帮助BpXXX类的实现： <br>
+<font color="&quot;#008000&quot;">#define DECLARE_META_INTERFACE(INTERFACE)&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \<br>
+&nbsp; &nbsp; static const String16 descriptor;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;\<br>
+&nbsp; &nbsp; static sp asInterface(const sp&amp; obj);&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;\<br>
+&nbsp; &nbsp; virtual String16 getInterfaceDescriptor() const;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;\</font><br>
+<font color="&quot;#008000&quot;">#define IMPLEMENT_META_INTERFACE(INTERFACE, NAME)&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;\<br>
+&nbsp; &nbsp; const String16 I##INTERFACE::descriptor(NAME);&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \<br>
+&nbsp; &nbsp; String16 I##INTERFACE::getInterfaceDescriptor() const {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return I##INTERFACE::descriptor;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;\<br>
+&nbsp; &nbsp; }&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \<br>
+&nbsp; &nbsp; sp I##INTERFACE::asInterface(const sp&amp; obj)&nbsp;&nbsp;\<br>
+&nbsp; &nbsp; {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;sp intr;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;\<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if (obj != NULL) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;intr = static_cast(&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;\<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; obj-&gt;queryLocalInterface(&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;I##INTERFACE::descriptor).get());&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;\<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;if (intr == NULL) {&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;\<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; intr = new Bp##INTERFACE(obj);&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;\<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;\<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;\<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return intr;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; \<br>
+&nbsp; &nbsp; }<br>
+</font> <br>
+&nbsp;&nbsp;<br>
+&nbsp; &nbsp;在定义自己的类的时候，只需要使用DECLARE_META_INTERFACE和IMPLEMENT_META_INTERFACE两个接口，并<br>
+结合类的名称，就可以实现BpInterface中的asInterface()和getInterfaceDescriptor()两个函数。<br>
+<b>第二部分 Binder的运作</b><br>
+　　<b>2.1 Binder的工作机制</b><br>
+&nbsp; &nbsp;&nbsp; &nbsp;Service Manager是一个守护进程，它负责启动各个进程之间的服务，对于相关的两个需要通讯的进程，它们通过调用libutil.so库实现通讯，而真正通讯的机制，是内核空间中的一块共享<br>
+<a href="http://product.it168.com/list/b/0205_1.shtml" target="_blank">内存</a><br>
+。<br>
+&nbsp; &nbsp;&nbsp; &nbsp; <br>
+<img src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/0126ec3d-c058-4293-87d6-6e3ec697f0b3.jpg" border="0" onload="if(this.width&gt;screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.alt=&#39;Click here to open new window\nCTRL+Mouse wheel to zoom in/out&#39;;}" onmouseover="if(this.width&gt;screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.style.cursor=&#39;hand&#39;; this.alt=&#39;Click here to open new window\nCTRL+Mouse wheel to zoom in/out&#39;;}" onclick="if(!this.resized) {return true;} else {window.open(&#39;http://image4.it168.com/2009/3/31/0126ec3d-c058-4293-87d6-6e3ec697f0b3.jpg&#39;);}" onmousewheel="return imgzoom(this);" alt=""><br>
+　　<b>2.2 从应　　用程序的角度看Binder<br>
+</b><br>
+<font color="&quot;#000000&quot;">　　</font>从应用程序的角度看Binder一共有三个方面：<br>
+　　Native 本地：例如BnABC，这是一个需要被继承和实现的类。<br>
+　　Proxy 代理：例如BpABC，这是一个在接口框架中被实现，但是在接口中没有体现的类。<br>
+　　客户端：例如客户端得到一个接口ABC，在调用的时候实际上被调用的是BpABC<br>
+<img src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/cee9d5f9-6e9c-421c-8cab-00ac192c33ac.jpg" border="0" onload="if(this.width&gt;screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.alt=&#39;Click here to open new window\nCTRL+Mouse wheel to zoom in/out&#39;;}" onmouseover="if(this.width&gt;screen.width*0.7) {this.resized=true; this.width=screen.width*0.7; this.style.cursor=&#39;hand&#39;; this.alt=&#39;Click here to open new window\nCTRL+Mouse wheel to zoom in/out&#39;;}" onclick="if(!this.resized) {return true;} else {window.open(&#39;http://image4.it168.com/2009/3/31/cee9d5f9-6e9c-421c-8cab-00ac192c33ac.jpg&#39;);}" onmousewheel="return imgzoom(this);" alt=""><br>
+本地功能（Bn）部分做的：<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 实现</font><b>BnABC:: BnTransact()</b> <br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 注册服务：</font>IServiceManager：：AddService<br>
+<font color="&quot;#000000&quot;">代理部分（</font>Bp）做的：<br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 实现几个功能函数，调用</font><b>BpABC::remote()-&gt;transact()</b><br>
+<font color="&quot;#000000&quot;">客户端做的：</font><br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp; 获得</font>ABC接口，然后调用接口（实际上调用了<b>BpABC</b>，继而通过<b>IPC</b>调用了<b>BnABC</b>，然后调用了具体的功能）<br>
+ <br>
+<font color="&quot;#000000&quot;">&nbsp; &nbsp;&nbsp; &nbsp; </font>在程序的实现过程中<b>BnABC</b>和<b>BpABC</b>是双继承了接口<b>ABC</b>。一般来说<b>BpABC</b>是一个实现类，这个实现类不需要在接口中体现，它实际上负责的只是通讯功能，不执行具体的功能；<b>BnABC</b>则是一个接口类，需要一个真正工作的类来继承、实现它，这个类才是真正执行具体功能的类。<br>
+<font color="&quot;#000000&quot;"><b>&nbsp; &nbsp;&nbsp; &nbsp; </b></font>在客户端中，从<b>ISeriviceManager</b>中获得一个<b>ABC</b>的接口，客户端调用这个接口，实际上是在调用<b>BpABC</b>，而<b>BpABC</b>又通过<b>Binder</b>的<b>IPC</b>机制和<b>BnABC</b>通讯，<b>BnABC</b>的实现类在后面执行。<br>
+　　事实上，<br>
+<a href="http://server.it168.com/" target="_blank">服务器</a><br>
+的具体实现和客户端是两个不同的进程，如果不考虑进程间通讯的过程，从调用者的角度，似乎客户端在直接调用另外一个进程间的函数——当然这个函数必须是接口<b>ABC</b>中定义的。<br>
+　　<b>2.3 ISericeManager的作用<br>
+</b> <br>
+&nbsp; &nbsp; ISericeManager涉及的两个文件是ISericeManager.h和ISericeManager.cpp。这两个文件基本上是<br>
+ISericeManager。ISericeManager是系统最先被启动的服务。非常值得注意的是：ISericeManager本地功能并没有使<br>
+现，它实际上由ServiceManager守护进程执行，而用户程序通过调用BpServiceManager来获得其他的服务。<br>
+&nbsp; &nbsp;&nbsp; &nbsp;在ISericeManager.h中定义了一个接口，用于得到默认的ISericeManager：<br>
+<font color="&quot;#008000&quot;">&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;sp defaultServiceManager();</font><br>
+&nbsp; &nbsp;&nbsp;&nbsp;这时得到的ISericeManager实际上是一个全局的ISericeManager。 <br>
+<b>第三部分 程序中Binder的具体实现</b><br>
+<b> </b>　　<b>3.1 一个利用接口的具体实现<br>
+</b>&nbsp; &nbsp; PermissionController也是libutils中定义的一个有关权限控制的接口，它一共包含两个文件：IPermissionController.h和IPermissionController.cpp这个结构在所有类的实现中都是类似的。<br>
+&nbsp; &nbsp;&nbsp;&nbsp;头文件IPermissionController.h的主要内容是定义IPermissionController接口和类BnPermissionController：<br>
+<font color="&quot;#008000&quot;">class IPermissionController : public IInterface<br>
+{<br>
+public:<br>
+&nbsp; &nbsp; DECLARE_META_INTERFACE(PermissionController);<br>
+&nbsp; &nbsp; virtual bool&nbsp; &nbsp;checkPermission(const String16&amp; permission,int32_t pid, int32_t uid) = 0;<br>
+&nbsp; &nbsp; enum {<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;CHECK_PERMISSION_TRANSACTION = IBinder::FIRST_CALL_TRANSACTION<br>
+&nbsp; &nbsp; };<br>
+};<br>
+class BnPermissionController : public BnInterface<br>
+{<br>
+public:<br>
+&nbsp; &nbsp; virtual status_t&nbsp; &nbsp; onTransact( uint32_t code,<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;const Parcel&amp; data,<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;Parcel* reply,<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;uint32_t flags = 0);<br>
+};</font><br>
+&nbsp; &nbsp; IPermissionController是一个接口类，只有checkPermission()一个纯虚函数。<br>
+ <br>
+ <br>
+BnPermissionController继承了以BnPermissionController实例化模版类BnInterface。因<br>
+此，BnPermissionController，事实上BnPermissionController双继承了BBinder和<br>
+IPermissionController。<br>
+&nbsp; &nbsp; 实现文件IPermissionController.cpp中，首先实现了一个BpPermissionController。<br>
+<font color="&quot;#008000&quot;">class BpPermissionController : public BpInterface<br>
+{<br>
+public:<br>
+&nbsp; &nbsp; BpPermissionController(const sp&amp; impl)<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;: BpInterface(impl)<br>
+&nbsp; &nbsp; {<br>
+&nbsp; &nbsp; }<br>
+&nbsp; &nbsp; virtual bool checkPermission(const String16&amp; permission, int32_t pid, int32_t uid)<br>
+&nbsp; &nbsp; {<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;Parcel data, reply;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;data.writeInterfaceToken(IPermissionController::<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;getInterfaceDescriptor());<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;data.writeString16(permission);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;data.writeInt32(pid);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;data.writeInt32(uid);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;remote()-&gt;transact(CHECK_PERMISSION_TRANSACTION, data, &amp;reply);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if (reply.readInt32() != 0) return 0;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return reply.readInt32() != 0;<br>
+&nbsp; &nbsp; }<br>
+};<br>
+IMPLEMENT_META_INTERFACE(PermissionController, "android.os.IPermissionController");<br>
+</font><br>
+ <br>
+ <br>
+BpPermissionController继承了BpInterface，它本身是一个<br>
+已经实现的类，而且并没有在接口中体现。这个类按照格式写就可以，在实现checkPermission()函数的过程中，使用Parcel作为传输数据<br>
+的容器，传输中时候transact()函数，其参数需要包含枚举值CHECK_PERMISSION_TRANSACTION。<br>
+IMPLEMENT_META_INTERFACE用于扶助生成。<br>
+&nbsp; &nbsp; BnPermissionController中实现的onTransact()函数如下所示：<br>
+<font color="&quot;#008000&quot;">status_t BnPermissionController:: BnTransact(<br>
+&nbsp; &nbsp; uint32_t code, const Parcel&amp; data, Parcel* reply, uint32_t flags)<br>
+{<br>
+&nbsp; &nbsp; switch(code) {<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;case CHECK_PERMISSION_TRANSACTION: {<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;CHECK_INTERFACE(IPermissionController, data, reply);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;String16 permission = data.readString16();<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;int32_t pid = data.readInt32();<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;int32_t uid = data.readInt32();<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;bool res = checkPermission(permission, pid, uid);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;reply-&gt;writeInt32(0);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;reply-&gt;writeInt32(res ? 1 : 0);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;return NO_ERROR;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;} break;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;default:<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;return BBinder:: BnTransact(code, data, reply, flags);<br>
+&nbsp; &nbsp; }<br>
+}</font><br>
+ <br>
+&nbsp; &nbsp;&nbsp;&nbsp;在onTransact()函数中根据枚举值判断数据使用的方式。注意，由于BnPermissionController也是继承了类<br>
+IPermissionController，但是纯虚函数checkPermission()依然没有实现。因此这个<br>
+BnPermissionController类并不能实例化，它其实也还是一个接口，需要一个实现类来继承它，那才是实现具体功能的类。<br>
+　　<b>3.2 BnABC的实现<br>
+</b>&nbsp; &nbsp; 本地服务启动后将形成一个守护进程，具体的本地服务是由一个实现类继承BnABC来实现的，这个服务的名称通常叫做ABC。<br>
+&nbsp; &nbsp; 在其中，通常包含了一个instantiate()函数，这个函数一般按照如下的方式实现：<br>
+<font color="&quot;#008000&quot;">void ABC::instantiate() {<br>
+&nbsp; &nbsp; defaultServiceManager()-&gt;addService(<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;String16("XXX.ABC"), new ABC ());<br>
+}</font><br>
+<font color="&quot;#008000&quot;">&nbsp; &nbsp; </font>按照这种方式，通过调用defaultServiceManager()函数，将增加一个名为"XXX.ABC"的服务。<br>
+&nbsp; &nbsp; 在这个defaultServiceManager()函数中调用了：<br>
+<font color="&quot;#008000&quot;">ProcessState::self()-&gt;getContextObject(NULL));<br>
+&nbsp; &nbsp; IPCThreadState* ipc = IPCThreadState::self();<br>
+&nbsp; &nbsp;IPCThreadState::talkWithDriver()</font><br>
+在ProcessState 类建立的过程中调用open_driver()打开<br>
+<a href="http://driver.it168.com/" target="_blank">驱动</a><br>
+程序，在talkWithDriver()的执行过程中。<br>
+　　<b>3.3 BpABC调用的实现</b><br>
+&nbsp; &nbsp; BpABC调用的过程主要通过mRemote()-&gt;transact() 来传输数据，mRemote()是BpRefBase的成员，它是一个IBinder。这个调用过程如下所示：<br>
+<font color="&quot;#008000&quot;">&nbsp; &nbsp; mRemote()-&gt;transact() <br>
+&nbsp; &nbsp; Process::self() <br>
+&nbsp; &nbsp; IPCThreadState::self()-&gt;transact()<br>
+&nbsp; &nbsp; writeTransactionData()<br>
+&nbsp; &nbsp; waitForResponse()<br>
+&nbsp; &nbsp; talkWithDriver()<br>
+&nbsp; &nbsp; ioctl(fd, BINDER_WRITE_READ, &amp;bwr)</font><br>
+&nbsp; &nbsp; 在IPCThreadState::executeCommand()函数中，实现传输操作。<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+<br>
+<b>本文来自ChinaUnix博客，如果查看原文请点：</b><a href="http://blog.chinaunix.net/u1/49742/showart_1918335.html" target="_blank">http://blog.chinaunix.net/u1/49742/showart_1918335.html</a> 
+</td>
+
+      </tr>
+
+
+      <tr>
+
+        <td height="20" align="right"> 　 <a href="http://linux.chinaunix.net/bbs/thread-1110014-1-1.html" target="_blank">发表评论</a>
+
+  <a href="http://linux.chinaunix.net/bbs/thread-1110014-1-1.html" target="_blank">查看评论</a>(共有<span class="STYLE1" id="postcount2"></span>条评论)
+<a href="http://linux.chinaunix.net/bbs/forum-4-1.html" target="_blank">我要提问</a>
+</td>
+
+      </tr>
+      <tr>
+
+        <td>&nbsp;</td>
+
+      </tr>
+
+      
+
+    </tbody></table>
+
+
+</td>
+
+    <td width="8">&nbsp;</td>
+
+    <td width="245" valign="top" bgcolor="#FFF9EB">
+<center><br>
+<form action="http://linux.chinaunix.net/search2.php" method="GET">
+<input type="text" name="key" size="15"><input type="hidden" name="id" value="0"><input type="submit" value="搜索">
+</form>
+<br>
+</center>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+      <tbody><tr>
+
+        <td height="27" background="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/bg245.jpg" class="F13"><table width="100%"><tbody><tr><td class="F13">最新资讯</td><td align="right"><a href="http://linux.chinaunix.net/news" target="_blank">更多&gt;&gt;</a>&nbsp;</td></tr></tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td valign="top" bgcolor="#FFFFFF" class="BLKtext"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+
+          <tbody><tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+          <tr>
+
+            <td>· <a href="http://linux.chinaunix.net/news/2010/12/10/1175491.shtml" title="谷歌劝说诺基亚采用Android操作系统" target="_blank">谷歌劝说诺基亚采用Android操作..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/10/1175493.shtml" title="Apache 基金会确认退出 JCP 执行委员会" target="_blank">Apache 基金会确认退出 JCP 执..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175306.shtml" title="Chrome 10 新功能探秘：新增GPU混合加速功能" target="_blank">Chrome 10 新功能探秘：新增GP..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175307.shtml" title="金山宣布开源其安全软件" target="_blank">金山宣布开源其安全软件</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175309.shtml" title="女黑客在开源会议上抱受骚扰" target="_blank">女黑客在开源会议上抱受骚扰</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175310.shtml" title="21款值得关注的Linux游戏" target="_blank">21款值得关注的Linux游戏</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175311.shtml" title="马化腾：腾讯半年后彻底转型，开放和分享" target="_blank">马化腾：腾讯半年后彻底转型，..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175305.shtml" title="[多图] Chrome OS 预发布版本多图赏析" target="_blank">[多图] Chrome OS 预发布版本多..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/01/1175001.shtml" title="Lubuntu 11.04 默认应用抢先一览" target="_blank">Lubuntu 11.04 默认应用抢先一览</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/01/1175002.shtml" title="Red Hat宣布收购云计算软件提供商Makara" target="_blank">Red Hat宣布收购云计算软件提供..</a><br>
+</td>
+
+          </tr>
+
+          <tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+        </tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td height="10" bgcolor="#FFFFFF"></td>
+
+      </tr>
+
+      <tr></tr></tbody></table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+      <tbody><tr>
+
+        <td height="27" background="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/bg245.jpg" class="F13"><table width="100%"><tbody><tr><td class="F13">论坛热点</td><td align="right"><a href="http://linux.chinaunix.net/bbs" target="_blank">更多&gt;&gt;</a>&nbsp;</td></tr></tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td valign="top" bgcolor="#FFFFFF" class="BLKtext"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+
+          <tbody><tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+          <tr>
+
+            <td>· <a href="http://bbs.chinaunix.net/thread-3687970-1-1.html" title="do_execve时候用户栈中参数的位置问题" target="_blank">do_execve时候用户栈中参数的..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687969-1-1.html" title="swapinfo -atm 问题" target="_blank">swapinfo -atm 问题</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687968-1-1.html" title="Linux 的优点简述" target="_blank">Linux 的优点简述</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687967-1-1.html" title="VM虚拟机上得Red Hat Linux上搭建的ftp服务器，windows登陆不进去，但一个局域网其他" target="_blank">VM虚拟机上得Red Hat Linux上..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687965-1-1.html" title="我看成了上海男人喜欢女人毛多还是毛少" target="_blank">我看成了上海男人喜欢女人毛..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687964-1-1.html" title="校车展览，看了你就知道" target="_blank">校车展览，看了你就知道</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687963-1-1.html" title="在遇到他之前，唯一需要做的，就是让自己足够优秀。在遇到他之前，请把最好的年华留给" target="_blank">在遇到他之前，唯一需要做的..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687962-1-1.html" title="GRUB的疑问" target="_blank">GRUB的疑问</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687961-1-1.html" title="从来没有人真正付足书价——所付的只是印刷费" target="_blank">从来没有人真正付足书价——..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687960-1-1.html" title="云存储 vs 网盘" target="_blank">云存储 vs 网盘</a><br>
+</td>
+
+          </tr>
+
+          <tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+        </tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td height="10" bgcolor="#FFFFFF"></td>
+
+      </tr>
+
+      <tr></tr></tbody></table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+      <tbody><tr>
+
+        <td height="27" background="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/bg245.jpg" class="F13"><table width="100%"><tbody><tr><td class="F13">文档更新</td><td align="right"><a href="http://linux.chinaunix.net/techdoc" target="_blank">更多&gt;&gt;</a>&nbsp;</td></tr></tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td valign="top" bgcolor="#FFFFFF" class="BLKtext"><table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+
+          <tbody><tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+          <tr>
+
+            <td>· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686893.shtml" title="orcale queue" target="_blank">orcale queue</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686868.shtml" title="谁可以推荐几本经典的操作系统的书（英文版）" target="_blank">谁可以推荐几本经典的操作系统的..</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686867.shtml" title="【北京】某物联网公司招云计算应用高级开发工程师" target="_blank">【北京】某物联网公司招云计算应..</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686866.shtml" title="【北京】某物联网公司招云计算应用高级开发工程师" target="_blank">【北京】某物联网公司招云计算应..</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686865.shtml" title="谁能推荐几本关于操作系统的书" target="_blank">谁能推荐几本关于操作系统的书</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686864.shtml" title="如何添加网络接口eth1" target="_blank">如何添加网络接口eth1</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686863.shtml" title="葡萄牙语入门教材的选取与经验分享" target="_blank">葡萄牙语入门教材的选取与经验分享</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686862.shtml" title="葡萄牙语就业前景分析" target="_blank">葡萄牙语就业前景分析</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686861.shtml" title="葡萄牙语学习经验交流" target="_blank">葡萄牙语学习经验交流</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686860.shtml" title="Щ" target="_blank">Щ</a><br>
+</td>
+
+          </tr>
+
+   
+        </tbody></table></td>
+
+      </tr>
+
+
+      <tr></tr></tbody></table>
+</td>
+
+  </tr>
+
+</tbody></table>
+<script src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/threadcount.php"></script>
+<table width="950" border="0" align="center" cellpadding="0" cellspacing="0">
+
+  <tbody><tr>
+
+    <td>&nbsp;</td>
+
+  </tr>
+
+</tbody></table>
+
+<table width="950" border="0" align="center" cellpadding="0" cellspacing="0">
+
+  <tbody><tr>
+
+    <td height="2" bgcolor="#308CF6"></td>
+
+  </tr>
+
+  <tr>
+
+    <td height="30" align="center"><a href="http://www.chinaunix.net/about/index.shtml" target="_blank">关于我们</a> | <a href="http://www.chinaunix.net/about/connect.html" target="_blank">联系方式</a> | <a href="http://www.chinaunix.net/about/service.html" target="_blank">广告合作</a> | <a href="http://www.wintalent.cn:8031/wt5/sequelmedia/web/index" target="_blank">诚聘英才</a> | <a href="http://www.chinaunix.net/about/channel.html" target="_blank">网站地图</a> | <a href="http://www.chinaunix.net/about/friend.html" target="_blank">友情链接</a> | <a href="http://linux.chinaunix.net/bbs/register.php" target="_blank">免费注册</a></td>
+
+  </tr>
+
+  <tr>
+
+    <td height="2" bgcolor="#308CF6"></td>
+
+  </tr>
+
+  <tr>
+
+    <td align="center"><p>Copyright &#169; 2001-2009 ChinaUnix.net All Rights Reserved</p>
+
+        <p>感谢所有关心和支持过ChinaUnix的朋友们<br>
+	</p><p>
+ <a href="http://www.it168.com/images/icp.jpg" target="_blank">京ICP证:060528号</a></p></td>
+
+  </tr>
+
+</tbody></table>
+
+<!-- 统计 START -->
+<script src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/pv.js.下载" type="text/javascript"></script>
+<script>
+function sendPV(){
+    var pvTrack = new PvTrack();
+    pvTrack.type = 10; // 频道类别ID
+    pvTrack.channel = 22; // 频道ID
+   
+    pvTrack.pageType = 0;
+    pvTrack.track();
+}
+window.setTimeout("sendPV()", 0);
+</script>
+<script language="javascript" src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/pv.js(1).下载" type="text/javascript"></script>
+<!-- 统计 .END -->
+<div style="display:none">
+<script type="text/javascript"> 
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F0ee5e8cdc4d43389b3d1bfd76e83216b' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/h.js.下载" type="text/javascript"></script>
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/ga.js.下载" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-11982772-4");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+<script type="text/javascript" src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/601.js.下载"></script><script type="text/javascript" src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/601.js(1).下载"></script><script type="text/javascript" src="./Android的IPC机制Binder的各个部分 - 技术文档 - 网络技术 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区_files/601.js(2).下载"></script>
+
+
+
+
+
+
+</body></html>

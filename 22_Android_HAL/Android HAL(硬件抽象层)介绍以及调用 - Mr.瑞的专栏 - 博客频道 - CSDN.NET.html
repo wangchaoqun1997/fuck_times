@@ -1,0 +1,2392 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0055)http://blog.csdn.net/k229650014/article/details/5801397 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/hm.js.下载"></script>  
+
+    <script src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/push.js.下载"></script><script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/tracking.js.下载" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script><script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/repoAddr2.js.下载"></script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://blog.csdn.net/k229650014/article/details/5801397#">
+
+    <title>Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏
+        - 博客频道 - CSDN.NET</title>
+    
+    <meta name="description" content="1 HAL简介Android 的 HAL（Hardware Abstract Layer硬件抽象层）是Google因应厂商「希望不公开源码」的要求下，所推出的新观念，其架构如下图。虽然 HAL 现在的「抽象程度」还不足，现阶段实作还不是全面符合 HAL的架构规划，不过也确实给了我们很好的思考空间。图1：Android HAL 架构规划这是 Patrick Brady (Google) 在200">
+    <script src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/jquery.js.下载" type="text/javascript"></script>
+      <script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/jquery-version.js.下载"></script>
+    <script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/ad.js.下载"></script>
+        <!--new top-->
+       
+        <link rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/index.css">
+        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/tracking.js(1).下载"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/style.css">
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/k229650014/rss/list">
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/default.css">
+ 
+
+
+<script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+</script>
+
+
+<script src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/share.js.下载"></script><link rel="stylesheet" type="text/css" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/job_reco.css"><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><link href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/bdsstyle.css" rel="stylesheet" type="text/css"><link rel="stylesheet" type="text/css" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/style(1).css"><link rel="stylesheet" type="text/css" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/style(2).css"><script src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/get_ads.php" type="text/javascript"></script><script src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/logger.js.下载"></script><link rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/share_style0_16.css"></head>
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><iframe frameborder="0" style="display: none;" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/saved_resource.html"></iframe><div id="MathJax_Message" style="display: none;"></div>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57" id="revive-0-0"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/html.js.下载" type="text/javascript"></script><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar_logo" class="img blog-icon"></a></div>          <div class="pull-right login-wrap ">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="http://passport.csdn.net/account/mobileregister?ref=toolbar&amp;action=mobileRegister">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search" method="get" target="_blank">                      <input type="hidden" value="toolbar" name="ref" accesskey="2">                      <div class="border">                        <input placeholder="搜索" type="text" value="" name="q" accesskey="2"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label"><span class="red_txt">*</span>标题</label>                          <div class="col-sm-10">                            <input id="inputTitle" type="text" placeholder="" class="title form-control">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group" style="display:none;">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input id="input-url" type="text" placeholder="" class="url form-control">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" type="text" class="form-control tag">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">位置</label>                        <div class="col-sm-10">                          <div class="my_lib_box">                            个人主页&nbsp;-&nbsp;<a href="http://my.csdn.net/" target="_blank">我的知识</a>                          </div>                          <div class="checkbox">                            <div class="pull-left">                              <label>                                <input type="checkbox" name="share" class="save_lib_map" checked="checked">同时保存至：                              </label>                            </div>                            <div class="pull-left">                              <div class="dropdown">                                <button id="toolbar_sele_map" type="button">                                  选择知识图谱                                  <i class="fa fa-chevron-down"></i>                                </button>                                <div class="top_arr"></div>                                <div class="outside">                                  <ul class="dropdown-menu" id="toolbar_Design_knowledge"><li>选择知识图谱</li></ul>                                </div>                              </div>                            </div>                            <div class="pull-left new_txt">                              <a href="http://lib.csdn.net/my/create/structure" target="_blank">新建？</a>                            </div>                          </div>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left" style="display:none">                            <div class="checkbox">                              <label>                                <input type="checkbox" name="share" checked="checked" class="share">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"><div class="icon-hasnotes" style=""></div></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note" style="left: -212px; top: 13025px; display: none;">                      <div class="box"><div class="notifications notice_list_con curr">  <div class="menu_title">    <span class="title"><a href="http://msg.csdn.net/letters" target="_blank" class="read_all">查看所有私信</a><a href="http://msg.csdn.net/" target="_blank" class="go_all">查看所有通知</a></span>  </div>  <div class="loading"></div>  <div class="empty">暂没有新通知</div>  <div class="notice_content" style="overflow-y: auto; max-height: 270px;"></div></div><div class="notifications detail_con" style="display: none">  <div class="menu_title">    <span class="title">      <a class="go_back" href="javascript:void 0;">返回通知列表</a>      <a class="notifications_page_none nextnote" href="javascript:void 0;">下一条</a>      <a class="notifications_page prvnote" href="javascript:void 0;">上一条</a>    </span>  </div>  <div class="notice_content" style="overflow-y: scroll; height: 250px;"></div></div><div class="error"></div></div>                    <iframe src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/saved_resource(1).html" frameborder="0" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix" style="display:none;"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt style="border: none;"><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/2_wangchaoqun1997.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="avatar"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/2_wangchaoqun1997.jpg"></a></dt>                        <dd class="info" style="border: none;"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname">wangchaoqun1997</a><span class="dec">驱动 linux驱动 android驱动 driver</span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="http://my.csdn.net/my/account/changepwd?ref=toolbar" class="pull-left"><span class="icon-cog"></span>帐号设置</a><a href="https://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-left" style="margin-left:132px; width:18px; height:27px; white-space:nowrap; overflow:hidden;"><span class="icon-signout"></span><span class="out">退出</span></a></div>                  </div>                </div>              </li>              <li class="apps">                <div id="chasnew123" class="hasnew" style="display: none;"></div>                <div id="cappsarea123" class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd> <a href="http://lib.csdn.net/?ref=toolbar" target="_blank">知识库</a></dd>                      <dd><a href="http://ask.csdn.net/?ref=toolbar" target="_blank">技术问答</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                      <dd style="display:none"> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd style="display:none"> <a href="http://job.csdn.net/?ref=toolbar" target="_blank">JOB<img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="http://edu.csdn.net/?ref=toolbar" target="_blank">学院<img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://huiyi.csdn.net/?ref=toolbar" target="_blank">活动</a></dd>                      <dd> <a href="http://www.csto.com/?ref=toolbar" target="_blank">CSTO</a></dd>                      <dd> <a href="http://mall.csdn.net/?ref=toolbar" target="_blank">C币兑换<img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://cto.csdn.net/?ref=toolbar" target="_blank">CTO俱乐部</a></dd>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/k229650014">Mr.瑞的专栏</a></h2>
+            <h3></h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/k229650014?viewmode=contents"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_mulu&#39;])">
+                    <img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/k229650014?viewmode=list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_zhaiyao&#39;])">
+                    <img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/k229650014/rss/list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_RSS&#39;])">
+                    <img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "k229650014";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/k229650014";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "wangchaoqun1997";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+
+<a href="http://blog.csdn.net/csdnproduct/article/details/70145129" target="_blank">
+<font color="blue"><strong>【公告】关于开启用户注册及登录手机短信验证的通知</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/70147263" target="_blank">
+<font color="red">CSDN日报20170412 ——《程序员该如何定位？看这四大方向》
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/60961185" target="_blank">
+<font color="blue"><strong>博客搬家，有礼相送</strong>
+</font></a>
+</div>                        </div>
+                        
+
+
+
+  
+<link href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/comment1.css" type="text/css" rel="stylesheet">
+<link href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/style1.css" type="text/css" rel="stylesheet">
+<script language="JavaScript" type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/jquery.cookie.js.下载"></script>
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/main.js.下载"></script>
+<link rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/markdown_views.css">
+<link rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/category.css">
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/MathJax.js.下载"></script>
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/web-storage-cache.min.js.下载"></script>
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/replace.min.js.下载"></script>
+
+<link rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/prettify.css">
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/prettify.js.下载"></script>
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=Android+HAL(%e7%a1%ac%e4%bb%b6%e6%8a%bd%e8%b1%a1%e5%b1%82)%e4%bb%8b%e7%bb%8d%e4%bb%a5%e5%8f%8a%e8%b0%83%e7%94%a8&u=http://blog.csdn.net/k229650014/article/details/5801397"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/k229650014/article/details/5801397">
+        Android HAL(硬件抽象层)介绍以及调用            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href="http://www.csdn.net/tag/android" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">android</a><a href="http://www.csdn.net/tag/module" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">module</a><a href="http://www.csdn.net/tag/struct" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">struct</a><a href="http://www.csdn.net/tag/methods" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">methods</a><a href="http://www.csdn.net/tag/path" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">path</a><a href="http://www.csdn.net/tag/callback" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">callback</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2010-08-10 14:27</span>
+            <span class="link_view" title="阅读次数">23726人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#comments" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_pinglun&#39;])">评论</a>(13)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle(&#39;Android+HAL(%e7%a1%ac%e4%bb%b6%e6%8a%bd%e8%b1%a1%e5%b1%82)%e4%bb%8b%e7%bb%8d%e4%bb%a5%e5%8f%8a%e8%b0%83%e7%94%a8&#39;,&#39;5801397&#39;);return false;" title="收藏" target="_blank">收藏</a></span>
+             <span class="link_report"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" onclick="javascript:report(5801397,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody" style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label onclick="GetCategoryArticles(&#39;709930&#39;,&#39;k229650014&#39;,&#39;top&#39;,&#39;5801397&#39;);">
+                        <span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_fenlei&#39;]);">Android开发文章<em>（2）</em></span>
+                      <img class="arrow-down" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a href="http://blog.csdn.net/k229650014/article/category/709930" target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_709930">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/category.js.下载"></script>  
+        <div class="bog_copyright">         
+            <p class="copyright_p">版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+<p><strong>1 HAL简介</strong>
+</p>
+<p><br>
+<a href="http://lib.csdn.net/base/android" class="replace_word" title="Android知识库" target="_blank" style="color:#df3434; font-weight:bold;">Android</a> 的 HAL（Hardware Abstract 
+Layer硬件抽象层）是Google因应厂商「希望不公开源码」的要求下，所推出的新观念，其<a href="http://lib.csdn.net/base/architecture" class="replace_word" title="大型网站架构知识库" target="_blank" style="color:#df3434; font-weight:bold;">架构</a>如下图。虽然 HAL 
+现在的「抽象程度」还不足，现阶段实作还不是全面符合 HAL的架构规划，不过也确实给了我们很好的思考空间。</p>
+<p><span><img title="Android HAL 分析 - On&lt;wbr&gt;ce - 许兴旺的博客" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/590815976116437204.jpg" border="0" alt="Android HAL 分析 - On&lt;wbr&gt;ce - 许兴旺的博客">
+<br>
+</span>
+<br>
+图1：Android HAL 架构规划</p>
+<p><br>
+这是 Patrick Brady (Google) 在2008 Google I/O 所发表的演讲「Anatomy &amp; 
+Physiology of an Android」中，所提出的 Android HAL 架构图。从这张架构图我们知道，HAL 的目的是为了把 
+Android framework 与 <a href="http://lib.csdn.net/base/linux" class="replace_word" title="Linux知识库" target="_blank" style="color:#df3434; font-weight:bold;">Linux</a> kernel 完整「隔开」。让 Android 不至过度依赖 Linux 
+kernel，有点像是「kernel independent」的意思，让 Android framework 
+的开发能在不考虑驱动程序的前提下进行发展。</p>
+<p>在 Android 原始码里，HAL 主要的实作储存于以下目录：<br>
+<br>
+1. libhardware_legacy/ - 
+过去的实作、采取链接库模块的观念进行<br>
+2. libhardware/ - 新版的实作、调整为 HAL stub 的观念<br>
+3. 
+ril/ - Radio Interface Layer</p>
+<p>在 HAL 的架构实作成熟前（即图1的规划），我们先就目前 HAL 现况做一个简单的分析。另外，目前 Android 的 
+HAL实作，仍旧散布在不同的地方，例如 Camera、WiFi 等，因此上述的目录并不包含所有的 HAL 程序代码。<br>
+<br>
+<strong>2
+ HAL 的过去</strong>
+<br>
+<br>
+<span><img title="Android HAL 分析 - 
+On&lt;wbr&gt;ce - 许兴旺的博客" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/590815976116437205.jpg" border="0" alt="Android HAL 分析 - On&lt;wbr&gt;ce - 
+许兴旺的博客">
+<br>
+</span>
+<br>
+图2：Android HAL / libhardware_legacy<br>
+<br>
+过
+去的 libhardware_legacy 作法，比较是传统的「module」方式，也就是将 *.so 档案当做「shared 
+library」来使用，在runtime（JNI 部份）以 direct function call 使用 HAL 
+module。透过直接函数呼叫的方式，来操作驱动程序。当然，应用程序也可以不需要透过 JNI 的方式进行，直接以加载 *.so 
+檔（dlopen）的做法呼叫*.so 里的符号（symbol）也是一种方式。总而言之是没有经过封装，上层可以直接操作硬件。</p>
+<p><strong>3 HAL 的现况<br>
+</strong>
+<br>
+<span><img title="Android HAL 分析 - 
+On&lt;wbr&gt;ce - 许兴旺的博客" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/590815976116437206.jpg" border="0" alt="Android HAL 分析 - On&lt;wbr&gt;ce - 
+许兴旺的博客">
+<br>
+</span>
+<br>
+图3：Android HAL / libhardware<br>
+<br>
+现
+在的 libhardware 作法，就有「stub」的味道了。HAL stub 是一种代理人（proxy）的概念，stub 虽然仍是以 
+*.so檔的形式存在，但 HAL 已经将 *.so 档隐藏起来了。Stub 向 HAL「提供」操作函数（operations），而 
+runtime 则是向 HAL 取得特定模块（stub）的 operations，再 callback 这些操作函数。这种以 indirect 
+function call 的实作架构，让HAL stub 变成是一种「包含」关系，即 HAL 里包含了许许多多的 
+stub（代理人）。Runtime 只要说明「类型」，即 module 
+ID，就可以取得操作函数。对于目前的HAL，可以认为Android定义了HAL层结构框架，通过几个接口访问硬件从而统一了调用方式。</p>
+<p><strong>4 HAL_legacy和HAL的对比</strong>
+<br>
+<br>
+HAL_legacy：旧式的HAL是一个模块，采用
+共享库形式，在编译时会调用到。由于采用function <br>
+call形式调用，因此可被多个进程使用，但会被mapping到多个进程空间中，造
+成浪费，同时需要考虑代码能否安全重入的问题（thread safe）。<br>
+<br>
+HAL：新式的HAL采用HAL module和HAL 
+stub结合形式，HAL stub不是一个share library，编译时上层只拥有访问HAL stub的函数指针，并不需要HAL 
+stub。上层通过HAL module提供的统一接口获取并操作HAL 
+stub，so文件只会被mapping到一个进程，也不存在重复mapping和重入问题。</p>
+<p><br>
+<strong>5 HAL module架构<br>
+</strong>
+<br>
+HAL moudle主要分为三个结构：<br>
+<br>
+struct
+ hw_module_t;<br>
+struct hw_module_methods_t;<br>
+struct hw_device_t;<br>
+<br>
+他
+们的继承关系如下图：<br>
+<br>
+<span><img title="Android HAL 分析 - On&lt;wbr&gt;ce - 
+许兴旺的博客" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/590815976116437207.jpg" border="0" alt="Android HAL 分析 - On&lt;wbr&gt;ce - 许兴旺的博客">
+<br>
+</span>
+<br>
+图4：Android HAL结构继承关系</p>
+<p><strong>6 HAL使用方法</strong>
+<br>
+<br>
+（1）Native code通过hw_get_module调
+用获取HAL stub：<br>
+hw_get_module (LED_HARDWARE_MODULE_ID, (const 
+hw_module_t**)&amp;module)<br>
+<br>
+（2）通过继承hw_module_methods_t的callback来
+open设备：<br>
+module-&gt;methods-&gt;open(module,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+LED_HARDWARE_MODULE_ID, (struct hw_device_t**)device);<br>
+<br>
+（3）通过继承
+hw_device_t的callback来控制设备：<br>
+sLedDevice-&gt;set_on(sLedDevice, led);<br>
+sLedDevice-&gt;set_off(sLedDevice,
+ led);</p>
+<p><br>
+<strong>7 HAL stub编写方法<br>
+</strong>
+<br>
+（1）定义自己的HAL结构体，编写头文件led.h,
+ hardware/hardware.h<br>
+struct led_module_t {<br>
+&nbsp;&nbsp; struct hw_module_t 
+common;<br>
+};<br>
+<br>
+struct led_control_device_t {<br>
+&nbsp;&nbsp; struct 
+hw_device_t common;<br>
+<br>
+&nbsp;&nbsp; int fd;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* file descriptor of 
+LED device */<br>
+<br>
+&nbsp;&nbsp; /* supporting control APIs <a href="http://lib.csdn.net/base/go" class="replace_word" title="Go知识库" target="_blank" style="color:#df3434; font-weight:bold;">Go</a> here */<br>
+&nbsp;&nbsp; int 
+(*set_on)(struct led_control_device_t *dev, int32_t led);<br>
+&nbsp;&nbsp; int 
+(*set_off)(struct led_control_device_t *dev, int32_t led);<br>
+};<br>
+<br>
+继
+承关系如下图：</p>
+<p><span><img title="Android HAL 分析 - On&lt;wbr&gt;ce - 许兴旺的博客" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/590815976116437208.jpg" border="0" alt="Android HAL 分析 - On&lt;wbr&gt;ce - 许兴旺的博客">
+<br>
+</span>
+<br>
+图5：HAL stub与HAL module继承关系<br>
+<br>
+<br>
+（2）
+设计led.c 完成功能实现和HAL stub注册<br>
+<br>
+（2.1）led_module_methods继承
+hw_module_methods_t，实现open的callback<br>
+struct hw_module_methods_t 
+led_module_methods = {<br>
+&nbsp;&nbsp;&nbsp; open: led_device_open<br>
+};<br>
+<br>
+（2.2）用
+HAL_MODULE_INFO_SYM实例led_module_t，这个名称不可修改<br>
+tag：需要制定为 
+HARDWARE_MODULE_TAG<br>
+id：指定为 HAL Stub 的 module ID<br>
+methods：struct 
+hw_module_methods_t，为 HAL 所定义的「method」<br>
+const struct led_module_t 
+HAL_MODULE_INFO_SYM = {<br>
+&nbsp;&nbsp;&nbsp; common: {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tag: 
+HARDWARE_MODULE_TAG,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; version_major: 1,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+version_minor: 0,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; id: LED_HARDWARE_MODULE_ID,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+name: "Sample LED Stub",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; author: "The Mokoid Open Source 
+Project",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; methods: &amp;led_module_methods,<br>
+&nbsp;&nbsp;&nbsp; }<br>
+<br>
+&nbsp;&nbsp;&nbsp;
+ /* supporting APIs go here. */<br>
+};</p>
+<p>（2.3）open是一个必须实现的callback API，负责申请结构体空间，填充信息，注册具体操作API接口,打开Linux驱动。<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 由于存在多重继承关系，只需对子结构体hw_device_t对象申请空间即可。<br>
+int led_device_open(const 
+struct hw_module_t* module, const char* name,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; struct 
+hw_device_t** device) <br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; struct led_control_device_t *dev;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ dev = (struct led_control_device_t *)malloc(sizeof(*dev));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+memset(dev, 0, sizeof(*dev));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dev-&gt;common.tag = 
+HARDWARE_DEVICE_TAG;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dev-&gt;common.version = 0;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+dev-&gt;common.module = module;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dev-&gt;common.close = 
+led_device_close;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dev-&gt;set_on = led_on;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+dev-&gt;set_off = led_off;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; *device = &amp;dev-&gt;common;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ /*<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * Initialize Led hardware here.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ dev-&gt;fd = open(LED_DEVICE, O_RDONLY);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (dev-&gt;fd &lt; 
+0) <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return -1;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; led_off(dev, LED_C608);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ led_off(dev, LED_C609);<br>
+success:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;<br>
+}</p>
+<p>（2.4）填充具体API操作代码<br>
+int led_on(struct led_control_device_t *dev, 
+int32_t led)<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int fd;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LOGI("LED Stub: set %d 
+on.", led);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fd = dev-&gt;fd;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; switch (led) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ case LED_C608: <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ioctl(fd, 1, &amp;led);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ break;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case LED_C609:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+ioctl(fd, 1, &amp;led);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+default:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return -1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+return 0;<br>
+}<br>
+<br>
+int
+ led_off(struct led_control_device_t *dev, int32_t led)<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+int fd;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LOGI("LED Stub: set %d off.", led);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fd = 
+dev-&gt;fd;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; switch (led) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; case LED_C608: <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ ioctl(fd, 2, &amp;led);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; break;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ case LED_C609:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ioctl(fd, 2, &amp;led);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ break;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; default:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return -1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ }<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return 0;<br>
+}</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><!-- [if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:View>Normal</w:View>
+  <w:Zoom>0</w:Zoom>
+  <w:PunctuationKerning></w:PunctuationKerning>
+  <w:DrawingGridVerticalSpacing>7.8 磅</w:DrawingGridVerticalSpacing>
+  <w:DisplayHorizontalDrawingGridEvery>0</w:DisplayHorizontalDrawingGridEvery>
+  <w:DisplayVerticalDrawingGridEvery>2</w:DisplayVerticalDrawingGridEvery>
+  <w:ValidateAgainstSchemas></w:ValidateAgainstSchemas>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:Compatibility>
+   <w:SpaceForUL></w:SpaceForUL>
+   <w:BalanceSingleByteDoubleByteWidth></w:BalanceSingleByteDoubleByteWidth>
+   <w:DoNotLeaveBackslashAlone></w:DoNotLeaveBackslashAlone>
+   <w:ULTrailSpace></w:ULTrailSpace>
+   <w:DoNotExpandShiftReturn></w:DoNotExpandShiftReturn>
+   <w:AdjustLineHeightInTable></w:AdjustLineHeightInTable>
+   <w:BreakWrappedTables></w:BreakWrappedTables>
+   <w:SnapToGridInCell></w:SnapToGridInCell>
+   <w:WrapTextWithPunct></w:WrapTextWithPunct>
+   <w:UseAsianBreakRules></w:UseAsianBreakRules>
+   <w:DontGrowAutofit></w:DontGrowAutofit>
+   <w:UseFELayout></w:UseFELayout>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!-- [if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]--><!-- [if !mso]>
+<object
+ classid="clsid:38481807-CA0E-42D2-BF39-B33AF135CC4D" id=ieooui>
+</object>
+<style>
+st1/:*{behavior:url(#ieooui) }
+</style>
+<![endif]-->
+&lt;!--
+ /* Font Definitions */
+ @font-face
+	{font-family:宋体;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-alt:SimSun;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+@font-face
+	{font-family:"/@宋体";
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	mso-pagination:none;
+	font-size:10.5pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:宋体;
+	mso-font-kerning:1.0pt;}
+ /* Page Definitions */
+ @page
+	{mso-page-border-surround-header:no;
+	mso-page-border-surround-footer:no;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;
+	mso-header-margin:42.55pt;
+	mso-footer-margin:49.6pt;
+	mso-paper-source:0;
+	layout-grid:15.6pt;}
+div.Section1
+	{page:Section1;}
+--&gt;
+<!-- [if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:普通表格;
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+table.MsoTableGrid
+	{mso-style-name:网格型;
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	border:solid windowtext 1.0pt;
+	mso-border-alt:solid windowtext .5pt;
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-border-insideh:.5pt solid windowtext;
+	mso-border-insidev:.5pt solid windowtext;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	text-align:justify;
+	text-justify:inter-ideograph;
+	mso-pagination:none;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]-->
+</p><p class="MsoNormal"><span lang="EN-US">Android HAL </span>
+<span style="font-family: 宋体;">是如何被调用的</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span lang="EN-US">Android</span>
+<span style="font-family: 宋体;">对硬件的调用，</span>
+<span lang="EN-US">google</span>
+<span style="font-family: 宋体;">推荐使用</span>
+<span lang="EN-US">HAL</span>
+<span style="font-family: 宋体;">的方式进行调用，对于</span>
+<span lang="EN-US">Andriod HAL</span>
+<span style="font-family: 宋体;">的写法，可以参考</span>
+<span lang="EN-US">android</span>
+<span style="font-family: 宋体;">源码里的</span>
+<span lang="EN-US">hardware</span>
+<span style="font-family: 宋体;">目录下几个模块的模版。</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">在看</span>
+<span lang="EN-US">HAL</span>
+<span style="font-family: 宋体;">的编写方法的过程中，会发现整个模块貌似没有一个入口。一般说来模块都要有个入口，比如应用程序有</span>
+<span lang="EN-US">main</span>
+<span style="font-family: 宋体;">函数，可以为加载器进行加载执行，</span>
+<span lang="EN-US">dll</span>
+<span style="font-family: 宋体;">文件有</span>
+<span lang="EN-US">dllmain</span>
+<span style="font-family: 宋体;">，而对于我们自己写的动态链接库，我们可以对库中导出的任何符号进行调用。</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">问题来了，</span>
+<span lang="EN-US">Android</span>
+<span style="font-family: 宋体;">中的</span>
+<span lang="EN-US">HAL</span>
+<span style="font-family: 宋体;">是比较具有通用性的，需要上层的函数对其进行加载调用，</span>
+<span lang="EN-US">Android</span>
+<span style="font-family: 宋体;">的</span>
+<span lang="EN-US">HAL</span>
+<span style="font-family: 宋体;">加载器是如何实现对不同的</span>
+<span lang="EN-US">Hardware
+Module</span>
+<span style="font-family: 宋体;">进行通用性的调用的呢？</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">带着这个疑问查看</span>
+<span lang="EN-US">Android</span>
+<span style="font-family: 宋体;">源码，会发现</span>
+<span lang="EN-US">Android</span>
+<span style="font-family: 宋体;">中实现调用</span>
+<span lang="EN-US">HAL</span>
+<span style="font-family: 宋体;">是通过</span>
+<span lang="EN-US">hw_get_module</span>
+<span style="font-family: 宋体;">实现的。</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span lang="EN-US">int
+hw_get_module(const char *id, const struct hw_module_t **module);</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">这是其函数原型，</span>
+<span lang="EN-US">id</span>
+<span style="font-family: 宋体;">会指定</span>
+<span lang="EN-US">Hardware</span>
+<span style="font-family: 宋体;">的</span>
+<span lang="EN-US">id</span>
+<span style="font-family: 宋体;">，这是一个字符串，比如</span>
+<span lang="EN-US">sensor</span>
+<span style="font-family: 宋体;">的</span>
+<span lang="EN-US">id</span>
+<span style="font-family: 宋体;">是</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span lang="EN-US">#define
+SENSORS_HARDWARE_MODULE_ID "sensors"</span>
+<span style="font-family: 宋体;">，如果找到了对应的</span>
+<span lang="EN-US">hw_module_t</span>
+<span style="font-family: 宋体;">结构体，会将其指针放入</span>
+<span lang="EN-US">*module</span>
+<span style="font-family: 宋体;">中。看看它的实现。。。。</span>
+</p>
+<table class="MsoTableGrid" style="border-collapse: collapse; border: medium none;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 426.1pt; border: medium none; background: none repeat scroll 0% 0% #a6a6a6; padding: 0cm 5.4pt;" width="568" valign="top">
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+/* Loop through the configuration variants looking for a module */</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+for (i=0 ; i&lt;HAL_VARIANT_KEYS_COUNT+1 ; i++) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+if (i &lt; HAL_VARIANT_KEYS_COUNT) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+<strong><span>&nbsp;</span>
+//</strong>
+</span>
+<strong><span style="font-family: 宋体;">获取</span>
+<span lang="EN-US">ro.hardware/ro.product.board/ro.board.platform/ro.arch</span>
+</strong>
+<strong><span style="font-family: 宋体;">等</span>
+<span lang="EN-US">key</span>
+</strong>
+<strong><span style="font-family: 宋体;">的值。</span>
+<span lang="EN-US"></span>
+</strong>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+if (property_get(variant_keys[i],
+  prop, NULL) == 0) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+continue;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+}</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+snprintf(path, sizeof(path),
+  "%s/%s.%s.so",</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+HAL_LIBRARY_PATH, id,
+  prop);</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+<strong><span>&nbsp;</span>
+//</strong>
+</span>
+<strong><span style="font-family: 宋体;">如果开发板叫做</span>
+<span lang="EN-US">mmdroid,</span>
+</strong>
+<strong><span style="font-family: 宋体;">那么这里的</span>
+<span lang="EN-US">path</span>
+</strong>
+<strong><span style="font-family: 宋体;">就是</span>
+<span lang="EN-US">system/lib/hw/sensor.mmdroid.so</span>
+</strong>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+} else {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+snprintf(path, sizeof(path),
+  "%s/%s.default.so",</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+HAL_LIBRARY_PATH, id);<strong>//</strong>
+</span>
+<strong><span style="font-family: 宋体;">默认会加载</span>
+<span lang="EN-US">/system/lib/hw/sensor.default.so</span>
+</strong>
+</p>
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+<span>&nbsp;&nbsp;&nbsp;</span>
+}</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+if (access(path, R_OK)) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+continue;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+}</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+/* we found a library matching this id/variant */</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+break;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+}</span>
+</p>
+</td>
+</tr>
+<tr>
+<td style="width: 426.1pt; border: medium none; background: none repeat scroll 0% 0% #a6a6a6; padding: 0cm 5.4pt;" width="568" valign="top">
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+status = -ENOENT;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+if (i &lt; HAL_VARIANT_KEYS_COUNT+1) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+/* load the module, if this fails, we're doomed, and we should not try</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+* to load a different variant. */</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+status = load(id, path, module);<strong>//</strong>
+</span>
+<strong><span style="font-family: 宋体;">调用</span>
+<span lang="EN-US">load</span>
+</strong>
+<strong><span style="font-family: 宋体;">函数打开动态链接库</span>
+<span lang="EN-US"></span>
+</strong>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+}</span>
+</p>
+</td>
+</tr>
+<tr>
+<td style="width: 426.1pt; border: medium none; background: none repeat scroll 0% 0% #a6a6a6; padding: 0cm 5.4pt;" width="568" valign="top">
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+</td>
+</tr>
+<tr>
+<td style="width: 426.1pt; border: medium none; background: none repeat scroll 0% 0% #a6a6a6; padding: 0cm 5.4pt;" width="568" valign="top">
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">获取了动态链接库的路径之后，就会调用</span>
+<span lang="EN-US">load</span>
+<span style="font-family: 宋体;">函数打开它，下面会打开它。</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span lang="EN-US">&nbsp;</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">奥秘在</span>
+<span lang="EN-US">load</span>
+<span style="font-family: 宋体;">中</span>
+</p>
+<table class="MsoTableGrid" style="border-collapse: collapse; border: medium none;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 426.1pt; border: medium none; background: none repeat scroll 0% 0% #a6a6a6; padding: 0cm 5.4pt;" width="568" valign="top">
+<p class="MsoNormal"><span lang="EN-US">static int load(const char *id,</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+const char *path,</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+const struct hw_module_t **pHmi)</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">{</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+int status;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+void *handle;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+struct hw_module_t *hmi;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+/*</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+* load the symbols resolving undefined symbols before</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+* dlopen returns. Since RTLD_GLOBAL is not or'd in with</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+* RTLD_NOW the external symbols will not be global</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+*/</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+handle = dlopen(path, RTLD_NOW);<strong>//</strong>
+</span>
+<strong><span style="font-family: 宋体;">打开动态库</span>
+</strong>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+if (handle == NULL) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+char const *err_str = dlerror();</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+LOGE("load: module=%s/n%s", path,
+  err_str?err_str:"unknown");</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+status = -EINVAL;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+goto done;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+}</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+/* Get the address of the struct hal_module_info. */</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+const char *sym = HAL_MODULE_INFO_SYM_AS_STR;<strong>//</strong>
+</span>
+<strong><span style="font-family: 宋体;">被定义为了“</span>
+<span lang="EN-US">HMI</span>
+</strong>
+<strong><span style="font-family: 宋体;">”</span>
+<span lang="EN-US"></span>
+</strong>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+hmi = (struct hw_module_t *)dlsym(handle, sym);//</span>
+<strong><span style="font-family: 宋体;">查找“</span>
+<span lang="EN-US">HMI</span>
+</strong>
+<strong><span style="font-family: 宋体;">”这个导出符号，并获取其地址</span>
+<span lang="EN-US"></span>
+</strong>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+if (hmi == NULL) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+LOGE("load: couldn't find symbol %s", sym);</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+status = -EINVAL;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+goto done;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+}</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21.75pt;"><span lang="EN-US">/* Check that
+  the id matches */</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21.75pt;"><span lang="EN-US">//</span>
+<strong><span style="font-family: 宋体;">找到了</span>
+<span lang="EN-US">hw_module_t</span>
+</strong>
+<strong><span style="font-family: 宋体;">结构！！！</span>
+<span lang="EN-US"></span>
+</strong>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+if (strcmp(id, hmi-&gt;id) != 0) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+LOGE("load: id=%s != hmi-&gt;id=%s", id, hmi-&gt;id);</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+status = -EINVAL;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+goto done;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+}</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+hmi-&gt;dso = handle;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+/* success */</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+status = 0;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+done:</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+if (status != 0) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+hmi = NULL;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+if (handle != NULL) {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+dlclose(handle);</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+handle = NULL;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+}</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+} else {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+LOGV("loaded HAL id=%s path=%s hmi=%p handle=%p",</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+id, path, *pHmi, handle);</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+}</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;
+  </span>
+//</span>
+<strong><span style="font-family: 宋体;">凯旋而归</span>
+<span lang="EN-US"></span>
+</strong>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+*pHmi = hmi;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">&nbsp;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp; </span>
+<span>&nbsp;&nbsp;</span>
+return status;</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">}</span>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">从上面的代码中，会发现一个很奇怪的宏</span>
+<span lang="EN-US">HAL_MODULE_INFO_SYM_AS_STR</span>
+<span style="font-family: 宋体;">，它直接被定义为了</span>
+<span lang="EN-US">#define HAL_MODULE_INFO_SYM_AS_STR<span>&nbsp;
+</span>
+"HMI"</span>
+<span style="font-family: 宋体;">，为何根据它就能从动态链接库中找到这个</span>
+<span lang="EN-US">hw_module_t</span>
+<span style="font-family: 宋体;">结构体呢？我们查看一下我们用到的</span>
+<span lang="EN-US">hal</span>
+<span style="font-family: 宋体;">对应的</span>
+<span lang="EN-US">so</span>
+<span style="font-family: 宋体;">就可以了，在</span>
+<span lang="EN-US">linux</span>
+<span style="font-family: 宋体;">中可以使用</span>
+<span lang="EN-US">readelf XX.so –s</span>
+<span style="font-family: 宋体;">查看。</span>
+</p>
+<table class="MsoTableGrid" style="border-collapse: collapse; border: medium none;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 426.1pt; border: medium none; background: none repeat scroll 0% 0% #a6a6a6; padding: 0cm 5.4pt;" width="568" valign="top">
+<p class="MsoNormal"><span lang="EN-US">Symbol table '.dynsym' contains 28
+  entries:</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;
+  </span>
+Num: <span>&nbsp;&nbsp;&nbsp;</span>
+Value<span>&nbsp; </span>
+Size Type<span>&nbsp;&nbsp;&nbsp;
+  </span>
+Bind<span>&nbsp;&nbsp; </span>
+Vis<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span>
+Ndx Name</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+0: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+LOCAL<span>&nbsp;
+  </span>
+DEFAULT<span>&nbsp; </span>
+UND </span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+1: 00000594<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 SECTION
+  LOCAL<span>&nbsp; </span>
+DEFAULT<span>&nbsp;&nbsp;&nbsp; </span>
+7 </span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+2: 00001104<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 SECTION
+  LOCAL<span>&nbsp; </span>
+DEFAULT<span>&nbsp;&nbsp; </span>
+13 </span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+3: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND ioctl</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+4: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND strerror</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+5: 00000b84<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS __exidx_end</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+6: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 OBJECT<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND __stack_chk_guard</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+7: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND __aeabi_unwind_cpp_pr0</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+8: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND __errno</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+9: 00001188<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS _bss_end__</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+10: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND malloc</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+11: 00001188<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS __bss_start__</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+12: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND __android_log_print</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+13: 00000b3a<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp;
+  </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS
+  __exidx_start</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+14: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND __stack_chk_fail</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+15: 00001188<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS __bss_end__</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+16: 00001188<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS __bss_start</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+17: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND memset</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+18: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND __aeabi_uidiv</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+19: 00001188<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS __end__</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+20: 00001188<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS _edata</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+21: 00001188<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS _end</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+22: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND open</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+23: 00080000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+ABS _stack</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+<strong>24: 00001104<span>&nbsp;&nbsp; </span>
+128 OBJECT<span>&nbsp;
+  </span>
+GLOBAL DEFAULT<span>&nbsp;&nbsp; </span>
+13 HMI</strong>
+</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+25: 00001104<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 NOTYPE<span>&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp;&nbsp; </span>
+13 __data_start</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+26: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND close</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+27: 00000000<span>&nbsp;&nbsp;&nbsp;&nbsp; </span>
+0 FUNC<span>&nbsp;&nbsp;&nbsp; </span>
+GLOBAL DEFAULT<span>&nbsp; </span>
+UND free</span>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">从上面中，第</span>
+<span lang="EN-US">24</span>
+<span style="font-family: 宋体;">个符号，名字就是“</span>
+<span lang="EN-US">HMI</span>
+<span style="font-family: 宋体;">”，对应于</span>
+<span lang="EN-US">hw_module_t</span>
+<span style="font-family: 宋体;">结构体。再去对照一下</span>
+<span lang="EN-US">HAL</span>
+<span style="font-family: 宋体;">的代码。</span>
+</p>
+<table class="MsoTableGrid" style="border-collapse: collapse; border: medium none;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td style="width: 426.1pt; border: medium none; background: none repeat scroll 0% 0% #a6a6a6; padding: 0cm 5.4pt;" width="568" valign="top">
+<p class="MsoNormal"><span lang="EN-US">/*</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;</span>
+*
+  The COPYBIT Module</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;</span>
+*/</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">struct copybit_module_t
+  HAL_MODULE_INFO_SYM = {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+common: {</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+tag: HARDWARE_MODULE_TAG,</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+version_major: 1,</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+version_minor: 0,</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+id: COPYBIT_HARDWARE_MODULE_ID,</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+name: "QCT MSM7K COPYBIT Module",</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+author: "Google, Inc.",</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  </span>
+methods: &amp;copybit_module_methods</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US"><span>&nbsp;&nbsp;&nbsp;
+  </span>
+}</span>
+</p>
+<p class="MsoNormal"><span lang="EN-US">};</span>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">这里定义了一个名为</span>
+<span lang="EN-US">HAL_MODULE_INFO_SYM</span>
+<span style="font-family: 宋体;">的</span>
+<span lang="EN-US">copybit_module_t</span>
+<span style="font-family: 宋体;">的结构体，</span>
+<span lang="EN-US">common</span>
+<span style="font-family: 宋体;">成员为</span>
+<span lang="EN-US">hw_module_t</span>
+<span style="font-family: 宋体;">类型。注意这里的</span>
+<span lang="EN-US">HAL_MODULE_INFO_SYM</span>
+<span style="font-family: 宋体;">变量必须为这个名字，这样编译器才会将这个结构体的导出符号变为“</span>
+<span lang="EN-US">HMI</span>
+<span style="font-family: 宋体;">”，这样这个结构体才能被</span>
+<span lang="EN-US">dlsym</span>
+<span style="font-family: 宋体;">函数找到！</span>
+</p>
+<p class="MsoNormal" style="text-indent: 21pt;"><span style="font-family: 宋体;">综上，我们知道了</span>
+<span lang="EN-US">andriod HAL</span>
+<span style="font-family: 宋体;">模块也有一个通用的入口地址，这个入口地址就是</span>
+<span lang="EN-US">HAL_MODULE_INFO_SYM</span>
+<span style="font-family: 宋体;">变量，通过它，我们可以访问到</span>
+<span lang="EN-US">HAL</span>
+<span style="font-family: 宋体;">模块中的所有想要外部访问到的方法。</span>
+</p>
+<p></p>   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad bdshare-button-style0-16" style="float: right;" data-mod="popu_172" data-bd-bind="1492159490145">
+<a href="http://blog.csdn.net/k229650014/article/details/5801397#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important" target="_blank"></a>
+<a href="http://blog.csdn.net/k229650014/article/details/5801397#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间" style="background-position:0 -52px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/k229650014/article/details/5801397#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博" style="background-position:0 -104px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/k229650014/article/details/5801397#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博" style="background-position:0 -260px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/k229650014/article/details/5801397#" class="bds_renren" data-cmd="renren" title="分享到人人网" style="background-position:0 -208px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/k229650014/article/details/5801397#" class="bds_weixin" data-cmd="weixin" title="分享到微信" style="background-position:0 -1612px !important" target="_blank"></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/blog_detail.css">
+
+    
+<!--172.16.140.11-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+<script type="text/javascript">
+    var fromjs = $("#fromjs");
+    if (fromjs.length > 0) {
+            $("#fromjs .markdown_views pre").addClass("prettyprint");
+            prettyPrint();
+
+            $('pre.prettyprint code').each(function () {
+                var lines = $(this).text().split('\n').length;
+                var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                $(this).addClass('has-numbering').parent().append($numbering);
+                for (i = 1; i <= lines; i++) {
+                    $numbering.append($('<li/>').text(i));
+                };
+                $numbering.fadeIn(1700);
+            });
+
+            $('.pre-numbering li').css("color", "#999");
+        }
+
+    
+
+</script>
+
+ 
+
+
+        <div id="digg" articleid="5801397">
+            <dl id="btnDigg" class="digg digg_enable" onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>3</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_enable" onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" target="_blank">&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" target="_blank">&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;]);location.href=&#39;/k229650014/article/details/5798867&#39;;">上一篇</span><a href="http://blog.csdn.net/k229650014/article/details/5798867" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;])">U-boot简介以及常用命令</a></li>
+                <li class="next_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;]);location.href=&#39;/k229650014/article/details/6729483&#39;;">下一篇</span><a href="http://blog.csdn.net/k229650014/article/details/6729483" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;])">Android 上层界面到内核代码的完整的流程分析，以alarm为例子</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article" style="">
+                <h4>我的同类文章</h4>
+                <div class="similar_c" style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span style="cursor:pointer" onclick="GetCategoryArticles(&#39;709930&#39;,&#39;k229650014&#39;,&#39;foot&#39;,&#39;5801397&#39;);">Android开发文章<em>（2）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141" style="max-height:195px;">
+                        <a href="http://blog.csdn.net/" style="display:none" target="_blank">http://blog.csdn.net</a>
+                        <ul class="similar_list fl"><li><em>•</em><a href="http://blog.csdn.net/k229650014/article/details/7009604" id="foot_aritcle_7009604undefined33380251118566173" target="_blank" title="(转，好文必须的)Android深入浅出之Binder机制">(转，好文必须的)Android深入浅出之Binder机制</a><span>2011-11-24</span><label><i>阅读</i><b>1328</b></label></li> </ul>
+
+                        <ul class="similar_list fr"><li><em>•</em><a href="http://blog.csdn.net/k229650014/article/details/6729483" id="foot_aritcle_6729483undefined6722294670352067" target="_blank" title="Android 上层界面到内核代码的完整的流程分析，以alarm为例子">Android 上层界面到内核代码的完整的流程分析，以alarm为例子</a><span>2011-08-29</span><label><i>阅读</i><b>7284</b></label></li> </ul>
+                    </div>
+                </div>
+            </div>    
+    <script type="text/javascript">
+        $(function () {
+            GetCategoryArticles('709930', 'k229650014','foot','5801397');
+        });
+    </script>
+      
+</div>
+
+    <div>
+            <script type="text/javascript">
+                /*博客内容页下方Banner1-728*90，创建于2016-12-13*/
+                var cpro_id = "u2843949";
+            </script>
+            <script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2843949_0"><iframe id="iframeu2843949_0" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/dcem.html" width="728" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:728px;height:90px" allowtransparency="true"></iframe></div>
+     </div>
+
+<div id="suggest">
+
+</div>
+         <script language="javascript" type="text/javascript">     
+             $(function(){
+                 $.get("/k229650014/svc/GetSuggestContent/5801397",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/replace.css">
+
+<div id="relate" data-mod="popu_218" class="tracking-ad" style="display: block;">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c"><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/android"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/1455589744328_328.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/android">Android知识库</a></h4><p><label><span>33150</span><em>关注</em><i>|</i><span>2675</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/go"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/1471395508721_721.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/go">Go知识库</a></h4><p><label><span>2161</span><em>关注</em><i>|</i><span>949</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/linux"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/1468390230134_134.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/linux">Linux知识库</a></h4><p><label><span>11512</span><em>关注</em><i>|</i><span>3933</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/architecture"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/1458091865915_915.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/architecture">大型网站架构知识库</a></h4><p><label><span>8454</span><em>关注</em><i>|</i><span>708</span><em>收录</em></label></p></dd></dl></div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived"> 
+    <div class="embody embody_b" id="libkeyparent" style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/job_reco.js.下载" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "5801397",
+                username: "wangchaoqun1997",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+            
+            setEduLoc();
+
+            function setEduLoc() {               
+                var edus = $("#adCollege div dd a");
+                if (edus.length == 0) {
+                    setTimeout(function () {
+                        setEduLoc();
+                    }, 500);
+                }
+                else {
+                    var eduLoc = "?ref=blog&loc=0";
+                    $.each(edus, function (index,item) {
+                        var href = $(this).attr("href") + eduLoc;
+                        $(this).attr("href", href);
+                    });
+                }
+            }
+
+        </script> 
+    <div class="tracking-ad" data-mod="popu_84"><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/2314?ref=blog&amp;loc=0" title="FFmpeg音视频高级开发实战3 iOS/Android/windows/Linux" strategy="v4:content" target="_blank">FFmpeg音视频高级开发实战3 iOS/Android/windows/Linux</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1479?ref=blog&amp;loc=0" title="Android底层技术：Linux驱动框架与开发" strategy="v4:content" target="_blank">Android底层技术：Linux驱动框架与开发</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3713?ref=blog&amp;loc=0" title="JavaAndroid客户端和C#服务端Web Api接口开发" strategy="v4:content" target="_blank">JavaAndroid客户端和C#服务端Web Api接口开发</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1353?ref=blog&amp;loc=0" title="《C语言/C++学习指南》Linux开发篇" strategy="v4:content" target="_blank">《C语言/C++学习指南》Linux开发篇</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3749?ref=blog&amp;loc=0" title="Linux驱动之LCD实战视频课程" strategy="v4:content" target="_blank">Linux驱动之LCD实战视频课程</a></dd></div></div>  
+
+    
+     <div id="res" data-mod="popu_36" class="tracking-ad" style="width: 42%; float: left; margin-right: 30px; display: block;"><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/RopenYuan/article/details/7410426" title="Android硬件抽象层HAL概要介绍和学习计划 " strategy="SearchAlgorithm" target="_blank">Android硬件抽象层HAL概要介绍和学习计划 </a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/lqxandroid2012/article/details/46228585" title="Android硬件抽象层HAL概要介绍和学习计划" strategy="SearchAlgorithm" target="_blank">Android硬件抽象层HAL概要介绍和学习计划</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/wenfeng731/article/details/10251119" title="在A20上演示老罗的Android硬件抽象层HAL概要介绍和学习计划1" strategy="SearchAlgorithm" target="_blank">在A20上演示老罗的Android硬件抽象层HAL概要介绍和学习计划1</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/broadview2006/article/details/8128238" title="Android硬件抽象层HAL概要介绍和学习计划" strategy="SearchAlgorithm" target="_blank">Android硬件抽象层HAL概要介绍和学习计划</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/wyymaomi/article/details/7431953" title="Android硬件抽象层HAL概要介绍和学习计划" strategy="SearchAlgorithm" target="_blank">Android硬件抽象层HAL概要介绍和学习计划</a></dd></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = 'Android HAL(硬件抽象层)介绍以及调用' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                    <script type="text/javascript">
+                        /*博客内容页下方Banner-728*90，创建于2014-7-3*/
+                        var cpro_id = "u1607657";
+                    </script>
+                    <script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u1607657_0"><iframe id="iframeu1607657_0" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/dcem(1).html" width="728" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:728px;height:90px" allowtransparency="true"></iframe></div>
+    </div>  
+
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list"><dl class="comment_item comment_topic" id="comment_item_6240323"><dt class="comment_head" floor="13">13楼 <span class="user"><a class="username" href="http://blog.csdn.net/devwang_com" target="_blank">devwang_com</a> <span class="ptime">2016-08-30 10:24发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6240323" username="devwang_com"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/devwang_com" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_devwang_com.jpg" width="40" height="40"></a></dd><dd class="comment_body">学习~学习~~<br>好文章必须顶~~~<br>感谢博主大牛分享~~~</dd></dl><dl class="comment_item comment_topic" id="comment_item_6106864"><dt class="comment_head" floor="12">12楼 <span class="user"><a class="username" href="http://blog.csdn.net/tkwxty" target="_blank">tkwxty</a> <span class="ptime">2016-06-30 10:55发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6106864" username="tkwxty"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/tkwxty" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_tkwxty.jpg" width="40" height="40"></a></dd><dd class="comment_body">好文章必须给赞！</dd></dl><dl class="comment_item comment_topic" id="comment_item_4542147"><dt class="comment_head" floor="11">11楼 <span class="user"><a class="username" href="http://blog.csdn.net/guopeixin" target="_blank">guopeixin</a> <span class="ptime">2014-11-24 10:23发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="4542147" username="guopeixin"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/guopeixin" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_guopeixin.jpg" width="40" height="40"></a></dd><dd class="comment_body">牛鼻，最牛鼻的是最后一段。<br><br>一直很好奇，当系统中存在两个或者更多个使用了相同HAL Module Name的so的时候，在int hw_get_module(const char *id, const struct hw_module_t **module);调用完毕之后，究竟load哪个so被调用起来的问题。<br><br>最后，必须再赞一下，感谢NB人的分享</dd></dl><dl class="comment_item comment_topic" id="comment_item_2569383"><dt class="comment_head" floor="10">10楼 <span class="user"><a class="username" href="http://blog.csdn.net/flypaul" target="_blank">flypaul</a> <span class="ptime">2013-03-27 17:03发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="2569383" username="flypaul"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/flypaul" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_flypaul.jpg" width="40" height="40"></a></dd><dd class="comment_body">学习。顶</dd></dl><dl class="comment_item comment_topic" id="comment_item_2287613"><dt class="comment_head" floor="9">9楼 <span class="user"><a class="username" href="http://blog.csdn.net/zhongjihao100" target="_blank">haoge101</a> <span class="ptime">2012-07-17 17:33发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="2287613" username="zhongjihao100"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/zhongjihao100" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_zhongjihao100.jpg" width="40" height="40"></a></dd><dd class="comment_body">顶顶顶</dd></dl><dl class="comment_item comment_topic" id="comment_item_2232121"><dt class="comment_head" floor="8">8楼 <span class="user"><a class="username" href="http://blog.csdn.net/yellowlwt" target="_blank">yellowlwt</a> <span class="ptime">2012-05-25 10:37发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="2232121" username="yellowlwt"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/yellowlwt" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_yellowlwt.jpg" width="40" height="40"></a></dd><dd class="comment_body">太犀利了呀～～～搂住牛人阿</dd></dl><dl class="comment_item comment_topic" id="comment_item_2178781"><dt class="comment_head" floor="7">7楼 <span class="user"><a class="username" href="http://blog.csdn.net/mxl_mxl" target="_blank">mxl_mxl</a> <span class="ptime">2012-04-12 08:38发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="2178781" username="mxl_mxl"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/mxl_mxl" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_mxl_mxl.jpg" width="40" height="40"></a></dd><dd class="comment_body">牛！</dd></dl><dl class="comment_item comment_topic" id="comment_item_2149995"><dt class="comment_head" floor="6">6楼 <span class="user"><a class="username" href="http://blog.csdn.net/hermit_TT" target="_blank">hermit_TT</a> <span class="ptime">2012-03-31 11:02发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="2149995" username="hermit_TT"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/hermit_TT" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_hermit_tt.jpg" width="40" height="40"></a></dd><dd class="comment_body">很给力，透彻。学习了</dd></dl><dl class="comment_item comment_topic" id="comment_item_2118979"><dt class="comment_head" floor="5">5楼 <span class="user"><a class="username" href="http://blog.csdn.net/HippoNiar" target="_blank">爱疯咸森</a> <span class="ptime">2012-03-05 11:29发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="2118979" username="HippoNiar"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/HippoNiar" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_hipponiar.jpg" width="40" height="40"></a></dd><dd class="comment_body">楼主给力啊，分析得很透彻，顶一下</dd></dl><dl class="comment_item comment_topic" id="comment_item_1986460"><dt class="comment_head" floor="4">4楼 <span class="user"><a class="username" href="http://blog.csdn.net/TaoJian890318" target="_blank">justmantao</a> <span class="ptime">2011-10-14 15:17发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="1986460" username="TaoJian890318"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/TaoJian890318" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_taojian890318.jpg" width="40" height="40"></a></dd><dd class="comment_body">TKS</dd></dl><dl class="comment_item comment_topic" id="comment_item_1879876"><dt class="comment_head" floor="3">3楼 <span class="user"><a class="username" href="http://blog.csdn.net/shenxinyue123" target="_blank">shenxinyue123</a> <span class="ptime">2011-08-18 16:21发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="1879876" username="shenxinyue123"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/shenxinyue123" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_shenxinyue123.jpg" width="40" height="40"></a></dd><dd class="comment_body">楼主，牛人！</dd></dl><dl class="comment_item comment_topic" id="comment_item_1629297"><dt class="comment_head" floor="2">2楼 <span class="user"><a class="username" href="http://blog.csdn.net/azeki" target="_blank">azeki</a> <span class="ptime">2011-03-31 17:19发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="1629297" username="azeki"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/azeki" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_azeki.jpg" width="40" height="40"></a></dd><dd class="comment_body">楼主牛人</dd></dl><dl class="comment_item comment_topic" id="comment_item_1579999"><dt class="comment_head" floor="1">1楼 <span class="user"><a class="username" href="http://blog.csdn.net/wbr912" target="_blank">wbr912</a> <span class="ptime">2011-01-15 12:52发表</span>  <a href="http://blog.csdn.net/k229650014/article/details/5801397#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="1579999" username="wbr912"> <a href="http://blog.csdn.net/k229650014/article/details/5801397#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/k229650014/article/details/5801397#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/wbr912" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/3_wbr912.jpg" width="40" height="40"></a></dd><dd class="comment_body">[e03]<br>正困惑于这部分内容，看了这篇文章有豁然开朗的感觉，楼主真是厉害。</dd></dl><div class="clear"></div></div>
+    <div id="comment_bar" style="display: none;">
+    </div>
+    <div id="comment_form"><a name="commentbox"></a><a name="reply"></a><a name="quote"></a><form action="http://blog.csdn.net/k229650014/comment/submit?id=5801397" method="post" onsubmit="return subform(this);"><div class="commentform"><div class="panel_head">发表评论</div><ul><li class="left">用 户 名：</li><li class="right">wangchaoqun1997</li></ul><ul><li class="left">评论内容：</li><li class="right" style="position:relative;"><div id="ubbtools"><a href="http://blog.csdn.net/k229650014/article/details/5801397#insertcode" code="code"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/code.gif" border="0" alt="插入代码" title="插入代码"></a></div><div id="lang_list" style="position: absolute; top: 28px; left: 0px; display: none;"><a class="long_name" href="http://blog.csdn.net/k229650014/article/details/5801397#html">HTML/XML</a><a class="long_name" href="http://blog.csdn.net/k229650014/article/details/5801397#objc">objective-c</a><a class="zhong_name" href="http://blog.csdn.net/k229650014/article/details/5801397#delphi">Delphi</a><a class="zhong_name" href="http://blog.csdn.net/k229650014/article/details/5801397#ruby">Ruby</a><a href="http://blog.csdn.net/k229650014/article/details/5801397#php">PHP</a><a class="duan_name" href="http://blog.csdn.net/k229650014/article/details/5801397#csharp">C#</a><a style=" border-right: none;" class="duan_name" href="http://blog.csdn.net/k229650014/article/details/5801397#cpp">C++</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/k229650014/article/details/5801397#javascript">JavaScript</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/k229650014/article/details/5801397#vb">Visual Basic</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/k229650014/article/details/5801397#python">Python</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/k229650014/article/details/5801397#java">Java</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/k229650014/article/details/5801397#css">CSS</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/k229650014/article/details/5801397#sql">SQL</a><a style="border:none;" class="duan_name" href="http://blog.csdn.net/k229650014/article/details/5801397#plain">其它</a></div><textarea class="comment_content" name="comment_content" id="comment_content" style="width: 400px; height: 200px;"></textarea></li></ul><ul><input type="hidden" id="comment_replyId" name="comment_replyId"><input type="hidden" id="comment_userId" name="comment_userId" value="521203"><input type="hidden" id="commentId" name="commentId" value=""><input type="submit" class="comment_btn" value="提交">&nbsp;&nbsp;<span id="tip_comment" style="color: Red; display: none;"></span></ul></div></form></div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '5801397';
+    var commentscount = 13;
+    var islock = false
+</script>
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/comment.js.下载"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top" style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop" style="display: none;" title="返回顶部" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_huidaodingbu&#39;])">         
+         <img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="">
+
+    <h5>
+        <a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+    <div class="classify">
+<a title="全部主题" href="http://www.csdn.net/tag" target="_blank" onclick="LogClickCount(this,336);">全部主题</a>
+<a title="Hadoop" href="http://g.csdn.net/5272865" target="_blank" onclick="LogClickCount(this,336);">Hadoop</a>
+<a title="AWS" href="http://g.csdn.net/5272866" target="_blank" onclick="LogClickCount(this,336);">AWS</a>
+<a title="移动游戏" href="http://g.csdn.net/5272870" target="_blank" onclick="LogClickCount(this,336);">移动游戏</a>
+<a title="Java" href="http://g.csdn.net/5272871" target="_blank" onclick="LogClickCount(this,336);">Java</a>
+<a title="Android" href="http://g.csdn.net/5272872" target="_blank" onclick="LogClickCount(this,336);">Android</a>
+<a title="iOS" href="http://g.csdn.net/5272873" target="_blank" onclick="LogClickCount(this,336);">iOS</a>
+<a title="Swift" href="http://g.csdn.net/5272868" target="_blank" onclick="LogClickCount(this,336);">Swift</a>
+<a title="智能硬件" href="http://g.csdn.net/5272869" target="_blank" onclick="LogClickCount(this,336);">智能硬件</a>
+<a title="Docker" href="http://g.csdn.net/5272867" target="_blank" onclick="LogClickCount(this,336);">Docker</a>
+<a title="OpenStack" href="http://g.csdn.net/5272925" target="_blank" onclick="LogClickCount(this,336);">OpenStack</a>
+<a title="VPN" href="http://www.csdn.net/tag/vpn" target="_blank" onclick="LogClickCount(this,336);">VPN</a>
+<a title="Spark" href="http://g.csdn.net/5272924" target="_blank" onclick="LogClickCount(this,336);">Spark</a>
+<a title="ERP" href="http://www.csdn.net/tag/erp" target="_blank" onclick="LogClickCount(this,336);">ERP</a>
+<a title="IE10" href="http://www.csdn.net/tag/ie10" target="_blank" onclick="LogClickCount(this,336);">IE10</a>
+<a title="Eclipse" href="http://www.csdn.net/tag/eclipse" target="_blank" onclick="LogClickCount(this,336);">Eclipse</a>
+<a title="CRM" href="http://www.csdn.net/tag/crm" target="_blank" onclick="LogClickCount(this,336);">CRM</a>
+<a title="JavaScript" href="http://www.csdn.net/tag/javascript" target="_blank" onclick="LogClickCount(this,336);">JavaScript</a>
+<a title="数据库" href="http://www.csdn.net/tag/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" onclick="LogClickCount(this,336);">数据库</a>
+<a title="Ubuntu" href="http://www.csdn.net/tag/ubuntu" target="_blank" onclick="LogClickCount(this,336);">Ubuntu</a>
+<a title="NFC" href="http://www.csdn.net/tag/nfc" target="_blank" onclick="LogClickCount(this,336);">NFC</a>
+<a title="WAP" href="http://www.csdn.net/tag/wap" target="_blank" onclick="LogClickCount(this,336);">WAP</a>
+<a title="jQuery" href="http://www.csdn.net/tag/jquery" target="_blank" onclick="LogClickCount(this,336);">jQuery</a>
+<a title="BI" href="http://www.csdn.net/tag/bi" target="_blank" onclick="LogClickCount(this,336);">BI</a>
+<a title="HTML5" href="http://www.csdn.net/tag/html5" target="_blank" onclick="LogClickCount(this,336);">HTML5</a>
+<a title="Spring" href="http://www.csdn.net/tag/spring" target="_blank" onclick="LogClickCount(this,336);">Spring</a>
+<a title="Apache" href="http://www.csdn.net/tag/apache" target="_blank" onclick="LogClickCount(this,336);">Apache</a>
+<a title=".NET" href="http://www.csdn.net/tag/.net" target="_blank" onclick="LogClickCount(this,336);">.NET</a>
+<a title="API" href="http://www.csdn.net/tag/api" target="_blank" onclick="LogClickCount(this,336);">API</a>
+<a title="HTML" href="http://www.csdn.net/tag/html" target="_blank" onclick="LogClickCount(this,336);">HTML</a>
+<a title="SDK" href="http://www.csdn.net/tag/sdk" target="_blank" onclick="LogClickCount(this,336);">SDK</a>
+<a title="IIS" href="http://www.csdn.net/tag/iis" target="_blank" onclick="LogClickCount(this,336);">IIS</a>
+<a title="Fedora" href="http://www.csdn.net/tag/fedora" target="_blank" onclick="LogClickCount(this,336);">Fedora</a>
+<a title="XML" href="http://www.csdn.net/tag/xml" target="_blank" onclick="LogClickCount(this,336);">XML</a>
+<a title="LBS" href="http://www.csdn.net/tag/lbs" target="_blank" onclick="LogClickCount(this,336);">LBS</a>
+<a title="Unity" href="http://www.csdn.net/tag/unity" target="_blank" onclick="LogClickCount(this,336);">Unity</a>
+<a title="Splashtop" href="http://www.csdn.net/tag/splashtop" target="_blank" onclick="LogClickCount(this,336);">Splashtop</a>
+<a title="UML" href="http://www.csdn.net/tag/uml" target="_blank" onclick="LogClickCount(this,336);">UML</a>
+<a title="components" href="http://www.csdn.net/tag/components" target="_blank" onclick="LogClickCount(this,336);">components</a>
+<a title="Windows Mobile" href="http://www.csdn.net/tag/windowsmobile" target="_blank" onclick="LogClickCount(this,336);">Windows Mobile</a>
+<a title="Rails" href="http://www.csdn.net/tag/rails" target="_blank" onclick="LogClickCount(this,336);">Rails</a>
+<a title="QEMU" href="http://www.csdn.net/tag/qemu" target="_blank" onclick="LogClickCount(this,336);">QEMU</a>
+<a title="KDE" href="http://www.csdn.net/tag/kde" target="_blank" onclick="LogClickCount(this,336);">KDE</a>
+<a title="Cassandra" href="http://www.csdn.net/tag/cassandra" target="_blank" onclick="LogClickCount(this,336);">Cassandra</a>
+<a title="CloudStack" href="http://www.csdn.net/tag/cloudstack" target="_blank" onclick="LogClickCount(this,336);">CloudStack</a>
+<a title="FTC" href="http://www.csdn.net/tag/ftc" target="_blank" onclick="LogClickCount(this,336);">FTC</a>
+<a title="coremail" href="http://www.csdn.net/tag/coremail" target="_blank" onclick="LogClickCount(this,336);">coremail</a>
+<a title="OPhone " href="http://www.csdn.net/tag/ophone" target="_blank" onclick="LogClickCount(this,336);">OPhone </a>
+<a title="CouchBase" href="http://www.csdn.net/tag/couchbase" target="_blank" onclick="LogClickCount(this,336);">CouchBase</a>
+<a title="云计算" href="http://www.csdn.net/tag/%E4%BA%91%E8%AE%A1%E7%AE%97" target="_blank" onclick="LogClickCount(this,336);">云计算</a>
+<a title="iOS6" href="http://www.csdn.net/tag/iOS6" target="_blank" onclick="LogClickCount(this,336);">iOS6</a>
+<a title="Rackspace " href="http://www.csdn.net/tag/rackspace" target="_blank" onclick="LogClickCount(this,336);">Rackspace </a>
+<a title="Web App" href="http://www.csdn.net/tag/webapp" target="_blank" onclick="LogClickCount(this,336);">Web App</a>
+<a title="SpringSide" href="http://www.csdn.net/tag/springside" target="_blank" onclick="LogClickCount(this,336);">SpringSide</a>
+<a title="Maemo" href="http://www.csdn.net/tag/maemo" target="_blank" onclick="LogClickCount(this,336);">Maemo</a>
+<a title="Compuware" href="http://www.csdn.net/tag/compuware" target="_blank" onclick="LogClickCount(this,336);">Compuware</a>
+<a title="大数据" href="http://www.csdn.net/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE" target="_blank" onclick="LogClickCount(this,336);">大数据</a>
+<a title="aptech" href="http://www.csdn.net/tag/aptech" target="_blank" onclick="LogClickCount(this,336);">aptech</a>
+<a title="Perl" href="http://www.csdn.net/tag/perl" target="_blank" onclick="LogClickCount(this,336);">Perl</a>
+<a title="Tornado" href="http://www.csdn.net/tag/tornado" target="_blank" onclick="LogClickCount(this,336);">Tornado</a>
+<a title="Ruby" href="http://www.csdn.net/tag/ruby" target="_blank" onclick="LogClickCount(this,336);">Ruby</a>
+<a title="Hibernate" href="http://www.csdn.net/tag/hibernate" target="_blank" onclick="LogClickCount(this,336);">Hibernate</a>
+<a title="ThinkPHP" href="http://www.csdn.net/tag/thinkphp" target="_blank" onclick="LogClickCount(this,336);">ThinkPHP</a>
+<a title="HBase" href="http://www.csdn.net/tag/hbase" target="_blank" onclick="LogClickCount(this,336);">HBase</a>
+<a title="Pure" href="http://www.csdn.net/tag/pure" target="_blank" onclick="LogClickCount(this,336);">Pure</a>
+<a title="Solr" href="http://www.csdn.net/tag/solr" target="_blank" onclick="LogClickCount(this,336);">Solr</a>
+<a title="Angular" href="http://www.csdn.net/tag/angular" target="_blank" onclick="LogClickCount(this,336);">Angular</a>
+<a title="Cloud Foundry" href="http://www.csdn.net/tag/cloudfoundry" target="_blank" onclick="LogClickCount(this,336);">Cloud Foundry</a>
+<a title="Redis" href="http://www.csdn.net/tag/redis" target="_blank" onclick="LogClickCount(this,336);">Redis</a>
+<a title="Scala" href="http://www.csdn.net/tag/scala" target="_blank" onclick="LogClickCount(this,336);">Scala</a>
+<a title="Django" href="http://www.csdn.net/tag/django" target="_blank" onclick="LogClickCount(this,336);">Django</a>
+<a title="Bootstrap" href="http://www.csdn.net/tag/bootstrap" target="_blank" onclick="LogClickCount(this,336);">Bootstrap</a>
+    </div>
+
+</div>
+  <script language="javascript" type="text/javascript">     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/k229650014/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/async_new.js.下载"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/k229650014" target="_blank">
+    <img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/1_k229650014.jpg" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/k229650014" class="user_name" target="_blank">Jerry_xianrui</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter" title="[发私信]" onclick="window.open(&#39;http://msg.csdn.net/letters/model?receiver=k229650014&#39;,&#39;_blank&#39;,&#39;height=350,width=700&#39;);_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_sixin&#39;])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>35245次</span></li>
+    <li>积分：<span>360</span> </li>    
+    <li>等级： <span style="position:relative;display:inline-block;z-index:1">
+            <img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/blog2.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：360 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>4篇</span></li>
+    <li>转载：<span>1篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>25条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字"></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog">
+        <input type="hidden" name="q" id="inputQ">
+        <input type="hidden" name="t" value="blog">
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="http://blog.csdn.net/k229650014/article/category/709930" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Android开发文章</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/k229650014/article/category/709929" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Linux实用命令与窍门</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/k229650014/article/category/709932" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">情感与笑话</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/k229650014/article/category/709933" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">生活上的</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/k229650014/article/category/709931" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">驱动开发</a><span>(0)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="http://blog.csdn.net/k229650014/article/month/2011/11">2011年11月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/k229650014/article/month/2011/08">2011年08月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/k229650014/article/month/2010/08">2010年08月</a><span>(3)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/5801397" title="Android HAL(硬件抽象层)介绍以及调用">Android HAL(硬件抽象层)介绍以及调用</a><span>(23724)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/6729483" title="Android 上层界面到内核代码的完整的流程分析，以alarm为例子">Android 上层界面到内核代码的完整的流程分析，以alarm为例子</a><span>(7284)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/7009604" title="(转，好文必须的)Android深入浅出之Binder机制">(转，好文必须的)Android深入浅出之Binder机制</a><span>(1327)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/5798867" title="U-boot简介以及常用命令">U-boot简介以及常用命令</a><span>(1103)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/5798857" title="Git 中文教程">Git 中文教程</a><span>(532)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/5801397" title="Android HAL(硬件抽象层)介绍以及调用">Android HAL(硬件抽象层)介绍以及调用</a><span>(13)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/6729483" title="Android 上层界面到内核代码的完整的流程分析，以alarm为例子">Android 上层界面到内核代码的完整的流程分析，以alarm为例子</a><span>(10)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/7009604" title="(转，好文必须的)Android深入浅出之Binder机制">(转，好文必须的)Android深入浅出之Binder机制</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/5798857" title="Git 中文教程">Git 中文教程</a><span>(0)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/k229650014/article/details/5798867" title="U-boot简介以及常用命令">U-boot简介以及常用命令</a><span>(0)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/poem_qianmo/article/details/69849858" target="_blank">* 【《Real-Time Rendering 3rd》 提炼总结】(一) 全书知识点总览</a></li>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/69936363" target="_blank">* CSDN日报20170409 ——《扯蛋的密码规则》</a></li>
+<li><a href="http://blog.csdn.net/ynnmnm/article/details/69791337" target="_blank">* Shader2D: 一些2D效果的Shader实现</a></li>
+<li><a href="http://blog.csdn.net/zuoxiaolong8810/article/details/69736864" target="_blank">* 一个屌丝程序猿的人生（六十一）</a></li>
+<li><a href="http://blog.csdn.net/harvic880925/article/details/69787359" target="_blank">* 自定义控件三部曲视图篇（三）——瀑布流容器WaterFallLayout实现</a></li>
+<li><a href="http://blog.csdn.net/javawebrookie/article/details/61419785" target="_blank">* 面向服务的体系架构（SOA）—架构篇</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/5801397#comments">Android HAL(硬件抽象层)介绍以及调用</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/devwang_com" class="user_name">devwang_com</a>:
+学习~学习~~好文章必须顶~~~感谢博主大牛分享~~~
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/5801397#comments">Android HAL(硬件抽象层)介绍以及调用</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/tkwxty" class="user_name">tkwxty</a>:
+好文章必须给赞！
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/5801397#comments">Android HAL(硬件抽象层)介绍以及调用</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/guopeixin" class="user_name">guopeixin</a>:
+牛鼻，最牛鼻的是最后一段。一直很好奇，当系统中存在两个或者更多个使用了相同HAL Module Na...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/7009604#comments">(转，好文必须的)Android深入浅出之Binder机制</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/k229650014" class="user_name">Jerry_xianrui</a>:
+@weiqiyun1986:就是Linux通用的文件描述符（file descriptor）
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/6729483#comments">Android 上层界面到内核代码的完整的流程分析，以alarm为例子</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/k229650014" class="user_name">Jerry_xianrui</a>:
+@houyizi337825770:抱歉看到迟了，实现也是可以，不过定时开完机你必须有外设的RTC能...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/6729483#comments">Android 上层界面到内核代码的完整的流程分析，以alarm为例子</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/houyizi337825770" class="user_name">houyizi313</a>:
+兄弟：看你对alarm到RTC这么熟悉？能否指点下……如果我想Android实现定时开关机……主要是...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/6729483#comments">Android HAL(硬件抽象层)介绍以及调用</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/flypaul" class="user_name">flypaul</a>:
+学习。顶
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/6729483#comments">Android 上层界面到内核代码的完整的流程分析，以alarm为例子</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/crycheng" class="user_name">hccheng</a>:
+学习了
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/6729483#comments">Android 上层界面到内核代码的完整的流程分析，以alarm为例子</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/DYFleoo" class="user_name">天上飘云</a>:
+楼主写的真好，这种从上到下的考虑方式，值得我学习。
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/k229650014/article/details/6729483#comments">Android HAL(硬件抽象层)介绍以及调用</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/zhongjihao100" class="user_name">haoge101</a>:
+顶顶顶
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <div class="J_adv" data-view="true" data-mod="ad_popu_190" data-mtp="63" data-order="40" data-con="ad_content_1260" style="width: 200px; height: 200px;"><div id="nav_show_top_stop" style="width: 200px; height: 200px; z-index: 1000; position: fixed; top: 0px;"><div id="cpro_u2734128"><iframe id="iframeu2734128_0" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/dcem(2).html" width="200" height="200" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:200px;height:200px" allowtransparency="true"></iframe></div></div><script> var naviga_offsetTop = 0; function naviga_stay_top(){ var scrollTop = jQuery(document).scrollTop(); if( scrollTop > naviga_offsetTop ){jQuery('#nav_show_top_stop').css({'position': 'fixed'});jQuery('#nav_show_top_stop').css({'top': '0px'}); } else {jQuery('#nav_show_top_stop').css({'position': 'fixed'});jQuery('#nav_show_top_stop').css({'top': naviga_offsetTop - scrollTop + 'px'}); } }function onload_function(){naviga_offsetTop = jQuery('#nav_show_top_stop').position().top; jQuery(window).bind('scroll', naviga_stay_top); jQuery(window).bind('mousewheel',naviga_stay_top); jQuery(document).bind('scroll', naviga_stay_top); jQuery(document).bind('mousewheel',naviga_stay_top); }jQuery(document).ready( onload_function ); </script><script type="text/javascript">    (window.cproArray = window.cproArray || []).push({        id: 'u2734128'      });  </script>  <script src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script></div> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/cnick.js.下载"></script>
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/newblog.min.js.下载"></script>
+
+
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/showblogmedal.ashx"></script>
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/JavaScript1.js.下载"></script><link rel="stylesheet" type="text/css" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/pub_footer_2014.css"><div class="pub_fo"><div id="pub_footerall" class="pub_footer_new"><dl><dt></dt> <dd class="foot_sub_menu"><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a><span>|</span><a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a><span>|</span><a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a><span>|</span><a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a><span>|</span><a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a><span>|</span><a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a><span>|</span><a href="mailto:webmaster@csdn.net">问题报告</a><span>|</span><a target="_blank" href="http://www.csdn.net/friendlink.html">合作伙伴</a><span>|</span><a href="http://bbs.csdn.net/forums/Service" target="_blank">论坛反馈</a></dd><dd class="foot_contact"><a href="javascript:void(0);" target="_blank" class="qq">网站客服</a><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2251809102&amp;site=qq&amp;menu=yes" target="_blank" class="qq">杂志客服</a><a href="http://e.weibo.com/csdnsupport/profile" target="_blank" class="weibo">微博客服</a><a href="mailto:webmaster@csdn.net" class="email" title="联系邮箱">webmaster@csdn.net</a><span class="phone" title="服务热线">400-600-2320</span><span class="interval">|</span><span>北京创新乐知信息技术有限公司 版权所有</span><span class="interval">|</span><span>江苏知之为计算机有限公司</span><span class="interval">|</span><span>江苏乐知网络技术有限公司</span></dd><dd class="foot_copyright"><span>京&nbsp;ICP&nbsp;证&nbsp;09002463&nbsp;号</span><span class="interval">|</span><span>Copyright © 1999-2016, CSDN.NET, All Rights Reserved&nbsp;</span><a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div></div><div id="note1" class="csdn_note" style="display:none; position:absolute; z-index:9999; width:440px">  <span class="notice_top_arrow"><span class="inner"></span></span>  <div class="box"></div></div><div class="csdn_notice_tip" style="position: absolute; z-index: 9990; width: 170px; left: -72px; top: 13018px; display: block;">  <iframe src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/saved_resource(2).html" frameborder="0" scrolling="no" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe>  <div class="tip_text">您有<strong>11</strong>条新通知</div>  <a href="javascript:void 0" class="close2"></a></div><script id="noticeScript" type="text/javascript" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/notify.js.下载"></script>
+
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script><img src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/pv.aspx" border="0" width="0" height="0">
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/counter.js.下载"></script><script type="text/javascript" charset="UTF-8" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/msg.popup.js.下载"></script>
+<script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/ad-blog.js.下载"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div><input type="hidden" id="aa_g_data_ids">
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/toolbar.js.下载"></script>
+     <!--new top-->
+   
+    <link href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/ask_float_block.css" type="text/css" rel="stylesheet">
+    <script language="JavaScript" type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/wmd.js.下载"></script>
+    <script language="JavaScript" type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/showdown.js.下载"></script>
+    <script language="JavaScript" type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/prettify.js(1).下载"></script>
+    <script language="JavaScript" type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/ask_float_block.js.下载"></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/52b5334.js.下载"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/blog_code.css">
+    <script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/saveToCode.js.下载"></script>
+      <script type="text/javascript" src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/main.js(1).下载"></script>
+
+     <link rel="stylesheet" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/fa.css">
+
+    <div class="pop_CA_cover" style="display:none"></div>
+    <div class="pop pop_CA" style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon" id="fapancle" onclick="$(&#39;.pop_CA&#39;).hide();$(&#39;.pop_CA_cover&#39;).hide();"></span>
+          </div>
+          <iframe src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/saved_resource(3).html" id="fa" frameborder="0" width="100%" height="360" scrolling="no">
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;   
+ </iframe></div><div id="tag-suggest-pop">
+  <div class="relative">
+    <div class="close"></div>
+    <div class="content"></div>
+  </div>
+</div><link rel="stylesheet" type="text/css" media="screen" href="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/ask_float_fonts_css-6b30a53970eb5c3a2a045e3df585b475.css"><div data-mod="popu_64" class="csdn-tracking-statistics" chg-blk="0"><a id="com-quick-reply" title="快速回复" style="top:327px"></a><a id="com-quick-collect" title="我要收藏" style="top:365px"></a><a id="com-d-top-a" style="top: 403px; display: block;" title="返回顶部" onclick=""></a> </div><div class="pop_edit ask_second comm_ask_second"><h3>提问</h3><span class="ask_float_span">您的问题将会被发布在“<a class="ask_float_channel" href="http://ask.csdn.net/" target="_blank" style="cursor:pointer">技术问答</a>”频道</span><a href="http://blog.csdn.net/k229650014/article/details/5801397#" nodetype="close" class="close">×</a><div class="context"><div class="err_div"><span class="err_ico"></span><span class="err_txt">该问题已存在，请勿重复提问</span></div><div class="input_div"><input id="askInputSecond" type="text" style="font-size:14px;" placeholder="问题标题"></div><div class="cm_box"><div class="cm_dialog"></div> <div class="pop_cm cm_add_link"><input type="text" placeholder="链接内容" id="af_cm_link_txt"><input type="text" placeholder="链接地址" id="af_cm_link_url"><input type="text" placeholder="链接提示" id="af_cm_link_tit"><div class="text-right"><span class="btn btn-default btn-sm" id="add_link_btn">插入链接</span> </div> </div><div class="pop_cm cm_add_img"><div class="nav-tabs"><a class="img_tab active" href="http://blog.csdn.net/k229650014/article/details/5801397#tab_upload">本地上传</a><a class="img_tab" href="http://blog.csdn.net/k229650014/article/details/5801397#tab_weburl">网络图片</a></div><div class="tab_panel active" id="tab_upload"><div class="set_img"><iframe src="./Android HAL(硬件抽象层)介绍以及调用 - Mr.瑞的专栏 - 博客频道 - CSDN.NET_files/upload.html"></iframe></div></div><div class="tab_panel" id="tab_weburl"><input type="text" placeholder="图片地址" id="af_cm_img_url"><input type="text" placeholder="图片说明" id="af_cm_img_alt"><div class="text-right"><span class="btn btn-default btn-sm" id="add_img_btn">插入图片</span> </div></div> </div></div> <textarea id="editor_all" rows="8" style="display: none;"></textarea><div class="editor-toolbar"><i class="separator">|</i><a class="icon-headline" title="标题一（Ctrl+Alt+1）"></a><a class="icon-heading" title="标题二（Ctrl+Alt+2）"></a><a class="icon-bold" title="粗体（Ctrl+B）"></a><a class="icon-italic" title="斜体（Ctrl+I）"></a><i class="separator">|</i><a class="icon-quote-left" title="引用（Ctrl+’）"></a><a class="icon-code" title="插入代码片（Ctrl+,）"></a><a class="icon-list-ul" title="无序列表（Ctrl+L）"></a><a class="icon-list-ol" title="有序列表（Ctrl+Alt+L）"></a><i class="separator">|</i><a class="icon-link" title="添加链接（Ctrl+K）"></a><a class="icon-picture" title="添加图片（Ctrl+Alt+I）"></a><i class="separator">|</i><a class="icon-reply" title="撤退（Ctrl+Z）"></a><a class="icon-share-alt" title="前进（Ctrl+Shift+Z）"></a><i class="separator">|</i><a class="icon-info" href="http://ask.csdn.net/pages/markdown" target="_blank" title="markdown语法参考"></a><a class="icon-preview" title="预览"></a><i class="separator">|</i></div><div class="CodeMirror cm-s-paper CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none; font-size: 4px;" tabindex="0"></textarea></div><div class="CodeMirror-hscrollbar"><div style="height: 1px;"></div></div><div class="CodeMirror-vscrollbar"><div style="width: 1px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-gutter-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="min-width: 33px;"><div style="position: relative;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre>&nbsp;<span style="display: inline-block; width: 1px; margin-right: -1px;">&nbsp;</span></pre></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"></div><div class="CodeMirror-cursor" style="visibility: hidden;">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor" style="visibility: hidden;">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px;"></div><div class="CodeMirror-gutters" style="display: none;"></div></div></div><div class="editor-statusbar"><span class="lines">0</span><span class="words">0</span><span class="cursor">0:0</span></div><div class="div_tags clearfix"><div id="divSearchTags" class="tags_con"><input type="text"></div><input type="hidden" name="txtSearchTags"></div><div id="ask2_tagRecomm_div" class="drt_tagRecomm tracking-ad" data-mod="popu_73"><span class="drt_tit">推荐标签：</span></div></div><div class="success"><div class="left_area"><input id="chk_cb" type="checkbox"><span class="wyxs">我要悬赏</span><input id="cb_num" class="cb_num" readonly="true"><span class="phib_rii"><span> 币</span></span></div><a href="http://blog.csdn.net/k229650014/article/details/5801397#" nodetype="cancel" class="cancel">取消</a><a href="http://blog.csdn.net/k229650014/article/details/5801397#" nodetype="ok" class="ok">发布</a></div></div><div id="common_ask_div_sc" class="searchContainer"><div class="sTitle">可能存在类似的问题：</div><div class="sFooter"><a class="sFirstNewAsk">我想提一个新问题</a></div></div><div id="mask_code"></div><div class="gist_edit"><div class="save_snippets clearfix"><div class="tit"><h3>保存代码片</h3><span>整理和分享保存的代码片，请访问<a href="https://code.csdn.net/snippets_manage" target="_blank">代码笔记</a></span></div><div class="con_form"><ul class="gist_edit_list clearfix"><li><span class="red">*</span><span class="txt">标题</span><input id="form_title" class="form-input" placeholder="Android HAL(硬件抽象层)介绍以及调用" type="text"></li><li><span class="red">*</span><span class="txt">描述</span><textarea id="form-textarea" class="form-textarea" placeholder="Android HAL(硬件抽象层)介绍以及调用： http://blog.csdn.net/k229650014/article/details/5801397"></textarea></li><li><span class="red">&nbsp;</span><span class="txt">标签</span><div id="divSearchTags"><span class="label blog_tag"><span>android</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>module</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>struct</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>methods</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>path</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>callback</span><a title="Removing tag" href="javascript:;">x</a></span><input id="insertTag" class="insertTag" placeholder="请输入标签，按Enter生成(最多5项)" type="text" value="" name="insertTag" maxlength="21" style="color: rgb(51, 51, 51);"><input id="OrganTag" class="OrganTag" type="hidden" name="OrganTag" value="android,module,struct,methods,path,callback,"><input id="OldOrganTag" class="OldOrganTag" type="hidden" name="OldOrganTag" value=""><input type="hidden" name="txtSearchTags"></div></li></ul></div><div class="bottom-bar"><a href="javascript:;" class="btn-submit btn-cancel">取消</a><span class="tracking-ad" data-mod="popu_250"><a class="btn-submit btn-confirm" href="javascript:;" target="_blank">确定</a></span></div></div></div></body></html>

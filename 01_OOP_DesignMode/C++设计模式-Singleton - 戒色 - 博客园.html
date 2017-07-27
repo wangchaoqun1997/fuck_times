@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)http://www.cnblogs.com/jiese/p/3158517.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C++设计模式-Singleton - 戒色 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./C++设计模式-Singleton - 戒色 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./C++设计模式-Singleton - 戒色 - 博客园_files/bundle-WinXPBlue.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./C++设计模式-Singleton - 戒色 - 博客园_files/bundle-WinXPBlue-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/jiese/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/jiese/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/jiese/wlwmanifest.xml">
+<script async="" src="./C++设计模式-Singleton - 戒色 - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./C++设计模式-Singleton - 戒色 - 博客园_files/encoder.js.下载"></script><script src="./C++设计模式-Singleton - 戒色 - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'jiese', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./C++设计模式-Singleton - 戒色 - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<div id="top">
+	
+<div>
+	<table>
+		<tbody><tr>
+			<td class="HeaderTitles">
+                <h1 class="HeaderTitle"><a id="Header1_HeaderTitle" class="HeaderMainTitle" href="http://www.cnblogs.com/jiese/">cly</a></h1>
+				<p id="tagline"></p>
+			</td>
+		</tr>
+	</tbody></table>
+</div>
+<div class="HeaderBar">
+	<table id="HeaderBar" class="HeaderBar">
+		<tbody><tr>
+		    <td class="HeaderBarTab" nowrap="">
+		        <img id="Header1_StartButton" src="./C++设计模式-Singleton - 戒色 - 博客园_files/BlueTabRight.gif" align="absmiddle">
+		        <a id="blog_nav_sitehome" href="http://www.cnblogs.com/">博客园</a><img id="Header1_MyLinks1_Divider1" src="./C++设计模式-Singleton - 戒色 - 博客园_files/divider.gif" align="absmiddle">
+<a id="blog_nav_myhome" href="http://www.cnblogs.com/jiese/">首页</a><img id="Header1_MyLinks1_Image1" src="./C++设计模式-Singleton - 戒色 - 博客园_files/divider.gif" align="absmiddle">
+<a id="blog_nav_newpost" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a><img id="Header1_MyLinks1_Image2" src="./C++设计模式-Singleton - 戒色 - 博客园_files/divider.gif" align="absmiddle">
+<a id="blog_nav_contact" accesskey="9" rel="nofollow" href="https://msg.cnblogs.com/send/%E6%88%92%E8%89%B2">联系</a><img id="Header1_MyLinks1_Divider2" src="./C++设计模式-Singleton - 戒色 - 博客园_files/divider.gif" align="absmiddle">
+<a id="blog_nav_rss" href="http://www.cnblogs.com/jiese/rss" target="_blank">订阅</a><img id="Header1_MyLinks1_Divider3" src="./C++设计模式-Singleton - 戒色 - 博客园_files/divider.gif" align="absmiddle">
+<!--<a id="Header1_MyLinks1_Syndication2" href="../../Atom.aspx" target="_blank">Syndicate this Site (Atom)</a><img id="Header1_MyLinks1_Divider6" src="../../Skins/WinXPBlue/Images/divider.gif" align="absmiddle" />
+<a id="blog_nav_rss_image" class="XMLLink" href="http://www.cnblogs.com/jiese/rss" target="_blank"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>-->
+<a id="blog_nav_admin" rel="nofollow" href="https://i.cnblogs.com/">管理</a><img id="Header1_MyLinks1_Divider5" src="./C++设计模式-Singleton - 戒色 - 博客园_files/divider.gif" align="absmiddle">
+
+			</td>
+			<td class="HeaderBarTabBack" nowrap="" width="100%">
+				<div id="blog_stats">
+<div class="BlogStatsBar">
+	<table class="BlogStatsBar">
+		<tbody><tr>
+			<td width="100%">
+			</td>
+			<td class="BlogStatsBar" nowrap="">
+				&nbsp;
+				50 
+				Posts&nbsp;::
+				2 Stories
+				::
+				25 Comments
+				::
+				0 Trackbacks
+			</td>
+		</tr>
+	</tbody></table>
+</div>
+</div>
+			</td>
+		</tr>
+	</tbody></table>
+</div>
+
+</div>
+<div id="leftmenu">
+	
+		
+<h3>公告</h3>
+<div class="News">
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/jiese/">戒色</a><br>园龄：<a href="http://home.cnblogs.com/u/jiese/" title="入园时间：2010-09-18">6年7个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/jiese/followers/">48</a><br>关注：<a href="http://home.cnblogs.com/u/jiese/followees/">0</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;79767a19-06c3-df11-ac81-842b2b196315&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+		<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/jiese/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/jiese/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/jiese/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/jiese/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/jiese/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<h3 class="catListTitle">我的标签</h3>
+<div id="MyTag">
+<ul>
+<li><a href="http://www.cnblogs.com/jiese/tag/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>(17)</li><li><a href="http://www.cnblogs.com/jiese/tag/%E7%AE%97%E6%B3%95%20%E6%8E%92%E5%BA%8F/">算法 排序</a>(4)</li><li><a href="http://www.cnblogs.com/jiese/tag/%E5%BC%95%E7%94%A8/">引用</a>(1)</li><li><a href="http://www.cnblogs.com/jiese/tag/%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F/">执行顺序</a>(1)</li><li><a href="http://www.cnblogs.com/jiese/tag/%E7%AE%97%E6%B3%95/">算法</a>(1)</li><li><a href="http://www.cnblogs.com/jiese/tag/%E7%AE%97%E6%B3%95%20%E6%9F%A5%E6%89%BE/">算法 查找</a>(1)</li><li><a href="http://www.cnblogs.com/jiese/tag/abstractFactory%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82/">abstractFactory抽象工厂</a>(1)</li><li><a href="http://www.cnblogs.com/jiese/tag/Adapter%E9%80%82%E9%85%8D%E5%99%A8%E6%A8%A1%E5%BC%8F/">Adapter适配器模式</a>(1)</li><li><a href="http://www.cnblogs.com/jiese/tag/Bridge%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F/">Bridge桥接模式</a>(1)</li><li><a href="http://www.cnblogs.com/jiese/tag/Builder%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F/">Builder建造者模式</a>(1)</li><li><a href="http://www.cnblogs.com/jiese/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+		<h3>随笔分类<span style="font-size:11px;font-weight:normal">(55)</span></h3>
+		
+				<ul>
+			
+				<li> <a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/jiese/category/392561.html">面向对象(29)</a></li>
+			
+				<li> <a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/jiese/category/492576.html">设计模式(19)</a></li>
+			
+				<li> <a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/jiese/category/390970.html">算法，数据结构(7)</a></li>
+			
+				</ul>
+			
+	
+		<h3>随笔档案<span style="font-size:11px;font-weight:normal">(50)</span></h3>
+		
+				<ul>
+			
+				<li> <a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/jiese/archive/2013/09.html">2013年9月 (1)</a></li>
+			
+				<li> <a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/jiese/archive/2013/07.html">2013年7月 (19)</a></li>
+			
+				<li> <a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/jiese/archive/2013/06.html">2013年6月 (8)</a></li>
+			
+				<li> <a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/jiese/archive/2012/11.html">2012年11月 (1)</a></li>
+			
+				<li> <a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/jiese/archive/2012/07.html">2012年7月 (7)</a></li>
+			
+				<li> <a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/jiese/archive/2012/06.html">2012年6月 (8)</a></li>
+			
+				<li> <a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/jiese/archive/2011/07.html">2011年7月 (1)</a></li>
+			
+				<li> <a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/jiese/archive/2011/05.html">2011年5月 (5)</a></li>
+			
+				</ul>
+			
+	</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<h3 class="catListTitle">最新评论</h3>
+<div class="RecentComment" id="RecentComments">
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/jiese/p/3171463.html#3660682">1. Re:C++设计模式-Flyweight享元模式</a></li>
+        <li class="recent_comment_body">UnsharedConcreteFlyweight<br>这个类怎么没有用到呢</li>
+        <li class="recent_comment_author">--wuzx</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/jiese/p/3154669.html#3634074">2. Re:C++设计模式-Factory工厂模式</a></li>
+        <li class="recent_comment_body">受益匪浅。学到不少东西。</li>
+        <li class="recent_comment_author">--最最最爱小盖儿</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/jiese/p/3182342.html#3590705">3. Re:C++设计模式-State状态模式</a></li>
+        <li class="recent_comment_body">@蓝色心情2010博主贴的代码 内存泄漏了！示例代码给人的感觉不够形象和直接！...</li>
+        <li class="recent_comment_author">--AllKillMan</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/jiese/p/3183635.html#3590301">4. Re:C++设计模式-Observer观察者模式</a></li>
+        <li class="recent_comment_body">@wenwenxiong应该是没仔细看吧，Observer子类对象的指针并不是在使用过程中attach和detach动态创建的！而是在main函数中创建的。attach和detach中只是传参数进去的......</li>
+        <li class="recent_comment_author">--AllKillMan</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/jiese/p/3171463.html#3472473">5. Re:C++设计模式-Flyweight享元模式</a></li>
+        <li class="recent_comment_body">区分内外状态是实现享元模式的关键啊</li>
+        <li class="recent_comment_author">--envoy</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<h3 class="catListTitle">阅读排行榜</h3>
+<div class="RecentComment" id="TopViewPosts"> 
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/jiese/p/3183635.html">1. C++设计模式-Observer观察者模式(14143)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3154669.html">2. C++设计模式-Factory工厂模式(9269)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3158517.html">3. C++设计模式-Singleton(8622)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3166396.html">4. C++设计模式-Adapter适配器模式(7217)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3164940.html">5. C++设计模式-Bridge桥接模式(6554)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<h3 class="catListTitle">评论排行榜</h3>
+<div class="RecentComment" id="TopCommentsPosts">
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/jiese/p/3183635.html">1. C++设计模式-Observer观察者模式(7)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3158517.html">2. C++设计模式-Singleton(4)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3154669.html">3. C++设计模式-Factory工厂模式(3)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3182342.html">4. C++设计模式-State状态模式(3)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3171463.html">5. C++设计模式-Flyweight享元模式(2)</a></li></ul></div>
+</div></div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div class="RecentComment">
+	<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/jiese/p/3164940.html">1. C++设计模式-Bridge桥接模式(3)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3183635.html">2. C++设计模式-Observer观察者模式(3)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3154669.html">3. C++设计模式-Factory工厂模式(2)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3158517.html">4. C++设计模式-Singleton(2)</a></li><li><a href="http://www.cnblogs.com/jiese/p/3177032.html">5. C++设计模式-Facade模式(2)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+	
+</div>
+
+<div id="main">
+	
+<div id="post_detail">
+<div class="post">
+	<div class="postTitle">
+		<a id="cb_post_title_url" href="http://www.cnblogs.com/jiese/p/3158517.html">C++设计模式-Singleton</a>
+	</div>
+	
+	<div class="postText">
+		<div id="cnblogs_post_body"><p>Singleton单例模式</p>
+<p>Singleton 是对全局变量的取代策略<br><strong>作用</strong>：保证一个类只能有一个实例，并提供一个全局唯一的访问点。</p>
+<p>仅有一个实例：通过类的静态成员变量来体现。<br>提供访问它的全局访问点：访问静态成员变量的静态成员函数来体现。</p>
+<p>《设计模式》一书中给出了一种很不错的实现，定义一个单例类，使用类的私有静态指针变量指向类的唯一实例，并用一个公有的静态方法获取该实例。</p>
+<p>单例模式通过类本身来管理其唯一实例，这种特性提供了解决问题的方法。唯一的实例是类的一个普通对象，但设计这个类时，让它只能创建一个实例并提供对此实例的全局访问。唯一实例类Singleton在静态成员函数中隐藏创建实例的操作。习惯上把这个成员函数叫做Instance()，它的返回值是唯一实例的指针。</p>
+<p>单例类Singleton有以下特征：</p>
+<p>它有一个指向唯一实例的静态指针，并且是私有的；</p>
+<p>它有一个公有的函数，可以获取这个唯一的实例，并且在需要的时候创建该实例；</p>
+<p>它的构造函数是私有的，这样就不能从别处创建该类的实例。</p>
+<p>&nbsp;</p>
+<p>UML图：</p>
+<p style="text-align: left;"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/27131503-3eadd9e05f664c0fa60444788195a7dd.x-png" alt=""></p>
+<p style="text-align: left;">在Singleton模式的结构图中可以看到，我们通过维护一个static的成员变量_instance来记录这个唯一的对象实例。通过提供一个staitc的接口Instance来获得这个唯一的实例。</p>
+<p style="text-align: left;">代码如下：</p>
+<p style="text-align: left;">Singleton.h</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> <span style="color: #000000;">#ifndef _SINGLETON_H_
+</span><span style="color: #008080;"> 2</span> <span style="color: #0000ff;">#define</span> _SINGLETON_H_
+<span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Singleton
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">{
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">private</span><span style="color: #000000;">:
+</span><span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">static</span> Singleton* pInstance;<span style="color: #008000;">//</span><span style="color: #008000;">静态成员，保存对象的唯一实例</span>
+<span style="color: #008080;"> 8</span>     Singleton();<span style="color: #008000;">//</span><span style="color: #008000;">私有化构造函数，使其无法在类外实例化</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">public</span><span style="color: #000000;">:
+</span><span style="color: #008080;">10</span>     <span style="color: #0000ff;">static</span> Singleton*<span style="color: #000000;"> Instance();
+</span><span style="color: #008080;">11</span>     <span style="color: #008000;">//</span><span style="color: #008000;">void Destroy();</span>
+<span style="color: #008080;">12</span>     <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> Destroy();
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">};
+</span><span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span> <span style="color: #0000ff;">#endif</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>Singleton.cpp</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> #include <span style="color: #800000;">"</span><span style="color: #800000;">Singleton.h</span><span style="color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> #include &lt;iostream&gt;
+<span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #008080;"> 5</span> 
+<span style="color: #008080;"> 6</span> Singleton* Singleton::pInstance =<span style="color: #000000;"> NULL;
+</span><span style="color: #008080;"> 7</span> 
+<span style="color: #008080;"> 8</span> <span style="color: #000000;">Singleton::Singleton()
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">10</span>     cout&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Singleton...</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span> Singleton*<span style="color: #000000;"> Singleton::Instance()
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">15</span>     <span style="color: #0000ff;">if</span>(NULL ==<span style="color: #000000;"> pInstance)
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">17</span>         pInstance = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Singleton();
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">19</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;"> pInstance;
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">21</span> 
+<span style="color: #008080;">22</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> Singleton::Destroy()
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">{
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">    delete pInstance;
+</span><span style="color: #008080;">25</span>     pInstance =<span style="color: #000000;"> NULL;
+</span><span style="color: #008080;">26</span>     cout&lt;&lt; <span style="color: #800000;">"</span><span style="color: #800000;">Destroy...</span><span style="color: #800000;">"</span> &lt;&lt;<span style="color: #000000;"> endl;
+</span><span style="color: #008080;">27</span> }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>main.cpp</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> #include <span style="color: #800000;">"</span><span style="color: #800000;">Singleton.h</span><span style="color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> #include &lt;iostream&gt;
+<span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">using</span> <span style="color: #0000ff;">namespace</span><span style="color: #000000;"> std;
+</span><span style="color: #008080;"> 5</span> 
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">int</span><span style="color: #000000;"> main()
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">{
+</span><span style="color: #008080;"> 8</span>     Singleton* ps = Singleton::Instance();<span style="color: #008000;">//</span><span style="color: #008000;">通过全局访问点获取实例</span>
+<span style="color: #008080;"> 9</span> <span style="color: #000000;">    Singleton::Destroy();
+</span><span style="color: #008080;">10</span>     <span style="color: #0000ff;">return</span> <span style="color: #800080;">0</span><span style="color: #000000;">;
+</span><span style="color: #008080;">11</span> }</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>Singleton不可以被实例化，因此我们将其构造函数声明为protected或者直接声明为private。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/jiese/category/392561.html" target="_blank">面向对象</a>,<a href="http://www.cnblogs.com/jiese/category/492576.html" target="_blank">设计模式</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/jiese/tag/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>, <a href="http://www.cnblogs.com/jiese/tag/Singleton%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">Singleton单例模式</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(3158517,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;79767a19-06c3-df11-ac81-842b2b196315&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/jiese/" target="_blank"><img src="./C++设计模式-Singleton - 戒色 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/jiese/">戒色</a><br>
+            <a href="http://home.cnblogs.com/u/jiese/followees">关注 - 0</a><br>
+            <a href="http://home.cnblogs.com/u/jiese/followers">粉丝 - 48</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;79767a19-06c3-df11-ac81-842b2b196315&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(3158517,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">2</span>
+    </div>
+    <div class="buryit" onclick="votePost(3158517,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/jiese/p/3156753.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/jiese/p/3156753.html" title="发布于2013-06-26 16:06">C++设计模式-AbstractFactory抽象工厂模式</a><br><a href="http://www.cnblogs.com/jiese/p/3161076.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/jiese/p/3161076.html" title="发布于2013-06-28 16:09">C++设计模式-Builder建造者模式</a><br></div>
+</div>
+
+
+	</div>
+	
+	<div class="postfoot">
+		posted on <span id="post-date">2013-06-27 13:21</span> <a href="http://www.cnblogs.com/jiese/">戒色</a> 阅读(<span id="post_view_count">8622</span>) 评论(<span id="post_comment_count">4</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=3158517" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/jiese/p/3158517.html#" onclick="AddToWz(3158517);return false;">收藏</a>
+	</div>
+</div>
+<script type="text/javascript">var allowComments=true,cb_blogId=88921,cb_entryId=3158517,cb_blogApp=currentBlogApp,cb_blogUserGuid='79767a19-06c3-df11-ac81-842b2b196315',cb_entryCreatedDate='2013/6/27 13:21:00';loadViewCount(cb_entryId);</script>
+
+</div><a name="!comments"></a><div id="blog-comments-placeholder"><div id="comments_pager_top"></div>
+<a name="feedback"></a>
+<br>
+<div id="comments">
+	<h3>Feedback</h3>
+		
+		
+				<div class="post">			
+					<div class="postTitle">
+						<a href="http://www.cnblogs.com/jiese/p/3158517.html#2714696" class="layer">#1楼</a><a name="2714696" id="comment_anchor_2714696"></a>
+							<span>
+								 <span class="comment_date">2013-06-27 13:42</span>
+							</span>
+						<a id="a_comment_author_2714696" href="http://www.cnblogs.com/johnwonder/" target="_blank">john23.net</a> <a href="http://msg.cnblogs.com/send/john23.net" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+					</div>
+					<div class="postText">
+						<div id="comment_body_2714696" class="blog_comment_body">感谢分享</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2714696,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2714696,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2714696_avatar" style="display:none;">http://pic.cnblogs.com/face/u64521.jpg</span>
+						<br>
+						&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(2714696,&#39;5JbtPeXCvbAj+dZUkZ0ohy6MxWvjMz+Gz66xHz/MZeDmkeW3UT42MQ==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(2714696,&#39;5JbtPeXCvbAj+dZUkZ0ohy6MxWvjMz+Gz66xHz/MZeDmkeW3UT42MQ==&#39;)">引用</a></span>
+					</div>
+				</div>
+				<br>
+			
+				<div class="post">			
+					<div class="postTitle">
+						<a href="http://www.cnblogs.com/jiese/p/3158517.html#2714783" class="layer">#2楼</a><a name="2714783" id="comment_anchor_2714783"></a>
+							<span>
+								 <span class="comment_date">2013-06-27 15:00</span>
+							</span>
+						<a id="a_comment_author_2714783" href="http://www.cnblogs.com/codemood/" target="_blank">tangzhnju</a> <a href="http://msg.cnblogs.com/send/tangzhnju" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+					</div>
+					<div class="postText">
+						<div id="comment_body_2714783" class="blog_comment_body">这种实现最大的问题在于不是是多线程安全的。<br>if(NULL == pInstance)<br>{<br>    pInstance = new Singleton();<br>}<br>if语句内部可能会被多个线程执行到。</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2714783,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2714783,&#39;Bury&#39;,this)">反对(0)</a></div><span id="comment_2714783_avatar" style="display:none;">http://pic.cnblogs.com/face/u432127.png?id=24205834</span>
+						<br>
+						&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(2714783,&#39;YLjoQOCvV8TH1tf87rxzODnAsynK5+YHoswf3N7lr0DX3s8sbmQvJA==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(2714783,&#39;YLjoQOCvV8TH1tf87rxzODnAsynK5+YHoswf3N7lr0DX3s8sbmQvJA==&#39;)">引用</a></span>
+					</div>
+				</div>
+				<br>
+			
+				<div class="post">			
+					<div class="postTitle">
+						<a href="http://www.cnblogs.com/jiese/p/3158517.html#2714796" class="layer">#3楼</a><a name="2714796" id="comment_anchor_2714796"></a>
+							<span>
+								 <span class="comment_date">2013-06-27 15:06</span>
+							</span>
+						<a id="a_comment_author_2714796" href="http://home.cnblogs.com/u/335932/" target="_blank">goddices</a> <a href="http://msg.cnblogs.com/send/goddices" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+					</div>
+					<div class="postText">
+						<div id="comment_body_2714796" class="blog_comment_body">楼主胆子真大，在大部分C++程序员把C++当C语言写的地方说C++的设计模式，目测下面有喷子</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2714796,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2714796,&#39;Bury&#39;,this)">反对(0)</a></div>
+						<br>
+						&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(2714796,&#39;DGQOtPiAH2BDnAX71axOxwwn9TtNm3TkPYEw/Fn4ZGqTTVumiMNp2g==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(2714796,&#39;DGQOtPiAH2BDnAX71axOxwwn9TtNm3TkPYEw/Fn4ZGqTTVumiMNp2g==&#39;)">引用</a></span>
+					</div>
+				</div>
+				<br>
+			
+				<div class="post">			
+					<div class="postTitle">
+						<a href="http://www.cnblogs.com/jiese/p/3158517.html#2869675" class="layer">#4楼</a><a name="2869675" id="comment_anchor_2869675"></a><span id="comment-maxId" style="display:none;">2869675</span><span id="comment-maxDate" style="display:none;">2014/1/29 17:31:47</span>
+							<span>
+								 <span class="comment_date">2014-01-29 17:31</span>
+							</span>
+						<a id="a_comment_author_2869675" href="http://home.cnblogs.com/u/498236/" target="_blank">生的荒唐</a> <a href="http://msg.cnblogs.com/send/%E7%94%9F%E7%9A%84%E8%8D%92%E5%94%90" title="发送站内短消息" class="sendMsg2This">&nbsp;</a>
+					</div>
+					<div class="postText">
+						<div id="comment_body_2869675" class="blog_comment_body">首先顶一个  感谢lz的分享<br>其次给一些我的见解：<br>1.应该显示声明私有的析构函数，不排除有人会这么干：<br>Singleton* ps = Singleton::Instance();//<br>Singleton tmp(* ps );<br>此时编译不通过；<br>2.由于实例是new出来的，你的销毁函数并没有做NULL的检测 直接delete了，有可能coder忘记获取实例了，那么delete null也就bug了；我想获取实例的函数可以这样：<br> Singleton* Singleton::Instance()<br> {<br>    if(NULL == pInstance)<br>    {<br>       static Singleton ssingleton;<br>        pInstance = &amp;ssingleton;<br>     }<br>    return pInstance;<br>}<br>感谢lz</div><div class="comment_vote"><a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2869675,&#39;Digg&#39;,this)">支持(0)</a><a href="javascript:void(0);" class="comment_bury" onclick="return voteComment(2869675,&#39;Bury&#39;,this)">反对(0)</a></div>
+						<br>
+						&nbsp;&nbsp;<span class="comment_actions"><a href="javascript:void(0);" onclick="return ReplyComment(2869675,&#39;Wda8n4bK1OM+IPAVQKLHQQF4uHETFiKy05YGHrwS5W4EV/IsksnZJw==&#39;)">回复</a><a href="javascript:void(0);" onclick="return QuoteComment(2869675,&#39;Wda8n4bK1OM+IPAVQKLHQQF4uHETFiKy05YGHrwS5W4EV/IsksnZJw==&#39;)">引用</a></span>
+					</div>
+				</div>
+				<br>
+			
+</div><div id="comments_pager_bottom"></div></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/jiese/p/3158517.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/jiese/p/3158517.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="我的AR之旅">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./C++设计模式-Singleton - 戒色 - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./C++设计模式-Singleton - 戒色 - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./C++设计模式-Singleton - 戒色 - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./C++设计模式-Singleton - 戒色 - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./C++设计模式-Singleton - 戒色 - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./C++设计模式-Singleton - 戒色 - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="http://www.gcpowertools.com.cn/products/activereports/excel.htm?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=AR&amp;utm_campaign=community" target="_blank">【报表】Excel 报表开发18 招式，人人都能做报表</a><br><a href="http://click.aliyun.com/m/15483" target="_blank">【活动】阿里云海外云服务全面降价助力企业全球布局</a><br><a href="https://group.cnblogs.com/topic/76829.html" target="_blank">【实用】40+篇云服务器操作及运维基础知识！</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="https://cn.udacity.com/course/data-analyst-nanodegree--nd002-cn-basic/?utm_source=cnblogs&amp;utm_medium=referral&amp;utm_campaign=DAND03" target="_blank"><img width="300" height="250" src="./C++设计模式-Singleton - 戒色 - 博客园_files/24442-20170509155547285-603349158.jpg" alt="优达学城0509"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/569481/" target="_blank">Google I/O大会前瞻：AI会是最大亮点</a><br> ·  <a href="http://news.cnblogs.com/n/569480/" target="_blank">Galaxy S8系列销量不错 上市25天卖出500万台</a><br> ·  <a href="http://news.cnblogs.com/n/569479/" target="_blank">苹果最新专利暗示Siri智能扬声器确实是圆柱形的</a><br> ·  <a href="http://news.cnblogs.com/n/569478/" target="_blank">微博高管解读财报：竞争来自信息流和短视频领域</a><br> ·  <a href="http://news.cnblogs.com/n/569477/" target="_blank">雅虎拟回购30亿美元股票</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/17215/" target="_blank"><img width="468" height="60" src="./C++设计模式-Singleton - 戒色 - 博客园_files/24442-20170417123605337-535991337.jpg" alt="阿里云E4"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br> ·  <a href="http://kb.cnblogs.com/page/566528/" target="_blank">怎么轻松学习JavaScript</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+</div>
+
+<p id="footer">
+	Powered by: 
+	<br>
+	
+	<a id="Footer1_Hyperlink3" name="Hyperlink1" href="http://www.cnblogs.com/" style="font-family:Verdana;font-size:12px;">博客园</a>
+	<br>
+	Copyright © 戒色
+</p>
+
+
+
+</body></html>

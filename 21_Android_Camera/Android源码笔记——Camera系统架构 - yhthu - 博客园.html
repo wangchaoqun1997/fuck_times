@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)http://www.cnblogs.com/younghao/p/5337058.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Android源码笔记——Camera系统架构 - yhthu - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/bundle-CodingLife.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/bundle-CodingLife-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/younghao/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/younghao/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/younghao/wlwmanifest.xml">
+<script async="" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/encoder.js.下载"></script><script src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'younghao', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/younghao/"><img id="blogLogo" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/younghao/">Young</a></h1>
+<h2>相信未来，热爱生命</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/younghao/">首页</a></li>
+<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/yhthu">联系</a></li>
+<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/younghao/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/younghao/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<span id="stats_post_count">随笔 - 24&nbsp; </span>
+<span id="stats_article_count">文章 - 1&nbsp; </span>
+<span id="stats-comment_count">评论 - 121</span>
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/younghao/p/5337058.html">Android源码笔记——Camera系统架构</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>Camera的架构与Android系统的整体架构保持一致，如下图所示，本文主要从以下四个方面对其进行说明。</p> <ol> <li>Framework：Camera.java  </li><li>Android Runtime：android_hardware_Camera.cpp  </li><li>Library：Camera Client和Camera Service  </li><li>HAL：CameraHardwareInterface </li></ol> <p align="center"><a href="http://images2015.cnblogs.com/blog/826785/201603/826785-20160330143512629-945630262.jpg"><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px; padding-top: 0px" title="14527792381330663_thumb9" border="0" alt="14527792381330663_thumb9" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/826785-20160330143513223-741578156.jpg" width="640" height="363"></a></p> <hr>  <h3></h3> <h3>&nbsp;</h3> <h3>一、Framework：Camera.java</h3> <p>Camera是应用层软件直接使用的类，涵盖了启动、预览、拍摄及关闭等操作摄像头的全部接口。Camera.java在Android源码中的路径为：framework/base/core/java/android/hardware。为了说明整个Camera系统的架构，这里暂不横向分析Camera.java的功能，下面从open()方法着手：</p> <div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #0000ff">public</span> <span style="color: #0000ff">static</span><span style="color: #000000"> Camera open() {
+    </span><span style="color: #0000ff">int</span> numberOfCameras =<span style="color: #000000"> getNumberOfCameras();
+    CameraInfo cameraInfo </span>= <span style="color: #0000ff">new</span><span style="color: #000000"> CameraInfo();
+    </span><span style="color: #0000ff">for</span> (<span style="color: #0000ff">int</span> i = 0; i &lt; numberOfCameras; i++<span style="color: #000000">) {
+        getCameraInfo(i, cameraInfo);
+        </span><span style="color: #0000ff">if</span> (cameraInfo.facing ==<span style="color: #000000"> CameraInfo.CAMERA_FACING_BACK) {
+            </span><span style="color: #0000ff">return</span> <span style="color: #0000ff">new</span><span style="color: #000000"> Camera(i);
+        }
+    }
+    </span><span style="color: #0000ff">return</span> <span style="color: #0000ff">null</span><span style="color: #000000">;
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>open()方法需要注意以下几点：</p>
+<ul>
+<li>getNumberOfCameras为native方法，实现在android_hardware_Camera.cpp中； 
+</li><li>CameraInfo是Camera定义的静态内部类，包含facing、orientation、canDisableShutterSound； 
+</li><li>getCameraInfo内部调用native方法_getCameraInfo获取摄像头信息； 
+</li><li>open()默认启动的是后置摄像头（CAMERA_FACING_BACK）。</li></ul>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #008000">/**</span><span style="color: #008000"> used by Camera#open, Camera#open(int) </span><span style="color: #008000">*/</span><span style="color: #000000">
+Camera(</span><span style="color: #0000ff">int</span><span style="color: #000000"> cameraId) {
+    </span><span style="color: #0000ff">int</span> err =<span style="color: #000000"> cameraInitNormal(cameraId);
+    </span><span style="color: #0000ff">if</span><span style="color: #000000"> (checkInitErrors(err)) {
+        </span><span style="color: #0000ff">switch</span><span style="color: #000000">(err) {
+            </span><span style="color: #0000ff">case</span><span style="color: #000000"> EACCESS:
+                </span><span style="color: #0000ff">throw</span> <span style="color: #0000ff">new</span> RuntimeException("Fail to connect to camera service"<span style="color: #000000">);
+            </span><span style="color: #0000ff">case</span><span style="color: #000000"> ENODEV:
+                </span><span style="color: #0000ff">throw</span> <span style="color: #0000ff">new</span> RuntimeException("Camera initialization failed"<span style="color: #000000">);
+            </span><span style="color: #0000ff">default</span><span style="color: #000000">:
+                </span><span style="color: #008000">//</span><span style="color: #008000"> Should never hit this.</span>
+                <span style="color: #0000ff">throw</span> <span style="color: #0000ff">new</span> RuntimeException("Unknown camera error"<span style="color: #000000">);
+        }
+    }
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>Camera构造器的核心实现在cameraInitNormal中，cameraInitNormal调用cameraInitVersion，并传入参数cameraId和CAMERA_HAL_API_VERSION_NORMAL_CONNECT，后者代表HAL的版本。</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><pre><span style="color: #0000ff">private</span> <span style="color: #0000ff">int</span> cameraInitVersion(<span style="color: #0000ff">int</span> cameraId, <span style="color: #0000ff">int</span><span style="color: #000000"> halVersion) {
+</span></pre><pre><span style="color: #000000">    ……</span></pre><pre><span style="color: #000000">    String packageName </span>=<span style="color: #000000"> ActivityThread.currentPackageName();
+    </span><span style="color: #0000ff">return</span> native_setup(<span style="color: #0000ff">new</span> WeakReference&lt;Camera&gt;(<span style="color: #0000ff">this</span><span style="color: #000000">), cameraId, halVersion, packageName);
+}</span></pre></div>
+<p>cameraInitNormal调用本地方法native_setup()，由此进入到android_hardware_Camera.cpp中，native_setup()的签名如下：</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><pre><span style="color: #0000ff">private</span> <span style="color: #0000ff">native</span> <span style="color: #0000ff">final</span> <span style="color: #0000ff">int</span> native_setup(Object camera_this, <span style="color: #0000ff">int</span> cameraId, <span style="color: #0000ff">int</span> halVersion, String packageName);</pre></div>
+<h3>&nbsp;</h3>
+<h3>二、Android Runtime：android_hardware_Camera.cpp</h3>
+<p>native_setup()被动态注册到JNI，通过JNI调用android_hardware_Camera_native_setup()方法。</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #0000ff">static</span> JNINativeMethod camMethods[] =<span style="color: #000000"> {
+    ……
+    { </span>"native_setup",    "(Ljava/lang/Object;ILjava/lang/String;)V"<span style="color: #000000">,
+    (</span><span style="color: #0000ff">void</span>*<span style="color: #000000">)android_hardware_Camera_native_setup }
+    ……
+};</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>JNI的重点是android_hardware_Camera_native_setup()方法的实现：</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #008000">//</span><span style="color: #008000"> connect to camera service</span>
+<span style="color: #0000ff">static</span> jint android_hardware_Camera_native_setup(JNIEnv *<span style="color: #000000">env, jobject thiz,
+    jobject weak_this, jint cameraId, jint halVersion, jstring clientPackageName)
+{
+    </span><span style="color: #008000">//</span><span style="color: #008000"> Convert jstring to String16</span>
+    <span style="color: #0000ff">const</span> char16_t *rawClientName = env-&gt;<span style="color: #000000">GetStringChars(clientPackageName, NULL);
+    jsize rawClientNameLen </span>= env-&gt;<span style="color: #000000">GetStringLength(clientPackageName);
+    String16 clientName(rawClientName, rawClientNameLen);
+    env</span>-&gt;<span style="color: #000000">ReleaseStringChars(clientPackageName, rawClientName);
+
+    sp</span>&lt;Camera&gt;<span style="color: #000000"> camera;
+    </span><span style="color: #0000ff">if</span> (halVersion ==<span style="color: #000000"> CAMERA_HAL_API_VERSION_NORMAL_CONNECT) {
+        </span><span style="color: #008000">//</span><span style="color: #008000"> Default path: hal version is don't care, do normal camera connect.</span>
+        camera =<span style="color: #000000"> Camera::connect(cameraId, clientName,
+                Camera::USE_CALLING_UID);
+    } </span><span style="color: #0000ff">else</span><span style="color: #000000"> {
+        jint status </span>=<span style="color: #000000"> Camera::connectLegacy(cameraId, halVersion, clientName,
+                Camera::USE_CALLING_UID, camera);
+        </span><span style="color: #0000ff">if</span> (status !=<span style="color: #000000"> NO_ERROR) {
+            </span><span style="color: #0000ff">return</span><span style="color: #000000"> status;
+        }
+    }
+
+    </span><span style="color: #0000ff">if</span> (camera ==<span style="color: #000000"> NULL) {
+        </span><span style="color: #0000ff">return</span> -<span style="color: #000000">EACCES;
+    }
+
+    </span><span style="color: #008000">//</span><span style="color: #008000"> make sure camera hardware is alive</span>
+    <span style="color: #0000ff">if</span> (camera-&gt;getStatus() !=<span style="color: #000000"> NO_ERROR) {
+        </span><span style="color: #0000ff">return</span><span style="color: #000000"> NO_INIT;
+    }
+
+    jclass clazz </span>= env-&gt;<span style="color: #000000">GetObjectClass(thiz);
+    </span><span style="color: #0000ff">if</span> (clazz ==<span style="color: #000000"> NULL) {
+        </span><span style="color: #008000">//</span><span style="color: #008000"> This should never happen</span>
+        jniThrowRuntimeException(env, "Can't find android/hardware/Camera"<span style="color: #000000">);
+        </span><span style="color: #0000ff">return</span><span style="color: #000000"> INVALID_OPERATION;
+    }
+
+    </span><span style="color: #008000">//</span><span style="color: #008000"> We use a weak reference so the Camera object can be garbage collected.
+    </span><span style="color: #008000">//</span><span style="color: #008000"> The reference is only used as a proxy for callbacks.</span>
+    sp&lt;JNICameraContext&gt; context = <span style="color: #0000ff">new</span><span style="color: #000000"> JNICameraContext(env, weak_this, clazz, camera);
+    context</span>-&gt;incStrong((<span style="color: #0000ff">void</span>*<span style="color: #000000">)android_hardware_Camera_native_setup);
+    camera</span>-&gt;<span style="color: #000000">setListener(context);
+
+    </span><span style="color: #008000">//</span><span style="color: #008000"> save context in opaque field</span>
+    env-&gt;<span style="color: #000000">SetLongField(thiz, fields.context, (jlong)context.get());
+    </span><span style="color: #0000ff">return</span><span style="color: #000000"> NO_ERROR;
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>android_hardware_Camera_native_setup()方法通过调用Camera::connect()方法请求连接CameraService服务。入参中：</p>
+<ul>
+<li>clientName是通过将clientPackageName从jstring转换为String16格式得到； 
+</li><li>Camera::USE_CALLING_UID是定义在Camera.h中的枚举类型，其值为ICameraService::USE_CALLING_UID（同样为枚举类型，值为-1）。</li></ul>
+<p>Camera::connect()位于Camera.cpp中，由此进入到Library层。</p>
+<p>&nbsp;</p>
+<h3>三、Library：Camera Client和Camera Service </h3>
+<p>如上述架构图中所示，ICameraService.h、ICameraClient.h和ICamera.h三个类定义了Camera的接口和架构，ICameraService.cpp和Camera.cpp两个文件用于Camera架构的实现，Camera的具体功能在下层调用硬件相关的接口来实现。Camera.h是Camera系统对上层的接口。</p>
+<p>具体的，Camera类继承模板类CameraBase，Camera::connect()调用了CameraBase.cpp中的connect()方法。</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><pre>sp&lt;Camera&gt; Camera::connect(<span style="color: #0000ff">int</span> cameraId, <span style="color: #0000ff">const</span> String16&amp;<span style="color: #000000"> clientPackageName,
+        </span><span style="color: #0000ff">int</span><span style="color: #000000"> clientUid)
+{
+    </span><span style="color: #0000ff">return</span><span style="color: #000000"> CameraBaseT::connect(cameraId, clientPackageName, clientUid);
+}</span></pre></div>
+<p>CameraBase实际上又继承了IBinder的DeathRecipient内部类，DeathRecipient虚拟继承自RefBase。RefBase是Android中的引用计数基础类，其中定义了incStrong、decStrong、incWeak和decWeak等涉及sp/wp的指针操作函数，当然这扯远了。</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre>template &lt;typename TCam&gt;
+<span style="color: #0000ff">struct</span><span style="color: #000000"> CameraTraits {
+};
+
+template </span>&lt;typename TCam, typename TCamTraits = CameraTraits&lt;TCam&gt; &gt;
+<span style="color: #0000ff">class</span> CameraBase : <span style="color: #0000ff">public</span><span style="color: #000000"> IBinder::DeathRecipient
+{
+</span><span style="color: #0000ff">public</span><span style="color: #000000">:
+    
+    </span><span style="color: #0000ff">static</span> sp&lt;TCam&gt;      connect(<span style="color: #0000ff">int</span><span style="color: #000000"> cameraId,
+                                 </span><span style="color: #0000ff">const</span> String16&amp;<span style="color: #000000"> clientPackageName,
+                                 </span><span style="color: #0000ff">int</span><span style="color: #000000"> clientUid);
+    ……
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><pre><span style="color: #0000ff">class</span> DeathRecipient : <span style="color: #0000ff">public</span> <span style="color: #0000ff">virtual</span><span style="color: #000000"> RefBase
+{
+</span><span style="color: #0000ff">public</span><span style="color: #000000">:
+    </span><span style="color: #0000ff">virtual</span> <span style="color: #0000ff">void</span> binderDied(<span style="color: #0000ff">const</span> wp&lt;IBinder&gt;&amp; who) = <span style="color: #800080">0</span><span style="color: #000000">;
+};</span></pre></div>
+<p>回到Camera::connect()的实现上，其中，<span style="color: #0000ff">new</span><span style="color: #000000"> TCam(cameraId)生成BnCameraClient对象，BnCameraClient定义在ICameraClient.h文件中，继承自模板类BnInterface。getCameraService()方法返回CameraService的服务代理BpCameraService，BpCameraService同样继承自模板类BnInterface。然后通过Binder通信发送CONNECT命令，当BnCameraService收到CONNECT命令后调用CameraService的connect()成员函数来做相应的处理。</span></p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre>template &lt;typename TCam, typename TCamTraits&gt;<span style="color: #000000">
+sp</span>&lt;TCam&gt; CameraBase&lt;TCam, TCamTraits&gt;::connect(<span style="color: #0000ff">int</span><span style="color: #000000"> cameraId,
+                                               </span><span style="color: #0000ff">const</span> String16&amp;<span style="color: #000000"> clientPackageName,
+                                               </span><span style="color: #0000ff">int</span><span style="color: #000000"> clientUid)
+{
+    ALOGV(</span><span style="color: #800000">"</span><span style="color: #800000">%s: connect</span><span style="color: #800000">"</span><span style="color: #000000">, __FUNCTION__);
+    sp</span>&lt;TCam&gt; c = <span style="color: #0000ff">new</span><span style="color: #000000"> TCam(cameraId); // BnCameraClient 
+    sp</span>&lt;TCamCallbacks&gt; cl =<span style="color: #000000"> c;
+    status_t status </span>=<span style="color: #000000"> NO_ERROR;
+    </span><span style="color: #0000ff">const</span> sp&lt;ICameraService&gt;&amp; cs =<span style="color: #000000"> getCameraService(); // BpCameraService
+
+    </span><span style="color: #0000ff">if</span> (cs != <span style="color: #800080">0</span><span style="color: #000000">) {
+        TCamConnectService fnConnectService </span>=<span style="color: #000000"> TCamTraits::fnConnectService;
+        status </span>= (cs.<span style="color: #0000ff">get</span>()-&gt;*<span style="color: #000000">fnConnectService)(cl, cameraId, clientPackageName, clientUid,
+                                             </span><span style="color: #008000">/*</span><span style="color: #008000">out</span><span style="color: #008000">*/</span> c-&gt;<span style="color: #000000">mCamera);
+    }
+    </span><span style="color: #0000ff">if</span> (status == OK &amp;&amp; c-&gt;mCamera != <span style="color: #800080">0</span><span style="color: #000000">) {
+        c</span>-&gt;mCamera-&gt;asBinder()-&gt;<span style="color: #000000">linkToDeath(c);
+        c</span>-&gt;mStatus =<span style="color: #000000"> NO_ERROR;
+    } </span><span style="color: #0000ff">else</span><span style="color: #000000"> {
+        ALOGW(</span><span style="color: #800000">"</span><span style="color: #800000">An error occurred while connecting to camera: %d</span><span style="color: #800000">"</span><span style="color: #000000">, cameraId);
+        c.clear();
+    }
+    </span><span style="color: #0000ff">return</span><span style="color: #000000"> c;
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #0000ff">class</span> BnCameraClient: <span style="color: #0000ff">public</span> BnInterface&lt;ICameraClient&gt;<span style="color: #000000">
+{
+</span><span style="color: #0000ff">public</span><span style="color: #000000">:
+    </span><span style="color: #0000ff">virtual</span><span style="color: #000000"> status_t    onTransact( uint32_t code,
+                                    </span><span style="color: #0000ff">const</span> Parcel&amp;<span style="color: #000000"> data,
+                                    Parcel</span>*<span style="color: #000000"> reply,
+                                    uint32_t flags </span>= <span style="color: #800080">0</span><span style="color: #000000">);
+};</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #0000ff">class</span> BpCameraService: <span style="color: #0000ff">public</span> BpInterface&lt;ICameraService&gt;<span style="color: #000000">
+{
+</span><span style="color: #0000ff">public</span><span style="color: #000000">:
+    BpCameraService(</span><span style="color: #0000ff">const</span> sp&lt;IBinder&gt;&amp;<span style="color: #000000"> impl)
+        : BpInterface</span>&lt;ICameraService&gt;<span style="color: #000000">(impl)
+    {
+    }
+    ……
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p><span style="color: #000000">注：connect()函数在BpCameraService和BnCameraService的父类ICameraService中声明为纯虚函数，在BpCameraService和CameraService中分别给出了实现，BpCameraService作为代理类，提供接口给客户端，真正实现在BnCameraService的子类CameraService中。</span></p>
+<p><span style="color: #000000">在BpCameraService中，connect()函数实现如下：</span></p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #008000">//</span><span style="color: #008000"> connect to camera service (android.hardware.Camera)</span>
+    <span style="color: #0000ff">virtual</span> status_t connect(<span style="color: #0000ff">const</span> sp&lt;ICameraClient&gt;&amp; cameraClient, <span style="color: #0000ff">int</span><span style="color: #000000"> cameraId,
+                             </span><span style="color: #0000ff">const</span> String16 &amp;clientPackageName, <span style="color: #0000ff">int</span><span style="color: #000000"> clientUid,
+                             </span><span style="color: #008000">/*</span><span style="color: #008000">out</span><span style="color: #008000">*/</span><span style="color: #000000">
+                             sp</span>&lt;ICamera&gt;&amp;<span style="color: #000000"> device)
+    {
+        Parcel data, reply;
+        data.writeInterfaceToken(ICameraService::getInterfaceDescriptor());
+        data.writeStrongBinder(cameraClient</span>-&gt;<span style="color: #000000">asBinder());
+        data.writeInt32(cameraId);
+        data.writeString16(clientPackageName);
+        data.writeInt32(clientUid);
+        remote()</span>-&gt;transact(BnCameraService::CONNECT, data, &amp;<span style="color: #000000">reply); </span>// BpBinder的transact()函数向IPCThreadState实例发送消息，通知其有消息要发送给binder driver</pre><pre>        <span style="color: #0000ff">if</span> (readExceptionCode(reply)) <span style="color: #0000ff">return</span> -<span style="color: #000000">EPROTO;
+        status_t status </span>=<span style="color: #000000"> reply.readInt32();
+        </span><span style="color: #0000ff">if</span> (reply.readInt32() != <span style="color: #800080">0</span><span style="color: #000000">) {
+            device </span>= interface_cast&lt;ICamera&gt;<span style="color: #000000">(reply.readStrongBinder()); </span>// client端读出server返回的bind<span style="color: #000000">
+        }
+        </span><span style="color: #0000ff">return</span><span style="color: #000000"> status;
+    }</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>首先将传递过来的Camera对象cameraClient转换成IBinder类型，将调用的参数写到Parcel（可理解为Binder通信的管道）中，通过BpBinder的transact()函数发送消息，然后由BnCameraService去响应该连接，最后就是等待服务端返回，如果成功则生成一个BpCamera实例。</p>
+<p>真正的服务端响应实现在BnCameraService的onTransact()函数中，其负责解包收到的Parcel并执行client端的请求的方法。</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #000000">status_t BnCameraService::onTransact(
+    uint32_t code, </span><span style="color: #0000ff">const</span> Parcel&amp; data, Parcel*<span style="color: #000000"> reply, uint32_t flags)
+{
+    </span><span style="color: #0000ff">switch</span><span style="color: #000000">(code) {
+    </span></pre><pre><span style="color: #000000">    ……
+     </span><span style="color: #0000ff">case</span><span style="color: #000000"> CONNECT: {
+            CHECK_INTERFACE(ICameraService, data, reply);
+            sp</span>&lt;ICameraClient&gt; cameraClient =<span style="color: #000000">
+                    interface_cast</span>&lt;ICameraClient&gt;<span style="color: #000000">(data.readStrongBinder()); // 使用Camera的Binder对象生成Camera客户代理BpCameraClient实例
+              int32_t cameraId </span>=<span style="color: #000000"> data.readInt32();
+            </span><span style="color: #0000ff">const</span> String16 clientName =<span style="color: #000000"> data.readString16();
+            int32_t clientUid </span>=<span style="color: #000000"> data.readInt32();
+            sp</span>&lt;ICamera&gt;<span style="color: #000000"> camera;
+            status_t status </span>=<span style="color: #000000"> connect(cameraClient, cameraId,
+                    clientName, clientUid, </span><span style="color: #008000">/*</span><span style="color: #008000">out</span><span style="color: #008000">*/</span><span style="color: #000000">camera); // 将生成的BpCameraClient对象作为参数传递到CameraService的connect()函数中
+              reply</span>-&gt;<span style="color: #000000">writeNoException();
+            reply</span>-&gt;<span style="color: #000000">writeInt32(status); // 将BpCamera对象以IBinder的形式打包到Parcel中返回
+              </span><span style="color: #0000ff">if</span> (camera !=<span style="color: #000000"> NULL) {
+                reply</span>-&gt;writeInt32(<span style="color: #800080">1</span><span style="color: #000000">);
+                reply</span>-&gt;writeStrongBinder(camera-&gt;<span style="color: #000000">asBinder());
+            } </span><span style="color: #0000ff">else</span><span style="color: #000000"> {
+                reply</span>-&gt;writeInt32(<span style="color: #800080">0</span><span style="color: #000000">);
+            }
+            </span><span style="color: #0000ff">return</span><span style="color: #000000"> NO_ERROR;
+        } </span><span style="color: #0000ff">break</span><span style="color: #000000">;
+    ……
+    }
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>主要的处理包括： 
+</p><ol>
+<li>通过data中Camera的Binder对象生成Camera客户代理BpCameraClient实例； 
+</li><li>将生成的BpCameraClient对象作为参数传递到CameraService（/frameworks/av/services/camera /libcameraservice/CameraService.cpp）的connect()函数中，该函数会返回一个BpCamera实例； 
+</li><li>将在上述实例对象以IBinder的形式打包到Parcel中返回。</li></ol>
+<p>最后，BpCamera实例是通过CameraService::connect()函数返回的。CameraService::connect()实现的核心是调用connectHelperLocked()函数根据HAL不同API的版本创建不同的client实例（早期版本中好像没有connectHelperLocked()这个函数，但功能基本相似）。</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #000000">status_t CameraService::connectHelperLocked(
+        </span><span style="color: #008000">/*</span><span style="color: #008000">out</span><span style="color: #008000">*/</span><span style="color: #000000">
+        sp</span>&lt;Client&gt;&amp;<span style="color: #000000"> client,
+        </span><span style="color: #008000">/*</span><span style="color: #008000">in</span><span style="color: #008000">*/</span>
+        <span style="color: #0000ff">const</span> sp&lt;ICameraClient&gt;&amp;<span style="color: #000000"> cameraClient,
+        </span><span style="color: #0000ff">int</span><span style="color: #000000"> cameraId,
+        </span><span style="color: #0000ff">const</span> String16&amp;<span style="color: #000000"> clientPackageName,
+        </span><span style="color: #0000ff">int</span><span style="color: #000000"> clientUid,
+        </span><span style="color: #0000ff">int</span><span style="color: #000000"> callingPid,
+        </span><span style="color: #0000ff">int</span><span style="color: #000000"> halVersion,
+        </span><span style="color: #0000ff">bool</span><span style="color: #000000"> legacyMode) {
+
+    </span><span style="color: #0000ff">int</span> facing = -<span style="color: #800080">1</span><span style="color: #000000">;
+    </span><span style="color: #0000ff">int</span> deviceVersion = getDeviceVersion(cameraId, &amp;<span style="color: #000000">facing);
+
+    </span><span style="color: #0000ff">if</span> (halVersion &lt; <span style="color: #800080">0</span> || halVersion ==<span style="color: #000000"> deviceVersion) {
+        </span><span style="color: #008000">//</span><span style="color: #008000"> Default path: HAL version is unspecified by caller, create CameraClient
+        </span><span style="color: #008000">//</span><span style="color: #008000"> based on device version reported by the HAL.</span>
+        <span style="color: #0000ff">switch</span><span style="color: #000000">(deviceVersion) {
+          </span><span style="color: #0000ff">case</span><span style="color: #000000"> CAMERA_DEVICE_API_VERSION_1_0:
+            client </span>= <span style="color: #0000ff">new</span> CameraClient(<span style="color: #0000ff">this</span><span style="color: #000000">, cameraClient,
+                    clientPackageName, cameraId,
+                    facing, callingPid, clientUid, getpid(), legacyMode);
+            </span><span style="color: #0000ff">break</span><span style="color: #000000">;
+          </span><span style="color: #0000ff">case</span><span style="color: #000000"> CAMERA_DEVICE_API_VERSION_2_0:
+          </span><span style="color: #0000ff">case</span><span style="color: #000000"> CAMERA_DEVICE_API_VERSION_2_1:
+          </span><span style="color: #0000ff">case</span><span style="color: #000000"> CAMERA_DEVICE_API_VERSION_3_0:
+          </span><span style="color: #0000ff">case</span><span style="color: #000000"> CAMERA_DEVICE_API_VERSION_3_1:
+          </span><span style="color: #0000ff">case</span><span style="color: #000000"> CAMERA_DEVICE_API_VERSION_3_2:
+            client </span>= <span style="color: #0000ff">new</span> Camera2Client(<span style="color: #0000ff">this</span><span style="color: #000000">, cameraClient,
+                    clientPackageName, cameraId,
+                    facing, callingPid, clientUid, getpid(), legacyMode);
+            </span><span style="color: #0000ff">break</span><span style="color: #000000">;
+          </span><span style="color: #0000ff">case</span> -<span style="color: #800080">1</span><span style="color: #000000">:
+            ALOGE(</span><span style="color: #800000">"</span><span style="color: #800000">Invalid camera id %d</span><span style="color: #800000">"</span><span style="color: #000000">, cameraId);
+            </span><span style="color: #0000ff">return</span><span style="color: #000000"> BAD_VALUE;
+          </span><span style="color: #0000ff">default</span><span style="color: #000000">:
+            ALOGE(</span><span style="color: #800000">"</span><span style="color: #800000">Unknown camera device HAL version: %d</span><span style="color: #800000">"</span><span style="color: #000000">, deviceVersion);
+            </span><span style="color: #0000ff">return</span><span style="color: #000000"> INVALID_OPERATION;
+        }
+    } </span><span style="color: #0000ff">else</span><span style="color: #000000"> {
+        </span><span style="color: #008000">//</span><span style="color: #008000"> A particular HAL version is requested by caller. Create CameraClient
+        </span><span style="color: #008000">//</span><span style="color: #008000"> based on the requested HAL version.</span>
+        <span style="color: #0000ff">if</span> (deviceVersion &gt; CAMERA_DEVICE_API_VERSION_1_0 &amp;&amp;<span style="color: #000000">
+            halVersion </span>==<span style="color: #000000"> CAMERA_DEVICE_API_VERSION_1_0) {
+            </span><span style="color: #008000">//</span><span style="color: #008000"> Only support higher HAL version device opened as HAL1.0 device.</span>
+            client = <span style="color: #0000ff">new</span> CameraClient(<span style="color: #0000ff">this</span><span style="color: #000000">, cameraClient,
+                    clientPackageName, cameraId,
+                    facing, callingPid, clientUid, getpid(), legacyMode);
+        } </span><span style="color: #0000ff">else</span><span style="color: #000000"> {
+            </span><span style="color: #008000">//</span><span style="color: #008000"> Other combinations (e.g. HAL3.x open as HAL2.x) are not supported yet.</span>
+            ALOGE(<span style="color: #800000">"</span><span style="color: #800000">Invalid camera HAL version %x: HAL %x device can only be</span><span style="color: #800000">"</span>
+                    <span style="color: #800000">"</span><span style="color: #800000"> opened as HAL %x device</span><span style="color: #800000">"</span><span style="color: #000000">, halVersion, deviceVersion,
+                    CAMERA_DEVICE_API_VERSION_1_0);
+            </span><span style="color: #0000ff">return</span><span style="color: #000000"> INVALID_OPERATION;
+        }
+    }
+
+    status_t status </span>= connectFinishUnsafe(client, client-&gt;<span style="color: #000000">getRemote());
+    </span><span style="color: #0000ff">if</span> (status !=<span style="color: #000000"> OK) {
+        </span><span style="color: #008000">//</span><span style="color: #008000"> this is probably not recoverable.. maybe the client can try again</span>
+        <span style="color: #0000ff">return</span><span style="color: #000000"> status;
+    }
+
+    mClient[cameraId] </span>=<span style="color: #000000"> client;
+    LOG1(</span><span style="color: #800000">"</span><span style="color: #800000">CameraService::connect X (id %d, this pid is %d)</span><span style="color: #800000">"</span><span style="color: #000000">, cameraId,
+         getpid());
+
+    </span><span style="color: #0000ff">return</span><span style="color: #000000"> OK;
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>可见，在CAMERA_DEVICE_API_VERSION_2_0之前使用CameraClient进行实例化，之后则采用Camera2Client进行实例化。以CameraClient为例，其initialize()函数如下：</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre>status_t CameraClient::initialize(camera_module_t *<span style="color: #000000">module) {
+    </span><span style="color: #0000ff">int</span> callingPid =<span style="color: #000000"> getCallingPid();
+    status_t res;
+
+    LOG1(</span><span style="color: #800000">"</span><span style="color: #800000">CameraClient::initialize E (pid %d, id %d)</span><span style="color: #800000">"</span><span style="color: #000000">, callingPid, mCameraId);
+
+    </span><span style="color: #008000">//</span><span style="color: #008000"> Verify ops permissions</span>
+    res =<span style="color: #000000"> startCameraOps();
+    </span><span style="color: #0000ff">if</span> (res !=<span style="color: #000000"> OK) {
+        </span><span style="color: #0000ff">return</span><span style="color: #000000"> res;
+    }
+
+    </span><span style="color: #0000ff">char</span> camera_device_name[<span style="color: #800080">10</span><span style="color: #000000">];
+    snprintf(camera_device_name, </span><span style="color: #0000ff">sizeof</span>(camera_device_name), <span style="color: #800000">"</span><span style="color: #800000">%d</span><span style="color: #800000">"</span><span style="color: #000000">, mCameraId);
+
+    <strong>mHardware </strong></span><strong>= <span style="color: #0000ff">new</span></strong><span style="color: #000000"><strong> CameraHardwareInterface(camera_device_name);</strong>
+    res </span>= mHardware-&gt;initialize(&amp;module-&gt;<span style="color: #000000">common);
+    </span><span style="color: #0000ff">if</span> (res !=<span style="color: #000000"> OK) {
+        ALOGE(</span><span style="color: #800000">"</span><span style="color: #800000">%s: Camera %d: unable to initialize device: %s (%d)</span><span style="color: #800000">"</span><span style="color: #000000">,
+                __FUNCTION__, mCameraId, strerror(</span>-<span style="color: #000000">res), res);
+        mHardware.clear();
+        </span><span style="color: #0000ff">return</span><span style="color: #000000"> res;
+    }
+
+    mHardware</span>-&gt;<span style="color: #000000">setCallbacks(notifyCallback,
+            dataCallback,
+            dataCallbackTimestamp,
+            (</span><span style="color: #0000ff">void</span> *<span style="color: #000000">)(uintptr_t)mCameraId);
+
+    </span><span style="color: #008000">//</span><span style="color: #008000"> Enable zoom, error, focus, and metadata messages by default</span>
+    enableMsgType(CAMERA_MSG_ERROR | CAMERA_MSG_ZOOM | CAMERA_MSG_FOCUS |<span style="color: #000000">
+                  CAMERA_MSG_PREVIEW_METADATA </span>|<span style="color: #000000"> CAMERA_MSG_FOCUS_MOVE);
+
+    LOG1(</span><span style="color: #800000">"</span><span style="color: #800000">CameraClient::initialize X (pid %d, id %d)</span><span style="color: #800000">"</span><span style="color: #000000">, callingPid, mCameraId);
+    </span><span style="color: #0000ff">return</span><span style="color: #000000"> OK;
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>上述函数中，主要注意以下流程：</p>
+<ol>
+<li>加粗的代码CameraHardwareInterface新建了了一个Camera硬件接口，当然，camera_device_name为摄像头设备名； 
+</li><li>mHardware-&gt;initialize(&amp;module-&gt;<span style="color: #000000">common)</span>调用底层硬件的初始化方法； 
+</li><li><span style="color: #000000">mHardware</span>-&gt;<span style="color: #000000">setCallbacks</span>将CamerService处的回调函数注册到HAL处。</li></ol>
+<p>CameraHardwareInterface定义了Camera的硬件抽象特征，由此进入到HAL。</p>
+<p>&nbsp;</p>
+<h3>四、HAL：CameraHardwareInterface</h3>
+<p>CameraHardwareInterface的作用在于链接Camera Server和V4L2，通过实现CameraHardwareInterface可以屏蔽不同的driver对Camera Server的影响。CameraHardwareInterface同样虚拟继承自RefBase。</p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #0000ff">class</span> CameraHardwareInterface : <span style="color: #0000ff">public</span> <span style="color: #0000ff">virtual</span><span style="color: #000000"> RefBase {
+</span><span style="color: #0000ff">public</span><span style="color: #000000">:
+    CameraHardwareInterface(</span><span style="color: #0000ff">const</span> <span style="color: #0000ff">char</span> *<span style="color: #000000">name)
+    {
+        mDevice </span>= <span style="color: #800080">0</span><span style="color: #000000">;
+        mName </span>=<span style="color: #000000"> name;
+    }
+    ……
+}</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>CameraHardwareInterface中包含了控制通道和数据通道，控制通道用于处理预览和视频获取的开始/停止、拍摄照片、自动对焦等功能，数据通道通过回调函数来获得预览、视频录制、自动对焦等数据。当需要支持新的硬件时就需要继承于CameraHardwareInterface ，来实现对应的功能。CameraHardwareInterface提供的public方法如下： 
+</p><p><a href="http://images2015.cnblogs.com/blog/826785/201604/826785-20160401172334504-786352240.png"><img style="background-image: none; border-right-width: 0px; padding-left: 0px; padding-right: 0px; display: block; float: none; border-top-width: 0px; border-bottom-width: 0px; margin-left: auto; border-left-width: 0px; margin-right: auto; padding-top: 0px" title="1258.tmp" border="0" alt="1258.tmp" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/826785-20160401172334941-494038044.png" width="187" height="328"></a> 
+</p><p>在前一节中，initialize()函数调用了mHardware-&gt;initialize和<span style="color: #000000">mHardware</span>-&gt;<span style="color: #000000">setCallbacks，下面来看下CameraHardwareInterface.h对其的实现。</span></p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre>status_t initialize(hw_module_t *<span style="color: #000000">module)
+    {
+        ALOGI(</span><span style="color: #800000">"</span><span style="color: #800000">Opening camera %s</span><span style="color: #800000">"</span>, mName.<span style="color: #0000ff">string</span><span style="color: #000000">());
+        camera_module_t </span>*cameraModule = reinterpret_cast&lt;camera_module_t *&gt;<span style="color: #000000">(module);
+        camera_info info;
+        status_t res </span>= cameraModule-&gt;get_camera_info(atoi(mName.<span style="color: #0000ff">string</span>()), &amp;<span style="color: #000000">info);
+        </span><span style="color: #0000ff">if</span> (res != OK) <span style="color: #0000ff">return</span><span style="color: #000000"> res;
+
+        </span><span style="color: #0000ff">int</span> rc =<span style="color: #000000"> OK;
+        </span><span style="color: #0000ff">if</span> (module-&gt;module_api_version &gt;= CAMERA_MODULE_API_VERSION_2_3 &amp;&amp;<span style="color: #000000">
+            info.device_version </span>&gt;<span style="color: #000000"> CAMERA_DEVICE_API_VERSION_1_0) {
+            </span><span style="color: #008000">//</span><span style="color: #008000"> Open higher version camera device as HAL1.0 device.</span>
+            rc = cameraModule-&gt;open_legacy(module, mName.<span style="color: #0000ff">string</span><span style="color: #000000">(),
+                                               CAMERA_DEVICE_API_VERSION_1_0,
+                                               (hw_device_t </span>**)&amp;<span style="color: #000000">mDevice);
+        } </span><span style="color: #0000ff">else</span><span style="color: #000000"> {
+            rc </span>= CameraService::filterOpenErrorCode(module-&gt;methods-&gt;<span style="color: #000000">open(
+                module, mName.</span><span style="color: #0000ff">string</span>(), (hw_device_t **)&amp;<span style="color: #000000">mDevice));
+        }
+        </span><span style="color: #0000ff">if</span> (rc !=<span style="color: #000000"> OK) {
+            ALOGE(</span><span style="color: #800000">"</span><span style="color: #800000">Could not open camera %s: %d</span><span style="color: #800000">"</span>, mName.<span style="color: #0000ff">string</span><span style="color: #000000">(), rc);
+            </span><span style="color: #0000ff">return</span><span style="color: #000000"> rc;
+        }
+        initHalPreviewWindow();
+        </span><span style="color: #0000ff">return</span><span style="color: #000000"> rc;
+    }</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p><font color="#000000">在initialize()方法中，通过cameraModule-&gt;open_legacy打开摄像头模组，initHalPreviewWindow()用于初始化Preview的相关流opspreview_stream_ops，初始化hal的预览窗口。</font></p>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #0000ff">void</span><span style="color: #000000"> initHalPreviewWindow()
+    {
+        mHalPreviewWindow.nw.cancel_buffer </span>=<span style="color: #000000"> __cancel_buffer;
+        mHalPreviewWindow.nw.lock_buffer </span>=<span style="color: #000000"> __lock_buffer;
+        mHalPreviewWindow.nw.dequeue_buffer </span>=<span style="color: #000000"> __dequeue_buffer;
+        mHalPreviewWindow.nw.enqueue_buffer </span>=<span style="color: #000000"> __enqueue_buffer;
+        mHalPreviewWindow.nw.set_buffer_count </span>=<span style="color: #000000"> __set_buffer_count;
+        mHalPreviewWindow.nw.set_buffers_geometry </span>=<span style="color: #000000"> __set_buffers_geometry;
+        mHalPreviewWindow.nw.set_crop </span>=<span style="color: #000000"> __set_crop;
+        mHalPreviewWindow.nw.set_timestamp </span>=<span style="color: #000000"> __set_timestamp;
+        mHalPreviewWindow.nw.set_usage </span>=<span style="color: #000000"> __set_usage;
+        mHalPreviewWindow.nw.set_swap_interval </span>=<span style="color: #000000"> __set_swap_interval;
+
+        mHalPreviewWindow.nw.get_min_undequeued_buffer_count </span>=<span style="color: #000000">
+                __get_min_undequeued_buffer_count;
+    }</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div style="border-bottom: #cccccc 1px solid; border-left: #cccccc 1px solid; padding-bottom: 5px; background-color: #f5f5f5; padding-left: 5px; padding-right: 5px; border-top: #cccccc 1px solid; border-right: #cccccc 1px solid; padding-top: 5px" class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div><pre><span style="color: #008000">/*</span><span style="color: #008000">* Set the notification and data callbacks </span><span style="color: #008000">*/</span>
+    <span style="color: #0000ff">void</span><span style="color: #000000"> setCallbacks(notify_callback notify_cb,
+                      data_callback data_cb,
+                      data_callback_timestamp data_cb_timestamp,
+                      </span><span style="color: #0000ff">void</span>*<span style="color: #000000"> user)
+    {
+        mNotifyCb </span>=<span style="color: #000000"> notify_cb;
+        mDataCb </span>=<span style="color: #000000"> data_cb;
+        mDataCbTimestamp </span>=<span style="color: #000000"> data_cb_timestamp;
+        mCbUser </span>=<span style="color: #000000"> user;
+
+        ALOGV(</span><span style="color: #800000">"</span><span style="color: #800000">%s(%s)</span><span style="color: #800000">"</span>, __FUNCTION__, mName.<span style="color: #0000ff">string</span><span style="color: #000000">());
+
+        </span><span style="color: #0000ff">if</span> (mDevice-&gt;ops-&gt;<span style="color: #000000">set_callbacks) {
+            mDevice</span>-&gt;ops-&gt;<span style="color: #000000">set_callbacks(mDevice,
+                                   __notify_cb,
+                                   __data_cb,
+                                   __data_cb_timestamp,
+                                   __get_memory,
+                                   </span><span style="color: #0000ff">this</span><span style="color: #000000">);
+        }
+    }</span></pre><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div><span style="color: #000000">set_callbacks中，__notify_cb、__data_cb、__data_cb_timestamp和__get_memory</span>分别消息回调，数据回调，时间戳回调，以及内存相关操作的回调。 
+<p>&nbsp;</p>
+<p>以上通过简略分析应用层调用Camera.open()之后在Framework、ART、Library以及HAL层的响应，来说明Android中Camera系统的整体架构，希望对读者能有一定的帮助，后续将在理解Camera整体架构的基础，探索更加高效的Preview方式，敬请期待！</p></div><div id="MySignature" style="display: block;">相信未来，热爱生命</div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/younghao/category/772783.html" target="_blank">Android</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(5337058,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;bc5a6c90-5179-e511-9fc1-ac853d9f53cc&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/younghao/" target="_blank"><img src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/20151023151410.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/younghao/">yhthu</a><br>
+            <a href="http://home.cnblogs.com/u/younghao/followees">关注 - 1</a><br>
+            <a href="http://home.cnblogs.com/u/younghao/followers">粉丝 - 40</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;bc5a6c90-5179-e511-9fc1-ac853d9f53cc&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5337058,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">1</span>
+    </div>
+    <div class="buryit" onclick="votePost(5337058,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/younghao/p/5141290.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/younghao/p/5141290.html" title="发布于2016-02-01 09:07">OpenGL ES学习笔记（三）——纹理</a><br><a href="http://www.cnblogs.com/younghao/p/5498763.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/younghao/p/5498763.html" title="发布于2016-05-16 17:13">Android开发笔记——常见BUG类型之内存泄露与线程安全</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2016-04-01 17:29</span> <a href="http://www.cnblogs.com/younghao/">yhthu</a> 阅读(<span id="post_view_count">7524</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=5337058" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/younghao/p/5337058.html#" onclick="AddToWz(5337058);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=250453,cb_entryId=5337058,cb_blogApp=currentBlogApp,cb_blogUserGuid='bc5a6c90-5179-e511-9fc1-ac853d9f53cc',cb_entryCreatedDate='2016/4/1 17:29:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/younghao/p/5337058.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/younghao/p/5337058.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="我的AR之旅">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://www.grapecity.com.cn/enterprise-solutions/huozige/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=huozige&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/24442-20170531232906555-989803912.png" alt="huozige"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/570780/" target="_blank">评论：顺丰为什么可以硬气</a><br> ·  <a href="http://news.cnblogs.com/n/570779/" target="_blank">苹果App Store全面禁止热更新 不移除相关代码会下架</a><br> ·  <a href="http://news.cnblogs.com/n/570778/" target="_blank">谷歌在MadeWithCode女性编程项目学习平台加入《神奇女侠》项目</a><br> ·  <a href="http://news.cnblogs.com/n/570777/" target="_blank">码农不重视文档：开源项目深受其苦</a><br> ·  <a href="http://news.cnblogs.com/n/570776/" target="_blank">Android Pay台湾全面上线 扩大至全球13个国家和地区</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="https://www.mtyun.com/activity-anniversary?site=cnblogs&amp;campaign=20170601sales" target="_blank"><img width="468" height="60" src="./Android源码笔记——Camera系统架构 - yhthu - 博客园_files/24442-20170601093816602-1429765193.png" alt="美团云"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/younghao/">yhthu</a><br>园龄：<a href="http://home.cnblogs.com/u/younghao/" title="入园时间：2015-10-23">1年7个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/younghao/followers/">40</a><br>关注：<a href="http://home.cnblogs.com/u/younghao/followees/">1</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;bc5a6c90-5179-e511-9fc1-ac853d9f53cc&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&lt;</a></td><td align="center">2017年6月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/07/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td class="CalTodayDay" align="center">3</td></tr><tr><td class="CalWeekendDay" align="center">4</td><td align="center">5</td><td align="center">6</td><td align="center">7</td><td align="center">8</td><td align="center">9</td><td class="CalWeekendDay" align="center">10</td></tr><tr><td class="CalWeekendDay" align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalWeekendDay" align="center">17</td></tr><tr><td class="CalWeekendDay" align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td align="center">23</td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/younghao/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/younghao/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/younghao/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/younghao/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/younghao/tag/" title="我的博客的标签列表">我的标签</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_toptags" class="sidebar-block">
+<div class="catListTag">
+<h3 class="catListTitle">我的标签</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/younghao/tag/Android/">Android</a>(2)</li><li><a href="http://www.cnblogs.com/younghao/tag/Git/">Git</a>(1)</li><li><a href="http://www.cnblogs.com/younghao/tag/ListView/">ListView</a>(1)</li><li><a href="http://www.cnblogs.com/younghao/tag/MVC/">MVC</a>(1)</li><li><a href="http://www.cnblogs.com/younghao/tag/MVVM/">MVVM</a>(1)</li><li><a href="http://www.cnblogs.com/younghao/tag/notifyDataSetChanged/">notifyDataSetChanged</a>(1)</li><li><a href="http://www.cnblogs.com/younghao/tag/%E5%9B%BE%E7%89%87%E7%BC%93%E5%AD%98/">图片缓存</a>(1)</li><li><a href="http://www.cnblogs.com/younghao/tag/%E7%8A%B6%E6%80%81%E4%BE%9D%E8%B5%96/">状态依赖</a>(1)</li>
+</ul>
+</div></div><div id="sidebar_categories">
+<div id="sidebar_postcategory" class="catListPostCategory sidebar-block">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/younghao/category/772783.html">Android(22)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/younghao/category/772785.html">编程语言(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/younghao/category/772792.html">机器人(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/younghao/category/772788.html">开源软件(11)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/younghao/category/772789.html">认知科学(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/younghao/category/772790.html">物联网技术(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/younghao/category/772787.html">移动网络(8)</a> </li>
+
+</ul>
+
+</div>
+
+<div id="sidebar_postarchive" class="catListPostArchive sidebar-block">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/younghao/archive/2017/05.html">2017年5月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/younghao/archive/2017/04.html">2017年4月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/younghao/archive/2017/03.html">2017年3月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/younghao/archive/2016/12.html">2016年12月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/younghao/archive/2016/11.html">2016年11月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/younghao/archive/2016/09.html">2016年9月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/younghao/archive/2016/05.html">2016年5月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/younghao/archive/2016/04.html">2016年4月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/younghao/archive/2016/02.html">2016年2月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/younghao/archive/2016/01.html">2016年1月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/younghao/archive/2015/12.html">2015年12月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_11" href="http://www.cnblogs.com/younghao/archive/2015/10.html">2015年10月 (1)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/younghao/p/6696739.html#3704327">1. Re:程序员带你一步步分析AI如何玩Flappy&nbsp;Bird</a></li>
+        <li class="recent_comment_body">@小蚂蚁2012zero pad 就是添加一些0,tensorflow里面会自动加，然后相当于图像维度变大，比如：输入为5*5*3，filter为3*3*3，在zero pad 为1，则加上zero ......</li>
+        <li class="recent_comment_author">--xyt_cathy</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/younghao/p/6696739.html#3673309">2. Re:程序员带你一步步分析AI如何玩Flappy&nbsp;Bird</a></li>
+        <li class="recent_comment_body">@小蚂蚁2012...</li>
+        <li class="recent_comment_author">--yhthu</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/younghao/p/6696739.html#3673308">3. Re:程序员带你一步步分析AI如何玩Flappy&nbsp;Bird</a></li>
+        <li class="recent_comment_body">@淡然92谢谢...</li>
+        <li class="recent_comment_author">--yhthu</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/younghao/p/6696739.html#3673307">4. Re:程序员带你一步步分析AI如何玩Flappy&nbsp;Bird</a></li>
+        <li class="recent_comment_body">@xiaoming401业余时间可以玩玩，全当兴趣。。...</li>
+        <li class="recent_comment_author">--yhthu</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/younghao/p/6696739.html#3673305">5. Re:程序员带你一步步分析AI如何玩Flappy&nbsp;Bird</a></li>
+        <li class="recent_comment_body">@chifredhong 不好意思，没能及时回复。padding = "SAME"，可以参考官方文档。For the 'SAME' padding, the output height and wid......</li>
+        <li class="recent_comment_author">--yhthu</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/younghao/p/5337058.html">1. Android源码笔记——Camera系统架构(7525)</a></li><li><a href="http://www.cnblogs.com/younghao/p/5141295.html">2. Android线程管理（三）——Thread类的内部原理、休眠及唤醒(4652)</a></li><li><a href="http://www.cnblogs.com/younghao/p/5141290.html">3. OpenGL ES学习笔记（三）——纹理(4425)</a></li><li><a href="http://www.cnblogs.com/younghao/p/5116819.html">4. Android线程管理（一）——线程通信(4409)</a></li><li><a href="http://www.cnblogs.com/younghao/p/6696739.html">5. 程序员带你一步步分析AI如何玩Flappy&nbsp;Bird(3556)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/younghao/p/6696739.html">1. 程序员带你一步步分析AI如何玩Flappy&nbsp;Bird(91)</a></li><li><a href="http://www.cnblogs.com/younghao/p/6128747.html">2. 基于Retrofit+RxJava的Android分层网络请求框架(10)</a></li><li><a href="http://www.cnblogs.com/younghao/p/6681264.html">3. 通过UDP广播实现Android局域网Peer Discovering(6)</a></li><li><a href="http://www.cnblogs.com/younghao/p/5089118.html">4. Android开发笔记——视频录制播放常见问题(5)</a></li><li><a href="http://www.cnblogs.com/younghao/p/5498763.html">5. Android开发笔记——常见BUG类型之内存泄露与线程安全(4)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/younghao/p/6696739.html">1. 程序员带你一步步分析AI如何玩Flappy&nbsp;Bird(49)</a></li><li><a href="http://www.cnblogs.com/younghao/p/5089118.html">2. Android开发笔记——视频录制播放常见问题(4)</a></li><li><a href="http://www.cnblogs.com/younghao/p/6681264.html">3. 通过UDP广播实现Android局域网Peer Discovering(3)</a></li><li><a href="http://www.cnblogs.com/younghao/p/5088299.html">4. Android开发笔记——图片缓存、手势及OOM分析(2)</a></li><li><a href="http://www.cnblogs.com/younghao/p/5897702.html">5. Android App的架构设计：从VM、MVC、MVP到MVVM(2)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 yhthu
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>

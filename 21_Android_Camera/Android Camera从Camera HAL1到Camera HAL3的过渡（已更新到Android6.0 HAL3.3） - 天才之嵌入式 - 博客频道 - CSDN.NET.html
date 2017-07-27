@@ -1,0 +1,1502 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0061)http://blog.csdn.net/gzzaigcnforever/article/details/48974523 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+
+            <link rel="canonical" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523"> 
+ <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#">
+       
+    <title>Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式
+        - 博客频道 - CSDN.NET</title>
+    
+    <meta name="description" content="本文均属自己阅读源码的点滴总结，转账请注明出处谢谢。欢迎和大家交流。qq:1037701636 email:gzzaigcn2009@163.comSoftware：Android5.11. Android系统中Camera模块的历史演变进度/**">
+
+    <meta name="keywords" content="android,linux,c">
+
+   
+    <script src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/hm.js.下载"></script><script src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/blog_static_head.min.js.下载" type="text/javascript"></script>
+
+    
+        <!--new top-->
+       
+       
+        <!--new top-->
+    
+      <!-- ad begin -->
+         
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/style.css">
+
+    
+
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/gzzaigcn/rss/list">
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/default.css">
+ 
+
+
+
+
+    <link href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/csdn_public_blog_detail.min.css" type="text/css" rel="stylesheet">
+     
+         <link rel="stylesheet" href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/csdn_blog_detail.min.css">
+
+  
+
+
+    <!-- 请置于所有广告位代码之前 --> 
+            <script src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/ds.js.下载"></script>
+
+<script src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/share.js.下载"></script><link rel="stylesheet" type="text/css" href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/job_reco.css"><link href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/bdsstyle.css" rel="stylesheet" type="text/css"><link rel="stylesheet" type="text/css" href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/style(1).css"><link rel="stylesheet" type="text/css" href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/style(2).css"><script src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/logger.js.下载"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><link rel="stylesheet" href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/share_style0_16.css"></head>
+
+
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><div id="MathJax_Message" style="display: none;"></div><iframe frameborder="0" style="display: none;" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/saved_resource.html"></iframe><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar_logo" class="img blog-icon"></a></div>          <div class="pull-right login-wrap ">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="http://passport.csdn.net/account/mobileregister?ref=toolbar&amp;action=mobileRegister">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search" id="toolbar_search" method="get" target="_blank">                      <input type="hidden" value="toolbar" name="ref" accesskey="2">                      <div class="border">                        <input placeholder="搜索" type="text" value="" name="q" accesskey="2"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label"><span class="red_txt">*</span>标题</label>                          <div class="col-sm-10">                            <input id="inputTitle" type="text" placeholder="" class="title form-control">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group" style="display:none;">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input id="input-url" type="text" placeholder="" class="url form-control">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" type="text" class="form-control tag">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">位置</label>                        <div class="col-sm-10">                          <div class="my_lib_box">                            个人主页&nbsp;-&nbsp;<a href="http://my.csdn.net/" target="_blank">我的知识</a>                          </div>                          <div class="checkbox">                            <div class="pull-left">                              <label>                                <input type="checkbox" name="share" class="save_lib_map" checked="checked">同时保存至：                              </label>                            </div>                            <div class="pull-left">                              <div class="dropdown">                                <button id="toolbar_sele_map" type="button">                                  选择知识图谱                                  <i class="fa fa-chevron-down"></i>                                </button>                                <div class="top_arr"></div>                                <div class="outside">                                  <ul class="dropdown-menu" id="toolbar_Design_knowledge"><li>选择知识图谱</li></ul>                                </div>                              </div>                            </div>                            <div class="pull-left new_txt">                              <a href="http://lib.csdn.net/my/create/structure" target="_blank">新建？</a>                            </div>                          </div>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left" style="display:none">                            <div class="checkbox">                              <label>                                <input type="checkbox" name="share" checked="checked" class="share">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"><div class="icon-hasnotes" style=""></div></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note" style="left: -212px; top: 865px; display: none;">                      <div class="box"><div class="notifications notice_list_con curr">  <div class="menu_title">    <span class="title"><a href="http://msg.csdn.net/letters" target="_blank" class="read_all">查看所有私信</a><a href="http://msg.csdn.net/" target="_blank" class="go_all">查看所有通知</a></span>  </div>  <div class="loading"></div>  <div class="empty">暂没有新通知</div>  <div class="notice_content" style="overflow-y: auto; max-height: 270px;"></div></div><div class="notifications detail_con" style="display: none">  <div class="menu_title">    <span class="title">      <a class="go_back" href="javascript:void 0;">返回通知列表</a>      <a class="notifications_page_none nextnote" href="javascript:void 0;">下一条</a>      <a class="notifications_page prvnote" href="javascript:void 0;">上一条</a>    </span>  </div>  <div class="notice_content" style="overflow-y: scroll; height: 250px;"></div></div><div class="error"></div></div>                    <iframe src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/saved_resource(1).html" frameborder="0" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix" style="display:none;"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt style="border: none;"><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/2_wangchaoqun1997.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="avatar"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/2_wangchaoqun1997.jpg"></a></dt>                        <dd class="info" style="border: none;"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname">wangchaoqun1997</a><span class="dec">驱动 linux驱动 android驱动 driver</span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="http://my.csdn.net/my/account/changepwd?ref=toolbar" class="pull-left"><span class="icon-cog"></span>帐号设置</a><a href="https://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-left" style="margin-left:132px; width:18px; height:27px; white-space:nowrap; overflow:hidden;"><span class="icon-signout"></span><span class="out">退出</span></a></div>                  </div>                </div>              </li>              <li class="apps">                <div id="chasnew123" class="hasnew" style="display: none;"></div>                <div id="cappsarea123" class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd> <a href="http://lib.csdn.net/?ref=toolbar" target="_blank">知识库</a></dd>                      <dd><a href="http://ask.csdn.net/?ref=toolbar" target="_blank">技术问答</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                      <dd style="display:none"> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd style="display:none"> <a href="http://job.csdn.net/?ref=toolbar" target="_blank">JOB<img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="http://edu.csdn.net/?ref=toolbar" target="_blank">学院<img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://huiyi.csdn.net/?ref=toolbar" target="_blank">活动</a></dd>                      <dd> <a href="http://www.csto.com/?ref=toolbar" target="_blank">CSTO</a></dd>                      <dd> <a href="http://mall.csdn.net/?ref=toolbar" target="_blank">C币兑换<img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://cto.csdn.net/?ref=toolbar" target="_blank">CTO俱乐部</a></dd>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+       
+
+
+
+    <!-- 广告位开始 -->
+        
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/html.js.下载" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/gzzaigcnforever">天才之嵌入式</a></h2>
+            <h3>2017，重新开始，从心开始，从家开始。</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/gzzaigcnforever?viewmode=contents"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_mulu&#39;])">
+                    <img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/gzzaigcnforever?viewmode=list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_zhaiyao&#39;])">
+                    <img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/gzzaigcnforever/rss/list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_RSS&#39;])">
+                    <img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "gzzaigcn";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/gzzaigcnforever";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "wangchaoqun1997";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+
+<a href="http://bss.csdn.net/m/topic/community_IoT/index" target="_blank">
+<font color="red"><strong>【CSDN 技术主题月】物联网全栈开发</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/broadview2006/article/details/72901572" target="_blank">
+<font color="blue"><strong>【评论送书】每周荐书：JVM、Nginx、小程序</strong></font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/72956478" target="_blank">
+<font color="red"><strong>CSDN日报20170609 ——《我成为程序员是别无选择，但之后却又别有洞天》</strong></font></a>
+
+
+</div>                        </div>
+                        
+
+
+
+  
+
+
+
+
+
+
+<script type="text/javascript" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/category.js.下载"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=Android+Camera%e4%bb%8eCamera+HAL1%e5%88%b0Camera+HAL3%e7%9a%84%e8%bf%87%e6%b8%a1%ef%bc%88%e5%b7%b2%e6%9b%b4%e6%96%b0%e5%88%b0Android6.0+HAL3.3%ef%bc%89&u=http://blog.csdn.net/gzzaigcnforever/article/details/48974523"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523">
+        Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href="http://www.csdn.net/tag/android" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">android</a><a href="http://www.csdn.net/tag/linux" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">linux</a><a href="http://www.csdn.net/tag/c" target="_blank" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_tag&#39;]);">c</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2015-10-09 11:05</span>
+            <span class="link_view" title="阅读次数">7058人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#comments" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_pinglun&#39;])">评论</a>(4)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle(&#39;Android+Camera%e4%bb%8eCamera+HAL1%e5%88%b0Camera+HAL3%e7%9a%84%e8%bf%87%e6%b8%a1%ef%bc%88%e5%b7%b2%e6%9b%b4%e6%96%b0%e5%88%b0Android6.0+HAL3.3%ef%bc%89&#39;,&#39;48974523&#39;);return false;" title="收藏" target="_blank">收藏</a></span>
+             <span class="link_report"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#report" onclick="javascript:report(48974523,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody" style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label onclick="GetCategoryArticles(&#39;1087759&#39;,&#39;gzzaigcn&#39;,&#39;top&#39;,&#39;48974523&#39;);">
+                        <span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_fenlei&#39;]);">android源码<em>（66）</em></span>
+                      <img class="arrow-down" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a href="http://blog.csdn.net/gzzaigcn/article/category/1087759" target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_1087759">                            
+                            </ul>
+                        </div>
+                    </label>                    
+                    <label onclick="GetCategoryArticles(&#39;3066721&#39;,&#39;gzzaigcn&#39;,&#39;top&#39;,&#39;48974523&#39;);">
+                        <span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_fenlei&#39;]);">Android Camera HAL3学习记录<em>（7）</em></span>
+                      <img class="arrow-down" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a href="http://blog.csdn.net/gzzaigcn/article/category/3066721" target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_3066721">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+        <div class="bog_copyright">         
+            <p class="copyright_p">版权声明：本文为CSDN博主(天才2012)原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+
+<div id="article_content" class="article_content tracking-ad" data-mod="popu_307" data-dsm="post">
+<p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-size: 18px;">本文均属自己阅读源码的点滴总结，转账请注明出处谢谢。</span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;"><span style="font-size: 18px;">欢迎和大家交流。qq:1037701636 email:</span><span style="color: rgb(255, 153, 0); text-decoration: none; font-size: 18px;"><a target="_blank" href="mailto:gzzaigcn2012@gmail.com" style="color: rgb(255, 153, 0); text-decoration: none;">gzzaigcn2</a>009@163.com</span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;">Software：系统源码Android5.1</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;"><br></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; font-size: 14px; line-height: 26px;"></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size:12px;">1. <a href="http://lib.csdn.net/base/android" class="replace_word" title="Android知识库" target="_blank" style="color:#df3434; font-weight:bold;">Android</a>系统中Camera模块版本号的历史演变进度</span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"></p><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 684px; top: 677px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_1" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_1" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*&nbsp;All&nbsp;module&nbsp;versions&nbsp;&lt;=&nbsp;HARDWARE_MODULE_API_VERSION(1,&nbsp;0xFF)&nbsp;must&nbsp;be&nbsp;treated</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;*&nbsp;as&nbsp;CAMERA_MODULE_API_VERSION_1_0</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="preprocessor">#define&nbsp;CAMERA_MODULE_API_VERSION_1_0&nbsp;HARDWARE_MODULE_API_VERSION(1,&nbsp;0)</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="preprocessor">#define&nbsp;CAMERA_MODULE_API_VERSION_2_0&nbsp;HARDWARE_MODULE_API_VERSION(2,&nbsp;0)</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="preprocessor">#define&nbsp;CAMERA_MODULE_API_VERSION_2_1&nbsp;HARDWARE_MODULE_API_VERSION(2,&nbsp;1)</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="preprocessor">#define&nbsp;CAMERA_MODULE_API_VERSION_2_2&nbsp;HARDWARE_MODULE_API_VERSION(2,&nbsp;2)</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="preprocessor">#define&nbsp;CAMERA_MODULE_API_VERSION_2_3&nbsp;HARDWARE_MODULE_API_VERSION(2,&nbsp;3)</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="preprocessor">#define&nbsp;CAMERA_MODULE_API_VERSION_CURRENT&nbsp;CAMERA_MODULE_API_VERSION_2_3</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*&nbsp;All&nbsp;device&nbsp;versions&nbsp;&lt;=&nbsp;HARDWARE_DEVICE_API_VERSION(1,&nbsp;0xFF)&nbsp;must&nbsp;be&nbsp;treated</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;*&nbsp;as&nbsp;CAMERA_DEVICE_API_VERSION_1_0</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="preprocessor">#define&nbsp;CAMERA_DEVICE_API_VERSION_1_0&nbsp;HARDWARE_DEVICE_API_VERSION(1,&nbsp;0)</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="preprocessor">#define&nbsp;CAMERA_DEVICE_API_VERSION_2_0&nbsp;HARDWARE_DEVICE_API_VERSION(2,&nbsp;0)</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="preprocessor">#define&nbsp;CAMERA_DEVICE_API_VERSION_2_1&nbsp;HARDWARE_DEVICE_API_VERSION(2,&nbsp;1)</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="preprocessor">#define&nbsp;CAMERA_DEVICE_API_VERSION_3_0&nbsp;HARDWARE_DEVICE_API_VERSION(3,&nbsp;0)</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="preprocessor">#define&nbsp;CAMERA_DEVICE_API_VERSION_3_1&nbsp;HARDWARE_DEVICE_API_VERSION(3,&nbsp;1)</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="preprocessor">#define&nbsp;CAMERA_DEVICE_API_VERSION_3_2&nbsp;HARDWARE_DEVICE_API_VERSION(3,&nbsp;2)</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span><span class="comment">//&nbsp;Device&nbsp;version&nbsp;3.2&nbsp;is&nbsp;current,&nbsp;older&nbsp;HAL&nbsp;camera&nbsp;device&nbsp;versions&nbsp;are&nbsp;not</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="comment">//&nbsp;recommended&nbsp;for&nbsp;new&nbsp;devices.</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="preprocessor">#define&nbsp;CAMERA_DEVICE_API_VERSION_CURRENT&nbsp;CAMERA_DEVICE_API_VERSION_3_2</span><span>&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="1554183" snippet_file_name="blog_20160111_1_6246064" name="code" class="cpp" style="display: none;">/**
+ * All module versions &lt;= HARDWARE_MODULE_API_VERSION(1, 0xFF) must be treated
+ * as CAMERA_MODULE_API_VERSION_1_0
+ */
+#define CAMERA_MODULE_API_VERSION_1_0 HARDWARE_MODULE_API_VERSION(1, 0)
+#define CAMERA_MODULE_API_VERSION_2_0 HARDWARE_MODULE_API_VERSION(2, 0)
+#define CAMERA_MODULE_API_VERSION_2_1 HARDWARE_MODULE_API_VERSION(2, 1)
+#define CAMERA_MODULE_API_VERSION_2_2 HARDWARE_MODULE_API_VERSION(2, 2)
+#define CAMERA_MODULE_API_VERSION_2_3 HARDWARE_MODULE_API_VERSION(2, 3)
+
+#define CAMERA_MODULE_API_VERSION_CURRENT CAMERA_MODULE_API_VERSION_2_3
+
+/**
+ * All device versions &lt;= HARDWARE_DEVICE_API_VERSION(1, 0xFF) must be treated
+ * as CAMERA_DEVICE_API_VERSION_1_0
+ */
+#define CAMERA_DEVICE_API_VERSION_1_0 HARDWARE_DEVICE_API_VERSION(1, 0)
+#define CAMERA_DEVICE_API_VERSION_2_0 HARDWARE_DEVICE_API_VERSION(2, 0)
+#define CAMERA_DEVICE_API_VERSION_2_1 HARDWARE_DEVICE_API_VERSION(2, 1)
+#define CAMERA_DEVICE_API_VERSION_3_0 HARDWARE_DEVICE_API_VERSION(3, 0)
+#define CAMERA_DEVICE_API_VERSION_3_1 HARDWARE_DEVICE_API_VERSION(3, 1)
+#define CAMERA_DEVICE_API_VERSION_3_2 HARDWARE_DEVICE_API_VERSION(3, 2)
+
+// Device version 3.2 is current, older HAL camera device versions are not
+// recommended for new devices.
+#define CAMERA_DEVICE_API_VERSION_CURRENT CAMERA_DEVICE_API_VERSION_3_2</pre>从上述对Camera版本的定义可知，Android将整个camera模块划分为module和device两个部分，前者拥有对后者的控制权，而后者直接就是代表的camera hal接口的实现。<p></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">对于Module API的区别主要在于2.1之后增加了set_callbacks接口，用于HAL检测当前module的工作状态，低版本的module不需要实现。</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">此外对于Module API版本号高于2.2时可支持get_vendor_tag_ops，Framework调用后课获取对厂商自己扩展定义的tag ops，便于操作厂商自己私有定义的camera所需的metadata信息，同理低版本的module不需要去实现该接口。</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">此外对于Module API 为2.3的版本增加了open_legacy接口：</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"></p><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 684px; top: 1370px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_2" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_2" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=2&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="datatypes">int</span><span>&nbsp;(*open_legacy)(</span><span class="keyword">const</span><span>&nbsp;</span><span class="keyword">struct</span><span>&nbsp;hw_module_t*&nbsp;module,&nbsp;</span><span class="keyword">const</span><span>&nbsp;</span><span class="datatypes">char</span><span>*&nbsp;id,&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uint32_t&nbsp;halVersion,&nbsp;<span class="keyword">struct</span><span>&nbsp;hw_device_t**&nbsp;device);&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="1554183" snippet_file_name="blog_20160111_2_73312" name="code" class="cpp" style="display: none;">    int (*open_legacy)(const struct hw_module_t* module, const char* id,
+            uint32_t halVersion, struct hw_device_t** device);</pre><p></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">他描述的是可以根据自己所选的device version，比如对于一个camera hal他支持并实现了CAMERA_DEVICE_API_VERSION_1_0和CAMERA_DEVICE_API_VERSION_3_2两种版本下的hal接口的实现，只有module api定义的是2.3的版本的话，在Framework中就可以通过对open_legacy()来指定hal_version，从而获取不同版本下的hal device的实现接口即hw_device_t。但目前来看，<a href="http://lib.csdn.net/base/android" class="replace_word" title="Android知识库" target="_blank" style="color:#df3434; font-weight:bold;">android</a>提供了该接口，却在Framework层都没有给出直接的调用，此外可见的hal module api2.3的版本，也都不会去实现该接口。说明hw_module_t所属的open目前依旧还是获取对camera device控制权的唯一路径与方法，也许对于一个camera device而言实现一种版本的接口就已经够用和麻烦的了。</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><br></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">2 Camera Client</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">&nbsp; &nbsp; 关于CameraService相关的内容可以参考博文<a target="_blank" href="http://blog.csdn.net/gzzaigcnforever/article/details/22783753">Android4.2.2 CameraService服务启动和应用端camera初始化记录</a>来梳理整个Camera.so模块的加载与处理过程。每一个应用端的camera在connect到CameraService处会以一个Camera Client形式存在，该类继承并实现CameraService::Client的一个内部类，通过匿名的Binder服务与应用端进行交互。在CamerService启动并建立的时候，就会自动加载一个camera.xxx.so的模块，提取module相关的handle。</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">每当connect时，CameraService会执行一个getDeviceVersion的函数：</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"></p><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 684px; top: 1787px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_3" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_3" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=3&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="datatypes">int</span><span>&nbsp;CameraService::getDeviceVersion(</span><span class="datatypes">int</span><span>&nbsp;cameraId,&nbsp;</span><span class="datatypes">int</span><span>*&nbsp;facing)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">struct</span><span>&nbsp;camera_info&nbsp;info;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(mModule-&gt;get_camera_info(cameraId,&nbsp;&amp;info)&nbsp;!=&nbsp;OK)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;-1;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="datatypes">int</span><span>&nbsp;deviceVersion;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(mModule-&gt;common.module_api_version&nbsp;&gt;=&nbsp;CAMERA_MODULE_API_VERSION_2_0)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deviceVersion&nbsp;=&nbsp;info.device_version;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="keyword">else</span><span>&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deviceVersion&nbsp;=&nbsp;CAMERA_DEVICE_API_VERSION_1_0;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(facing)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*facing&nbsp;=&nbsp;info.facing;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;deviceVersion;&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div><pre code_snippet_id="1554183" snippet_file_name="blog_20160111_3_3170211" name="code" class="cpp" style="display: none;">int CameraService::getDeviceVersion(int cameraId, int* facing) {
+    struct camera_info info;
+    if (mModule-&gt;get_camera_info(cameraId, &amp;info) != OK) {
+        return -1;
+    }
+
+    int deviceVersion;
+    if (mModule-&gt;common.module_api_version &gt;= CAMERA_MODULE_API_VERSION_2_0) {
+        deviceVersion = info.device_version;
+    } else {
+        deviceVersion = CAMERA_DEVICE_API_VERSION_1_0;
+    }
+
+    if (facing) {
+        *facing = info.facing;
+    }
+
+    return deviceVersion;
+}</pre>即对于那些module_api_version小于2.0的版本，即所谓的1.0版本外，其他module对应的device 版本号，由HAL自行决定，决定权通过get_camera_info来获取hal支持的camera_info相关信息，其中包括device_version。1.0版本的module直接默认的device_verison则为1.0版本。<p></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"></p><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 684px; top: 2250px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_4" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_4" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=4&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_1_0:&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;CameraClient(</span><span class="keyword">this</span><span>,&nbsp;cameraClient,&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clientPackageName,&nbsp;cameraId,&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;facing,&nbsp;callingPid,&nbsp;clientUid,&nbsp;getpid(),&nbsp;legacyMode);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">break</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_2_0:&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_2_1:&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_3_0:&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_3_1:&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_3_2:&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Camera2Client(</span><span class="keyword">this</span><span>,&nbsp;cameraClient,&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;clientPackageName,&nbsp;cameraId,&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;facing,&nbsp;callingPid,&nbsp;clientUid,&nbsp;getpid(),&nbsp;legacyMode);<span class="comment">//CameraService端新建Camera2Client</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">break</span><span>;&nbsp;&nbsp;</span></span></li></ol></div><pre code_snippet_id="1554183" snippet_file_name="blog_20160111_4_345529" name="code" class="cpp" style="display: none;">     case CAMERA_DEVICE_API_VERSION_1_0:
+            client = new CameraClient(this, cameraClient,
+                    clientPackageName, cameraId,
+                    facing, callingPid, clientUid, getpid(), legacyMode);
+            break;
+          case CAMERA_DEVICE_API_VERSION_2_0:
+          case CAMERA_DEVICE_API_VERSION_2_1:
+          case CAMERA_DEVICE_API_VERSION_3_0:
+          case CAMERA_DEVICE_API_VERSION_3_1:
+          case CAMERA_DEVICE_API_VERSION_3_2:
+            client = new Camera2Client(this, cameraClient,
+                    clientPackageName, cameraId,
+                    facing, callingPid, clientUid, getpid(), legacyMode);//CameraService端新建Camera2Client
+            break;</pre><span style="font-size: 10px;">通过上述的代码逻辑可知，对于Camera Client的升级，由底层Device API Version来决定。很明显可以知道，目前1.0的device api以CameraClient的形式存在，而2.0以上的版本则均以Camera2Client的形式存在。&nbsp;</span><p></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;">对于Camera模块不同版本的DEVICE_API来说，其区别本质上就是在HAL所需要实现的接口不同，分别由以下三个版本的device接口：</span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;"></span></p><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 684px; top: 2649px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_5" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_5" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=5&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="keyword">typedef</span><span>&nbsp;</span><span class="keyword">struct</span><span>&nbsp;camera_device&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">/**</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;camera_device.common.version&nbsp;must&nbsp;be&nbsp;in&nbsp;the&nbsp;range</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;HARDWARE_DEVICE_API_VERSION(0,0)-(1,FF).&nbsp;CAMERA_DEVICE_API_VERSION_1_0&nbsp;is</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;recommended.</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;hw_device_t&nbsp;common;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;camera_device_ops_t&nbsp;*ops;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">void</span><span>&nbsp;*priv;&nbsp;&nbsp;</span></span></li><li class=""><span>}&nbsp;camera_device_t;&nbsp;&nbsp;</span></li></ol></div><pre code_snippet_id="1554183" snippet_file_name="blog_20160111_5_4979572" name="code" class="cpp" style="display: none;">typedef struct camera_device {
+    /**
+     * camera_device.common.version must be in the range
+     * HARDWARE_DEVICE_API_VERSION(0,0)-(1,FF). CAMERA_DEVICE_API_VERSION_1_0 is
+     * recommended.
+     */
+    hw_device_t common;
+    camera_device_ops_t *ops;
+    void *priv;
+} camera_device_t;</pre>对应的是1.0的DEVICE_API，目前低版本的Android系统中以该方式来实现的较多。<p></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;"><br></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;"></span></p><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 684px; top: 2950px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_6" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_6" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=6&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="keyword">typedef</span><span>&nbsp;</span><span class="keyword">struct</span><span>&nbsp;camera2_device&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">/**</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;common.version&nbsp;must&nbsp;equal&nbsp;CAMERA_DEVICE_API_VERSION_2_0&nbsp;to&nbsp;identify</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;this&nbsp;device&nbsp;as&nbsp;implementing&nbsp;version&nbsp;2.0&nbsp;of&nbsp;the&nbsp;camera&nbsp;device&nbsp;HAL.</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;hw_device_t&nbsp;common;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;camera2_device_ops_t&nbsp;*ops;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">void</span><span>&nbsp;*priv;&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;camera2_device_t;&nbsp;&nbsp;</span></li></ol></div><pre code_snippet_id="1554183" snippet_file_name="blog_20160111_6_7902530" name="code" class="cpp" style="display: none;">typedef struct camera2_device {
+    /**
+     * common.version must equal CAMERA_DEVICE_API_VERSION_2_0 to identify
+     * this device as implementing version 2.0 of the camera device HAL.
+     */
+    hw_device_t common;
+    camera2_device_ops_t *ops;
+    void *priv;
+} camera2_device_t;</pre>2.0版本的ops目前主流的IC厂商实现的较少。<p></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;"><br></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;"></span></p><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 684px; top: 3233px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_7" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_7" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=7&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span class="keyword">typedef</span><span>&nbsp;</span><span class="keyword">struct</span><span>&nbsp;camera3_device&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">/**</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;common.version&nbsp;must&nbsp;equal&nbsp;CAMERA_DEVICE_API_VERSION_3_0&nbsp;to&nbsp;identify&nbsp;this</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;device&nbsp;as&nbsp;implementing&nbsp;version&nbsp;3.0&nbsp;of&nbsp;the&nbsp;camera&nbsp;device&nbsp;HAL.</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Performance&nbsp;requirements:</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Camera&nbsp;open&nbsp;(common.module-&gt;common.methods-&gt;open)&nbsp;should&nbsp;return&nbsp;in&nbsp;200ms,&nbsp;and&nbsp;must&nbsp;return</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;in&nbsp;500ms.</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Camera&nbsp;close&nbsp;(common.close)&nbsp;should&nbsp;return&nbsp;in&nbsp;200ms,&nbsp;and&nbsp;must&nbsp;return&nbsp;in&nbsp;500ms.</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;hw_device_t&nbsp;common;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;camera3_device_ops_t&nbsp;*ops;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">void</span><span>&nbsp;*priv;&nbsp;&nbsp;</span></span></li><li class=""><span>}&nbsp;camera3_device_t;&nbsp;&nbsp;</span></li></ol></div><pre code_snippet_id="1554183" snippet_file_name="blog_20160111_7_7204419" name="code" class="cpp" style="display: none;">typedef struct camera3_device {
+    /**
+     * common.version must equal CAMERA_DEVICE_API_VERSION_3_0 to identify this
+     * device as implementing version 3.0 of the camera device HAL.
+     *
+     * Performance requirements:
+     *
+     * Camera open (common.module-&gt;common.methods-&gt;open) should return in 200ms, and must return
+     * in 500ms.
+     * Camera close (common.close) should return in 200ms, and must return in 500ms.
+     *
+     */
+    hw_device_t common;
+    camera3_device_ops_t *ops;
+    void *priv;
+} camera3_device_t;</pre>对于3.0而言，也就是所谓的HAL3.0就体现在这里，当下可见的只有高通、三星等有对该种接口形式进行了实现。<p></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;">本质上来说，三个不同的版本都进行了全盘的升级，则重点则是归于在HAL中按照Google在Framework层定义的camerax_device_ops来实现该种接口，相关接口的实现形式在分析高通的HAL<a href="http://lib.csdn.net/base/architecture" class="replace_word" title="大型网站架构知识库" target="_blank" style="color:#df3434; font-weight:bold;">架构</a>时再去分析。</span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;"><br></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;">3 Camera device</span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;">对于三个不同版本的hal层接口，在Camera的Framework中实现的过程略有不同，可以分为device1、device2、device3。</span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;">对于1.0版本的Device API，在创建CameraClient时，是以CameraHardwareInterface(可以认为是Camera Device1)来维护队整个对HAL层中Camera Device的控制权，即&nbsp;camera_device_t归CameraHardwareInterface来调用。</span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;"><br></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;">对于2.0以上版本的Device API时，在创建Camera2Client时，会通过CameraDeviceFactory::createDevice来创建相应的Camera Device<br></span></p><div class="dp-highlighter bg_cpp"><div class="bar"><div class="tools"><b>[cpp]</b> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="ViewSource" title="view plain" onclick="dp.sh.Toolbar.Command(&#39;ViewSource&#39;,this);return false;" target="_blank">view plain</a><span data-mod="popu_168"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="CopyToClipboard" title="copy" onclick="dp.sh.Toolbar.Command(&#39;CopyToClipboard&#39;,this);return false;" target="_blank">copy</a><div style="position: absolute; left: 684px; top: 3850px; width: 18px; height: 18px; z-index: 99;"><embed id="ZeroClipboardMovie_8" src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_8" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=8&amp;width=18&amp;height=18" wmode="transparent"></div></span><span data-mod="popu_169"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="PrintSource" title="print" onclick="dp.sh.Toolbar.Command(&#39;PrintSource&#39;,this);return false;" target="_blank">print</a></span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="About" title="?" onclick="dp.sh.Toolbar.Command(&#39;About&#39;,this);return false;" target="_blank">?</a></div></div><ol start="1" class="dp-cpp"><li class="alt"><span><span>sp&lt;CameraDeviceBase&gt;&nbsp;CameraDeviceFactory::createDevice(</span><span class="datatypes">int</span><span>&nbsp;cameraId)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;sp&lt;CameraService&gt;&nbsp;svc&nbsp;=&nbsp;sService.promote();&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(svc&nbsp;==&nbsp;0)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ALOGE(<span class="string">"%s:&nbsp;No&nbsp;service&nbsp;registered"</span><span>,&nbsp;__FUNCTION__);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;NULL;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="datatypes">int</span><span>&nbsp;deviceVersion&nbsp;=&nbsp;svc-&gt;getDeviceVersion(cameraId,&nbsp;</span><span class="comment">/*facing*/</span><span>NULL);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;sp&lt;CameraDeviceBase&gt;&nbsp;device;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">switch</span><span>&nbsp;(deviceVersion)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_2_0:&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_2_1:&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;device&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Camera2Device(cameraId);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">break</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_3_0:&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_3_1:&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">case</span><span>&nbsp;CAMERA_DEVICE_API_VERSION_3_2:&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;device&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Camera3Device(cameraId);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">break</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">default</span><span>:&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ALOGE(<span class="string">"%s:&nbsp;Camera&nbsp;%d:&nbsp;Unknown&nbsp;HAL&nbsp;device&nbsp;version&nbsp;%d"</span><span>,&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;__FUNCTION__,&nbsp;cameraId,&nbsp;deviceVersion);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;device&nbsp;=&nbsp;NULL;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">break</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;ALOGV_IF(device&nbsp;!=&nbsp;0,&nbsp;<span class="string">"Created&nbsp;a&nbsp;new&nbsp;camera&nbsp;device&nbsp;for&nbsp;version&nbsp;%d"</span><span>,&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deviceVersion);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;device;&nbsp;&nbsp;</span></span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div><pre code_snippet_id="1554183" snippet_file_name="blog_20160111_8_1315075" name="code" class="cpp" style="display: none;">sp&lt;CameraDeviceBase&gt; CameraDeviceFactory::createDevice(int cameraId) {
+
+    sp&lt;CameraService&gt; svc = sService.promote();
+    if (svc == 0) {
+        ALOGE("%s: No service registered", __FUNCTION__);
+        return NULL;
+    }
+
+    int deviceVersion = svc-&gt;getDeviceVersion(cameraId, /*facing*/NULL);
+
+    sp&lt;CameraDeviceBase&gt; device;
+
+    switch (deviceVersion) {
+        case CAMERA_DEVICE_API_VERSION_2_0:
+        case CAMERA_DEVICE_API_VERSION_2_1:
+            device = new Camera2Device(cameraId);
+            break;
+        case CAMERA_DEVICE_API_VERSION_3_0:
+        case CAMERA_DEVICE_API_VERSION_3_1:
+        case CAMERA_DEVICE_API_VERSION_3_2:
+            device = new Camera3Device(cameraId);
+            break;
+        default:
+            ALOGE("%s: Camera %d: Unknown HAL device version %d",
+                  __FUNCTION__, cameraId, deviceVersion);
+            device = NULL;
+            break;
+    }
+
+    ALOGV_IF(device != 0, "Created a new camera device for version %d",
+                          deviceVersion);
+
+    return device;
+}</pre>可以看到对于Camera2Client而言，对Device API2.0、2.1的版本通过Camera2Device来实现对底层device的控制，对3.0以上的版本通过Camera3Device来实现，前者可以说是调用的是Camera HAL2.0相关的camera2_device_t的接口，后者调用的是Camera HAL3.0相关的camera3_device_t的接口，当然重点就是两者内部实现的形式不同，3.0版本的处理也更显的复杂。<span style="font-size: 10px;">其中Camera Device API2.0的版本从Android4.2开始发布，而API3更多的是对前者的升级与换代而已在4.4.2的版本中科院看到。</span><p></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 10px;"><br></span></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">4.小结</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">Camera不断的过渡，也算是Android系统源码中，变化较大的一个部分了，虽然Framework层核心的CameraService、Camera等的实现逻辑都没有发生很大的变化，但和底层HAL的交互却有着质的变异。而目前主流的IC厂商都在朝着Camera HAL3.0的方向进行发展，所有有必要对3.0实现的原理与本质进行探究与学习。</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><br></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;">附图：camera在Android Framework层中的变迁</p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/20160201135123906" alt=""><br></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"></p><div><img src="file:///C:/Users/zzgong/AppData/Local/Temp/enhtmlclip/Image(2).png" style="height: auto;" alt=""></div><div><br></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Camera HAL1.0 在Android4.0 ICE开始；</span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Camera HAL2.0、HAL3.0在Android4.2/4.3 JB版本开始支持；</span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Camera HAL3.1 在Androiod4.4 KitKat开始Support；</span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Camera HAL3.2 在Android5.0 L 开始支持；</span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);"><br></span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Camera API2在Android5.0 L开始支持，并逐步deprecate Camera API1。</span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);"><br></span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);"><br></span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Android几个版本下camera_common.h的文档集：</span></span></div><div><span style="font-size:18px;color:#FF0000;">Android4.0</span></div><div>#<strong>define</strong>&nbsp;<a target="_blank" href="http://androidxref.com/4.2_r1/s?refs=CAMERA_DEVICE_API_VERSION_1_0&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_1_0</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.2_r1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">1</span>,&nbsp;0)</div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);"><br></span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Android4.2</span></span></div><div style="border: 0px; margin: 0px;">#<strong>define</strong>&nbsp;<a target="_blank" name="CAMERA_DEVICE_API_VERSION_1_0" style="color: rgb(204, 102, 102); font-weight: bold;"></a><a target="_blank" href="http://androidxref.com/4.2_r1/s?refs=CAMERA_DEVICE_API_VERSION_1_0&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_1_0</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.2_r1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">1</span>,&nbsp;0)<div>#<strong>define</strong>&nbsp;<a target="_blank" href="http://androidxref.com/4.2_r1/s?refs=CAMERA_DEVICE_API_VERSION_2_0&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_2_0</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.2_r1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">2</span>,&nbsp;0)</div></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);"><br></span></span></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Android4.3</span></span></div><div style="border: 0px; margin: 0px;"><div>#<strong>define</strong>&nbsp;<a target="_blank" href="http://androidxref.com/4.3_r2.1/s?refs=CAMERA_DEVICE_API_VERSION_1_0&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_1_0</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.3_r2.1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">1</span>,&nbsp;0)</div><div>#<strong>define</strong>&nbsp;<a target="_blank" href="http://androidxref.com/4.3_r2.1/s?refs=CAMERA_DEVICE_API_VERSION_2_0&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_2_0</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.3_r2.1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">2</span>,&nbsp;0)</div><div>#<strong>define</strong>&nbsp;<a target="_blank" href="http://androidxref.com/4.3_r2.1/s?refs=CAMERA_DEVICE_API_VERSION_2_1&amp;project=hardware" style="color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_2_1</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.3_r2.1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">2</span>,&nbsp;<span style="color: rgb(165, 42, 42);">1</span>)</div><div>#<strong>define</strong>&nbsp;<a target="_blank" href="http://androidxref.com/4.3_r2.1/s?refs=CAMERA_DEVICE_API_VERSION_3_0&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_3_0</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.3_r2.1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">3</span>,&nbsp;0)</div><div><br></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Android4.4</span></span></div><div><a target="_blank" href="http://androidxref.com/4.4_r1/xref/hardware/libhardware/include/hardware/camera_common.h#98" name="98" style="text-decoration: none; color: rgb(102, 102, 102); display: inline-block; width: 5ex; text-align: right; padding-right: 1ex; margin-right: 0.2em; background-color: rgb(221, 221, 221);">98</a>#<strong>define</strong>&nbsp;<a target="_blank" href="http://androidxref.com/4.4_r1/s?refs=CAMERA_DEVICE_API_VERSION_1_0&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_1_0</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.4_r1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">1</span>,&nbsp;0)</div><div style="border: 0px; margin: 0px;"><a target="_blank" href="http://androidxref.com/4.4_r1/xref/hardware/libhardware/include/hardware/camera_common.h#99" name="99" style="text-decoration: none; color: rgb(102, 102, 102); display: inline-block; width: 5ex; text-align: right; padding-right: 1ex; margin-right: 0.2em; background-color: rgb(221, 221, 221);">99</a>#<strong>define</strong>&nbsp;<a target="_blank" name="CAMERA_DEVICE_API_VERSION_2_0" style="color: rgb(204, 102, 102); font-weight: bold;"></a><a target="_blank" href="http://androidxref.com/4.4_r1/s?refs=CAMERA_DEVICE_API_VERSION_2_0&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_2_0</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.4_r1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">2</span>,&nbsp;0)<br><a target="_blank" href="http://androidxref.com/4.4_r1/xref/hardware/libhardware/include/hardware/camera_common.h#100" name="100" style="text-decoration: none; color: rgb(0, 0, 0); display: inline-block; width: 5ex; text-align: right; padding-right: 1ex; margin-right: 0.2em; background-color: rgb(221, 221, 221);">100</a>#<strong>define</strong>&nbsp;<a target="_blank" name="CAMERA_DEVICE_API_VERSION_2_1" style="color: rgb(204, 102, 102); font-weight: bold;"></a><a target="_blank" href="http://androidxref.com/4.4_r1/s?refs=CAMERA_DEVICE_API_VERSION_2_1&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_2_1</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.4_r1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">2</span>,&nbsp;<span style="color: rgb(165, 42, 42);">1</span>)<br><a target="_blank" href="http://androidxref.com/4.4_r1/xref/hardware/libhardware/include/hardware/camera_common.h#101" name="101" style="text-decoration: none; color: rgb(102, 102, 102); display: inline-block; width: 5ex; text-align: right; padding-right: 1ex; margin-right: 0.2em; background-color: rgb(221, 221, 221);">101</a>#<strong>define</strong>&nbsp;<a target="_blank" name="CAMERA_DEVICE_API_VERSION_3_0" style="color: rgb(204, 102, 102); font-weight: bold;"></a><a target="_blank" href="http://androidxref.com/4.4_r1/s?refs=CAMERA_DEVICE_API_VERSION_3_0&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_3_0</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.4_r1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">3</span>,&nbsp;0)<div><a target="_blank" href="http://androidxref.com/4.4_r1/xref/hardware/libhardware/include/hardware/camera_common.h#102" name="102" style="text-decoration: none; color: rgb(102, 102, 102); display: inline-block; width: 5ex; text-align: right; padding-right: 1ex; margin-right: 0.2em; background-color: rgb(221, 221, 221);">102</a>#<strong>define</strong>&nbsp;<a target="_blank" href="http://androidxref.com/4.4_r1/s?refs=CAMERA_DEVICE_API_VERSION_3_1&amp;project=hardware" style="text-decoration: none; color: rgb(204, 102, 102); font-weight: bold;">CAMERA_DEVICE_API_VERSION_3_1</a>&nbsp;<a target="_blank" href="http://androidxref.com/4.4_r1/s?defs=HARDWARE_DEVICE_API_VERSION&amp;project=hardware" style="text-decoration: none; color: rgb(32, 32, 98);">HARDWARE_DEVICE_API_VERSION</a>(<span style="color: rgb(165, 42, 42);">3</span>,&nbsp;<span style="color: rgb(165, 42, 42);">1</span>)</div><div><br></div><div><br></div><div><span style="font-size: 16px;"><span style="color: rgb(255, 0, 0);">Android5.0</span></span></div><div>#define CAMERA_DEVICE_API_VERSION_1_0 HARDWARE_DEVICE_API_VERSION(1, 0)</div><div>#define CAMERA_DEVICE_API_VERSION_2_0 HARDWARE_DEVICE_API_VERSION(2, 0)</div><div>#define CAMERA_DEVICE_API_VERSION_2_1 HARDWARE_DEVICE_API_VERSION(2, 1)</div><div>#define CAMERA_DEVICE_API_VERSION_3_0 HARDWARE_DEVICE_API_VERSION(3, 0)</div><div>#define CAMERA_DEVICE_API_VERSION_3_1 HARDWARE_DEVICE_API_VERSION(3, 1)</div><div>#define CAMERA_DEVICE_API_VERSION_3_2 HARDWARE_DEVICE_API_VERSION(3, 2)</div><div><br></div><div><span style="color: rgb(255, 0, 0);"><span style="font-size: 16px;">Android6.0</span></span></div><div>#define CAMERA_DEVICE_API_VERSION_3_3 HARDWARE_DEVICE_API_VERSION(3, 3)</div></div></div><br><p></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><br></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><br></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><br></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><br></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><br></p><p style="margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-family: Arial; line-height: 26px;"><span style="font-size: 14px;"><br></span></p>   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad bdshare-button-style0-16" style="float: right;" data-mod="popu_172" data-bd-bind="1497139627563">
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important" target="_blank"></a>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间" style="background-position:0 -52px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博" style="background-position:0 -104px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博" style="background-position:0 -260px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="bds_renren" data-cmd="renren" title="分享到人人网" style="background-position:0 -208px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" class="bds_weixin" data-cmd="weixin" title="分享到微信" style="background-position:0 -1612px !important" target="_blank"></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   
+
+    
+<!--172.16.140.15-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+
+
+ 
+
+
+        <div id="digg" articleid="48974523">
+            <dl id="btnDigg" class="digg digg_enable" onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>3</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_enable" onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>1</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" target="_blank">&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" target="_blank">&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;]);location.href=&#39;/gzzaigcnforever/article/details/48972477&#39;;">上一篇</span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48972477" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;])">我心依旧之Android Camera模块FW/HAL3探学序</a></li>
+                <li class="next_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;]);location.href=&#39;/gzzaigcnforever/article/details/48997463&#39;;">下一篇</span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48997463" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;])">Android Camera HAL3中预览preview模式下的控制流</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+            <div class="similar_article">
+                    <h4></h4>
+                    <div class="similar_c" style="margin:20px 0px 0px 0px">
+                        <div class="similar_c_t">
+                          &nbsp;&nbsp;相关文章推荐
+                        </div>
+                   
+                        <div class="similar_wrap tracking-ad" data-mod="popu_36" style="max-height:195px;">                       
+                            <ul class="similar_list fl">    
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/sadamoo/article/details/50787307" title="Android Camera HAL V3 Vendor Tag及V1，V3参数转换" strategy="recommend_sim_0" target="_blank" style="width: 290px;">Android Camera HAL V3 Vendor Tag及V1，V3参数转换</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/eastpoplar/article/details/51896443" title="Android Camera HAL V3 Vendor Tag及V1，V3参数转换" strategy="recommend_sim_0" target="_blank" style="width: 290px;">Android Camera HAL V3 Vendor Tag及V1，V3参数转换</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/eastpoplar/article/details/51896547" title="Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）" strategy="recommend_sim_0" target="_blank" style="width: 290px;">Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/sadamoo/article/details/51570118" title="Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）" strategy="recommend_sim_0" target="_blank" style="width: 290px;">Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/houyizi337825770/article/details/49180423" title="Android Camera HAL V3参数传递" strategy="recommend_sim_0" target="_blank" style="width: 290px;">Android Camera HAL V3参数传递</a>
+                                   </li>
+                            </ul>
+                              <ul class="similar_list fr">      
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/eastpoplar/article/details/51896538" title="Android Camera HAL3中预览preview模式下的控制流" strategy="recommend_sim_0" target="_blank" style="width: 290px;">Android Camera HAL3中预览preview模式下的控制流</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/gzzaigcn/article/details/49094107" title="Android Camera HAL3中拍照Capture模式下多模块间的交互与帧Result与帧数据回调" strategy="recommend_sim_0" target="_blank" style="width: 290px;">Android Camera HAL3中拍照Capture模式下多模块间的交互与帧Result与帧数据回调</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/sadamoo/article/details/50771015" title="Android Camera HAL3中预览preview模式下的数据流" strategy="recommend_sim_0" target="_blank" style="width: 290px;">Android Camera HAL3中预览preview模式下的数据流</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/fu_shuwu/article/details/52986750" title="Android Camera HAL3中预览preview模式下的数据流" strategy="recommend_sim_0" target="_blank" style="width: 290px;">Android Camera HAL3中预览preview模式下的数据流</a>
+                                   </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+      
+</div>
+
+     <div>
+           
+
+       
+                           
+            <!-- 广告位：PC端-博客内容页-banner1-960*90 --> 
+            <script> 
+                (function() { 
+                    var s = "_" + Math.random().toString(36).slice(2); 
+                    document.write('<div id="' + s + '"></div>'); 
+                    (window.slotbydup=window.slotbydup || []).push({ 
+                        id: '4228013', 
+                        container: s, 
+                        size: '0,0', 
+                        display: 'inlay-fix' 
+                    }); 
+                })(); 
+            </script><div id="_154vz4t30x7"></div><script charset="utf-8" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/dcwm"></script><script type="text/javascript">
+    /*博客内容页下方Banner1-960*90，创建于2016-12-13*/
+    var cpro_id = "u2843955";
+</script>
+<script type="text/javascript" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2843955_0"><iframe id="iframeu2843955_0" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/dcwm.html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+    </div>
+
+<div id="suggest">
+
+</div>
+         <script language="javascript" type="text/javascript">     
+             $(function(){
+                 $.get("/gzzaigcn/svc/GetSuggestContent/48974523",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ 
+
+<div id="relate" data-mod="popu_218" class="tracking-ad" style="display: block;">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c"><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/android"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/1455589744328_328.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/android">Android知识库</a></h4><p><label><span>34810</span><em>关注</em><i>|</i><span>3135</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/architecture"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/1458091865915_915.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/architecture">大型网站架构知识库</a></h4><p><label><span>8967</span><em>关注</em><i>|</i><span>732</span><em>收录</em></label></p></dd></dl></div>
+</div>
+ 
+
+<dl class="blog-ass-articl tracking-ad" id="res-relatived" data-mod="popu_84"> 
+    <div class="embody embody_b" id="libkeyparent" style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+    
+    <div id="adCollege"> 
+    <div><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/2994" title="Lua语言从入门到精通" strategy="undefined" target="_blank">Lua语言从入门到精通</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3527" title="MATLAB基础知识大串讲" strategy="undefined" target="_blank">MATLAB基础知识大串讲</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/2947" title="走进Vue.js 1.0" strategy="undefined" target="_blank">走进Vue.js 1.0</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1196" title="微信公众平台开发进阶" strategy="undefined" target="_blank">微信公众平台开发进阶</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1968" title="JFinal极速开发企业实战" strategy="undefined" target="_blank">JFinal极速开发企业实战</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3903" title="深度学习框架-Tensorflow案例实战视频课程" strategy="undefined" target="_blank">深度学习框架-Tensorflow案例实战视频课程</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1515" title="虚幻4开发快速入门" strategy="undefined" target="_blank">虚幻4开发快速入门</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3029" title="开源摄像机EasyCamera开发教程" strategy="undefined" target="_blank">开源摄像机EasyCamera开发教程</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1416" title="2017软考软件设计师下午案例分析视频培训课程" strategy="undefined" target="_blank">2017软考软件设计师下午案例分析视频培训课程</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3506" title="深度学习Caffe框架入门视频课程" strategy="undefined" target="_blank">深度学习Caffe框架入门视频课程</a></dd></div></div>  
+
+    
+
+     <script src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/job_reco.js.下载" type="text/javascript"></script> 
+     <script type="text/javascript">
+         csdn.position.showEdu({
+             sourceType: "blog",
+             searchType: "detail",
+             searchKey: "48974523",
+                username: "wangchaoqun1997",
+                recordcount: "10",
+                containerId: "adCollege" //容器DIV的id。 
+            });  
+        </script> 
+   
+</dl>
+
+
+
+
+
+    <div id="ad_cen">        
+                <div>
+                                    <div class="tracking-ad" data-view="true" data-mod="ad_popu_199" data-mtp="43" data-order="114" data-con="ad_content_1843" style="width: 960px; height: 90px;">
+                                             <script type="text/javascript">
+                                                 /*博客内容页下方Banner2-960*90，创建于,2016-11-28*/
+                                                 var cpro_id = "u2831143";
+                                            </script>
+                                            <script type="text/javascript" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2831143_0"><iframe id="iframeu2831143_0" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/dcwm(1).html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+                                   </div>
+                    </div>
+    </div>  
+
+        <!-- 广告位开始 -->
+        <!-- 广告位结束 -->
+<div class="tracking-ad" data-view="true" data-mod="ad_popu_72" data-mtp="62" data-order="40" data-con="ad_content_2072">
+                 <script id="popuLayer_js_q" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/popuLayer.js.下载" defer="defer" type="text/javascript"></script>
+            <div id="layerd" style="position: fixed; bottom: 0px; right: 0px; line-height: 0px; z-index: 1000; width: 300px; height: 278px;">
+    	            <div class="J_close layer_close" style="display:;background-color:#efefef;padding:0px;color:#333;font:12px/24px Helvetica,Tahoma,Arial,sans-serif;text-align:right;">关闭</div><!-- 广告占位容器 --><div id="cpro_u2895327"><iframe id="iframeu2895327_0" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/dcwm(2).html" width="300" height="250" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:300px;height:250px" allowtransparency="true"></iframe></div></div>
+            <script>  document.getElementById("popuLayer_js_q").onload=function(){      var styObjd=styObj={width:"300px","height":parseInt(250)+28};window.CSDN.Layer.PopuLayer("#layerd",{storageName:"layerd",styleObj:styObjd,total:50,expoire:1000*60});  }</script><!-- 投放代码 --><script type="text/javascript">                /*服务器频道首页置顶Banner960*90，创建于2014-7-3*/    (window.cproArray = window.cproArray || []).push({        id: "u2895327"      });  </script>  <script src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script>
+     
+</div>
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list"><dl class="comment_item comment_topic" id="comment_item_6535277"><dt class="comment_head" floor="3">3楼 <span class="user"><a class="username" href="http://blog.csdn.net/mike_gxguo" target="_blank">石牛软件技术工作室</a> <span class="ptime">2017-01-05 15:03发表</span>  <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6535277" username="mike_gxguo"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/mike_gxguo" target="_blank"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/3_mike_gxguo.jpg" width="40" height="40"></a></dd><dd class="comment_body">perfect</dd></dl><dl class="comment_item comment_topic" id="comment_item_5842798"><dt class="comment_head" floor="2">2楼 <span class="user"><a class="username" href="http://blog.csdn.net/alien75" target="_blank">alien75</a> <span class="ptime">2016-01-15 11:13发表</span>  <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="5842798" username="alien75"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/alien75" target="_blank"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/3_alien75.jpg" width="40" height="40"></a></dd><dd class="comment_body">学习了，顺便说一下个人的理解：<br>1、API存在四种类型版本，从上往下是Camera API(java)、Module API、Device API、HAL API；前面三个有明显的版本信息标识(体现在有代码级别的定义)，而HAL则主要根据提供哪种形式的cameraX_device_ops来明确版本信息(或者说与Device API有紧密联系，或者直接等同)；<br>2、Module、Device、HAL对应的工具类是CameraXClient、CameraXDevice、cameraX_device_t/cameraX_device_ops_t，选用哪种工具类是由下而上根据HAL版本信息来确定的；而Camera API则与它们的耦合度比较低(由于没有看5.0中API2的具体代码我推测是与JNI及Camera API的native实现有关)；</dd><dl class="comment_item comment_reply" id="comment_item_5842904"><dt class="comment_head" floor="2">Re: <span class="user"><a class="username" href="http://blog.csdn.net/gzzaigcn" target="_blank">天才2012</a> <span class="ptime">2016-01-15 12:24发表</span>  <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="5842904" username="gzzaigcn"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/gzzaigcn" target="_blank"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/3_gzzaigcn.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复alien75：很不错，具体的version选择都可以在code中体现出来。<br>要说明的是API2.0最大的特点是基于AIDL将Java 中的client和Service直接交互，省去了一大部分原先的jni native。</dd></dl></dl><dl class="comment_item comment_topic" id="comment_item_5501679"><dt class="comment_head" floor="1">1楼 <span class="user"><a class="username" href="http://blog.csdn.net/u011815689" target="_blank">寒江看雪</a> <span class="ptime">2015-10-12 20:14发表</span>  <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="5501679" username="u011815689"> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/u011815689" target="_blank"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/3_u011815689.jpg" width="40" height="40"></a></dd><dd class="comment_body">善于总结啊</dd></dl><div class="clear"></div></div>
+    <div id="comment_bar" style="display: none;">
+    </div>
+    <div id="comment_form"><a name="commentbox"></a><a name="reply"></a><a name="quote"></a><form action="http://blog.csdn.net/gzzaigcn/comment/submit?id=48974523" method="post" onsubmit="return subform(this);"><div class="commentform"><div class="panel_head">发表评论</div><ul><li class="left">用 户 名：</li><li class="right">wangchaoqun1997</li></ul><ul><li class="left">评论内容：</li><li class="right" style="position:relative;"><div id="ubbtools"><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#insertcode" code="code"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/code.gif" border="0" alt="插入代码" title="插入代码"></a></div><div id="lang_list" style="position: absolute; top: 28px; left: 0px; display: none;"><a class="long_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#html">HTML/XML</a><a class="long_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#objc">objective-c</a><a class="zhong_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#delphi">Delphi</a><a class="zhong_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#ruby">Ruby</a><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#php">PHP</a><a class="duan_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#csharp">C#</a><a style=" border-right: none;" class="duan_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#cpp">C++</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#javascript">JavaScript</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#vb">Visual Basic</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#python">Python</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#java">Java</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#css">CSS</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#sql">SQL</a><a style="border:none;" class="duan_name" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#plain">其它</a></div><textarea class="comment_content" name="comment_content" id="comment_content" style="width: 400px; height: 200px;"></textarea></li></ul><ul><input type="hidden" id="comment_replyId" name="comment_replyId"><input type="hidden" id="comment_userId" name="comment_userId" value="521203"><input type="hidden" id="commentId" name="commentId" value=""><input type="submit" class="comment_btn" value="提交">&nbsp;&nbsp;<span id="tip_comment" style="color: Red; display: none;"></span></ul></div></form></div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '48974523';
+    var commentscount = 4;
+    var islock = false
+</script>
+
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top" style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop" style="display: none;" title="返回顶部" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_huidaodingbu&#39;])">         
+         <img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="">
+
+    <h5>
+        <a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+    <div class="classify">
+<a title="全部主题" href="http://www.csdn.net/tag" target="_blank" onclick="LogClickCount(this,336);">全部主题</a>
+<a title="Hadoop" href="http://g.csdn.net/5272865" target="_blank" onclick="LogClickCount(this,336);">Hadoop</a>
+<a title="AWS" href="http://g.csdn.net/5272866" target="_blank" onclick="LogClickCount(this,336);">AWS</a>
+<a title="移动游戏" href="http://g.csdn.net/5272870" target="_blank" onclick="LogClickCount(this,336);">移动游戏</a>
+<a title="Java" href="http://g.csdn.net/5272871" target="_blank" onclick="LogClickCount(this,336);">Java</a>
+<a title="Android" href="http://g.csdn.net/5272872" target="_blank" onclick="LogClickCount(this,336);">Android</a>
+<a title="iOS" href="http://g.csdn.net/5272873" target="_blank" onclick="LogClickCount(this,336);">iOS</a>
+<a title="Swift" href="http://g.csdn.net/5272868" target="_blank" onclick="LogClickCount(this,336);">Swift</a>
+<a title="智能硬件" href="http://g.csdn.net/5272869" target="_blank" onclick="LogClickCount(this,336);">智能硬件</a>
+<a title="Docker" href="http://g.csdn.net/5272867" target="_blank" onclick="LogClickCount(this,336);">Docker</a>
+<a title="OpenStack" href="http://g.csdn.net/5272925" target="_blank" onclick="LogClickCount(this,336);">OpenStack</a>
+<a title="VPN" href="http://www.csdn.net/tag/vpn" target="_blank" onclick="LogClickCount(this,336);">VPN</a>
+<a title="Spark" href="http://g.csdn.net/5272924" target="_blank" onclick="LogClickCount(this,336);">Spark</a>
+<a title="ERP" href="http://www.csdn.net/tag/erp" target="_blank" onclick="LogClickCount(this,336);">ERP</a>
+<a title="IE10" href="http://www.csdn.net/tag/ie10" target="_blank" onclick="LogClickCount(this,336);">IE10</a>
+<a title="Eclipse" href="http://www.csdn.net/tag/eclipse" target="_blank" onclick="LogClickCount(this,336);">Eclipse</a>
+<a title="CRM" href="http://www.csdn.net/tag/crm" target="_blank" onclick="LogClickCount(this,336);">CRM</a>
+<a title="JavaScript" href="http://www.csdn.net/tag/javascript" target="_blank" onclick="LogClickCount(this,336);">JavaScript</a>
+<a title="数据库" href="http://www.csdn.net/tag/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" onclick="LogClickCount(this,336);">数据库</a>
+<a title="Ubuntu" href="http://www.csdn.net/tag/ubuntu" target="_blank" onclick="LogClickCount(this,336);">Ubuntu</a>
+<a title="NFC" href="http://www.csdn.net/tag/nfc" target="_blank" onclick="LogClickCount(this,336);">NFC</a>
+<a title="WAP" href="http://www.csdn.net/tag/wap" target="_blank" onclick="LogClickCount(this,336);">WAP</a>
+<a title="jQuery" href="http://www.csdn.net/tag/jquery" target="_blank" onclick="LogClickCount(this,336);">jQuery</a>
+<a title="BI" href="http://www.csdn.net/tag/bi" target="_blank" onclick="LogClickCount(this,336);">BI</a>
+<a title="HTML5" href="http://www.csdn.net/tag/html5" target="_blank" onclick="LogClickCount(this,336);">HTML5</a>
+<a title="Spring" href="http://www.csdn.net/tag/spring" target="_blank" onclick="LogClickCount(this,336);">Spring</a>
+<a title="Apache" href="http://www.csdn.net/tag/apache" target="_blank" onclick="LogClickCount(this,336);">Apache</a>
+<a title=".NET" href="http://www.csdn.net/tag/.net" target="_blank" onclick="LogClickCount(this,336);">.NET</a>
+<a title="API" href="http://www.csdn.net/tag/api" target="_blank" onclick="LogClickCount(this,336);">API</a>
+<a title="HTML" href="http://www.csdn.net/tag/html" target="_blank" onclick="LogClickCount(this,336);">HTML</a>
+<a title="SDK" href="http://www.csdn.net/tag/sdk" target="_blank" onclick="LogClickCount(this,336);">SDK</a>
+<a title="IIS" href="http://www.csdn.net/tag/iis" target="_blank" onclick="LogClickCount(this,336);">IIS</a>
+<a title="Fedora" href="http://www.csdn.net/tag/fedora" target="_blank" onclick="LogClickCount(this,336);">Fedora</a>
+<a title="XML" href="http://www.csdn.net/tag/xml" target="_blank" onclick="LogClickCount(this,336);">XML</a>
+<a title="LBS" href="http://www.csdn.net/tag/lbs" target="_blank" onclick="LogClickCount(this,336);">LBS</a>
+<a title="Unity" href="http://www.csdn.net/tag/unity" target="_blank" onclick="LogClickCount(this,336);">Unity</a>
+<a title="Splashtop" href="http://www.csdn.net/tag/splashtop" target="_blank" onclick="LogClickCount(this,336);">Splashtop</a>
+<a title="UML" href="http://www.csdn.net/tag/uml" target="_blank" onclick="LogClickCount(this,336);">UML</a>
+<a title="components" href="http://www.csdn.net/tag/components" target="_blank" onclick="LogClickCount(this,336);">components</a>
+<a title="Windows Mobile" href="http://www.csdn.net/tag/windowsmobile" target="_blank" onclick="LogClickCount(this,336);">Windows Mobile</a>
+<a title="Rails" href="http://www.csdn.net/tag/rails" target="_blank" onclick="LogClickCount(this,336);">Rails</a>
+<a title="QEMU" href="http://www.csdn.net/tag/qemu" target="_blank" onclick="LogClickCount(this,336);">QEMU</a>
+<a title="KDE" href="http://www.csdn.net/tag/kde" target="_blank" onclick="LogClickCount(this,336);">KDE</a>
+<a title="Cassandra" href="http://www.csdn.net/tag/cassandra" target="_blank" onclick="LogClickCount(this,336);">Cassandra</a>
+<a title="CloudStack" href="http://www.csdn.net/tag/cloudstack" target="_blank" onclick="LogClickCount(this,336);">CloudStack</a>
+<a title="FTC" href="http://www.csdn.net/tag/ftc" target="_blank" onclick="LogClickCount(this,336);">FTC</a>
+<a title="coremail" href="http://www.csdn.net/tag/coremail" target="_blank" onclick="LogClickCount(this,336);">coremail</a>
+<a title="OPhone " href="http://www.csdn.net/tag/ophone" target="_blank" onclick="LogClickCount(this,336);">OPhone </a>
+<a title="CouchBase" href="http://www.csdn.net/tag/couchbase" target="_blank" onclick="LogClickCount(this,336);">CouchBase</a>
+<a title="云计算" href="http://www.csdn.net/tag/%E4%BA%91%E8%AE%A1%E7%AE%97" target="_blank" onclick="LogClickCount(this,336);">云计算</a>
+<a title="iOS6" href="http://www.csdn.net/tag/iOS6" target="_blank" onclick="LogClickCount(this,336);">iOS6</a>
+<a title="Rackspace " href="http://www.csdn.net/tag/rackspace" target="_blank" onclick="LogClickCount(this,336);">Rackspace </a>
+<a title="Web App" href="http://www.csdn.net/tag/webapp" target="_blank" onclick="LogClickCount(this,336);">Web App</a>
+<a title="SpringSide" href="http://www.csdn.net/tag/springside" target="_blank" onclick="LogClickCount(this,336);">SpringSide</a>
+<a title="Maemo" href="http://www.csdn.net/tag/maemo" target="_blank" onclick="LogClickCount(this,336);">Maemo</a>
+<a title="Compuware" href="http://www.csdn.net/tag/compuware" target="_blank" onclick="LogClickCount(this,336);">Compuware</a>
+<a title="大数据" href="http://www.csdn.net/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE" target="_blank" onclick="LogClickCount(this,336);">大数据</a>
+<a title="aptech" href="http://www.csdn.net/tag/aptech" target="_blank" onclick="LogClickCount(this,336);">aptech</a>
+<a title="Perl" href="http://www.csdn.net/tag/perl" target="_blank" onclick="LogClickCount(this,336);">Perl</a>
+<a title="Tornado" href="http://www.csdn.net/tag/tornado" target="_blank" onclick="LogClickCount(this,336);">Tornado</a>
+<a title="Ruby" href="http://www.csdn.net/tag/ruby" target="_blank" onclick="LogClickCount(this,336);">Ruby</a>
+<a title="Hibernate" href="http://www.csdn.net/tag/hibernate" target="_blank" onclick="LogClickCount(this,336);">Hibernate</a>
+<a title="ThinkPHP" href="http://www.csdn.net/tag/thinkphp" target="_blank" onclick="LogClickCount(this,336);">ThinkPHP</a>
+<a title="HBase" href="http://www.csdn.net/tag/hbase" target="_blank" onclick="LogClickCount(this,336);">HBase</a>
+<a title="Pure" href="http://www.csdn.net/tag/pure" target="_blank" onclick="LogClickCount(this,336);">Pure</a>
+<a title="Solr" href="http://www.csdn.net/tag/solr" target="_blank" onclick="LogClickCount(this,336);">Solr</a>
+<a title="Angular" href="http://www.csdn.net/tag/angular" target="_blank" onclick="LogClickCount(this,336);">Angular</a>
+<a title="Cloud Foundry" href="http://www.csdn.net/tag/cloudfoundry" target="_blank" onclick="LogClickCount(this,336);">Cloud Foundry</a>
+<a title="Redis" href="http://www.csdn.net/tag/redis" target="_blank" onclick="LogClickCount(this,336);">Redis</a>
+<a title="Scala" href="http://www.csdn.net/tag/scala" target="_blank" onclick="LogClickCount(this,336);">Scala</a>
+<a title="Django" href="http://www.csdn.net/tag/django" target="_blank" onclick="LogClickCount(this,336);">Django</a>
+<a title="Bootstrap" href="http://www.csdn.net/tag/bootstrap" target="_blank" onclick="LogClickCount(this,336);">Bootstrap</a>
+    </div>
+
+</div>
+  <script type="text/javascript">     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/gzzaigcn/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+    var articletitle='Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）';
+
+</script>
+
+
+
+
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/gzzaigcn" target="_blank">
+    <img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/1_gzzaigcn.jpg" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/gzzaigcn" class="user_name" target="_blank">天才2012</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter" title="[发私信]" onclick="window.open(&#39;http://msg.csdn.net/letters/model?receiver=gzzaigcn&#39;,&#39;_blank&#39;,&#39;height=350,width=700&#39;);_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_sixin&#39;])"></a>  
+</div>
+<div id="blog_medal">
+                       <div class="ico_expert" onclick="javascript:location=&#39;http://blog.csdn.net/experts/rule.html&#39;" title="CSDN认证专家" style="cursor:pointer;width:60px;height:60px;background:url(&#39;http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/bokezhuanjiamiddle.png&#39;) no-repeat"></div>
+                <div id="bms_box">
+                                            <a target="_blank">
+                                                    <img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/zhuanlandaren.png" onmouseover="m_over_m(this,2)" onmouseout="m_out_m()" alt="2">
+                                            </a>
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>556402次</span></li>
+    <li>积分：<span>7695</span> </li>    
+    <li>等级： <span style="position:relative;display:inline-block;z-index:1">
+            <img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/blog6.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：7695 </div>
+        </span>  </li>
+    <li>排名：<span>第2504名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>162篇</span></li>
+    <li>转载：<span>44篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>288条</span></li>
+</ul>
+</ul>
+</div>
+
+
+
+
+<div id="custom_column_22924241" class="panel">
+<ul class="panel_head"><span>天才的嵌入式的世界</span></ul>
+<ul class="panel_body">
+喜欢开源，喜欢交流吹牛，哈哈！！！！
+QQ：1037701636； 
+CSDN：http://blog.csdn.net/gzzaigcn。
+百度知道团队：嵌入式的世界，欢迎加入
+</ul>
+</div>
+
+<div id="custom_column_23047149" class="panel">
+<ul class="panel_head"><span>博客公告</span></ul>
+<ul class="panel_body">
+
+本博客所有原创Blog，是本人对学习过程的记录。欢迎交流，欢迎转载，转载请务必注明出处。
+
+</ul>
+</div><div id="panel_Category" class="panel">
+    <ul class="panel_head"><span>博客专栏</span></ul>
+    <ul class="panel_body" id="sp_column">
+    <table cellpadding="0" cellspacing="0"><tbody><tr>
+    <td style="padding:10px 10px 0 0;">
+    <a href="http://blog.csdn.net/column/details/camera.html" target="_blank"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/20151123180521786" style="width:75px;height:75px;"></a>
+    </td>
+    <td style="padding:10px 0; vertical-align:top;">
+    <a href="http://blog.csdn.net/column/details/camera.html" target="_blank">我心依旧之Android Camera模块FW/HAL3探学</a>
+    <p>文章：8篇</p>
+    <span>阅读：38037</span>
+    </td>
+    </tr></tbody></table>
+    <table cellpadding="0" cellspacing="0"><tbody><tr>
+    <td style="padding:10px 10px 0 0;">
+    <a href="http://blog.csdn.net/column/details/gzz-eworld.html" target="_blank"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/20151123175744177" style="width:75px;height:75px;"></a>
+    </td>
+    <td style="padding:10px 0; vertical-align:top;">
+    <a href="http://blog.csdn.net/column/details/gzz-eworld.html" target="_blank">我心所向之Android4.2</a>
+    <p>文章：18篇</p>
+    <span>阅读：66951</span>
+    </td>
+    </tr></tbody></table>
+    </ul>
+</div><div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search csdn-tracking-statistics" target="_blank" data-mod="popu_306">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字"></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog">
+        <input type="hidden" name="q" id="inputQ">
+        <input type="hidden" name="t" value="blog">
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+   
+    $(function () {
+        $("#btnSubmit").unbind("click");
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {           
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            if ($("#inputSearch").val() == "") {               
+                alert("请录入搜索关键词！");                         
+                return false;
+            }
+            //var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";           
+            var url = "https://www.baidu.com/s?wd=" + encodeURIComponent($("#inputSearch").val()) + "%20site%3Ablog.csdn.net"
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1087759" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">android源码</a><span>(67)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1081241" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">android源码编译</a><span>(14)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1115047" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">TI Davnic视频编解码</a><span>(11)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1081328" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">linux</a><span>(62)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1129234" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">程序语言</a><span>(31)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1144573" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">其他</a><span>(16)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1179689" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Linux下底层驱动开发</a><span>(17)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1276313" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Beagleboard-xm</a><span>(9)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1402800" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">CC2541</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1466861" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">dm6437</a><span>(22)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1496025" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">CCS5.x</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1546077" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">图像处理</a><span>(3)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/1839455" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">嵌入式的人生</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/2135451" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">我心所向之Android4.2.2多媒体、视频采集与显示</a><span>(22)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/2628689" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">嵌入式寻工之旅</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/3066721" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Android Camera HAL3学习记录</a><span>(8)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/gzzaigcn/article/category/5728019" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Linux驱动开发</a><span>(3)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list"><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2017/01">2017年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2016/08">2016年08月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2016/06">2016年06月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2016/05">2016年05月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2016/04">2016年04月</a><span>(1)</span></li><span class="hidelist" style="display:none;"><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2016/03">2016年03月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2016/02">2016年02月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2016/01">2016年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2015/12">2015年12月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2015/11">2015年11月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2015/10">2015年10月</a><span>(10)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2015/09">2015年09月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2015/08">2015年08月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2015/07">2015年07月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2015/03">2015年03月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2015/01">2015年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/12">2014年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/11">2014年11月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/10">2014年10月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/09">2014年09月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/08">2014年08月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/06">2014年06月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/05">2014年05月</a><span>(13)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/04">2014年04月</a><span>(9)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/03">2014年03月</a><span>(14)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/02">2014年02月</a><span>(7)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2014/01">2014年01月</a><span>(8)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/12">2013年12月</a><span>(7)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/11">2013年11月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/10">2013年10月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/09">2013年09月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/08">2013年08月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/07">2013年07月</a><span>(9)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/06">2013年06月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/05">2013年05月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/04">2013年04月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/03">2013年03月</a><span>(7)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2013/01">2013年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/12">2012年12月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/11">2012年11月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/10">2012年10月</a><span>(7)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/09">2012年09月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/08">2012年08月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/07">2012年07月</a><span>(10)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/05">2012年05月</a><span>(6)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/04">2012年04月</a><span>(16)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/03">2012年03月</a><span>(7)</span></li><li><a href="http://blog.csdn.net/gzzaigcn/article/month/2012/02">2012年02月</a><span>(8)</span></li></span><div id="archive_list_button" class="list_closed">展开</div></div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/8898380" title="CC2541 BLE源码阅读知识积累之外设从机Peripheral工作模式。">CC2541 BLE源码阅读知识积累之外设从机Peripheral工作模式。</a><span>(13417)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/8897267" title="CC2541 BLE源码阅读知识积累之OSAL小结">CC2541 BLE源码阅读知识积累之OSAL小结</a><span>(12222)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/8652290" title="多寄存器寻址指令ldmia/ldmib和ARM存储器访问指令——多寄存器存取">多寄存器寻址指令ldmia/ldmib和ARM存储器访问指令——多寄存器存取</a><span>(8829)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/8075059" title="关于CodeSourcery 和Sourcery G++">关于CodeSourcery 和Sourcery G++</a><span>(7304)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523" title="Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）">Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）</a><span>(7057)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/21892067" title="Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer">Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer</a><span>(7041)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/7727395" title="linux下设备device_register和驱动driver_register先后注册的影响和关系">linux下设备device_register和驱动driver_register先后注册的影响和关系</a><span>(5644)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/7322392" title="DAVINCI DM365-DM368开发攻略——开发环境搭建（DVSDK4.02）">DAVINCI DM365-DM368开发攻略——开发环境搭建（DVSDK4.02）</a><span>(5403)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/7463525" title="DM3730 调试心得4之cmemk">DM3730 调试心得4之cmemk</a><span>(5336)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/22175829" title="Android4.2.2 SurfaceFlinger本地的FramebufferSurface实现真正的显示">Android4.2.2 SurfaceFlinger本地的FramebufferSurface实现真正的显示</a><span>(5274)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/7463525" title="DM3730 调试心得4之cmemk">DM3730 调试心得4之cmemk</a><span>(35)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/22175829" title="Android4.2.2 SurfaceFlinger本地的FramebufferSurface实现真正的显示">Android4.2.2 SurfaceFlinger本地的FramebufferSurface实现真正的显示</a><span>(23)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/17801261" title="写给我的2013">写给我的2013</a><span>(20)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/42749263" title="写给我的2014——也写给我即将逝去的研究生生涯">写给我的2014——也写给我即将逝去的研究生生涯</a><span>(13)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/33744925" title="基于BP神经网络的简单字符识别算法自小结(C语言版)">基于BP神经网络的简单字符识别算法自小结(C语言版)</a><span>(12)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/21892067" title="Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer">Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer</a><span>(12)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/8897267" title="CC2541 BLE源码阅读知识积累之OSAL小结">CC2541 BLE源码阅读知识积累之OSAL小结</a><span>(11)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/8153719" title="beagelboard-xm上dvsdk移植4：sd卡启动脚本以及NFS文件系统的制作和配置">beagelboard-xm上dvsdk移植4：sd卡启动脚本以及NFS文件系统的制作和配置</a><span>(10)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/50620321" title="写给我的2015—开启工作新旅程">写给我的2015—开启工作新旅程</a><span>(8)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/gzzaigcnforever/article/details/7298435" title="DM3730调试心得，与问题">DM3730调试心得，与问题</a><span>(8)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/turingbooks/article/details/72416875" target="_blank">* 5月书讯：流畅的Python，终于等到你！</a></li>
+<li><a href="http://blog.csdn.net/kimmking/article/details/72886230" target="_blank">* JSON最佳实践</a></li>
+<li><a href="http://blog.csdn.net/swingwang/article/details/72887367" target="_blank">* InfiniBand技术和协议架构分析</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/72675977" target="_blank">* Android 中解决破解签名验证之后导致的登录授权失效问题</a></li>
+<li><a href="http://blog.csdn.net/poem_qianmo/article/details/72857602" target="_blank">* 《Real-Time Rendering 3rd》 提炼总结——图形渲染与视觉外观</a></li>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/72903038" target="_blank">* CSDN日报20170607 ——《别混淆你想要什么和能否实现》</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/21892067#comments">Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/root45" class="user_name">root45</a>:
+这里又回到了客户端侧的，的确这里很好奇的是在服务端侧也有过GraphicBuffer的存在，而客户端...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/21892067#comments">Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/root45" class="user_name">root45</a>:
+在flatten和unflatten函数其实就是为了满足Binder数据的通信协议Parcel而设计...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/21892067#comments">Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/root45" class="user_name">root45</a>:
+首先是新建一个应用程序客户端侧的一个GraphicBuffer对象，然后利用服务端返回的reply信...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/21892067#comments">Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/root45" class="user_name">root45</a>:
+这里看到usage有一种是硬件帧缓存，另一个是开辟单独的匿名内存块。当然数据直接写入FramerBu...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/21892067#comments">Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/root45" class="user_name">root45</a>:
+sp SurfaceFlinger::createGraphicBufferAlloc()  {  ...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/21892067#comments">Android4.2.2 SurfaceFlinger之图形缓存区申请与分配dequeueBuffer</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/root45" class="user_name">root45</a>:
+//当前找到的slots中的buffer没有缓冲区或者相关属性不匹配则从新申请
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/49070703#comments">Android Camera HAL3中预览preview模式下的数据流</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/xxnaxx" class="user_name">xxnaxx</a>:
+谢谢博主，这篇讲的非常好！ 但是最后那张流程图分辨率太低了，文字根本看不清，可以上传张清晰的吗
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48997463#comments">Android Camera HAL3中预览preview模式下的控制流</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/smartbone763" class="user_name">裤子又瘦了</a>:
+感谢分享，最近刚开始做高通，开始HAL3....
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48997463#comments">Android Camera HAL3中预览preview模式下的控制流</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/gzzaigcn" class="user_name">天才2012</a>:
+@Frankensteinban:希望学习后也可以分享自己的心得
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/gzzaigcnforever/article/details/48997463#comments">Android Camera HAL3中预览preview模式下的控制流</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/Frankensteinban" class="user_name">Ginter_</a>:
+帮助很大，感谢分享
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 -->                    <!-- 广告位结束 -->
+                   <div class="tracking-ad" data-view="true" data-mtp="63" data-order="40" data-con="ad_content_1260" style="width: 200px; height: 200px;">
+                         <div id="nav_show_top_stop" style="width: 200px; height: 200px; z-index: 1000; position: fixed; top: 2949px;"><div id="cpro_u2734128"><iframe id="iframeu2734128_0" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/dcwm(3).html" width="200" height="200" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:200px;height:200px" allowtransparency="true"></iframe></div></div>
+                   </div>
+    <script type="text/javascript">    
+        setTimeout(function () {
+            var naviga_offsetTop = 0;
+            function naviga_stay_top() { var scrollTop = jQuery(document).scrollTop(); if (scrollTop > naviga_offsetTop) { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": "0px" }); } else { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": naviga_offsetTop - scrollTop + "px" }); } }
+            function onload_function() { naviga_offsetTop = jQuery("#nav_show_top_stop").position().top; jQuery(window).bind("scroll", naviga_stay_top); jQuery(window).bind("mousewheel", naviga_stay_top); jQuery(document).bind("scroll", naviga_stay_top); jQuery(document).bind("mousewheel", naviga_stay_top); } jQuery(document).ready(onload_function);
+               
+        }, 200);    
+    </script>
+<script type="text/javascript">(window.cproArray = window.cproArray || []).push({ id: "u2734128" });  </script> 
+                    <script src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script> 
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+
+     
+
+   
+   
+     <!--new top-->
+   
+   
+
+    
+    
+    
+   
+
+   
+
+
+       <script type="text/javascript" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/MathJax.js.下载"></script>
+          <script type="text/javascript">
+              //$(function () {
+              //    setTimeout(function () {
+              //        var searchtitletags = articletitle + ',' + $("#tags").html();
+              //        searchService({
+              //            index: 'blog',
+              //            query: searchtitletags,
+              //            from: 5,
+              //            size: 5,
+              //            appendTo: '#res',
+              //            url: 'recommend',
+              //            his: 2,
+              //            client: "blog_cf_enhance",
+              //            tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+              //        });
+              //    }, 1000);
+              //});
+
+         </script>
+    
+    <script src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/csdn_blog_detail.min.js.下载" type="text/javascript"></script><link rel="stylesheet" type="text/css" href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/pub_footer_2014.css"><div class="pub_fo"><div id="pub_footerall" class="pub_footer_new"><dl><dt></dt> <dd class="foot_sub_menu"><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a><span>|</span><a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a><span>|</span><a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a><span>|</span><a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a><span>|</span><a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a><span>|</span><a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a><span>|</span><a href="mailto:webmaster@csdn.net">问题报告</a><span>|</span><a target="_blank" href="http://www.csdn.net/friendlink.html">合作伙伴</a><span>|</span><a href="http://bbs.csdn.net/forums/Service" target="_blank">论坛反馈</a></dd><dd class="foot_contact"><a href="javascript:void(0);" target="_blank" class="qq">网站客服</a><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2251809102&amp;site=qq&amp;menu=yes" target="_blank" class="qq">杂志客服</a><a href="http://e.weibo.com/csdnsupport/profile" target="_blank" class="weibo">微博客服</a><a href="mailto:webmaster@csdn.net" class="email" title="联系邮箱">webmaster@csdn.net</a><span class="phone" title="服务热线">400-660-0108</span><span class="interval">|</span><span>北京创新乐知信息技术有限公司 版权所有</span><span class="interval">|</span><span>江苏知之为计算机有限公司</span><span class="interval">|</span><span>江苏乐知网络技术有限公司</span></dd><dd class="foot_copyright"><span>京&nbsp;ICP&nbsp;证&nbsp;09002463&nbsp;号</span><span class="interval">|</span><span>Copyright © 1999-2017, CSDN.NET, All Rights Reserved&nbsp;</span><a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div></div><div id="note1" class="csdn_note" style="display:none; position:absolute; z-index:9999; width:440px">  <span class="notice_top_arrow"><span class="inner"></span></span>  <div class="box"></div></div><div class="csdn_notice_tip" style="position: absolute; z-index: 9990; width: 170px; left: -72px; top: 858px; display: block;">  <iframe src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/saved_resource(2).html" frameborder="0" scrolling="no" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe>  <div class="tip_text">您有<strong>11</strong>条新通知</div>  <a href="javascript:void 0" class="close2"></a></div><script id="noticeScript" type="text/javascript" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/notify.js.下载"></script><input type="hidden" id="aa_g_data_ids">
+        
+    <script type="text/javascript" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/csdn_public_blog_detail.min.js.下载"></script>
+
+    <script type="text/javascript" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/showblogmedal.ashx"></script>
+
+     
+    
+
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334" src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/52b5334.js.下载"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    
+    
+        
+     
+
+    
+          
+    <div class="pop_CA_cover" style="display:none"></div>
+    <div class="pop pop_CA" style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon" id="fapancle" onclick="$(&#39;.pop_CA&#39;).hide();$(&#39;.pop_CA_cover&#39;).hide();"></span>
+          </div>
+          <iframe src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/saved_resource(3).html" id="fa" frameborder="0" width="100%" height="360" scrolling="no"></iframe>
+    </div>
+
+
+        <script type="text/javascript">
+
+            $(function () {
+                var fromjs = $("#fromjs");
+                if (fromjs.length > 0) {
+                    $("#fromjs .markdown_views pre").addClass("prettyprint");
+                    prettyPrint();
+
+                    $('pre.prettyprint code').each(function () {
+                        var lines = $(this).text().split('\n').length;
+                        var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                        $(this).addClass('has-numbering').parent().append($numbering);
+                        for (i = 1; i <= lines; i++) {
+                            $numbering.append($('<li/>').text(i));
+                        };
+                        $numbering.fadeIn(1700);
+                    });
+
+                    $('.pre-numbering li').css("color", "#999");
+                }
+            });
+           
+            $(".markdown_views a[target!='_blank']").attr("target", "_blank");
+
+            //$(".toc a[target='_blank']").attr("target", "");
+
+            setTimeout(function () {
+                $(".toc a[target='_blank']").attr("target", "");
+            },500);
+
+        </script>
+
+
+   
+ <div id="tag-suggest-pop">
+  <div class="relative">
+    <div class="close"></div>
+    <div class="content"></div>
+  </div>
+</div><div id="mask_code"></div><div class="gist_edit"><div class="save_snippets clearfix"><div class="tit"><h3>保存代码片</h3><span>整理和分享保存的代码片，请访问<a href="https://code.csdn.net/snippets_manage" target="_blank">代码笔记</a></span></div><div class="con_form"><ul class="gist_edit_list clearfix"><li><span class="red">*</span><span class="txt">标题</span><input id="form_title" class="form-input" placeholder="Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）" type="text"></li><li><span class="red">*</span><span class="txt">描述</span><textarea id="form-textarea" class="form-textarea" placeholder="Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3）： http://blog.csdn.net/gzzaigcnforever/article/details/48974523"></textarea></li><li><span class="red">&nbsp;</span><span class="txt">标签</span><div id="divSearchTags"><span class="label blog_tag"><span>android</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>linux</span><a title="Removing tag" href="javascript:;">x</a></span><span class="label blog_tag"><span>c</span><a title="Removing tag" href="javascript:;">x</a></span><input id="insertTag" class="insertTag" placeholder="请输入标签，按Enter生成(最多5项)" type="text" value="" name="insertTag" maxlength="21" style="color: rgb(51, 51, 51);"><input id="OrganTag" class="OrganTag" type="hidden" name="OrganTag" value="android,linux,c,"><input id="OldOrganTag" class="OldOrganTag" type="hidden" name="OldOrganTag" value=""><input type="hidden" name="txtSearchTags"></div></li></ul></div><div class="bottom-bar"><a href="javascript:;" class="btn-submit btn-cancel">取消</a><span class="tracking-ad" data-mod="popu_250"><a class="btn-submit btn-confirm" href="javascript:;" target="_blank">确定</a></span></div></div></div><link rel="stylesheet" type="text/css" media="screen" href="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/ask_float_fonts_css-6b30a53970eb5c3a2a045e3df585b475.css"><div data-mod="popu_64" class="csdn-tracking-statistics" chg-blk="0"><a id="com-quick-reply" title="快速回复" style="top:445px"></a><a id="com-quick-collect" title="我要收藏" style="top:483px"></a><a id="com-d-top-a" style="top: 521px; display: inline;" title="返回顶部" onclick=""></a> </div><div class="pop_edit ask_second comm_ask_second"><h3>提问</h3><span class="ask_float_span">您的问题将会被发布在“<a class="ask_float_channel" href="http://ask.csdn.net/" target="_blank" style="cursor:pointer">技术问答</a>”频道</span><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" nodetype="close" class="close">×</a><div class="context"><div class="err_div"><span class="err_ico"></span><span class="err_txt">该问题已存在，请勿重复提问</span></div><div class="input_div"><input id="askInputSecond" type="text" style="font-size:14px;" placeholder="问题标题"></div><div class="cm_box"><div class="cm_dialog"></div> <div class="pop_cm cm_add_link"><input type="text" placeholder="链接内容" id="af_cm_link_txt"><input type="text" placeholder="链接地址" id="af_cm_link_url"><input type="text" placeholder="链接提示" id="af_cm_link_tit"><div class="text-right"><span class="btn btn-default btn-sm" id="add_link_btn">插入链接</span> </div> </div><div class="pop_cm cm_add_img"><div class="nav-tabs"><a class="img_tab active" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#tab_upload">本地上传</a><a class="img_tab" href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#tab_weburl">网络图片</a></div><div class="tab_panel active" id="tab_upload"><div class="set_img"><iframe src="./Android Camera从Camera HAL1到Camera HAL3的过渡（已更新到Android6.0 HAL3.3） - 天才之嵌入式 - 博客频道 - CSDN.NET_files/upload.html"></iframe></div></div><div class="tab_panel" id="tab_weburl"><input type="text" placeholder="图片地址" id="af_cm_img_url"><input type="text" placeholder="图片说明" id="af_cm_img_alt"><div class="text-right"><span class="btn btn-default btn-sm" id="add_img_btn">插入图片</span> </div></div> </div></div> <textarea id="editor_all" rows="8" style="display: none;"></textarea><div class="editor-toolbar"><i class="separator">|</i><a class="icon-headline" title="标题一（Ctrl+Alt+1）"></a><a class="icon-heading" title="标题二（Ctrl+Alt+2）"></a><a class="icon-bold" title="粗体（Ctrl+B）"></a><a class="icon-italic" title="斜体（Ctrl+I）"></a><i class="separator">|</i><a class="icon-quote-left" title="引用（Ctrl+’）"></a><a class="icon-code" title="插入代码片（Ctrl+,）"></a><a class="icon-list-ul" title="无序列表（Ctrl+L）"></a><a class="icon-list-ol" title="有序列表（Ctrl+Alt+L）"></a><i class="separator">|</i><a class="icon-link" title="添加链接（Ctrl+K）"></a><a class="icon-picture" title="添加图片（Ctrl+Alt+I）"></a><i class="separator">|</i><a class="icon-reply" title="撤退（Ctrl+Z）"></a><a class="icon-share-alt" title="前进（Ctrl+Shift+Z）"></a><i class="separator">|</i><a class="icon-info" href="http://ask.csdn.net/pages/markdown" target="_blank" title="markdown语法参考"></a><a class="icon-preview" title="预览"></a><i class="separator">|</i></div><div class="CodeMirror cm-s-paper CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none; font-size: 4px;" tabindex="0"></textarea></div><div class="CodeMirror-hscrollbar"><div style="height: 1px;"></div></div><div class="CodeMirror-vscrollbar"><div style="width: 1px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-gutter-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="min-width: 33px;"><div style="position: relative;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre>&nbsp;<span style="display: inline-block; width: 1px; margin-right: -1px;">&nbsp;</span></pre></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"></div><div class="CodeMirror-cursor" style="visibility: hidden;">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor" style="visibility: hidden;">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px;"></div><div class="CodeMirror-gutters" style="display: none;"></div></div></div><div class="editor-statusbar"><span class="lines">0</span><span class="words">0</span><span class="cursor">0:0</span></div><div class="div_tags clearfix"><div id="divSearchTags" class="tags_con"><input type="text"></div><input type="hidden" name="txtSearchTags"></div><div id="ask2_tagRecomm_div" class="drt_tagRecomm tracking-ad" data-mod="popu_73"><span class="drt_tit">推荐标签：</span></div></div><div class="success"><div class="left_area"><input id="chk_cb" type="checkbox"><span class="wyxs">我要悬赏</span><input id="cb_num" class="cb_num" readonly="true"><span class="phib_rii"><span> 币</span></span></div><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" nodetype="cancel" class="cancel">取消</a><a href="http://blog.csdn.net/gzzaigcnforever/article/details/48974523#" nodetype="ok" class="ok">发布</a></div></div><div id="common_ask_div_sc" class="searchContainer"><div class="sTitle">可能存在类似的问题：</div><div class="sFooter"><a class="sFirstNewAsk">我想提一个新问题</a></div></div><div style="position:fixed; top:0; left:0; overflow:hidden;"><input style="position:absolute; left:-300px;" type="text" value="" id="focus_retriever" readonly="true"></div></body></html>

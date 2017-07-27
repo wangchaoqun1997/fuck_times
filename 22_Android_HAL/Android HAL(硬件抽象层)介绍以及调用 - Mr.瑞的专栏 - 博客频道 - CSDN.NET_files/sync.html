@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>sina sync page</title>
+</head>
+<body>
+<script type='text/javascript'>
+    var dre = 'http://weibo.com/login?url=';
+	var reg_sina = /^http\:\/\/login\.sina\.com\.cn/i;
+	
+    var regs = {};
+    regs['baidu'] = /^http\:\/\/(.+)\.baidu\.com/i;
+    regs['yunyun'] = /^http:\/\/(.+\.)?yunyun\.com/i;
+    
+    var to_website_url = {};
+    to_website_url['baidu'] = 'http://cpro.baidu.com/cpro/ui/html/sync.htm';
+    to_website_url['yunyun'] = 'https://passport.yunyun.com/WeiboSync.php';
+
+    var getCookie = function(sKey) {
+        sKey = sKey.replace(/([\.\[\]\$])/g, '\\\$1');
+        var rep = new RegExp(sKey + '=([^;]*)?;', 'i');
+        var co = document.cookie + ';';
+        var res = co.match(rep);
+        if (res) {
+            return res[1] || "";
+        } else {
+            return '';
+        }
+    };
+    
+    var checkReferrer = function(fromURL) {
+    	fromURL = fromURL || '';
+    	var is_trust = false;
+    	for(var reg in regs){
+    		if(regs[reg].test(document.referrer)){
+    			is_trust = true;
+    		}
+    	}
+    	if(fromURL == 'sina' && !is_trust && reg_sina.test(document.referrer)){
+    		is_trust = true;
+    	}
+        return is_trust;
+    };
+    
+    var fromWebSite = function() {
+    	for(var reg in regs){
+    		if(regs[reg].test(document.referrer)){
+    			return reg;
+    		}
+    	}
+    	return '';
+    };
+
+	var suda = function(url) {
+		if(1 === (Math.random()*1000 | 0)){
+			document.body.appendChild(document.createElement('img')).src = url + '&_t=' + (+new Date());
+		}
+	};
+	
+    ;(function(){
+   		var xhr = new XMLHttpRequest();  	 
+     	xhr.onreadystatechange = function(){
+	        	if(xhr.readyState == 4){
+	                if((xhr.status >= 200 && xhr.status < 300 ) || xhr.status == 304){
+	                    var data = JSON.parse(xhr.responseText);
+	                    if (checkReferrer('sina')) {
+	                        var uid = data.data; 
+	                        if (!uid && getCookie('ALF') && fromWebSite()) {
+	                            var thisURL = location.href;
+	                           //如果自动登录 会多传___ALF=1
+	                            location.href = dre + thisURL + (/\?/.test(thisURL)?'&':'?') + 'from=' + fromWebSite() + '&___ALF=1';
+	                            return;
+	                        }
+	                        if (uid) {
+	                        	suda('http://beacon.sina.com.cn/e.gif?h=1');//如果成功的suda
+	            	            var from = location.href.match(/[\&|\?]from\=([a-z]+)$/i); 
+	            	            from = (from && from[1]) || fromWebSite() || '';
+	            	            if(from && to_website_url[from]){
+	            	            location.href = to_website_url[from] + '?sid=' + uid + '&t='
+	            	                    + (new Date()).getTime();
+	            	            }
+	                        } else {
+	                        	suda('http://beacon.sina.com.cn/e.gif?h=0');//如果失败的suda
+	                        }
+	                    }
+	                }else{
+	                    console.log("error:"+ xhr.status);
+	                }            		
+	        	}	
+	         }; 
+            xhr.open("post","/aj/v6/user/uid?is_sync=1",true);
+            var SUB = document.cookie.indexOf('SUB');
+            SUB != -1 ? xhr.send(null) : '' ;
+    })();
+</script>
+</body>
+</html>

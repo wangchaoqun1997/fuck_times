@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<!-- saved from url=(0045)http://www.cnblogs.com/xerrard/p/4747802.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/bundle-coffee.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/bundle-coffee-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/xerrard/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/xerrard/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/xerrard/wlwmanifest.xml">
+<script async="" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/encoder.js.下载"></script><script src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'xerrard', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/xerrard/"><img id="blogLogo" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/xerrard/">xerrard</a></h1>
+<h2></h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="navigator">
+			
+<ul id="navList">
+	<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+	<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/xerrard/">首页</a></li>
+	<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+	<li><a id="blog_nav_contact" accesskey="9" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/xerrard">联系</a></li>
+	<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+	<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/xerrard/rss">订阅</a>
+	<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/xerrard/rss"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/xml.gif" alt="订阅"></a></li>
+</ul>
+
+
+			<div class="blogStats">
+				
+				<div id="blog_stats">
+<!--done-->
+随笔- 30&nbsp;
+文章- 0&nbsp;
+评论- 3&nbsp;
+</div>
+				
+			</div><!--end: blogStats -->
+		</div><!--end: navigator 博客导航栏 -->
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/xerrard/p/4747802.html">Android 5.1 Camera 架构学习之Camera初始化</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>&nbsp;</p>
+<p>Android Camera 采用C/S架构，client 与server两个独立的线程之间（CameraService）使用Binder通信。</p>
+<h3>一 CameraService的注册。</h3>
+<p>1.手机开机后，会走init.rc流程，init.rc会启动MediaServer Service。</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>service media /system/bin/<span>mediaserver
+    class<span> main
+    user root ####
+#   google default ####
+#   user media    ####
+    group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm media sdcard_r system net_bt_stack ####
+#   google default ####
+#   group audio camera inet net_bt net_bt_admin net_bw_acct drmrpc mediadrm ####
+<span>
+    ioprio rt 4</span></span></span></pre>
+<p>&nbsp;</p>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>2.MediaServer的main函数位于frameworks/base/media/mediaserver/main_mediaserver.cpp中。</p>
+<p>在Main_MediaServer.cpp的main函数中，CameraService完成了注册</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">int</span> main(<span style="color: #0000ff;">int</span> argc __unused, <span style="color: #0000ff;">char</span>**<span style="color: #000000;"> argv)
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">{
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">    signal(SIGPIPE, SIG_IGN);
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">char</span><span style="color: #000000;"> value[PROPERTY_VALUE_MAX];
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">bool</span> doLog = (property_get(<span style="color: #800000;">"</span><span style="color: #800000;">ro.test_harness</span><span style="color: #800000;">"</span>, value, <span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span>) &gt; <span style="color: #800080;">0</span>) &amp;&amp; (atoi(value) == <span style="color: #800080;">1</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">    pid_t childPid;
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">..............................
+</span><span style="color: #008080;"> 8</span>         sp&lt;ProcessState&gt;<span style="color: #000000;"> proc(ProcessState::self());
+</span><span style="color: #008080;"> 9</span>         sp&lt;IServiceManager&gt; sm =<span style="color: #000000;"> defaultServiceManager();
+</span><span style="color: #008080;">10</span>         ALOGI(<span style="color: #800000;">"</span><span style="color: #800000;">ServiceManager: %p</span><span style="color: #800000;">"</span>, sm.<span style="color: #0000ff;">get</span><span style="color: #000000;">());
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">        AudioFlinger::instantiate();
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">        MediaPlayerService::instantiate();
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">#ifdef MTK_AOSP_ENHANCEMENT
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">        MemoryDumper::instantiate();
+</span><span style="color: #008080;">15</span> <span style="color: #0000ff;">#endif</span>
+<span style="color: #008080;">16</span>        <span style="color: #ff0000;"> <strong>CameraService::instantiate();</strong></span>
+<span style="color: #008080;">17</span> ......................................</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>3.&nbsp;instantiate的实现在CameraService的父类中，</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">namespace</span><span style="color: #000000;"> android {
+
+template</span>&lt;typename SERVICE&gt;
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> BinderService
+{
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">static</span> status_t <span style="color: #ff0000;"><strong>publish</strong></span>(<span style="color: #0000ff;">bool</span> allowIsolated = <span style="color: #0000ff;">false</span><span style="color: #000000;">) {
+        sp</span>&lt;IServiceManager&gt;<span style="color: #000000;"> sm(defaultServiceManager());
+        </span><span style="color: #0000ff;">return</span> sm-&gt;<span style="color: #000000;">addService(
+                String16(SERVICE::getServiceName()),
+                </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> SERVICE(), allowIsolated);
+    }
+
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> publishAndJoinThreadPool(<span style="color: #0000ff;">bool</span> allowIsolated = <span style="color: #0000ff;">false</span><span style="color: #000000;">) {
+        publish(allowIsolated);
+        joinThreadPool();
+    }
+
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"><span style="color: #ff0000;"><strong> instantiate()</strong></span> { publish(); }
+
+    </span><span style="color: #0000ff;">static</span> status_t shutdown() { <span style="color: #0000ff;">return</span><span style="color: #000000;"> NO_ERROR; }
+
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> joinThreadPool() {
+        sp</span>&lt;ProcessState&gt;<span style="color: #000000;"> ps(ProcessState::self());
+        ps</span>-&gt;<span style="color: #000000;">startThreadPool();
+        ps</span>-&gt;<span style="color: #000000;">giveThreadPoolName();
+        IPCThreadState::self()</span>-&gt;<span style="color: #000000;">joinThreadPool();
+    }
+};
+
+
+}; </span><span style="color: #008000;">//</span><span style="color: #008000;"> namespace android</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p><br>可以发现在publish(）函数中，CameraService完成服务的注册 。<span style="line-height: 1.5;">SERVICE是个模板，这里是注册CameraService，所以可用CameraService代替</span></p>
+<p>&nbsp;&nbsp;<span class="cnblogs_code"><span style="color: #0000ff;">return</span> sm-&gt;addService(String16(CameraService::getServiceName()), <span style="color: #0000ff;">new</span> CameraService()); </span>&nbsp;</p>
+<p>&nbsp;</p>
+<p>这样，Camera就在ServiceManager完成服务注册，提供给client随时使用。</p>
+<p>&nbsp;</p>
+<h3>二 &nbsp;client如何连上server端，并打开camera模块</h3>
+<h4>1.Client如何连接到server端。</h4>
+<p>我们从Camera.open()开始往framework进行分析，调用frameworks\base\core\java\android\hardware\Camera.java类的open方法 。</p>
+<div class="cnblogs_code">
+<pre><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span><span style="color: #000000;"> Camera open() {
+............................................
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span><span style="color: #000000;"> Camera(cameraId);
+.............................................
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这里调用了Camera的构造函数,在构造函数中调用了cameraInitVersion</p>
+<div class="cnblogs_code">
+<pre>    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">int</span> cameraInitVersion(<span style="color: #0000ff;">int</span> cameraId, <span style="color: #0000ff;">int</span><span style="color: #000000;"> halVersion) {
+        ..................................................
+        </span><span style="color: #0000ff;">return</span> <span style="color: #ff0000;"><strong>native_setup</strong></span>(<span style="color: #0000ff;">new</span> WeakReference&lt;Camera&gt;(<span style="color: #0000ff;">this</span><span style="color: #000000;">), cameraId, halVersion, packageName);
+    }</span></pre>
+</div>
+<p>此后进入JNI层android_hardware_camera.cpp</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> connect to camera service</span>
+<span style="color: #0000ff;">static</span> jint <span style="color: #ff0000;"><strong>android_hardware_Camera_native_setup</strong></span>(JNIEnv *<span style="color: #000000;">env, jobject thiz,
+    jobject weak_this, jint cameraId, jint halVersion, jstring clientPackageName)
+{
+   .......................
+        camera </span>=<span style="color: #000000;"><span style="color: #ff0000;"><strong> Camera::connect</strong></span>(cameraId, clientName,
+                Camera::USE_CALLING_UID);
+    ......................
+
+    sp</span>&lt;JNICameraContext&gt; context = <span style="color: #0000ff;">new</span><span style="color: #000000;"> JNICameraContext(env, weak_this, clazz, camera);
+     ...........................
+    camera</span>-&gt;<span style="color: #000000;">setListener(context);
+    ..........................
+
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>JNI函数里面，我们找到Camera C/S架构的客户端了（即红色加粗的那个Camera），它调用connect函数向服务端发送连接请求。JNICameraContext这个类是一个监听类，用于处理底层Camera回调函数传来的数据和消息</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre>sp&lt;Camera&gt; Camera::connect(<span style="color: #0000ff;">int</span> cameraId, <span style="color: #0000ff;">const</span> String16&amp;<span style="color: #000000;"> clientPackageName,
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> clientUid)
+{
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"><span style="color: #ff0000;"><strong> CameraBaseT::connect</strong></span>(cameraId, clientPackageName, clientUid);
+}</span></pre>
+</div>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>template &lt;typename TCam, typename TCamTraits&gt;<span style="color: #000000;">
+sp</span>&lt;TCam&gt; CameraBase&lt;TCam, TCamTraits&gt;::connect(<span style="color: #0000ff;">int</span><span style="color: #000000;"> cameraId,
+                                               </span><span style="color: #0000ff;">const</span> String16&amp;<span style="color: #000000;"> clientPackageName,
+                                               </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> clientUid)
+{
+    ALOGV(</span><span style="color: #800000;">"</span><span style="color: #800000;">%s: connect</span><span style="color: #800000;">"</span><span style="color: #000000;">, __FUNCTION__);
+    sp</span>&lt;TCam&gt; c = <span style="color: #0000ff;">new</span><span style="color: #000000;"> TCam(cameraId);
+    sp</span>&lt;TCamCallbacks&gt; cl =<span style="color: #000000;"> c;
+    status_t status </span>=<span style="color: #000000;"> NO_ERROR;
+    </span><span style="color: #0000ff;">const</span> sp&lt;ICameraService&gt;&amp; cs =<span style="color: #000000;"><span style="color: #ff0000;"><strong> getCameraService()</strong></span>;
+
+    </span><span style="color: #0000ff;">if</span> (cs != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        TCamConnectService fnConnectService </span>=<span style="color: #000000;"> TCamTraits::fnConnectService;
+        status </span>= (cs.<span style="color: #0000ff;">get</span>()-&gt;*<span style="color: #000000;"><span style="color: #ff0000;"><strong>fnConnectService</strong></span>)(cl, cameraId, clientPackageName, clientUid,
+                                             </span><span style="color: #008000;">/*</span><span style="color: #008000;">out</span><span style="color: #008000;">*/</span><span style="color: #ff0000;"> <strong>c-&gt;</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>mCamera</strong></span>);
+    }
+    </span><span style="color: #0000ff;">if</span> (status == OK &amp;&amp; c-&gt;mCamera != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        c</span>-&gt;mCamera-&gt;asBinder()-&gt;<span style="color: #000000;">linkToDeath(c);
+        c</span>-&gt;mStatus =<span style="color: #000000;"> NO_ERROR;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        ALOGW(</span><span style="color: #800000;">"</span><span style="color: #800000;">An error occurred while connecting to camera: %d</span><span style="color: #800000;">"</span><span style="color: #000000;">, cameraId);
+        c.clear();
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> c;
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> establish binder interface to camera service</span>
+template &lt;typename TCam, typename TCamTraits&gt;
+<span style="color: #0000ff;">const</span> sp&lt;ICameraService&gt;&amp; <span style="color: #ff0000;"><strong>CameraBase&lt;TCam, TCamTraits&gt;</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>::getCameraService()</strong></span>
+{
+    Mutex::Autolock _l(gLock);
+    </span><span style="color: #0000ff;">if</span> (gCameraService.<span style="color: #0000ff;">get</span>() == <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        sp</span>&lt;IServiceManager&gt; sm =<span style="color: #000000;"> defaultServiceManager();
+        sp</span>&lt;IBinder&gt;<span style="color: #000000;"> binder;
+        </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> {
+            binder </span>= sm-&gt;<span style="color: #000000;">getService(String16(kCameraServiceName));
+            </span><span style="color: #0000ff;">if</span> (binder != <span style="color: #800080;">0</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }
+            ALOGW(</span><span style="color: #800000;">"</span><span style="color: #800000;">CameraService not published, waiting...</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+            usleep(kCameraServicePollDelay);
+        } </span><span style="color: #0000ff;">while</span>(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (gDeathNotifier ==<span style="color: #000000;"> NULL) {
+            gDeathNotifier </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> DeathNotifier();
+        }
+        binder</span>-&gt;<span style="color: #000000;">linkToDeath(gDeathNotifier);
+        gCameraService </span>= <span style="color: #ff0000;"><strong>interface_cast&lt;ICameraService&gt;</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>(binder);</strong></span>
+    }
+    ALOGE_IF(gCameraService </span>== <span style="color: #800080;">0</span>, <span style="color: #800000;">"</span><span style="color: #800000;">no CameraService!?</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> gCameraService;
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>此处终于获得CameraService实例了，该CameraService实例是通过binder获取的。</p>
+<p>&nbsp;</p>
+<p>再来看fnConnectService是什么，</p>
+<p>在Camera.cpp中，有</p>
+<div class="cnblogs_code">
+<pre>CameraTraits&lt;Camera&gt;::TCamConnectService CameraTraits&lt;Camera&gt;::fnConnectService =
+        &amp;<span style="color: #ff0000;"><strong>ICameraService::connect</strong></span>;</pre>
+</div>
+<p>这样也就是说<strong>fnConnectService就是使用CameraService调用connect，从这里开始，终于从进入了服务端的流程</strong>：</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #000000;">status_t CameraService::connect(
+        </span><span style="color: #0000ff;">const</span> sp&lt;ICameraClient&gt;&amp;<span style="color: #000000;"> cameraClient,
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> cameraId,
+        </span><span style="color: #0000ff;">const</span> String16&amp;<span style="color: #000000;"> clientPackageName,
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> clientUid,
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;">out</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+        sp</span>&lt;ICamera&gt;&amp;<span style="color: #000000;"><span style="color: #ff0000;"><strong> device</strong></span>) { 
+</span><span style="color: #000000;">
+.........................
+    status_t status </span>= <span style="color: #000000;">validateConnect</span>(cameraId, <span style="color: #008000;">/*</span><span style="color: #008000;">inout</span><span style="color: #008000;">*/</span><span style="color: #000000;">clientUid);
+</span><span style="color: #000000;">..................................
+
+</span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">canConnectUnsafe(cameraId, clientPackageName,
+                              cameraClient</span>-&gt;<span style="color: #000000;">asBinder(),
+                              </span><span style="color: #008000;">/*</span><span style="color: #008000;">out</span><span style="color: #008000;">*/</span><span style="color: #000000;">clientTmp)) {
+            </span><span style="color: #0000ff;">return</span> -<span style="color: #000000;">EBUSY;
+        } </span><span style="color: #000000;">
+
+        status </span>= <span style="color: #ff0000;"><strong>connectHelperLocked</strong></span>(<span style="color: #008000;">/*</span><span style="color: #008000;">out</span><span style="color: #008000;">*/</span><span style="color: #000000;">client,
+                                     cameraClient,
+                                     cameraId,
+                                     clientPackageName,
+                                     clientUid,
+                                     callingPid);<br><br></span></pre>
+<p><span style="color: #ff0000;"><strong>&nbsp; device = client;</strong> </span>&nbsp;</p>
+<pre><span style="color: #0000ff;">return</span><span style="color: #000000;"> OK;
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #000000;">status_t CameraService::connectHelperLocked(
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;">out</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+        sp</span>&lt;Client&gt;&amp;<span style="color: #000000;"> client,
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;">in</span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">const</span> sp&lt;ICameraClient&gt;&amp;<span style="color: #000000;"> cameraClient,
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> cameraId,
+        </span><span style="color: #0000ff;">const</span> String16&amp;<span style="color: #000000;"> clientPackageName,
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> clientUid,
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> callingPid,
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> halVersion,
+        </span><span style="color: #0000ff;">bool</span><span style="color: #000000;"> legacyMode) {
+
+....................................
+            client </span>= <span style="color: #0000ff;">new</span> CameraClient(<span style="color: #0000ff;">this</span><span style="color: #000000;">, cameraClient,
+                    clientPackageName, cameraId,
+                    facing, callingPid, clientUid, getpid(), legacyMode);
+....................................       <br>&nbsp; &nbsp; status_t status = connectFinishUnsafe(client, client-&gt;getRemote());<br>............................................<br>
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>在connectHelpLocked，CameraService返回一个其实是它内部类的client——CameraClient。（<span style="color: #ff0000;"><strong>注意此client是CameraService内部的CameraClient，不是Camera客户端</strong></span>），此client还赋值给了device，而<span style="color: #ff0000;"><strong>这个device，就是在客户端CameraBase.cpp中c-&gt;mCamera,</strong></span></p>
+<div class="cnblogs_code">
+<pre>        status = (cs.<span style="color: #0000ff;">get</span>()-&gt;*<span style="color: #000000;">fnConnectService)(cl, cameraId, clientPackageName, clientUid,
+                                             </span><span style="color: #008000;">/*</span><span style="color: #008000;">out</span><span style="color: #008000;">*/</span> <strong><span style="color: #ff0000;">c-&gt;mCamera</span></strong>);</pre>
+</div>
+<p><strong>而这个<strong>c-&gt;mCamera就是每一次客户端Camera.cpp中调用一些函数（如preview/takepicture）时的mCamera，这样每一次客户端调用<strong><strong>preview/takepicture，就直接调用的是CameraClient中的相关函数。这样就真正建立了客户端和服务端的关系。如<strong><strong>Camera.cpp中的</strong></strong></strong></strong></strong></strong>startPreview</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> start preview mode</span>
+<span style="color: #000000;">status_t Camera::startPreview()
+{
+    ALOGV(</span><span style="color: #800000;">"</span><span style="color: #800000;">startPreview</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    sp </span>&lt;ICamera&gt; c =<span style="color: #000000;"> mCamera;
+    </span><span style="color: #0000ff;">if</span> (c == <span style="color: #800080;">0</span>) <span style="color: #0000ff;">return</span><span style="color: #000000;"> NO_INIT;
+    </span><span style="color: #0000ff;">return</span> c-&gt;<span style="color: #000000;">startPreview();
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>其实直接就会调用到CameraService中CameraClient.cpp中</p>
+<div class="cnblogs_code">
+<pre><span style="color: #008000;">//</span><span style="color: #008000;"> start preview mode</span>
+<span style="color: #000000;">status_t CameraClient::startPreview() {
+    LOG1(</span><span style="color: #800000;">"</span><span style="color: #800000;">startPreview (pid %d)</span><span style="color: #800000;">"</span><span style="color: #000000;">, getCallingPid());
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> startCameraMode(CAMERA_PREVIEW_MODE);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h4>2.service端（其实就是CameraClient）的初始化和运行过程。</h4>
+<p>刚才我们知道，camera客户端与服务端的调用关系，就是camera.cpp中的函数，对应到CameraClient中的函数。下面我们再看看CameraClient的初始化过程。</p>
+<p>在connectFinishUnsafe中，</p>
+<div class="cnblogs_code">
+<pre>    status_t status = client-&gt;initialize(mModule);</pre>
+</div>
+<p>我们再来看CameraClient类的initialize函数</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>status_t CameraClient::initialize(camera_module_t *<span style="color: #000000;">module) {
+    </span><span style="color: #0000ff;">int</span> callingPid =<span style="color: #000000;"> getCallingPid();
+    status_t res;
+
+    mHardware </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"><span style="color: #ff0000;"><strong> CameraHardwareInterface</strong></span>(camera_device_name);
+    res </span>= mHardware-&gt;<span style="color: #ff0000;"><strong>initialize</strong></span>(&amp;module-&gt;<span style="color: #000000;">common);
+
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>CameraClient的初始化就是：先实例化Camera Hal接口 CameraHardwareInterface，CameraHardwareInterface调用initialize()进入HAL层<span style="color: #ff0000;"><strong>打开Camera底层驱动</strong></span></p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre>    status_t initialize(hw_module_t *<span style="color: #000000;">module)
+    {
+        ALOGI(</span><span style="color: #800000;">"</span><span style="color: #800000;">Opening camera %s</span><span style="color: #800000;">"</span>, mName.<span style="color: #0000ff;">string</span><span style="color: #000000;">());
+        camera_module_t </span>*cameraModule = reinterpret_cast&lt;camera_module_t *&gt;<span style="color: #000000;">(module);
+        camera_info info;
+        status_t res </span>= cameraModule-&gt;get_camera_info(atoi(mName.<span style="color: #0000ff;">string</span>()), &amp;<span style="color: #000000;">info);
+        </span><span style="color: #0000ff;">if</span> (res != OK) <span style="color: #0000ff;">return</span><span style="color: #000000;"> res;
+
+        </span><span style="color: #0000ff;">int</span> rc =<span style="color: #000000;"> OK;
+        </span><span style="color: #0000ff;">if</span> (module-&gt;module_api_version &gt;= CAMERA_MODULE_API_VERSION_2_3 &amp;&amp;<span style="color: #000000;">
+            info.device_version </span>&gt;<span style="color: #000000;"> CAMERA_DEVICE_API_VERSION_1_0) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> Open higher version camera device as HAL1.0 device.</span>
+            rc = <span style="color: #ff0000;"><strong>cameraModule-&gt;open_legacy</strong></span>(module, mName.<span style="color: #0000ff;">string</span><span style="color: #000000;">(),
+                                               CAMERA_DEVICE_API_VERSION_1_0,
+                                               (hw_device_t </span>**)&amp;<span style="color: #000000;">mDevice);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            rc </span>= CameraService::filterOpenErrorCode(<span style="color: #ff0000;"><strong>module-&gt;methods-&gt;</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>open</strong></span>(
+                module, mName.</span><span style="color: #0000ff;">string</span>(), (hw_device_t **)&amp;<span style="color: #000000;">mDevice));
+        }
+        </span><span style="color: #0000ff;">if</span> (rc !=<span style="color: #000000;"> OK) {
+            ALOGE(</span><span style="color: #800000;">"</span><span style="color: #800000;">Could not open camera %s: %d</span><span style="color: #800000;">"</span>, mName.<span style="color: #0000ff;">string</span><span style="color: #000000;">(), rc);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> rc;
+        }
+        initHalPreviewWindow();
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> rc;
+    }</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>hardware-&gt;initialize(&amp;mModule-&gt;common)中mModule模块是一个结构体camera_module_t，他是怎么初始化的呢？我们发现CameraService里面有个函数</p>
+<div class="cnblogs_code"><div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div>
+<pre><span style="color: #0000ff;">void</span><span style="color: #000000;"> CameraService::onFirstRef()
+{
+    BnCameraService::onFirstRef();
+
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (<span style="color: #ff0000;"><strong>hw_get_module</strong></span>(CAMERA_HARDWARE_MODULE_ID,
+                (</span><span style="color: #0000ff;">const</span> hw_module_t **)&amp;mModule) &lt; <span style="color: #800080;">0</span><span style="color: #000000;">) {
+        LOGE(</span><span style="color: #800000;">"</span><span style="color: #800000;">Could not load camera HAL module</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        mNumberOfCameras </span>= <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }
+ 
+}</span></pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a href="javascript:void(0);" onclick="copyCnblogsCode(this)" title="复制代码"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/copycode.gif" alt="复制代码"></a></span></div></div>
+<p>&nbsp;</p>
+<p>了解HAL层的都知道<strong>hw_get_module</strong>函数就是用来获取模块的Hal stub，这里通过<strong>CAMERA_HARDWARE_MODULE_ID</strong>&nbsp;获取Camera Hal层的代理stub，并赋值给mModule，后面就可通过操作mModule完成对Camera模块的控制。那么onFirstRef()函数又是何时调用的？</p>
+<p><span style="color: #ff0000;"><strong>onFirstRef</strong></span>（）属于其父类RefBase，该函数在强引用sp新增引用计数时调用。就是<span style="color: #ff0000;"><strong>当 有sp包装的类初始化的时候调用</strong></span>，那么camera是何时调用的呢？可以发现在</p>
+<p>客户端发起连接时候</p>
+<p>sp&nbsp;Camera::connect(int cameraId)<br>{<br>&nbsp;&nbsp;&nbsp; LOGV("connect");<br>&nbsp;&nbsp;&nbsp; sp&nbsp;c = new Camera();<br>&nbsp;&nbsp;&nbsp;<span style="color: #ff0000;"><strong>&nbsp;const sp&amp; cs = getCameraService();</strong></span></p>
+<p>}</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;这个时候初始化了一个CameraService实例，且用Sp包装，这个时候sp将新增计数，相应的CameraService实例里面onFirstRef（）函数完成调用。<br><span style="color: #000000;">CameraService::connect（）即实例化CameraClient并打开驱动，返回CameraClient的时候，就表明客户端和服务端连接建立。Camera完成初始化。</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>总结：<strong>Camera的初始化流程简单的说就是：</strong></p>
+<p><strong>-&gt;先是系统注册CameraService的服务</strong></p>
+<p><strong>-&gt;AP层调用Camera.open()</strong></p>
+<p><strong>-&gt;Camera.java调用JNI native_setup()</strong></p>
+<p><strong>-&gt;JNI层调用&nbsp;android_hardware_Camera_native_setup</strong></p>
+<p><strong>-&gt; HAL 客户端(Camera.cpp)调用connect与服务端(CameraService.cpp)连接，并得到CameraService中的CameraClient的一个实例</strong></p>
+<p><strong>-&gt;服务端CameraClient的初始化，实例化Camera Hal接口 CameraHardwareInterface</strong></p>
+<p><strong>-&gt;CameraHardwareInterface 打开Camera驱动，初始化完毕</strong></p>
+<p>&nbsp;</p>
+<p><strong>最终的结果就是客户端会得到一个服务端CameraService中的CameraClient的一个实例，客户端的每一个函数操作其实最终都是调用CameraClient的函数</strong></p>
+<p>&nbsp;</p>
+<p>参考文档：</p>
+<p><a href="http://blog.csdn.net/dnfchan/article/details/7594590">Android 4.0 Camera架构分析之Camera初始化</a>&nbsp;http://blog.csdn.net/dnfchan/article/details/7594590</p>
+<p>Android 5.1 Camera Framework源码</p>
+<p>&nbsp;</p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/xerrard/category/763585.html" target="_blank">Android</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(4747802,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;34bdac1b-fa3a-e311-8d02-90b11c0b17d6&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/xerrard/" target="_blank"><img src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/20160720083401.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/xerrard/">xerrard</a><br>
+            <a href="http://home.cnblogs.com/u/xerrard/followees">关注 - 1</a><br>
+            <a href="http://home.cnblogs.com/u/xerrard/followers">粉丝 - 6</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;34bdac1b-fa3a-e311-8d02-90b11c0b17d6&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(4747802,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">1</span>
+    </div>
+    <div class="buryit" onclick="votePost(4747802,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/xerrard/p/4271665.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/xerrard/p/4271665.html" title="发布于2015-07-28 16:28">Android AIDL</a><br><a href="http://www.cnblogs.com/xerrard/p/4967711.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/xerrard/p/4967711.html" title="发布于2015-11-17 19:24">可移动悬浮球的实现</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2015-08-21 17:30</span> <a href="http://www.cnblogs.com/xerrard/">xerrard</a> 阅读(<span id="post_view_count">2042</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=4747802" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/xerrard/p/4747802.html#" onclick="AddToWz(4747802);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=205714,cb_entryId=4747802,cb_blogApp=currentBlogApp,cb_blogUserGuid='34bdac1b-fa3a-e311-8d02-90b11c0b17d6',cb_entryCreatedDate='2015/8/21 17:30:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/xerrard/p/4747802.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/xerrard/p/4747802.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="我的AR之旅">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="https://cn.udacity.com/mlnd/?utm_source=cnblogs&amp;utm_medium=referral&amp;utm_campaign=MLND03" target="_blank">【推荐】Google机器学习认证项目首推价末班车</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="http://wijmo.gcpowertools.com.cn/?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=wijmo&amp;utm_campaign=community" target="_blank"><img width="300" height="250" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/24442-20170531232714852-1660032846.gif" alt="huozige"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/570907/" target="_blank">回顾乔布斯和盖茨30年间相爱相杀的瞬间</a><br> ·  <a href="http://news.cnblogs.com/n/570905/" target="_blank">乐视北美裁员前曾将部分员工变临时工：不用给补偿</a><br> ·  <a href="http://news.cnblogs.com/n/570904/" target="_blank">CEO皮查伊去年薪酬拿2亿美元 Alphabet股东不淡定了</a><br> ·  <a href="http://news.cnblogs.com/n/570903/" target="_blank">IBM试产5nm芯片：指甲盖大小可容纳300亿晶体管</a><br> ·  <a href="http://news.cnblogs.com/n/570902/" target="_blank">揭秘比特币背后“暗网”江湖 8年暴涨300万倍</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="https://www.mtyun.com/activity-anniversary?site=cnblogs&amp;campaign=20170601sales" target="_blank"><img width="468" height="60" src="./Android 5.1 Camera 架构学习之Camera初始化 - xerrard - 博客园_files/24442-20170601093816602-1429765193.png" alt="美团云"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/xerrard/">xerrard</a><br>园龄：<a href="http://home.cnblogs.com/u/xerrard/" title="入园时间：2013-10-22">3年7个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/xerrard/followers/">6</a><br>关注：<a href="http://home.cnblogs.com/u/xerrard/followees/">1</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;34bdac1b-fa3a-e311-8d02-90b11c0b17d6&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="日历">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&lt;</a></td><td align="center">2017年6月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/07/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center">1</td><td align="center">2</td><td class="CalWeekendDay" align="center">3</td></tr><tr><td class="CalWeekendDay" align="center">4</td><td class="CalTodayDay" align="center">5</td><td align="center">6</td><td align="center">7</td><td align="center">8</td><td align="center">9</td><td class="CalWeekendDay" align="center">10</td></tr><tr><td class="CalWeekendDay" align="center">11</td><td align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalWeekendDay" align="center">17</td></tr><tr><td class="CalWeekendDay" align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td align="center">23</td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/xerrard/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/xerrard/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/xerrard/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/xerrard/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/xerrard/tag/" title="我的博客的标签列表">我的标签</a></li>
+<li><a id="itemListLink" onclick="this.blur();WarpClass(&#39;itemListLink&#39;, &#39;itemListLin_con&#39;);return false;" href="http://www.cnblogs.com/xerrard/p/4747802.html#">更多链接</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_toptags" class="sidebar-block"></div><div id="sidebar_categories">
+<div class="catListPostCategory">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/xerrard/category/763585.html">Android(18)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/xerrard/category/763588.html">Design Pattern(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/xerrard/category/763586.html">Java(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/xerrard/category/763587.html">Python(2)</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListPostArchive">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/xerrard/archive/2016/07.html">2016年7月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/xerrard/archive/2016/02.html">2016年2月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/xerrard/archive/2016/01.html">2016年1月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/xerrard/archive/2015/12.html">2015年12月 (8)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/xerrard/archive/2015/11.html">2015年11月 (6)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/xerrard/archive/2015/08.html">2015年8月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/xerrard/archive/2015/07.html">2015年7月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/xerrard/archive/2015/02.html">2015年2月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/xerrard/archive/2015/01.html">2015年1月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/xerrard/archive/2014/12.html">2014年12月 (1)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/xerrard/p/5145725.html#3526168">1. Re:android编译系统学习</a></li>
+        <li class="recent_comment_body">666666666666</li>
+        <li class="recent_comment_author">--Android将军</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/xerrard/p/5052734.html#3457262">2. Re:Android之ListView/GridView 优化</a></li>
+        <li class="recent_comment_body">@咖喱不见不散啊我这个图是从别的地方copy来的，很多文章里都用的这个图（最原始的出处也不知道，所以也没有在参考资料里列）。这个图中的view1其实就是你说的view0。另外，那段缓存机制的文字我重新......</li>
+        <li class="recent_comment_author">--xerrard</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/xerrard/p/5052734.html#3457113">3. Re:Android之ListView/GridView 优化</a></li>
+        <li class="recent_comment_body">那个View复用的图是不是有误？view1刚隐去一部分时，view8就以及显示了，怎么会是复用view1呢还是你没有画view0</li>
+        <li class="recent_comment_author">--咖喱不见不散啊</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/xerrard/p/4747802.html">1. Android 5.1 Camera 架构学习之Camera初始化(2043)</a></li><li><a href="http://www.cnblogs.com/xerrard/p/4967710.html">2. 魅族/锤子/苹果 悬停效果的实现(970)</a></li><li><a href="http://www.cnblogs.com/xerrard/p/4630210.html">3. Android WifiDirect 学习（三） 一些基础知识和问题(691)</a></li><li><a href="http://www.cnblogs.com/xerrard/p/4625173.html">4. Android WifiDirect学习(一)(609)</a></li><li><a href="http://www.cnblogs.com/xerrard/p/5671018.html">5. WearableListView的使用和一些思考(468)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/xerrard/p/5052734.html">1. Android之ListView/GridView 优化(2)</a></li><li><a href="http://www.cnblogs.com/xerrard/p/5145725.html">2. android编译系统学习(1)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/xerrard/p/4244114.html">1. Java IO流(1)</a></li><li><a href="http://www.cnblogs.com/xerrard/p/4967710.html">2. 魅族/锤子/苹果 悬停效果的实现(1)</a></li><li><a href="http://www.cnblogs.com/xerrard/p/4747802.html">3. Android 5.1 Camera 架构学习之Camera初始化(1)</a></li><li><a href="http://www.cnblogs.com/xerrard/p/5671018.html">4. WearableListView的使用和一些思考(1)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 xerrard
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>

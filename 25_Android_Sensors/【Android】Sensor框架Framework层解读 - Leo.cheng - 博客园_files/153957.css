@@ -1,0 +1,19 @@
+#lcwSignature
+{ 
+border-top: #e0e0e0 1px dashed;
+border-right: #e0e0e0 1px dashed;
+border-bottom: #e0e0e0 1px dashed;
+border-left: #e0e0e0 1px dashed;
+padding-top: 10px;
+padding-right: 10px;
+padding-bottom: 10px;
+padding-left: 200px;
+font-family: 宋体;
+font-size:11px;
+background: url(http://images.cnblogs.com/cnblogs_com/lcw/520427/o_%e4%b8%aa%e4%ba%ba%e7%ad%be%e5%90%8d.jpg) #e5f1f4 no-repeat 1% 50%;
+
+}
+#lcwSignature div
+{
+line-height: 25px;
+}

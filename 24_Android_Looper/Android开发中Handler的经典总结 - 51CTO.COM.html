@@ -1,0 +1,607 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0043)http://mobile.51cto.com/aprogram-442833.htm -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/saved_resource" charset="utf-8" id="uyan_script"></script>
+
+<meta http-equiv="x-ua-compatible" content="ie=7">
+<title>Android开发中Handler的经典总结 - 51CTO.COM</title>
+<meta name="description" content="当应用程序启动时，Android首先会开启一个主线程(也就是UI线程)，主线程为管理界面中的UI控件，进行事件分发。">
+<meta name="keywords" content="Android,Handler,总结">
+<!--<base target="_blank">--><base href="." target="_blank">
+<link href="./Android开发中Handler的经典总结 - 51CTO.COM_files/grid.css" rel="stylesheet" type="text/css">
+<link type="text/css" rel="stylesheet" href="./Android开发中Handler的经典总结 - 51CTO.COM_files/art_master_top.css">
+<link href="./Android开发中Handler的经典总结 - 51CTO.COM_files/css3.css" rel="stylesheet" type="text/css">
+<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/hm.js.下载"></script><script language="javaScript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/base_art.js.下载"></script>
+<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/index_1_down.js.下载"></script>
+<style type="text/css">
+.bds_tools a{ padding:0; margin:0;}
+</style>
+<style type="text/css"></style><link href="./Android开发中Handler的经典总结 - 51CTO.COM_files/bdsstyle.css" rel="stylesheet" type="text/css"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/logger.js.下载"></script></head>
+<body><iframe frameborder="0" style="display: none;" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/saved_resource.html"></iframe><div id="bdshare_s" style="display: block;"><iframe id="bdsIfr" style="position:absolute;display:none;z-index:9999;" frameborder="0" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/saved_resource(1).html"></iframe><div id="bdshare_l" style="display: none;"><div id="bdshare_l_c"><h6>分享到</h6><ul><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_mshare mshare">一键分享</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_qzone qqkj">QQ空间</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_tsina xlwb">新浪微博</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_bdysc bdysc">百度云收藏</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_renren rrw">人人网</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_tqq txwb">腾讯微博</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_bdxc bdxc">百度相册</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_kaixin001 kxw">开心网</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_tqf txpy">腾讯朋友</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_tieba bdtb">百度贴吧</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_douban db">豆瓣网</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_tsohu shwb">搜狐微博</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_bdhome bdhome">百度新首页</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_sqq sqq">QQ好友</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_thx thx">和讯微博</a></li><li><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="bds_more">更多...</a></li></ul><p><a href="http://mobile.51cto.com/aprogram-442833.htm#" class="goWebsite">百度分享</a></p></div></div></div>
+<!-- 导航 开始-->
+<script id="allmobilize" charset="utf-8" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/allmobilize.min.js.下载"></script><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://mobile.51cto.com/aprogram-442833.htm#">
+<div id="home_top">    <div class="top_nav">        <div class="left" style="width:400px"><div class="logo_51cto" title="51CTO.COM - 技术成就梦想 -  中国领先的IT技术网站"></div><a href="http://www.51cto.com/">首页</a><img width="16" height="25" align="absmiddle" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/top_bg_xian.gif" style="padding-top: 2px;"><a onmouseover="show(1,this);" onmouseout="popupClose();" href="http://www.51cto.com/col/35/" target="_blank">技术频道<img align="absmiddle" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/nav_ico1.gif" style="padding-left: 4px;"></a><img width="16" height="25" align="absmiddle" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/top_bg_xian.gif"><a onmouseover="show(2,this);" onmouseout="popupClose();" href="http://www.51cto.com/" target="_blank">51CTO旗下网站<img align="absmiddle" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/nav_ico1.gif" style="padding-left: 4px;"></a><img width="16" height="25" align="absmiddle" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/top_bg_xian.gif"><a href="http://www.51cto.com/about/map.htm" target="_blank">地图</a> <a href="http://www.51cto.com/about/rss.html" target="_blank"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/143749870.gif" style="vertical-align:middle; margin-bottom: 5px; margin-left:5px;"></a>       </div>        <div class="right">            <div class="more"><img width="27" height="16" align="absmiddle" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/top_shequ.gif"><a href="http://wot.51cto.com/" target="_blank" style="color:#CC0000">WOT</a><a href="http://edu.51cto.com/" target="_blank" style="color:#CC0000">学院</a><a href="http://down.51cto.com/" target="_blank">下载</a><a href="http://bbs.51cto.com/" target="_blank">论坛</a><a href="http://blog.51cto.com/" target="_blank">博客</a><a onmouseover="show(3,this)" onmouseout="popupClose()" href="javascript:viod(0);">更多<img align="absmiddle" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/nav_ico1.gif" style="padding-left: 4px;"></a>            </div>            <span id="login_status"><div class="login" style="padding-top:8px; text-align:right;"><a href="http://home.51cto.com/index?reback=http://mobile.51cto.com/aprogram-442833.htm" target="_self">登录</a><a href="http://home.51cto.com/user/register?reback=http://mobile.51cto.com/aprogram-442833.htm" target="_self">注册</a><a href="http://home.51cto.com/members/in-fo?down" target="_blank"><span class="jsVipDrop" style="position: relative;"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/vip_grey2.png" style="float:right; margin-top:5px"><div id="vip_mes_top" style="display:none;position: absolute;right:-75px;top: 17px;width: 137px;z-index: 99;"><div style="background: #faf7e6 none repeat scroll 0 0;border: 1px solid #ecb7a5;color: #666;font-size: 12px;padding: 3px 5px;position: relative;"><span style="background: rgba(0, 0, 0, 0) url(https://static1.51cto.com/home/web/images/hidearro.png) no-repeat scroll center center;display: inline-block;height: 7px;position: absolute;right: 57px;top: -6px;width: 12px;"></span><div style="color:#f60; text-align:center;">一个会员，全站特权</div></div></div></span></a></div></span>                </div>    </div></div>
+<div class="subMenu1" id="s1" onmouseover="popupNoClose();" onmouseout="popupClose();">
+<ul>
+<li><a href="http://network.51cto.com/" target="_blank">网络</a></li>
+<li><a href="http://netsecurity.51cto.com/" target="_blank">安全</a></li>
+<li><a href="http://developer.51cto.com/" target="_blank">开发</a></li>
+<li><a href="http://database.51cto.com/" target="_blank">数据库</a></li>
+<li><a href="http://server.51cto.com/" target="_blank">服务器</a></li>
+<li><a href="http://os.51cto.com/" target="_blank">系统</a></li>
+<li><a href="http://virtual.51cto.com/" target="_blank">虚拟化</a></li>
+<li><a href="http://cloud.51cto.com/" target="_blank">云计算</a></li>
+<li><a href="http://developer.51cto.com/embed/" target="_blank">嵌入式</a></li>
+<li><a href="http://mobile.51cto.com/" target="_blank">移动开发</a></li>
+</ul>
+</div> 
+<div class="subMenu2" id="s2" onmouseover="popupNoClose()" onmouseout="popupClose()">
+<ul>
+<li><a href="http://www.51cto.com/" target="_blank" title="中国领先的IT技术网站">51CTO.COM</a></li>
+<li><a href="http://cio.51cto.com/" target="_blank" title="中国首个专门服务于CIO的专业网站">CIOage.com</a></li>
+<li><a href="http://www.watchstor.com/" target="_blank" title="领先的中文存储网络媒体">WatchStor.com</a></li>
+<li><a href="http://www.hc3i.cn/" target="_blank" title="中国首家专注于数字医疗及医疗信息化的专业网站">HC3i.cn</a></li>
+</ul>
+</div>
+<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/jquery-1.8.3.min.js.下载"></script>
+<script>
+$(function(){
+	$(".bann").height(265);	 
+	$(".bann").css("background-color","white");
+	var s=window.location.toString();
+	var s1=s.substr(7,s.length);
+	var s2=s1.indexOf(".");
+	s=s.substr(7,s2);
+	if (s == 'cloud') {
+	     $(".hot").css("top","1200px");
+		$(".g_13").find(".focus").css("height","1390px");
+	}else{
+		$(".hot").css("top","450px");
+
+	}
+	//$(".fixfloat").css("height","640px");
+	$(".g_13").find(".focus").css("height","640px");
+	var url = window.location.host;
+	if (url.indexOf('developer.51cto.com/col')) {
+		$('.banner_r').css('position', 'relative');
+		$('.banner_r').children().append('<div style="right: 0px; width: 24px; height: 14px; z-index: 12; position: absolute; background: transparent url(http://s5.51cto.com/wyfs02/M00/86/BB/wKiom1fI4nWStYqXAAAEoZQn6vs942.png) repeat scroll 0% 0%; bottom: 2px;"></div>');
+	}
+});
+var edunum=2;
+$(function(){
+	$("#change").click(function(){
+		$("#edu > ul").css("display","none");
+		var eduid='edu'+edunum;
+		$("#" + eduid).css("display","block");	
+		if(edunum<4){
+			edunum++;	
+		}else{
+			edunum=1;	
+		}							
+	});  
+});
+</script>
+
+<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/head_art_more1.js.下载"></script><div class="subMenu3" id="s3" onmouseover="popupNoClose()" onmouseout="popupClose()" style="z-index:9999;position: absolute;">
+<ul>
+<li><a href="http://home.51cto.com/" target="_blank">家园</a></li>
+<li><a href="http://gaozhao.51cto.com/" target="_blank" style="color:red;">招聘</a></li>
+<li><a href="http://wot.51cto.com/" target="_blank">WOT</a></li>
+<li><a href="http://edu.51cto.com/" target="_blank">学院</a></li>
+<li><a href="http://blog.51cto.com/" target="_blank">博客</a></li>
+<li><a href="http://bbs.51cto.com/" target="_blank">论坛</a></li>
+<li><a href="http://down.51cto.com/" target="_blank">下载</a></li>
+<li><a href="http://selftest.51cto.com/" target="_blank">自测</a></li>
+<li><a href="http://doctor.51cto.com/" target="_blank">门诊</a></li>
+<li><a href="http://blog.51cto.com/newsletter/" target="_blank">周刊</a></li>
+<li><a href="http://book.51cto.com/" target="_blank">读书</a></li>
+<li><a href="http://t.51cto.com/" target="_blank" style="color:red;">题库</a></li>
+</ul>
+</div>
+
+<!-- 登陆信息 -->
+<!-- 导航 结束--> 
+ <div class="g_39 mb10">
+	<div id="tonglanad" class="fl"><script language="JavaScript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ad.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ad.php"></script><iframe width="760" height="90" noresize="" scrolling="No" frameborder="0" marginheight="0" marginwidth="0" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/mobile.html" align="center"></iframe></div>
+	<div id="list4" class="fr" style="position: relative;">
+		<ul>
+			<li id="wordlinkad1"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wordlink1.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ajs.php"></script><a href="http://gg.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3933__zoneid=270__cb=dd4a363b14__oadest=http%3A%2F%2Fedu.51cto.com%2Fzt%2Fzt_id-1.html%3Fan" target="_blank"><font color="red">网络安全一个大写的反“作死”</font></a><div id="beacon_dd4a363b14" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/lg.php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</li>
+			<li id="wordlinkad2"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wordlink2.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ajs(1).php"></script><a href="http://gg2.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3546__zoneid=631__cb=ecd6517031__oadest=http%3A%2F%2Fedu.51cto.com%2Ftraining%2Ftraining_id-44.html%3Fxiaoshou" target="_blank"><font color="red">助你4个月成为大数据工程师</font></a><div id="beacon_ecd6517031" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/lg(1).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</li>
+			<li id="wordlinkad3"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wordlink3.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ajs(2).php"></script><a href="http://gg1.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3717__zoneid=594__cb=b394113d8b__oadest=http%3A%2F%2Fedu.51cto.com%2Fpx%2Ftrain%2F115%3Fwzl" target="_blank"><font color="red">Linux云计算与架构师进阶</font></a><div id="beacon_b394113d8b" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/lg(2).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</li>
+			<li id="wordlinkad4"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wordlink4.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ajs(3).php"></script><a href="http://gg1.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3549__zoneid=636__cb=28e4d07aff__oadest=http%3A%2F%2Fedu.51cto.com%2Ftraining%2Ftraining_id-17.html%3Fxiaoshou" target="_blank"><font color="red">2016年备战软考-重难点解析</font></a><div id="beacon_28e4d07aff" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/lg(3).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</li>
+		<div style="right: 0px; width: 24px; height: 14px; z-index: 12; position: absolute; background: transparent url(http://s5.51cto.com/wyfs02/M00/86/BB/wKiom1fI4nWStYqXAAAEoZQn6vs942.png) repeat scroll 0% 0%; bottom: 2px;"></div></ul>
+	</div>
+<br class="dle">
+</div>
+
+<div class="g_39 menu">
+<div class="subNav_logo"><a href="http://mobile.51cto.com/" title="移动开发"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/143329156.gif"></a></div>
+<div class="subNav_l"><a href="http://mobile.51cto.com/">首页</a> | <a href="http://mobile.51cto.com/android/">Android</a> | <a href="http://mobile.51cto.com/iphone/">iOS</a> | <a href="http://mobile.51cto.com/windows-phone/">Windows Phone</a> | <a href="http://mobile.51cto.com/blackberry/">BlackBerry</a> | <a href="http://mobile.51cto.com/webos/">webOS</a> | <a href="http://mobile.51cto.com/symbian/">Symbian</a> | <a href="http://mobile.51cto.com/bada/">bada</a> | <a href="http://mobile.51cto.com/ophone/">OPhone</a> | <a href="http://mobile.51cto.com/others/" target="_blank">其他</a></div>  
+<div class="search fr">
+<dl>
+<form name="searchform" action="http://www.51cto.com/php/search.php" target="_blank" method="post" style="margin:0px; padding:0px;">
+<dt class="fl"><input name="keyword" type="text" class="searchInput f14 input" value="请输入关键字" onfocus="doempty(this, &#39;请输入关键字&#39;);" onblur="doempty(this, &#39;请输入关键字&#39;);"></dt>
+<dd class="fl"><input type="image" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/search.gif"></dd></form>
+</dl>
+</div>
+<br class="dle">
+</div>
+<div class="g_39 b3-s-4273B3 rel">
+<!--width : 26*25 - 15 = 635px-->
+<div class="g_26 fl m_l">
+<div class="brief bgF8F8F8">
+<p class="crumb ">您所在的位置：<a href="http://mobile.51cto.com/"><b>移动开发</b></a> &gt; <a href="http://mobile.51cto.com/android/"><b>Android</b></a> &gt; <a href="http://mobile.51cto.com/aprogram/"><b>Android编译</b></a> &gt;  <b>Android开发中Handler的经典总结</b> </p>
+<h1>Android开发中Handler的经典总结</h1>
+<div class="msg">
+<div>2014-06-18 14:41  佚名  pin5i  字号：<span class="f14-b"><a href="javascript:setfont(12);" target="_self">T</a></span> | <span class="f16-b"><a href="javascript:setfont(16);" target="_self">T</a></span></div>
+<div class="artHd" id="books" style="padding:5px 25px;display:none;"><script language="JavaScript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/getBookData.php"></script></div>
+<div class="fav"><a href="javascript:favorBox(&#39;open&#39;);" title="一键收藏，随时查看，分享好友！" target="_self"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/Fav.gif" alt="一键收藏，随时查看，分享好友！" border="0"></a></div>
+</div>
+<div class="brieftext">
+<p class="f14 green">当应用程序启动时，Android首先会开启一个主线程(也就是UI线程)，主线程为管理界面中的UI控件，进行事件分发。</p>
+<p class="ad">AD：<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/keywords_ad_new.js.下载"></script><a href="http://mobile.51cto.com/mobile/mdsa12/" target="_blank" style="text-decoration: none;color:red">51CTO 网+ 第十二期沙龙：大话数据之美_如何用数据驱动用户体验</a>
+</p>
+</div>
+<!--  <div style="border-left:5px solid #4065aa;height:25px; line-height:25px;margin-top:10px;background:#eef7ff;padding-left:10px;">
+<a style="text-decoration: none;color:red" target="_blank" href="http://server.51cto.com/exp/OpenPower/">IBM POWER8通过一年充分融入了“开放”基因，现在有哪些成效？快来注册观看直播，一起拥抱开源的力量。</a>
+</div> -->
+
+
+
+</div>
+<div class="tag bgF8F8F8" id="indexlist" style="display:none;">
+<ul id="indexliststr">
+</ul>
+<br class="dle">
+</div>
+<div class="content bgF8F8F8 f14">
+<div id="content">
+<p></p><p style="text-align: center;"><a target="_blank" href="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1OhN5mRGI3xAAA4g3j4V30690.jpg"><img class="fit-image" onload="javascript:if(this.width&gt;498)this.width=498;" onmousewheel="javascript:return big(this)" width="480" height="185" border="0" alt="" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1OhN5mRGI3xAAA4g3j4V30690.jpg"></a></p>
+<p><strong>一、Handler的定义：</strong></p>
+<p>主要接受子线程发送的数据， 并用此数据配合主线程更新UI。</p>
+<p>解释：当应用程序启动时，Android首先会开启一个主线程 (也就是UI线程) ， 主线程为管理界面中的UI控件， 进行事件分发， 比如说， 你要是点击一个 Button ，Android会分发事件到Button上，来响应你的操作。&nbsp;  如果此时需要一个耗时的操作，例如: 联网读取数据，&nbsp; &nbsp;  或者读取本地较大的一个文件的时候，你不能把这些操作放在主线程中，如果你放在主线程中的话，界面会出现假死现象，  如果5秒钟还没有完成的话，会收到Android系统的一个错误提示&nbsp; "强制关闭"。&nbsp;   这个时候我们需要把这些耗时的操作，放在一个子线程中，因为子线程涉及到UI更新，，Android主线程是线程不安全的， 也就是说，更新UI只能在主线程中更新，子线程中操作是危险的。 这个时候，Handler就出现了。，来解决这个复杂的问题 ，由于Handler运行在主线程中(UI线程中)，&nbsp; 它与子线程可以通过Message对象来传递数据，  这个时候，Handler就承担着接受子线程传过来的(子线程用sedMessage()方法传弟)Message对象，(里面包含数据)&nbsp; ，  把这些消息放入主线程队列中，配合主线程进行更新UI。</p>
+<p><strong>二、Handler一些特点</strong></p>
+<p>handler可以分发Message对象和Runnable对象到主线程中， 每个Handler实例，都会绑定到创建他的线程中(一般是位于主线程)，它有两个作用：</p>
+<p>(1)安排消息或Runnable 在某个主线程中某个地方执行；</p>
+<p>(2)安排一个动作在不同的线程中执行。</p>
+<p>Handler中分发消息的一些方法</p>
+<p>post(Runnable)</p>
+<p>postAtTime(Runnable，long)</p>
+<p>postDelayed(Runnable long)</p>
+<p>sendEmptyMessage(int)</p>
+<p>sendMessage(Message)</p>
+<p>sendMessageAtTime(Message，long)</p>
+<p>sendMessageDelayed(Message，long)</p>
+<p>以上post类方法允许你排列一个Runnable对象到主线程队列中，</p>
+<p>sendMessage类方法， 允许你安排一个带数据的Message对象到队列中，等待更新。</p>
+<p><strong>三、Handler实例</strong></p>
+<p>子类需要继承Hendler类，并重写handleMessage(Message msg) 方法， 用于接受线程数据。</p>
+<p>以下为一个实例，它实现的功能为：通过线程修改界面Button的内容</p>
+<pre><ol class="dp-j"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;MyHandlerActivity&nbsp;</span><span class="keyword">extends</span><span>&nbsp;Activity&nbsp;{&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;Button&nbsp;button;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;MyHandler&nbsp;myHandler;&nbsp;</span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">protected</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;onCreate(Bundle&nbsp;savedInstanceState)&nbsp;{&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">super</span><span>。onCreate(savedInstanceState);&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;setContentView(R。layout。handlertest);&nbsp;</span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;button&nbsp;=&nbsp;(Button)&nbsp;findViewById(R。id。button);&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myHandler&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;MyHandler();&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;当创建一个新的Handler实例时，&nbsp;它会绑定到当前线程和消息的队列中，开始分发数据</span><span>&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;Handler有两个作用，&nbsp;(1)&nbsp;:&nbsp;定时执行Message和Runnalbe&nbsp;对象</span><span>&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;(2):&nbsp;让一个动作，在不同的线程中执行。</span><span>&nbsp;</span></span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;它安排消息，用以下方法</span><span>&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;post(Runnable)</span><span>&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;postAtTime(Runnable，long)</span><span>&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;postDelayed(Runnable，long)</span><span>&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;sendEmptyMessage(int)</span><span>&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;sendMessage(Message);</span><span>&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;sendMessageAtTime(Message，long)</span><span>&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;sendMessageDelayed(Message，long)</span><span>&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;以上方法以&nbsp;post开头的允许你处理Runnable对象</span><span>&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//sendMessage()允许你处理Message对象(Message里可以包含数据，)</span><span>&nbsp;</span></span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyThread&nbsp;m&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;MyThread();&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">new</span><span>&nbsp;Thread(m)。start();&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">/**</span>&nbsp;</span></li><li><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;接受消息，处理消息&nbsp;，此Handler会与当前主线程一块运行</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;*/</span><span>&nbsp;</span></span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">class</span><span>&nbsp;MyHandler&nbsp;</span><span class="keyword">extends</span><span>&nbsp;Handler&nbsp;{&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;MyHandler()&nbsp;{&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;MyHandler(Looper&nbsp;L)&nbsp;{&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">super</span><span>(L);&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;子类必须重写此方法，接受数据</span><span>&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;handleMessage(Message&nbsp;msg)&nbsp;{&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;TODO&nbsp;Auto-generated&nbsp;method&nbsp;stub</span><span>&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Log。d(<span class="string">"MyHandler"</span><span>，&nbsp;</span><span class="string">"handleMessage。。。。。。"</span><span>);&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">super</span><span>。handleMessage(msg);&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;此处可以更新UI</span><span>&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bundle&nbsp;b&nbsp;=&nbsp;msg。getData();&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;color&nbsp;=&nbsp;b。getString(<span class="string">"color"</span><span>);&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyHandlerActivity。<span class="keyword">this</span><span>。button。append(color);&nbsp;</span></span></li><li class="alt"><span>&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">class</span><span>&nbsp;MyThread&nbsp;</span><span class="keyword">implements</span><span>&nbsp;Runnable&nbsp;{&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;run()&nbsp;{&nbsp;</span></span></li><li class="alt"><span>&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">try</span><span>&nbsp;{&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thread。sleep(<span class="number">10000</span><span>);&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;<span class="keyword">catch</span><span>&nbsp;(InterruptedException&nbsp;e)&nbsp;{&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;TODO&nbsp;Auto-generated&nbsp;catch&nbsp;block</span><span>&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e。printStackTrace();&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Log。d(<span class="string">"thread。。。。。。。"</span><span>，&nbsp;</span><span class="string">"mThread。。。。。。。。"</span><span>);&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Message&nbsp;msg&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Message();&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bundle&nbsp;b&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Bundle();</span><span class="comment">//&nbsp;存放数据</span><span>&nbsp;</span></span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b。putString(<span class="string">"color"</span><span>，&nbsp;</span><span class="string">"我的"</span><span>);&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;msg。setData(b);&nbsp;</span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MyHandlerActivity。<span class="keyword">this</span><span>。myHandler。sendMessage(msg);&nbsp;</span><span class="comment">//&nbsp;向Handler发送消息，更新UI</span><span>&nbsp;</span></span></li><li><span>&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span></li><li><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;</span></li><li class="alt"><span>}&nbsp;</span></li></ol></pre>
+<p></p><p>【编辑推荐】</p><div><ol><li><a href="http://mobile.51cto.com/news-442605.htm" target="_blank">Google官方预告将在I/O宣布Android 5.0</a></li><li><a href="http://mobile.51cto.com/web-442689.htm" target="_blank">Firefox OS的Web Apps兼容Android</a></li><li><a href="http://mobile.51cto.com/hot-442804.htm" target="_blank">一个iOS开发者学习Android之路</a></li><li><a href="http://mobile.51cto.com/abased-442805.htm" target="_blank">Android字体渲染器：使用OpenGL ES进行高效文字渲染</a></li><li><a href="http://mobile.51cto.com/abased-442811.htm" target="_blank">不做强迫症：Android多任务机制科普</a></li></ol></div><div align="right">【责任编辑：<a class="ln" href="mailto:yanjm@51cto.com">闫佳明</a> TEL：（010）68476606】</div><br> 
+<p class="blank10"></p> 
+ 
+ 
+
+
+<div class="f12"> <span class="fl">原文：<a href="./Android开发中Handler的经典总结 - 51CTO.COM_files/Android开发中Handler的经典总结 - 51CTO.COM.html" class="blue"><b>Android开发中Handler的经典总结</b></a></span> <span class="fr"><a href="http://mobile.51cto.com/">返回移动开发首页</a></span> </div>
+<p class="blank1"></p>
+</div>
+<hr style="border-top: #555555 1px solid; height: 1px; border-right: medium none; border-bottom: medium none; border-left: medium none">
+<div style="width: 600px; background: #ffffff"><img width="600" height="140" alt="" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1ZOwrbDjDqxAABJOr5GFjU021.png" border="0"></div>
+<hr style="border-top: #555555 1px solid; height: 1px; border-right: medium none; border-bottom: medium none; border-left: medium none">
+<iframe width="600" height="239" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/bulkfollow.html" frameborder="0" scrolling="no"></iframe>
+<div class="tips">
+<div style="float:left;">
+<span style="float:left; margin-top:4px;">分享到：</span>
+<!-- Baidu Button BEGIN -->
+    <div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="margin-right:5px; float:left;">
+        <a class="bds_qzone" title="分享到QQ空间" href="http://mobile.51cto.com/aprogram-442833.htm#"></a>
+        <a class="bds_tsina" title="分享到新浪微博" href="http://mobile.51cto.com/aprogram-442833.htm#"></a>
+        <a class="bds_tqq" title="分享到腾讯微博" href="http://mobile.51cto.com/aprogram-442833.htm#"></a>
+        <a class="bds_renren" title="分享到人人网" href="http://mobile.51cto.com/aprogram-442833.htm#"></a>
+        <a class="bds_t163" title="分享到网易微博" href="http://mobile.51cto.com/aprogram-442833.htm#"></a>
+        <span class="bds_more"></span>
+		<a class="shareCount" href="http://mobile.51cto.com/aprogram-442833.htm#" title="累计分享17次">17</a>
+
+</div>
+<!--<div class="fl"> 
+    </div>
+--><script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=585532" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+	var bds_config = {'snsKey':{'tsina':'2378297317'}};
+	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?t=" + new Date().getHours();
+</script>
+<!-- Baidu Button END -->
+
+
+
+</div><div class="fr blue"><a href="javascript:AddFavorite(document.location.href,document.title);" target="_self">收藏</a>|<a href="javascript:window.print();" target="_self">打印</a>|<a id="msnqqcopy" title="分享本资源给好友" target="_self">复制</a></div>
+</div>
+</div>
+<!--内容 end-->
+
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg pl15">关于<a href="http://www.51cto.com/php/search.php?keyword=Android" target="_blank" class="underline">Android</a>&nbsp;&nbsp;<a href="http://www.51cto.com/php/search.php?keyword=Handler" target="_blank" class="underline">Handler</a>&nbsp;&nbsp;<a href="http://www.51cto.com/php/search.php?keyword=%D7%DC%BD%E1" target="_blank" class="underline">总结</a>的更多文章</div>
+<div class="reltag">
+<ul class="fl list02">
+  <li><a href="http://mobile.51cto.com/aprogram-440632.htm" title="详解Android组件Activity的启动模式singleTask">详解Android组件Activity的启动模式singleT</a></li><li><a href="http://mobile.51cto.com/aprogram-440620.htm" title="Android应用程序组件Activity的" singletask"(12)"="">Android应用程序组件Activity的"singleTask</a></li><li><a href="http://mobile.51cto.com/aprogram-440618.htm" title="Android应用程序组件Activity的" singletask"(11)"="">Android应用程序组件Activity的"singleTask</a></li><li><a href="http://mobile.51cto.com/aprogram-440616.htm" title="Android应用程序组件Activity的" singletask"(10)"="">Android应用程序组件Activity的"singleTask</a></li><li><a href="http://mobile.51cto.com/aprogram-440615.htm" title="Android应用程序组件Activity的" singletask"(9)"="">Android应用程序组件Activity的"singleTask</a></li>
+</ul>
+<div class="fr">
+<div class="h5 f12"><a href="http://mobile.51cto.com/aprogram-440632.htm" title="详解Android组件Activity的启动模式singleTask"><b>详解Android组件Activity的启动模式singleTask</b></a></div>
+<a href="http://mobile.51cto.com/aprogram-440632.htm" title="详解Android组件Activity的启动模式singleTask"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1OEV6qy55s_AABAtibTS2w212.jpg" alt="详解Android组件Activity的启动模式singleTask" width="100" height="80" border="0"></a>
+<p class="c666">在Android应用程序中，可以配置Activity以四种方式来启动，其中<a class="blue" href="http://mobile.51cto.com/aprogram-440632.htm" title="详解Android组件Activity的启动模式singleTask">[详细]</a></p>
+</div>
+</div>
+<!--reltag end-->
+</div>
+<p class="blank10"></p>
+<div class="uyan">
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/uyan.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/plugin.client.js.下载" charset="utf-8"></script>
+</div>
+<!--box end-->
+<p class="blank10"></p>
+<div class="relart fl bor">
+<div class="titbg">
+<h3 class="fl t1">栏目热门</h3>
+<a href="http://mobile.51cto.com/col/1623/click1.htm" class="tmore">更多&gt;&gt;</a></div>
+<ul>
+  
+	  <li><a href="http://mobile.51cto.com/aprogram-440294.htm" title="Android应用程序消息处理机制(Looper、Handler)分析">Android应用程序消息处理机制(Looper、Hand</a></li>
+	  
+	  <li><a href="http://mobile.51cto.com/aprogram-438575.htm" title="Android平台中的安全编程">Android平台中的安全编程</a></li>
+	  
+	  <li><a href="http://mobile.51cto.com/aprogram-440632.htm" title="详解Android组件Activity的启动模式singleTask">详解Android组件Activity的启动模式singleT</a></li>
+	  
+	  <li><a href="http://mobile.51cto.com/aprogram-437793.htm" title="健壮且可读的安卓架构设计">健壮且可读的安卓架构设计</a></li>
+	  
+	  <li><a href="http://mobile.51cto.com/aprogram-436752.htm" title="如何在Android上测试异步任务">如何在Android上测试异步任务</a></li>
+	  
+</ul>
+</div>
+<div class="cathot fr bor">
+<div class="titbg">
+<h3 class="fl t1">同期最新</h3>
+<a href="http://mobile.51cto.com/col/1623" class="tmore">更多&gt;&gt;</a></div>
+<ul>
+	
+	  <li><a href="http://mobile.51cto.com/aprogram-442382.htm" title="开发原生的 Google 眼镜应用">开发原生的 Google 眼镜应用</a></li>
+	  
+	  <li><a href="http://mobile.51cto.com/aprogram-442125.htm" title="Android小兔子跳铃铛游戏开发过程和心得">Android小兔子跳铃铛游戏开发过程和心得</a></li>
+	  
+	  <li><a href="http://mobile.51cto.com/aprogram-442098.htm" title="iOS开发指南：与YOLOKit共度好时光">iOS开发指南：与YOLOKit共度好时光</a></li>
+	  
+	  <li><a href="http://mobile.51cto.com/aprogram-441773.htm" title="Android视图大小测量案例研究">Android视图大小测量案例研究</a></li>
+	  
+	  <li><a href="http://mobile.51cto.com/aprogram-440861.htm" title="如何在Android中实现折纸动画">如何在Android中实现折纸动画</a></li>
+	  
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1"><a href="http://mobile.51cto.com/">移动开发</a></h3>
+<span class="pl10">频道导航</span></div>
+ <ul class="xtlist">
+<li><span class="tit">平台</span>
+<div><a href="http://mobile.51cto.com/web/">移动Web</a>|<a href="http://mobile.51cto.com/android/">Android</a>|<a href="http://mobile.51cto.com/iphone/">iOS</a>|<a href="http://mobile.51cto.com/windows-phone/">Windows Phone</a></div>
+</li>
+
+<li><span class="tit">应用</span>
+<div><a href="http://mobile.51cto.com/app-show/">移动应用</a>|<a href="http://mobile.51cto.com/team/">移动团队</a>|<a href="http://mobile.51cto.com/market/">应用商店</a>|<a href="http://mobile.51cto.com/speclist/">专题汇总</a>|<a href="http://mobile.51cto.com/1603/">Phone Club</a></div>
+</li>
+
+<li><span class="tit">观察</span>
+<div><a href="http://mobile.51cto.com/comment/">业界观察</a>|<a href="http://mobile.51cto.com/data/">调查数据</a>|<a href="http://mobile.51cto.com/informatization/">移动信息化</a></div>
+</li>
+
+<li class="last"><span class="tit">Android</span>
+<div><a href="http://mobile.51cto.com/ahot/">热点</a>|<a href="http://mobile.51cto.com/anews/">资讯</a>|<a href="http://mobile.51cto.com/android/abased/">基础</a>|<a href="http://mobile.51cto.com/android/amedia/">多媒体</a>|<a href="http://mobile.51cto.com/android/adatabase/">数据库</a>|<a href="http://mobile.51cto.com/android/design/">设计</a>|<a href="http://mobile.51cto.com/android/aengine/">工具</a>|<a href="http://mobile.51cto.com/android/aprogram/">编译</a></div>
+</li>
+</ul> 
+</div> 
+<p class="blank10"></p>
+<p class="blank10"></p>
+<div class="leftbotcon">
+<div class="bor jdlist">
+<div class="titbg">
+<h3 class="t2">热点推荐</h3></div>
+<ul>
+<li><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-t-4&#39;]);" href="http://mobile.51cto.com/mobile-182392.htm"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/153546162.jpg"></a> 
+<div class="name"><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-t-4&#39;]);" href="http://mobile.51cto.com/mobile-182392.htm">Android开发应用详解</a></div></li>
+<li><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-t-4&#39;]);" href="http://developer.51cto.com/art/201106/266369.htm"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/133620622.jpg"></a> 
+<div class="name"><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-t-4&#39;]);" href="http://developer.51cto.com/art/201106/266369.htm">那些性感的让人尖叫的程序员</a></div></li>
+<li><a href="http://developer.51cto.com/art/200907/133407.htm"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/134217922.jpg"></a> 
+<div class="name"><a href="http://developer.51cto.com/art/200907/133407.htm">HTML5 下一代Web开发标准详解</a></div></li>
+<li><a href="http://developer.51cto.com/art/201104/257581.htm"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/123123954.jpg"></a> 
+<div class="name"><a href="http://developer.51cto.com/art/201104/257581.htm">高性能WEB开发应用指南</a></div></li>
+<li><a href="http://os.51cto.com/art/200706/49181.htm"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/195816929.jpg"></a> 
+<div class="name"><a href="http://os.51cto.com/art/200706/49181.htm">Ubuntu开源技术交流频道</a></div></li></ul></div>
+<p class="blank10"></p>
+<div class="bor hotTag"><strong>热门标签：</strong> <a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-2]);" href="http://os.51cto.com/windows/">windows频道</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://mobile.51cto.com/">移动开发</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://cloud.51cto.com/">云计算</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://mobile.51cto.com/mobile/objc/">objective-c</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://network.51cto.com/art/200909/151122.htm">tp-link路由器设置图解</a><a onclick="javascript: _gaq.push([&#39;_trackPageview&#39;, &#39;/51cto/neirong/d-w&#39;]);" href="http://developer.51cto.com/art/200907/133407.htm">html5</a> </div></div>
+<div class="leftbotbox"> </div>
+</div>
+<!--left end-->
+<div class="g_13 fr">
+<div class="focus fixfloat" style="height: 640px;"> 
+ <img width="298" style="border: 1px solid #CCCCCC; margin:5px 0px 5px;" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/weixin.jpg"><div class="hot" style="top: 450px;">
+<ul>
+<li class="tit"><em>头条</em> <a href="http://ai.51cto.com/art/201703/536061.htm">摆好正确姿势 看 Google 神级深度学习框架 TensorFlow 的实践思路</a> </li>
+<li class="con"><dl><dt><a href="http://ai.51cto.com/art/201703/536061.htm"><img border="0" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/Android开发中Handler的经典总结 - 51CTO.COM.html"></a></dt>
+<dd> </dd>
+</dl></li></ul><ol class="hotlist"><li><a href="http://mobile.51cto.com/iphone-535106.htm">iOS与Android设备到底是如何被入侵的？</a></li><li><a href="http://developer.51cto.com/art/201703/534563.htm">你所不了解的移动支付背后的技术支撑</a></li></ol></div>
+<p>
+<script language="JavaScript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ad.js(1).下载" type="text/javascript"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ad(1).php"></script><iframe width="300" height="260" noresize="" scrolling="No" frameborder="0" marginheight="0" marginwidth="0" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/14.html" align="left"></iframe>
+</p>
+</div>
+<div class="bor vlist" id="edu">
+	<div class="titbg">
+    <h3 class="fl t1"><a href="http://edu.51cto.com/" target="_blank">视频课程</a></h3>
+    <a class="tmore" id="change" style="cursor:pointer">换一换</a>
+    </div>
+    
+    	<ul class="plist01" id="edu1"><li><a class="ico" href="http://edu.51cto.com/course/course_id-1467.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1467.html" target="_blank"><img alt="Word 2003从入门到精通" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKiom1OiPdig59JIAAChTSQei48862.jpg" height="80" width="100"></a><h5><a title="Word 2003从入门到精通" href="http://edu.51cto.com/course/course_id-1467.html" target="_blank">Word 2003从入门到精通</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-157061.html" target="_blank">朱先忠</a></p><p> 1人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-1466.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1466.html" target="_blank"><img alt="CCNP交换技术部分" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKiom1OiOZ2hoX7SAADBjE1LHNE016.jpg" height="80" width="100"></a><h5><a title="CCNP交换技术部分" href="http://edu.51cto.com/course/course_id-1466.html" target="_blank">CCNP交换技术部分</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-7648423.html" target="_blank">谌玺</a></p><p> 2人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-1465.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1465.html" target="_blank"><img alt="Exchange2013部署实践" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1OhXqCg_SeNAAC-la48bws717.jpg" height="80" width="100"></a><h5><a title="Exchange2013部署实践" href="http://edu.51cto.com/course/course_id-1465.html" target="_blank">Exchange2013部署实践</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-5413429.html" target="_blank">兰晓宇</a></p><p> 4人学习过</p></div></li></ul><ul class="plist01" id="edu2" style="display:none"><li><a class="ico" href="http://edu.51cto.com/course/course_id-1464.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1464.html" target="_blank"><img alt="PPT改变生活--零基础学习PPT" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1OhO8PyDmIyAAGiiOponh0511.jpg" height="80" width="100"></a><h5><a title="PPT改变生活--零基础学习PPT" href="http://edu.51cto.com/course/course_id-1464.html" target="_blank">PPT改变生活--零基础学习PPT</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-9033677.html" target="_blank">吴树波</a></p><p> 27人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-1463.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1463.html" target="_blank"><img alt="安德全网独一份课程之思科RS和SP CCIE高级视频教程IPv6技术" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKiom1OhHsrBWlN3AADknrZZksM702.jpg" height="80" width="100"></a><h5><a title="安德全网独一份课程之思科RS和SP CCIE高级视频教程IPv6技术" href="http://edu.51cto.com/course/course_id-1463.html" target="_blank">安德全网独一份课程之思科RS和SP CCIE高级视</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-7305656.html" target="_blank">安德</a></p><p> 12人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-1461.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1461.html" target="_blank"><img alt="安德全网独一份课程之思科RS和SP CCIE高级视频教程《组播技术》" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKiom1Og-dLSzRczAAGn8chchfo922.jpg" height="80" width="100"></a><h5><a title="安德全网独一份课程之思科RS和SP CCIE高级视频教程《组播技术》" href="http://edu.51cto.com/course/course_id-1461.html" target="_blank">安德全网独一份课程之思科RS和SP CCIE高级视</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-7305656.html" target="_blank">安德</a></p><p> 14人学习过</p></div></li></ul><ul class="plist01" id="edu3" style="display:none"><li><a class="ico" href="http://edu.51cto.com/course/course_id-1456.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1456.html" target="_blank"><img alt="Lync 2013-项目实战-培训视频教程-第 4 阶段-部署基础环境" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKiom1OeTvOh9BsoAABLwaZUCZE007.jpg" height="80" width="100"></a><h5><a title="Lync 2013-项目实战-培训视频教程-第 4 阶段-部署基础环境" href="http://edu.51cto.com/course/course_id-1456.html" target="_blank">Lync 2013-项目实战-培训视频教程-第 4 阶段-</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-711418.html" target="_blank">刘金丰</a></p><p> 47人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-1453.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1453.html" target="_blank"><img alt="网络规划及部署视频教程" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1Ofl5KAesJ9AAEmfaE5Uns985.jpg" height="80" width="100"></a><h5><a title="网络规划及部署视频教程" href="http://edu.51cto.com/course/course_id-1453.html" target="_blank">网络规划及部署视频教程</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-25778.html" target="_blank">王伟超</a></p><p> 142人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-1452.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1452.html" target="_blank"><img alt="Prefactoring 软件预构思想" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1Oa3d3icfK5AADY5KJcT5A433.jpg" height="80" width="100"></a><h5><a title="Prefactoring 软件预构思想" href="http://edu.51cto.com/course/course_id-1452.html" target="_blank">Prefactoring 软件预构思想</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-4737356.html" target="_blank">吉贤</a></p><p> 40人学习过</p></div></li></ul><ul class="plist01" id="edu4" style="display:none"><li><a class="ico" href="http://edu.51cto.com/course/course_id-1450.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1450.html" target="_blank"><img alt="Windows Server 2012 深度管理系列课程" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKiom1Oa0vmhNxIMAAER378vvp4834.jpg" height="80" width="100"></a><h5><a title="Windows Server 2012 深度管理系列课程" href="http://edu.51cto.com/course/course_id-1450.html" target="_blank">Windows Server 2012 深度管理系列课程</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-7787419.html" target="_blank">王进</a></p><p> 176人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-1449.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1449.html" target="_blank"><img alt="[老谭]零基础学通Excel VBA-初级视频课程" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1OZ1TTQjWcsAAEQ00j-MvE546.jpg" height="80" width="100"></a><h5><a title="[老谭]零基础学通Excel VBA-初级视频课程" href="http://edu.51cto.com/course/course_id-1449.html" target="_blank">[老谭]零基础学通Excel VBA-初级视频课程</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-8963545.html" target="_blank">谭科</a></p><p> 188人学习过</p></div></li><li><a class="ico" href="http://edu.51cto.com/course/course_id-1446.html" target="_blank"></a><a href="http://edu.51cto.com/course/course_id-1446.html" target="_blank"><img alt="[老谭]全国计算机等级考试-二级Visual FoxPro快速通关" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKiom1OaagqweQvZAAEETNE6J8U368.jpg" height="80" width="100"></a><h5><a title="[老谭]全国计算机等级考试-二级Visual FoxPro快速通关" href="http://edu.51cto.com/course/course_id-1446.html" target="_blank">[老谭]全国计算机等级考试-二级Visual FoxPro</a></h5><div class="c666"><p>讲师：<a href="http://edu.51cto.com/lecturer/user_id-8963545.html" target="_blank">谭科</a></p><p> 68人学习过</p></div></li></ul><ul class="plist01" id="edu5" style="display:none"></ul>
+	
+</div>
+<div class="rank">
+<div class="tlt">
+      <h3>文章排行</h3>
+      <a onmouseover="change_top10(3);" id="top_3">本月</a><a onmouseover="change_top10(2);" id="top_2">本周</a><a onmouseover="change_top10(1);" class="myon" id="top_1">24小时</a> </div>
+ <div id="top10_1" style="display: block;" class="list"><ul>
+<li><a href="http://mobile.51cto.com/design-250037.htm" target="_blank" title="21个免费的UI界面设计工具、资源及网站">21个免费的UI界面设计工具、资源及网站</a>
+</li><li><a href="./Android开发中Handler的经典总结 - 51CTO.COM_files/Android开发中Handler的经典总结 - 51CTO.COM.html" target="_blank" title="Android开发中Handler的经典总结">Android开发中Handler的经典总结</a>
+</li><li><a href="http://mobile.51cto.com/hot-508139.htm" target="_blank" title="什么，YouTube, App这些英文你都读错了">什么，YouTube, App这些英文你都读错了</a>
+</li><li><a href="http://mobile.51cto.com/aprogram-464015.htm" target="_blank" title="Android 反编译 -smali语法">Android 反编译 -smali语法</a>
+</li><li><a href="http://mobile.51cto.com/hot-495118.htm" target="_blank" title="51CTO原创精选">51CTO原创精选</a>
+</li><li><a href="http://mobile.51cto.com/aprogram-491662.htm" target="_blank" title="来自谷歌的Android性能优化大起底">来自谷歌的Android性能优化大起底</a>
+</li><li><a href="http://mobile.51cto.com/hot-511417.htm" target="_blank" title="I/O 首日，Google 发布了自家的 Siri、">I/O 首日，Google 发布了自家的 Siri、</a>
+</li><li><a href="http://mobile.51cto.com/news-508147.htm" target="_blank" title="html5 app轻架构高性能开发交流会即将">html5 app轻架构高性能开发交流会即将</a>
+</li><li><a href="http://mobile.51cto.com/hot-494444.htm" target="_blank" title="51CTO外电精选">51CTO外电精选</a>
+</li><li><a href="http://mobile.51cto.com/iphone-441694.htm" target="_blank" title="iOS新语言swift上手指南">iOS新语言swift上手指南</a>
+</li></ul></div>
+<div id="top10_2" style="display: none;" class="list"><ul>
+<li><a href="http://mobile.51cto.com/ahot-515466.htm" target="_blank" title="Android 7.0正式版8月登场 无缘Nexus 5">Android 7.0正式版8月登场 无缘Nexus 5</a>
+</li><li><a href="http://mobile.51cto.com/news-515470.htm" target="_blank" title="苹果将发布Swift 3.0 公布第四版开发内">苹果将发布Swift 3.0 公布第四版开发内</a>
+</li><li><a href="http://mobile.51cto.com/news-515524.htm" target="_blank" title="Android与iOS谁更优秀？消费者必看的五">Android与iOS谁更优秀？消费者必看的五</a>
+</li><li><a href="http://mobile.51cto.com/iphone-515464.htm" target="_blank" title="苹果会开放iOS操作系统吗？30年前已错">苹果会开放iOS操作系统吗？30年前已错</a>
+</li><li><a href="http://mobile.51cto.com/hot-515468.htm" target="_blank" title="移动支付技术架构及应用模式探讨">移动支付技术架构及应用模式探讨</a>
+</li><li><a href="http://mobile.51cto.com/iphone-515526.htm" target="_blank" title="软硬皆失：苹果授权操作系统缘何是个“">软硬皆失：苹果授权操作系统缘何是个“</a>
+</li><li><a href="http://mobile.51cto.com/data-515467.htm" target="_blank" title="移动营销大鱼吃小鱼 行业并购成趋势">移动营销大鱼吃小鱼 行业并购成趋势</a>
+</li><li><a href="http://mobile.51cto.com/comment-515079.htm" target="_blank" title="柴洪峰：移动支付已经成为金融创新的重">柴洪峰：移动支付已经成为金融创新的重</a>
+</li><li><a href="http://mobile.51cto.com/iphone-515505.htm" target="_blank" title="我们总结了十条变化 让你了解iOS 10第">我们总结了十条变化 让你了解iOS 10第</a>
+</li><li><a href="http://mobile.51cto.com/hot-515509.htm" target="_blank" title="物联网正在给批发业带来新的商业模式">物联网正在给批发业带来新的商业模式</a>
+</li></ul></div>
+<div id="top10_3" style="display: none;" class="list"><ul>
+<li><a href="http://mobile.51cto.com/iphone-514400.htm" target="_blank" title="iOS 10平台SpriteKit新特性之Tile Maps">iOS 10平台SpriteKit新特性之Tile Maps</a>
+</li><li><a href="http://mobile.51cto.com/iphone-514408.htm" target="_blank" title="iOS 10平台SpriteKit新特性之Tile Maps">iOS 10平台SpriteKit新特性之Tile Maps</a>
+</li><li><a href="http://mobile.51cto.com/android-514025.htm" target="_blank" title="使用Xamarin和Visual Studio开发Androi">使用Xamarin和Visual Studio开发Androi</a>
+</li><li><a href="http://mobile.51cto.com/anews-513979.htm" target="_blank" title="慧点科技新品牌SmartGO亮相   发力政企">慧点科技新品牌SmartGO亮相   发力政企</a>
+</li><li><a href="http://mobile.51cto.com/hot-514926.htm" target="_blank" title="用Horizon搭建可扩展的Javascript移动">用Horizon搭建可扩展的Javascript移动</a>
+</li><li><a href="http://mobile.51cto.com/ahot-515466.htm" target="_blank" title="Android 7.0正式版8月登场 无缘Nexus 5">Android 7.0正式版8月登场 无缘Nexus 5</a>
+</li><li><a href="http://mobile.51cto.com/news-515470.htm" target="_blank" title="苹果将发布Swift 3.0 公布第四版开发内">苹果将发布Swift 3.0 公布第四版开发内</a>
+</li><li><a href="http://mobile.51cto.com/news-515524.htm" target="_blank" title="Android与iOS谁更优秀？消费者必看的五">Android与iOS谁更优秀？消费者必看的五</a>
+</li><li><a href="http://mobile.51cto.com/iphone-515464.htm" target="_blank" title="苹果会开放iOS操作系统吗？30年前已错">苹果会开放iOS操作系统吗？30年前已错</a>
+</li><li><a href="http://mobile.51cto.com/hot-515468.htm" target="_blank" title="移动支付技术架构及应用模式探讨">移动支付技术架构及应用模式探讨</a>
+</li></ul></div>
+ 
+ </div>
+<p class="blank1"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1">热点职位</h3>
+<a href="http://gaozhao.51cto.com/job-search/list" class="tmore">更多&gt;&gt;</a></div>
+	<div class="rmzwn_xx"><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-6739.html" target="_blank"> u3d客户端开发 </a></dt><dd><h2>全职/1-3年/本科</h2><span>10k-20k</span><a href="http://gaozhao.51cto.com/company/view/id-1065.html" target="_blank">脉葳咨询</a></dd></dl><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-6189.html" target="_blank"> iOS高级开发工程师 </a></dt><dd><h2>全职/5-10年/本科</h2><span>25k-35k</span><a href="http://gaozhao.51cto.com/company/view/id-149.html" target="_blank">奇艺视频</a></dd></dl><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-5223.html" target="_blank"> Android专家工程师 </a></dt><dd><h2>全职/5-10年/本科</h2><span>30k-50k</span><a href="http://gaozhao.51cto.com/company/view/id-946.html" target="_blank">中网银科</a></dd></dl><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-6649.html" target="_blank"> unity3d开发工程师 </a></dt><dd><h2>全职/1-3年/本科</h2><span>10k-20k</span><a href="http://gaozhao.51cto.com/company/view/id-562.html" target="_blank">红云融通</a></dd></dl><dl><dt><a href="http://gaozhao.51cto.com/job/view/id-4302.html" target="_blank"> U3D开发工程师 </a></dt><dd><h2>全职/1-3年/大专</h2><span>6k-12k</span><a href="http://gaozhao.51cto.com/company/view/id-491.html" target="_blank">智竹游戏</a></dd></dl></div>
+</div>
+<div class="blank10"></div>
+<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/51cto_sha1.js.下载"></script>
+<div class="bor">
+<div class="titbg">
+<h3 class="fl t1">热点专题</h3>
+<a href="http://mobile.51cto.com/col/1623/spec1.htm" class="tmore">更多&gt;&gt;</a></div>
+<ul class="plist01">
+<li><a href="http://mobile.51cto.com/aengine-437184.htm" title="OpenGL ES应用开发实践指南"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKiom1NfyjqTE_CsAAA-2iGpQFI568.jpg" alt="OpenGL ES应用开发实践指南" width="100" height="80"></a>
+<h5><a href="http://mobile.51cto.com/aengine-437184.htm" title="OpenGL ES应用开发实践指南">OpenGL ES应用开发实</a></h5>
+<div class="c666">OpenGL ES 和 OpenGL 一样，是 khronos 所维护、定义</div>
+</li><li><a href="http://mobile.51cto.com/market-432103.htm" title="带你走进一个人的手游开发之旅"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1Mie4-xTEQlAABBNvHBUlY075.jpg" alt="带你走进一个人的手游开发之旅" width="100" height="80"></a>
+<h5><a href="http://mobile.51cto.com/market-432103.htm" title="带你走进一个人的手游开发之旅">带你走进一个人的手游</a></h5>
+<div class="c666">一款《Flappy Bird》捧红了越南开发者阮哈东，引来无</div>
+</li><li><a href="http://mobile.51cto.com/hot-431534.htm" title="手游开发经验分享"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioL1MdepeyqQ4VAAAwj3xbSHk166.jpg" alt="手游开发经验分享" width="100" height="80"></a>
+<h5><a href="http://mobile.51cto.com/hot-431534.htm" title="手游开发经验分享">手游开发经验分享</a></h5>
+<div class="c666">手机游戏开发可以很简单，如Flappy Bird，一个人一杯</div>
+</li> 
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="tagCloud">
+<div class="tlt">
+<h3>热点标签</h3>
+</div>
+<div class="taglist"><a title="iOS开发" href="http://mobile.51cto.com/mobile/objc/">iOS开发</a>  <a title="Android开发" href="http://mobile.51cto.com/mobile-182392.htm">Android开发</a> <a title="Symbian开发" href="http://mobile.51cto.com/mobile-220581.htm">Symbian开发</a>  <a title="MeeGo开发" href="http://mobile.51cto.com/meego-208013.htm">MeeGo开发</a>  <a title="BlackBerry开发" href="http://mobile.51cto.com/blackberry-255350.htm">BlackBerry开发</a>  <a title="Windows Phone开发" href="http://mobile.51cto.com/mobile-219051.htm">Windows Phone开发</a>  <a title="Phone Club" href="http://mobile.51cto.com/1603/">Phone Club</a>  <a title="Android 4.0" href="http://mobile.51cto.com/android-297987.htm" class="imp">Android 4.0</a>  <a title="webOS 3.0" href="http://mobile.51cto.com/webos-256291.htm">webOS 3.0</a>  <a title="智能手机" href="http://www.linkphone.cn/">智能手机</a> <a title="软件下载" href="http://download.linkphone.cn/">软件下载</a> </div>
+</div>
+<div class="rss">
+<ul>
+<li class="lin f12-c"><a href="http://news.51cto.com/col/1323/"><strong>点击这里查看样刊</strong></a></li>
+<li>
+<dl>
+<dt> </dt>
+<dd><a href="http://home.51cto.com/index.php?s=/Subscribe"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/dingy.gif"></a></dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1">全站热点</h3>
+</div>
+<div class="webhot fixfloat">
+<ul>
+
+<li>
+  <a href="http://os.51cto.com/art/201312/426165.htm" title="《Linux运维趋势》2013年12月号"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioJlLCvDyBs2epAABBq5nxodI990.jpg"></a>
+  <div><a href="http://os.51cto.com/art/201312/426165.htm" title="《Linux运维趋势》2013年12月号">《Linux运维趋势》2013年12月号</a></div>
+</li>
+
+<li>
+  <a href="http://netsecurity.51cto.com/secu/ecommerce2013/" title="网购狂欢季 冷眼看安全"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wKioJlLAy4PSkESXAAAVpte7OXk790.jpg"></a>
+  <div><a href="http://netsecurity.51cto.com/secu/ecommerce2013/" title="网购狂欢季 冷眼看安全">网购狂欢季 冷眼看安全</a></div>
+</li>
+
+</ul>
+</div>
+<p class="blank1"></p>
+<ul class="list03">
+
+<li><a href="http://os.51cto.com/art/201406/441527.htm" title="Windows XP市场份额高居老二">Windows XP市场份额高居老二</a></li>
+
+<li><a href="http://book.51cto.com/art/201406/441499.htm" title="Scrum精髓：敏捷转型指南">Scrum精髓：敏捷转型指南</a></li>
+
+<li><a href="http://network.51cto.com/art/201406/441494.htm" title="超导LTE系统 基站覆盖弱手机也能在线">超导LTE系统 基站覆盖弱手机也能在线</a></li>
+
+<li><a href="http://database.51cto.com/art/201406/441492.htm" title="制造业如何利用大数据">制造业如何利用大数据</a></li>
+
+<li><a href="http://mobile.51cto.com/iphone-441491.htm" title="零基础现学苹果新语言Swift，可能吗？">零基础现学苹果新语言Swift，可能吗</a></li>
+
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1">读书</h3>
+</div>
+  
+<div class="catbook"><a href="http://book.51cto.com/art/200704/46224.htm" title="数据库系统概念"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/143447447.jpg" width="66" height="98" border="0"></a>
+<h5><a href="http://book.51cto.com/art/200704/46224.htm">数据库系统概念</a></h5>
+<div class="c666 text">本书是数据库系统方面的经典教材之一。国际上许多著名大学包括斯坦福大学、耶鲁大学、得克萨斯大学、康奈尔大学、伊利诺伊大学、</div>
+</div>
+
+
+<ul class="list03">
+
+<li><a href="http://book.51cto.com/art/200801/63463.htm" title="J2EE开发全程实录">J2EE开发全程实录</a></li>
+
+<li><a href="http://book.51cto.com/art/200801/63467.htm" title="Linux环境下C编程指南">Linux环境下C编程指南</a></li>
+
+<li><a href="http://book.51cto.com/art/200801/63476.htm" title="Visual C# 2005从入门到精通">Visual C# 2005从入门到精通</a></li>
+
+<li><a href="http://book.51cto.com/art/200801/63480.htm" title="框架设计（第2版）CLR Via C#">框架设计（第2版）CLR Via C#</a></li>
+
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="bor">
+<div class="titbg">
+<h3 class="t1 fl">博文推荐</h3>
+<a class="tmore" href="http://blog.51cto.com/">更多&gt;&gt;</a></div>
+<div class="blogtj">
+<ul>
+<li> <a href="http://nowpaper.blog.51cto.com/"><img width="60" height="65" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/3893223_1320825949.jpg"></a>
+<h5><a href="http://nowpaper.blog.51cto.com/">nowpaper</a></h5>
+Windows Phone专家</li>
+<li> <a href="http://xiaominghimi.blog.51cto.com/"><img width="60" height="65" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/125657389.jpg"></a>
+<h5><a href="http://xiaominghimi.blog.51cto.com/">himi</a></h5>
+<p>Android开发专家</p>
+</li>
+</ul>
+</div>
+<ul class="list03">
+ <li><a href="http://firefish.blog.51cto.com/298258/251159/" target="_blank" title="在colinux上全新安装gentoo">在colinux上全新安装gentoo</a></li><li><a href="http://neochang.blog.51cto.com/703455/251133/" target="_blank" title="Power Systems渐成企业智慧动态基础架构基石">Power Systems渐成企业智慧动态基础</a></li><li><a href="http://winlinux.blog.51cto.com/849329/251121/" target="_blank" title="SMS2003之企业补丁管理">SMS2003之企业补丁管理</a></li><li><a href="http://laziocht.blog.51cto.com/107289/250975/" target="_blank" title="读《唐骏日记》有感">读《唐骏日记》有感</a></li>
+</ul>
+</div>
+<p class="blank10"></p>
+<div class="tj">
+<div class="tlt">
+<h3>最新热帖</h3>
+<a class="more" href="http://bbs.51cto.com/hotthreads.php">更多&gt;&gt;</a></div>
+<ul>
+<li><a href="http://bbs.51cto.com/thread-26429-1.html" target="_blank" title="通用WAP网站生成系统(PowerDiamond) v.1">通用WAP网站生成系统(PowerDiamond) </a></li><li><a href="http://bbs.51cto.com/thread-11063-1.html" target="_blank" title="八类大学毕业生求职时不受欢迎">八类大学毕业生求职时不受欢迎</a></li><li><a href="http://bbs.51cto.com/thread-6946-1.html" target="_blank" title="IT人为什么难以拿到高薪？【转帖】">IT人为什么难以拿到高薪？【转帖】</a></li><li><a href="http://bbs.51cto.com/thread-4333-1.html" target="_blank" title="想去外企上班">想去外企上班</a></li>
+</ul>
+</div>
+<div class="picAD">
+<iframe class="bann" frameborder="0" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/baidu.html" scrolling="No" style="background-color: white; height: 265px; width: 300px; padding: 0px; margin: 0px; overflow: hidden;"></iframe>
+</div>
+</div>
+<p class="blank1"></p> 
+<!--leftbotcon end-->
+</div> 
+<div class="subweb">
+<h4>51CTO旗下网站</h4>
+<div>
+<a target="_blank" href="http://www.51cto.com/">领先的IT技术网站 51CTO</a>
+<a target="_blank" href="http://www.watchstor.com/">领先的中文存储媒体 WatchStor</a>
+<a target="_blank" href="http://cio.51cto.com/">中国首个CIO网站 CIOage</a>
+<a target="_blank" href="http://www.hc3i.cn/">中国首家数字医疗网站 HC3i</a>
+</div>
+</div>
+<div id="ft"><div id="foot" align="center"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/copy_right.js.下载"></script>Copyright&#169;2005-2017 <a href="http://www.51cto.com/">51CTO.COM</a> 版权所有 未经许可 请勿转载<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/111ef0d5dd0beb1ff4ebd70294eb2ea1" type="text/javascript"></script></div></div>
+<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/count.js.下载"></script><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/count.php"></script>
+<script type="text/javascript">
+	$("#uyan_cmt_list").next().remove();	
+	$("#uyan_cmt_list").next().css("display","none");	
+</script>
+<!-- 悬浮广告 -->
+<!--<style type="text/css">-->
+	<!--.ipadFload{display:none;}-->
+	<!--.ipadFloada{ position:fixed; width:280px; height:210px; font-family:"微软雅黑"; padding-left:18px;right: 20px; bottom: 240px;  }-->
+	<!--.ipadClosea{ text-align:right; font-size:14px; line-height:20px;cursor:pointer;}-->
+<!--</style>-->
+<!--<div class="ipadFloada" id="ipadFloada" style="z-index:9999;">-->
+	<!--<div onclick="document.getElementById('ipadFloada').style.display='none';" class="ipadClosea"><img src="http://s3.51cto.com/wyfs02/M02/85/21/wKiom1eaubuSesqTAAAB9Jb8kBA734.gif"></div>-->
+	<!--<div class="ipadImg">-->
+		<!--<a href="http://x.51cto.com?sytc" target="_blank"><img width="280px" height="210px" src="http://s4.51cto.com/wyfs02/M00/8D/9C/wKioL1ij756hibWaAAFNKBkaLKk823.jpg"></a></div>-->
+<!--</div>-->
+<!--end-->
+
+<style>
+.Nfloat { position: fixed; right: 2%; top: 35%; z-index: 801; }
+</style>
+
+<!-- 新监测代码 -->
+<!-- 新监测代码 -->
+<div id="MyMoveAd" style="display: none; height: 2px;">
+<span id="wordlink_1"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wordlink1.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ajs.php"></script><a href="http://gg.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3933__zoneid=270__cb=dd4a363b14__oadest=http%3A%2F%2Fedu.51cto.com%2Fzt%2Fzt_id-1.html%3Fan" target="_blank"><font color="red">网络安全一个大写的反“作死”</font></a><div id="beacon_dd4a363b14" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/lg.php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</span>
+<span id="wordlink_2"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wordlink2.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ajs(1).php"></script><a href="http://gg2.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3546__zoneid=631__cb=ecd6517031__oadest=http%3A%2F%2Fedu.51cto.com%2Ftraining%2Ftraining_id-44.html%3Fxiaoshou" target="_blank"><font color="red">助你4个月成为大数据工程师</font></a><div id="beacon_ecd6517031" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/lg(1).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</span>
+<span id="wordlink_3"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wordlink3.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ajs(2).php"></script><a href="http://gg1.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3717__zoneid=594__cb=b394113d8b__oadest=http%3A%2F%2Fedu.51cto.com%2Fpx%2Ftrain%2F115%3Fwzl" target="_blank"><font color="red">Linux云计算与架构师进阶</font></a><div id="beacon_b394113d8b" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/lg(2).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</span>
+<span id="wordlink_4"><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/wordlink4.js.下载"></script><script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ajs(3).php"></script><a href="http://gg1.51cto.com/www/delivery/ck.php?oaparams=2__bannerid=3549__zoneid=636__cb=28e4d07aff__oadest=http%3A%2F%2Fedu.51cto.com%2Ftraining%2Ftraining_id-17.html%3Fxiaoshou" target="_blank"><font color="red">2016年备战软考-重难点解析</font></a><div id="beacon_28e4d07aff" style="position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="./Android开发中Handler的经典总结 - 51CTO.COM_files/lg(3).php" width="0" height="0" alt="" style="width: 0px; height: 0px;"></div>
+</span>
+<span id="pinglun"><script language="JavaScript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/getArtCount.php"></script>0</span>
+<span id="tonglan"></span>
+<span id="wordlink"><script language="JavaScript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ad.js(2).下载"></script></span>
+<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/ad.js(2).下载"></script>
+<span id="bookss"><script language="JavaScript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/getBookData.php"></script></span>
+</div>   
+<script language="javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/favorite.js.下载"></script>
+
+<script language="javaScript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/dialog_utf8.js.下载"></script>
+<script language="javaScript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/mail.js.下载"></script>  
+<script type="text/javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/favorbox.js.下载"></script>
+<script language="javascript" src="./Android开发中Handler的经典总结 - 51CTO.COM_files/clipboard.js.下载"></script>
+<script language="javaScript"> 
+	var thistid=442833; 
+	
+	//收藏按钮
+	var favor_url = 'http://mobile.51cto.com/aprogram-442833.htm';  // 如：http://bbs.51cto.com/thread-789649-1.html
+	var favor_title = 'Android开发中Handler的经典总结';       //  
+	
+	//绑定复制按钮
+	copy('msnqqcopy', 'http://mobile.51cto.com/aprogram-442833.htm', '分享到MSN/QQ的链接复制成功!');
+//	copy('bbscopy', '[url=http://mobile.51cto.com/aprogram-442833.htm][u]Android开发中Handler的经典总结[/u][/url]', '分享到论坛的UBB代码复制成功!');
+
+</script><div style="position: absolute; left: 1030px; top: 3834px; width: 34px; height: 12px; z-index: 99;"><embed id="ZeroClipboardMovie_1" src="http://images.51cto.com/images/art/newart1012/ZeroClipboard.swf" loop="false" menu="false" quality="best" bgcolor="#ffffff" width="34" height="12" name="ZeroClipboardMovie_1" align="middle" allowscriptaccess="always" allowfullscreen="false" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" flashvars="id=1&amp;width=34&amp;height=12" wmode="transparent"></div> 
+<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/index.php" charset="utf-8"></script><script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/vip_top.js.下载"></script>
+<script src="./Android开发中Handler的经典总结 - 51CTO.COM_files/count(1).php" language="javascript"></script>
+<script language="javascript">
+document.getElementById('books').innerHTML = document.getElementById("bookss").innerHTML; 
+</script>
+
+
+
+</body></html>

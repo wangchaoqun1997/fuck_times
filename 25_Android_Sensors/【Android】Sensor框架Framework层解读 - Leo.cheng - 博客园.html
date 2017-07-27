@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)http://www.cnblogs.com/lcw/p/3402770.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script async="" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/analytics.js.下载"></script><script type="text/javascript" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/encoder.js.下载"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/bundle-LessIsMoreRight.css">
+<link type="text/css" rel="stylesheet" href="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/153957.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/bundle-LessIsMoreRight-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/lcw/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/lcw/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/lcw/wlwmanifest.xml">
+<script src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'lcw', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+<script src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/share.js.下载"></script><link rel="stylesheet" href="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/slide_share.css"></head>
+<body>
+<a name="top"></a>
+<div id="page_begin_html"></div><script>load_page_begin_html();</script>
+
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+		
+<!--done-->
+<div class="title"><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/lcw/">十三</a></div>
+<div class="subtitle">Not to take the overall situation,not seeking a domain; not seek Jesus Christ,not seeking temporarily</div>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li id="nav_sitehome"><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+<li id="nav_myhome"><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/lcw/">首页</a></li>
+<li id="nav_newpost"><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+<li id="nav_contact"><a id="blog_nav_contact" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/Leo.cheng">联系</a></li>
+<li id="nav_rss"><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/lcw/rss">订阅</a>
+<!--<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/lcw/rss"><img src="//www.cnblogs.com/images/xml.gif" alt="订阅" /></a>--></li>
+<li id="nav_admin"><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+</ul>
+
+		<div class="blogStats">
+			
+			<div id="blog_stats">
+<!--done-->
+随笔-279&nbsp;
+文章-0&nbsp;
+评论-42&nbsp;
+</div>
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/lcw/p/3402770.html">【Android】Sensor框架Framework层解读</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><h2><span>Sensor整体架构</span></h2>
+<p><span>　　<img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01160907-fb5904fa5936464cbefae1a574a34339.png" alt=""></span></p>
+<h3><span>整体架构说明</span></h3>
+<ol>
+<li>黄色部分表示硬件，它要挂在I2C总线上</li>
+<li>红色部分表示驱动，<strong><span style="color: #800080;">驱动注册到Kernel的Input Subsystem上，然后通过Event Device把Sensor数据传到HAL层，准确说是HAL从Event读</span></strong></li>
+<li>绿色部分表示动态库，它封装了<strong><span style="color: #ff0000;">整个Sensor的IPC机制</span></strong>，如SensorManager是客户端，SensorService是服务端，<strong><span style="color: #0000ff;">而</span><span style="color: #0000ff;">HAL部分是封装了服务端对Kernel的直接访问</span></strong></li>
+<li>蓝色部分就是我们的Framework和Application了，JNI负责访问Sensor的客户端，而Application就是具体的应用程序，用来接收Sensor返回的数据，并处理实现对应的UI效果，如屏幕旋转，打电话时灭屏，自动调接背光（这三个功能的具体实现会在以后分析）</li>
+</ol>
+<p>&nbsp;</p>
+<hr>
+<h2><span>Sensor总体调用关系图</span></h2>
+<p><span>　　本节主要解读Android的Framework层框架。</span></p>
+<p><span>　　<img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01163454-2f2a3062d8d24a0a86671ac6a946def3.png" alt=""></span></p>
+<p>&nbsp;</p>
+<p><span lang="EN-US" xml:lang="EN-US">　　<strong><span style="color: #0000ff;">Sensor</span></strong></span><strong><span style="color: #0000ff;">&nbsp;框架分为三个层次，客户度、服务端、<span lang="EN-US" xml:lang="EN-US">HAL</span>层，</span><span style="color: #ff0000;">服务端负责从<span lang="EN-US" xml:lang="EN-US">HAL</span>读取数据，并将数据写到管道中，</span><span style="color: #800080;">客户端通过管道读取服务端数据。</span></strong></p>
+<h3><span>客户端主要类</span></h3>
+<p><span>　　<span style="color: #008080;"><strong>SensorManager.java</strong></span></span></p>
+<p><span><span>　　　　从</span><span lang="EN-US" xml:lang="EN-US">android4.1</span><span>开始，把</span><span lang="EN-US" xml:lang="EN-US">SensorManager</span><span>定义为一个抽象类，定义了一些主要的方法，<span style="color: #800080;"><strong>该类主要是应用层直接使用的类，提供给应用层的接口</strong></span></span></span></p>
+<p><span>　　<strong><span style="color: #008080;">SystemSensorManager.java</span></strong></span></p>
+<p><span>　　　　<span>继承于</span><span lang="EN-US" xml:lang="EN-US">SensorManager</span><span>，客户端消息处理的实体，<span style="color: #800080;"><strong>应用程序通过获取其实例，并注册监听接口，获取</strong></span></span><span style="color: #800080;"><strong><span lang="EN-US" xml:lang="EN-US">sensor</span>数据。</strong></span></span></p>
+<p><span lang="EN-US" xml:lang="EN-US">　　<span style="color: #008080;"><strong>sensorEventListener</strong></span></span><span style="color: #008080;"><strong>接口</strong></span></p>
+<p><span>　　　　<span style="color: #800080;"><strong>用于注册监听的接口</strong></span></span></p>
+<p><span>　　<strong><span style="color: #008080;">sensorThread</span></strong></span></p>
+<p><span>　　　　<span>是</span><span lang="EN-US" xml:lang="EN-US">SystemSensorManager</span><span>的一个内部类，开启一个新线程负责读取读取</span><span lang="EN-US" xml:lang="EN-US">sensor</span><span>数据，<strong><span style="color: #800080;">当注册了</span></strong></span><strong><span style="color: #800080;"><span lang="EN-US" xml:lang="EN-US">sensorEventListener</span>接口的时候才会启动线程</span></strong></span></p>
+<h4><span>　　<strong><span style="color: #008080;">android_hardware_SensorManager.cpp</span></strong></span></h4>
+<p><span>　　　　<span>负责与</span><span lang="EN-US" xml:lang="EN-US">java</span><span>层通信的</span><span lang="EN-US" xml:lang="EN-US">JNI</span><span>接口</span></span></p>
+<p><span><span>　　<span style="color: #008080;"><strong>SensorManager.cpp</strong></span></span></span></p>
+<p>　　　　<span lang="EN-US" xml:lang="EN-US">sensor</span><span>在</span><span lang="EN-US" xml:lang="EN-US">Native</span><span>层的<strong><span style="color: #800080;">客户端，负责与服务端</span></strong></span><strong><span style="color: #800080;"><span lang="EN-US" xml:lang="EN-US">SensorService.cpp</span>的通信</span></strong></p>
+<h4><span>　　<strong><span style="color: #008080;">SenorEventQueu</span></strong></span><strong><span style="color: #008080;">e.cpp</span></strong></h4>
+<p><span><span>　　　　消息队列</span></span></p>
+<h3><span>服务端主要类</span></h3>
+<p><span>　　</span><span style="color: #008080;"><strong><span lang="EN-US" xml:lang="EN-US">SensorService.cpp</span></strong></span></p>
+<p>　　　　<span style="color: #800080;"><strong>服务端数据处理中心</strong></span></p>
+<p><span lang="EN-US" xml:lang="EN-US">　　<strong><span style="color: #008080;">SensorEventConnection</span></strong></span></p>
+<p>　　　　从<span lang="EN-US" xml:lang="EN-US">BnSensorEventConnection</span>继承来，实现接口<span lang="EN-US" xml:lang="EN-US">ISensorEventConnection</span>的一些方法，<strong><span style="color: #ff0000;"><span lang="EN-US" xml:lang="EN-US">ISensorEventConnection</span>在<span lang="EN-US" xml:lang="EN-US">SensorEventQueue</span>会保存一个指针，指向调用服务接口创建的<span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span>对象</span></strong></p>
+<p><span lang="EN-US" xml:lang="EN-US">　　<strong><span style="color: #008080;">Bittube.cpp</span></strong></span></p>
+<p>　　　　在这个类中创建了<strong><span style="color: #800080;">管道，用于服务端与客户端读写数据</span></strong></p>
+<p><span lang="EN-US" xml:lang="EN-US">　　<strong><span style="color: #008080;">SensorDevice</span></strong></span></p>
+<p>　　　　<strong><span style="color: #800080;">负责与<span lang="EN-US" xml:lang="EN-US">HAL</span>读取数据</span></strong></p>
+<h3><span lang="EN-US" xml:lang="EN-US">HAL</span><span>层</span></h3>
+<p><span>　　<span lang="EN-US" xml:lang="EN-US">Sensor.h</span><span>是</span><span lang="EN-US" xml:lang="EN-US">google</span><span>为</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>定义的</span><span lang="EN-US" xml:lang="EN-US">Hal</span><span>接口，单独提出去</span></span></p>
+<p>&nbsp;</p>
+<hr>
+<h2><span>客户端读取数据</span></h2>
+<h2><span>调用时序图</span></h2>
+<p><span>　<img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01172821-9cd27ec59cea4c5685ff4327d3db1023.jpg" alt="" width="897" height="670"></span></p>
+<h3><span lang="EN-US" xml:lang="EN-US">a</span><span lang="EN-US" xml:lang="EN-US">pk</span><span>注册监听器</span></h3>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;e23ac9d3-96d8-48ec-93ac-9cee149f469e&#39;)"><img id="code_img_closed_e23ac9d3-96d8-48ec-93ac-9cee149f469e" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_e23ac9d3-96d8-48ec-93ac-9cee149f469e" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;e23ac9d3-96d8-48ec-93ac-9cee149f469e&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_e23ac9d3-96d8-48ec-93ac-9cee149f469e" class="cnblogs_code_hide">
+<pre>SensorManager  mSensorManager =<span style="color: #000000;">
+ (SensorManager)getSystemService(SENSOR_SERVICE);
+ Sensor   mAccelerometer </span>=<span style="color: #000000;">
+ mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+ 
+    </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onResume() {
+           </span><span style="color: #0000ff;">super</span><span style="color: #000000;">.onResume();
+          mSensorManager. registerListenerImpl (</span><span style="color: #0000ff;">this</span><span style="color: #000000;">, mAccelerometer,
+     SensorManager.SENSOR_DELAY_NORMAL);
+     }
+     </span><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onPause() {
+           </span><span style="color: #0000ff;">super</span><span style="color: #000000;">.onPause();
+         mSensorManager.unregisterListener(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+     }
+ 
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">interface</span><span style="color: #000000;"> SensorEventListener {
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> onSensorChanged(SensorEvent event);
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span> onAccuracyChanged(Sensor sensor, <span style="color: #0000ff;">int</span><span style="color: #000000;"> accuracy);   
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span lang="EN-US" xml:lang="EN-US">　　Activity</span><span>实现了</span><strong><span style="color: #ff0000;" lang="EN-US" xml:lang="EN-US">SensorEventListener</span></strong><span><strong><span style="color: #ff0000;">接口。</span></strong></span></p>
+<p><span>　　在</span><span lang="EN-US" xml:lang="EN-US">onCreate</span><span>方法中，获取</span><span lang="EN-US" xml:lang="EN-US">SystemSensorManager</span><span>，并获取到加速传感器的</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>；</span></p>
+<p><span>　　在</span><span lang="EN-US" xml:lang="EN-US">onResume</span><span>方法中调用</span><span lang="EN-US" xml:lang="EN-US">SystemSensorManager，<span style="color: #800080;"><strong>registerListenerImpl</strong></span></span><span><span style="color: #800080;"><strong>注册</strong></span>监听器；</span></p>
+<p><span>　　当</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>数据有改变的时候将会<strong><span style="color: #800080;">回调</span></strong></span><strong><span style="color: #800080;" lang="EN-US" xml:lang="EN-US">onSensorChanged</span></strong><span>方法。</span></p>
+<h3><span>初始化</span><span lang="EN-US" xml:lang="EN-US">SystemSensorManager</span></h3>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;94f55d3e-0fc9-4997-b0a7-e9847368bd55&#39;)"><img id="code_img_closed_94f55d3e-0fc9-4997-b0a7-e9847368bd55" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_94f55d3e-0fc9-4997-b0a7-e9847368bd55" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;94f55d3e-0fc9-4997-b0a7-e9847368bd55&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_94f55d3e-0fc9-4997-b0a7-e9847368bd55" class="cnblogs_code_hide">
+<pre> <span style="color: #0000ff;">public</span><span style="color: #000000;"> SystemSensorManager(Context context,Looper mainLooper) {
+        mMainLooper </span>=<span style="color: #000000;"> mainLooper;       
+              mContext </span>=<span style="color: #000000;"> context;
+             
+        </span><span style="color: #0000ff;">synchronized</span><span style="color: #000000;">(sListeners) {
+            </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">sSensorModuleInitialized) {
+                sSensorModuleInitialized </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+ 
+                nativeClassInit();
+ 
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> initialize the sensor list</span>
+<span style="color: #000000;">                sensors_module_init();
+                </span><span style="color: #0000ff;">final</span> ArrayList&lt;Sensor&gt; fullList =<span style="color: #000000;"> sFullSensorsList;
+                </span><span style="color: #0000ff;">int</span> i = 0<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> {
+                    Sensor sensor </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Sensor();
+                    i </span>=<span style="color: #000000;"> sensors_module_get_next_sensor(sensor, i);
+ 
+                    </span><span style="color: #0000ff;">if</span> (i&gt;=0<span style="color: #000000;">) {
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;">Log.d(TAG, "found sensor: " + sensor.getName() +
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;">        ", handle=" + sensor.getHandle());</span>
+<span style="color: #000000;">                        fullList.add(sensor);
+                        sHandleToSensor.append(sensor.getHandle(), sensor);
+                    }
+                } </span><span style="color: #0000ff;">while</span> (i&gt;0<span style="color: #000000;">);
+ 
+                sPool </span>= <span style="color: #0000ff;">new</span> SensorEventPool( sFullSensorsList.size()*2<span style="color: #000000;"> );
+                sSensorThread </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> SensorThread();
+            }
+        }
+    }</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　系统开机启动的时候，会创建</span><strong><span style="color: #ff0000;" lang="EN-US" xml:lang="EN-US">SystemSensorManager</span></strong><span>的实例，在其构造函数中，主要做了四件事情：</span></p>
+<ol>
+<li><strong><span style="color: #008080;">初始化</span></strong><span lang="EN-US" xml:lang="EN-US"><strong><span style="color: #008080;">JNI</span></strong>：</span>调用<span lang="EN-US" xml:lang="EN-US">JNI</span>函数<span lang="EN-US" xml:lang="EN-US">nativeClassInit()</span>进行初始化</li>
+<li><strong><span style="color: #008080;">初始化<span lang="EN-US" xml:lang="EN-US">Sensor</span></span></strong><span><strong><span style="color: #008080;">列表</span></strong>：</span>调用<span lang="EN-US" xml:lang="EN-US">JNI</span>函数<span lang="EN-US" xml:lang="EN-US">sensors_module_init</span>，对<span lang="EN-US" xml:lang="EN-US">Sensor</span>模块进行初始化。创建了<span lang="EN-US" xml:lang="EN-US">native</span>层<span lang="EN-US" xml:lang="EN-US">SensorManager</span>的实例。</li>
+<li><strong><span style="color: #008080;">获取<span lang="EN-US" xml:lang="EN-US">Sensor</span></span></strong><span><strong><span style="color: #008080;">列表</span></strong>：</span>调用<span lang="EN-US" xml:lang="EN-US">JNI</span>函数<span lang="EN-US" xml:lang="EN-US">sensors_module_get_next_sensor()</span>获取<span lang="EN-US" xml:lang="EN-US">Sensor</span>，并存在<span lang="EN-US" xml:lang="EN-US">sHandleToSensor</span>列表中</li>
+<li><strong><span style="color: #008080;">构造<span lang="EN-US" xml:lang="EN-US">SensorThread</span></span></strong><span><strong><span style="color: #008080;">类</span></strong>：</span>构造线程的类函数，并没有启动线程，当有应用注册的时候才会启动线程</li>
+</ol>
+<h3><span>启动</span><span lang="EN-US" xml:lang="EN-US">SensorThread</span><span>线程读取消息队列中数据</span></h3>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;fda6ec8f-552d-4e26-8d14-924fae6de88f&#39;)"><img id="code_img_closed_fda6ec8f-552d-4e26-8d14-924fae6de88f" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_fda6ec8f-552d-4e26-8d14-924fae6de88f" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;fda6ec8f-552d-4e26-8d14-924fae6de88f&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_fda6ec8f-552d-4e26-8d14-924fae6de88f" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">protected</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> registerListenerImpl(SensorEventListener listener, Sensor sensor,
+            </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> delay, Handler handler) {
+    
+        </span><span style="color: #0000ff;">synchronized</span><span style="color: #000000;"> (sListeners) {
+            ListenerDelegate l </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">for</span><span style="color: #000000;"> (ListenerDelegate i : sListeners) {
+                </span><span style="color: #0000ff;">if</span> (i.getListener() ==<span style="color: #000000;"> listener) {
+                    l </span>=<span style="color: #000000;"> i;
+                }
+            }
+            …….
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> if we don't find it, add it to the list</span>
+            <span style="color: #0000ff;">if</span> (l == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                l </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> ListenerDelegate(listener, sensor, handler);
+                sListeners.add(l);
+                  ……
+                    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (sSensorThread.startLocked()) {
+                        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">enableSensorLocked(sensor, delay)) {
+                          …….
+                        }
+                 ……
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">l.hasSensor(sensor)) {
+                l.addSensor(sensor);
+                </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">enableSensorLocked(sensor, delay)) {
+                    ……
+                }
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+    }</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　当有应用程序调用</span><strong><span style="color: #ff0000;" lang="EN-US" xml:lang="EN-US">registerListenerImpl()</span></strong><span>方法注册监听的时候，会调用</span><span lang="EN-US" xml:lang="EN-US">SensorThread.startLoacked()</span><span>启动线程</span><span lang="EN-US" xml:lang="EN-US">。</span></p>
+<p><span>　　线程只会启动一次，并调用</span><span lang="EN-US" xml:lang="EN-US">enableSensorLocked()</span><span>接口对指定的</span><span lang="EN-US" xml:lang="EN-US">sensor</span><span>使能，并设置采样时间。</span></p>
+<p><span style="line-height: 1.5;" lang="EN-US" xml:lang="EN-US">　　<span style="color: #0000ff;"><strong>SensorThreadRunnable</strong></span></span><span style="line-height: 1.5;">实现了</span><span style="line-height: 1.5;" lang="EN-US" xml:lang="EN-US">Runnable</span><span style="line-height: 1.5;">接口，在</span><span style="line-height: 1.5;" lang="EN-US" xml:lang="EN-US">SensorThread</span><span style="line-height: 1.5;">类中被启动</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;7db80af0-014d-44aa-8b4a-37338d21f25e&#39;)"><img id="code_img_closed_7db80af0-014d-44aa-8b4a-37338d21f25e" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_7db80af0-014d-44aa-8b4a-37338d21f25e" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;7db80af0-014d-44aa-8b4a-37338d21f25e&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_7db80af0-014d-44aa-8b4a-37338d21f25e" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">boolean</span><span style="color: #000000;"> startLocked() {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span> (mThread == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                    SensorThreadRunnable runnable </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> SensorThreadRunnable();
+                    Thread thread </span>= <span style="color: #0000ff;">new</span> Thread(runnable, SensorThread.<span style="color: #0000ff;">class</span><span style="color: #000000;">.getName());
+                    thread.start();
+                    </span><span style="color: #0000ff;">synchronized</span> (runnable) {  <span style="color: #008000;">//</span><span style="color: #008000;">队列创建成功,线程同步</span>
+                        <span style="color: #0000ff;">while</span> (mSensorsReady == <span style="color: #0000ff;">false</span><span style="color: #000000;">) {
+                            runnable.wait();
+                        }
+                    }
+                  
+        }
+</span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">class</span> SensorThreadRunnable <span style="color: #0000ff;">implements</span><span style="color: #000000;"> Runnable {
+            SensorThreadRunnable() {
+            }
+            </span><span style="color: #0000ff;">private</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> open() {
+                sQueue </span>=<span style="color: #000000;"> sensors_create_queue();
+                </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> run() {
+                …….
+                </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">open()) {
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">synchronized</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">) {
+                    mSensorsReady </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.notify();
+                }
+                </span><span style="color: #0000ff;">while</span> (<span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+                    </span><span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> sensor =<span style="color: #000000;"> sensors_data_poll(sQueue, values, status, timestamp);
+                    …….
+            }
+        }
+    }</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　在</span><span lang="EN-US" xml:lang="EN-US">open</span><span>函数中调用</span><span lang="EN-US" xml:lang="EN-US">JNI</span><span>函数</span><span lang="EN-US" xml:lang="EN-US"><strong><span style="color: #ff0000;">sensors_create_queue</span><span style="color: #ff0000;">()</span></strong></span><span>来创建消息队列</span><span lang="EN-US" xml:lang="EN-US">,</span><span>然后调用</span><span lang="EN-US" xml:lang="EN-US">SensorManager. createEventQueue()</span><span>创建。</span></p>
+<p><span>　　在</span><span lang="EN-US" xml:lang="EN-US">startLocked</span><span>函数中启动新的线程后，做了一个</span><span lang="EN-US" xml:lang="EN-US">while</span><span>的等待</span><span lang="EN-US" xml:lang="EN-US">while (mSensorsReady == false)</span><span>，只有当</span><span lang="EN-US" xml:lang="EN-US">mSensorsReady</span><span>等于</span><span lang="EN-US" xml:lang="EN-US">true</span><span>的时候，才会执行</span><span lang="EN-US" xml:lang="EN-US">enableSensorLocked()</span><span>函数对</span><span lang="EN-US" xml:lang="EN-US">sensor</span><span>使能。而</span><span lang="EN-US" xml:lang="EN-US">mSensorsReady</span><span>变量，是在</span><span lang="EN-US" xml:lang="EN-US">open()</span><span>调用创建消息队列成功之后才会</span><span lang="EN-US" xml:lang="EN-US">true</span><span>，所以认为，三个功能调用顺序是如下：</span></p>
+<ol>
+<li><span>调用</span><span lang="EN-US" xml:lang="EN-US">open</span><span>函数创建消息队列</span></li>
+<li><span>调用</span><span lang="EN-US" xml:lang="EN-US">enableSensorLocked()</span><span>函数对</span><span lang="EN-US" xml:lang="EN-US">sensor</span><span>使能</span></li>
+<li><span>调用</span><strong><span style="color: #ff0000;" lang="EN-US" xml:lang="EN-US">sensors_data_poll</span></strong><span>从消息队列中读取数据，而且是在</span><span lang="EN-US" xml:lang="EN-US">while (true)</span><span>循环里一直读取</span></li>
+</ol>
+<p>&nbsp;</p>
+<hr>
+<h2><span>服务端实现</span></h2>
+<h3><span>调用时序图</span></h3>
+<p><span><img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01182009-49c96961d41f45e5bcd7345e2b299360.png" alt="" width="891" height="710"></span></p>
+<p>&nbsp;</p>
+<h3>&nbsp;</h3>
+<h3><span>启动</span><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>服务</span></h3>
+<p><span>　　在</span><span lang="EN-US" xml:lang="EN-US">SystemServer</span><span>进程中的</span><span lang="EN-US" xml:lang="EN-US">main</span><span>函数中，通过</span><span lang="EN-US" xml:lang="EN-US">JNI</span><span>调用，调用到</span><span lang="EN-US" xml:lang="EN-US">com_android_server_SystemServer.cpp</span>的<span lang="EN-US" xml:lang="EN-US">android_server_SystemServer_init1()</span>方法，该方法又调用<span lang="EN-US" xml:lang="EN-US">system_init.cpp</span>中的<span lang="EN-US" xml:lang="EN-US">system_init():</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;718dbeb0-3c77-4216-99f6-6e52446272dc&#39;)"><img id="code_img_closed_718dbeb0-3c77-4216-99f6-6e52446272dc" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_718dbeb0-3c77-4216-99f6-6e52446272dc" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;718dbeb0-3c77-4216-99f6-6e52446272dc&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_718dbeb0-3c77-4216-99f6-6e52446272dc" class="cnblogs_code_hide">
+<pre>extern "C"<span style="color: #000000;"> status_t system_init()
+{
+    ……
+    property_get(</span>"system_init.startsensorservice", propBuf, "1"<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span> (strcmp(propBuf, "1") == 0<span style="color: #000000;">) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Start the sensor service</span>
+<span style="color: #000000;">        SensorService::instantiate();
+    }
+    …..
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> NO_ERROR;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　在这里创建了</span><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>的实例。</span></p>
+<h3><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>初始化</span></h3>
+<p><span lang="EN-US" xml:lang="EN-US">　　SensorService</span><span>创建完之后，将会调用</span><span lang="EN-US" xml:lang="EN-US"><strong><span style="color: #ff0000;">SensorService</span></strong>::<span style="color: #000000;">onFirstRef()</span></span><span>方法，在该方法中完成初始化工作。</span></p>
+<p><span>　　首先获取</span><span lang="EN-US" xml:lang="EN-US">SensorDevice</span><span>实例，在其构造函数中，完成了对</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>模块</span><span lang="EN-US" xml:lang="EN-US">HAL</span><span>的初始化：</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;4f84734b-fb70-4adb-8292-3c90022d6684&#39;)"><img id="code_img_closed_4f84734b-fb70-4adb-8292-3c90022d6684" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_4f84734b-fb70-4adb-8292-3c90022d6684" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;4f84734b-fb70-4adb-8292-3c90022d6684&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_4f84734b-fb70-4adb-8292-3c90022d6684" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">SensorDevice::SensorDevice()
+    :  mSensorDevice(</span>0<span style="color: #000000;">),
+       mSensorModule(</span>0<span style="color: #000000;">)
+{
+    status_t err </span>=<span style="color: #000000;"> hw_get_module(SENSORS_HARDWARE_MODULE_ID,
+            (hw_module_t </span><span style="color: #0000ff;">const</span>**)&amp;<span style="color: #000000;">mSensorModule);
+ 
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (mSensorModule) {
+        err </span>= sensors_open(&amp;mSensorModule-&gt;common, &amp;<span style="color: #000000;">mSensorDevice);
+ 
+        ALOGE_IF(err, </span>"couldn't open device for module %s (%s)"<span style="color: #000000;">,
+                SENSORS_HARDWARE_MODULE_ID, strerror(</span>-<span style="color: #000000;">err));
+ 
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (mSensorDevice) {
+            sensor_t </span><span style="color: #0000ff;">const</span>*<span style="color: #000000;"> list;
+            ssize_t count </span>= mSensorModule-&gt;get_sensors_list(mSensorModule, &amp;<span style="color: #000000;">list);
+            mActivationCount.setCapacity(count);
+            Info model;
+            </span><span style="color: #0000ff;">for</span> (size_t i=0 ; i&lt;size_t(count) ; i++<span style="color: #000000;">) {
+                mActivationCount.add(list[i].handle, model);
+                mSensorDevice</span>-&gt;activate(mSensorDevice, list[i].handle, 0<span style="color: #000000;">);
+            }
+        }
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　这里主要做了三个工作：</span></p>
+<ol>
+<li><span>调用</span><span lang="EN-US" xml:lang="EN-US">HAL</span><span>层的</span><span lang="EN-US" xml:lang="EN-US">hw_get_modele()</span><span>方法，加载</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>模块</span><span lang="EN-US" xml:lang="EN-US">so</span><span>文件</span></li>
+<li><span>调用</span><span lang="EN-US" xml:lang="EN-US">sensor.h</span><span>的</span><span lang="EN-US" xml:lang="EN-US">sensors_open</span><span>方法打开设备</span></li>
+<li><span>调用</span><span lang="EN-US" xml:lang="EN-US">sensors_poll_device_t-&gt;activate()</span><span>对</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>模块使能</span></li>
+</ol>
+<p><span>　　再看看</span><span lang="EN-US" xml:lang="EN-US">SensorService::<strong><span style="color: #ff0000;">onFirstRef()</span></strong></span><span>方法：</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;d8918991-a25a-40a2-b309-d148851684f3&#39;)"><img id="code_img_closed_d8918991-a25a-40a2-b309-d148851684f3" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_d8918991-a25a-40a2-b309-d148851684f3" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;d8918991-a25a-40a2-b309-d148851684f3&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_d8918991-a25a-40a2-b309-d148851684f3" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">void</span><span style="color: #000000;"> SensorService::onFirstRef()
+{
+    SensorDevice</span>&amp;<span style="color: #000000;"> dev(SensorDevice::getInstance());
+ 
+    </span><span style="color: #0000ff;">if</span> (dev.initCheck() ==<span style="color: #000000;"> NO_ERROR) {
+        sensor_t </span><span style="color: #0000ff;">const</span>*<span style="color: #000000;"> list;
+        ssize_t count </span>= dev.getSensorList(&amp;<span style="color: #000000;">list);
+        </span><span style="color: #0000ff;">if</span> (count &gt; 0<span style="color: #000000;">) {
+            ……
+            </span><span style="color: #0000ff;">for</span> (ssize_t i=0 ; i&lt;count ; i++<span style="color: #000000;">) {
+                registerSensor( </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> HardwareSensor(list[i]) );
+                ……
+            }
+ 
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> it's safe to instantiate the SensorFusion object here
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> (it wants to be instantiated after h/w sensors have been
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> registered)</span>
+            <span style="color: #0000ff;">const</span> SensorFusion&amp;<span style="color: #000000;"> fusion(SensorFusion::getInstance());
+ 
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (hasGyro) {
+               ……
+            }
+            ……
+            run(</span>"SensorService"<span style="color: #000000;">, PRIORITY_URGENT_DISPLAY);
+            mInitCheck </span>=<span style="color: #000000;"> NO_ERROR;
+        }
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　在这个方法中，主要做了</span><span lang="EN-US" xml:lang="EN-US">4</span><span>件事情：</span></p>
+<ol>
+<li><span>创建</span><span lang="EN-US" xml:lang="EN-US">SensorDevice</span><span>实例</span></li>
+<li><span>获取</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>列表</span></li>
+<li><span>调用</span><span lang="EN-US" xml:lang="EN-US">SensorDevice.getSensorList(),</span><span>获取</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>模块所有传感器列表</span></li>
+<li><span>为每个传感器注册监听器</span></li>
+</ol>
+<p><span><span>　　<strong><span style="color: #ff0000;">registerSensor</span></strong>( new HardwareSensor(list[i]) );</span></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;b66f05b1-860c-4a28-8d98-7c84c86cc7db&#39;)"><img id="code_img_closed_b66f05b1-860c-4a28-8d98-7c84c86cc7db" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_b66f05b1-860c-4a28-8d98-7c84c86cc7db" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;b66f05b1-860c-4a28-8d98-7c84c86cc7db&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_b66f05b1-860c-4a28-8d98-7c84c86cc7db" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">void</span> SensorService::registerSensor(SensorInterface*<span style="color: #000000;"> s)
+{
+    sensors_event_t event;
+    memset(</span>&amp;event, 0<span style="color: #000000;">, sizeof(event));
+ 
+    </span><span style="color: #0000ff;">const</span> Sensor sensor(s-&gt;<span style="color: #000000;">getSensor());
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 添加到Sensor列表，给客户端使用</span>
+<span style="color: #000000;">    mSensorList.add(sensor);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> add to our handle-&gt;SensorInterface mapping</span>
+<span style="color: #000000;">    mSensorMap.add(sensor.getHandle(), s);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> create an entry in the mLastEventSeen array</span>
+<span style="color: #000000;">    mLastEventSeen.add(sensor.getHandle(), event);
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span lang="EN-US" xml:lang="EN-US">　　HardwareSensor</span><span>实现了</span><span lang="EN-US" xml:lang="EN-US">SensorInterface</span><span>接口。</span></p>
+<ol>
+<li><span>启动线程读取数据</span></li>
+</ol>
+<p><span>　　调用</span><span lang="EN-US" xml:lang="EN-US">run</span><span>方法启动新线程，将调用</span><span lang="EN-US" xml:lang="EN-US">SensorService::threadLoop()</span><span>方法。</span></p>
+<h3>在新的线程中读取<span lang="EN-US" xml:lang="EN-US">HAL</span>层数据</h3>
+<p><span><span lang="EN-US" xml:lang="EN-US">　　SensorService</span><span>实现了</span><span lang="EN-US" xml:lang="EN-US">Thread</span><span>类，当在</span><span lang="EN-US" xml:lang="EN-US">onFirstRef</span><span>中调用</span><span lang="EN-US" xml:lang="EN-US">run</span><span>方法后，将在新的线程中调用</span><span lang="EN-US" xml:lang="EN-US">SensorService::<strong><span style="color: #ff0000;">threadLoop()</span></strong></span><span>方法。</span></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;e28c4520-26f0-4373-9767-046a6fc36a46&#39;)"><img id="code_img_closed_e28c4520-26f0-4373-9767-046a6fc36a46" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_e28c4520-26f0-4373-9767-046a6fc36a46" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;e28c4520-26f0-4373-9767-046a6fc36a46&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_e28c4520-26f0-4373-9767-046a6fc36a46" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">bool SensorService::threadLoop()
+{
+    ……
+    </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> {
+        count </span>=<span style="color: #000000;"> device.poll(buffer, numEventMax);
+ 
+        recordLastValue(buffer, count);
+        ……
+ 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> send our events to clients...</span>
+        <span style="color: #0000ff;">const</span> SortedVector&lt; wp&lt;SensorEventConnection&gt; &gt;<span style="color: #000000;"> activeConnections(
+                getActiveConnections());
+        size_t numConnections </span>=<span style="color: #000000;"> activeConnections.size();
+        </span><span style="color: #0000ff;">for</span> (size_t i=0 ; i&lt;numConnections ; i++<span style="color: #000000;">) {
+            sp</span>&lt;SensorEventConnection&gt;<span style="color: #000000;"> connection(
+                    activeConnections[i].promote());
+            </span><span style="color: #0000ff;">if</span> (connection != 0<span style="color: #000000;">) {
+                connection</span>-&gt;<span style="color: #000000;">sendEvents(buffer, count, scratch);
+            }
+        }
+    } </span><span style="color: #0000ff;">while</span> (count &gt;= 0 ||<span style="color: #000000;"> Thread::exitPending());
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p><span>　　在</span><span lang="EN-US" xml:lang="EN-US">while</span><span>循环中一直读取</span><span lang="EN-US" xml:lang="EN-US">HAL</span><span>层数据，再调用</span><strong><span style="color: #ff0000;" lang="EN-US" xml:lang="EN-US">SensorEventConnection-&gt;sendEvents</span></strong><span>将数据写到管道中。</span></p>
+<p>&nbsp;</p>
+<hr>
+<h2><span>客户端与服务端通信</span></h2>
+<h3><span>数据传送</span></h3>
+<p><span><span>　　客户端与服务端通信的状态图</span><span>：</span></span></p>
+<p><span><span>　　<img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01184808-c6d64026485646a0b02c9f154e10b447.png" alt="" width="924" height="375"></span></span></p>
+<p><span><span><span>　　<span style="color: #008080;"><strong>客户端服务端线程</strong></span></span></span></span></p>
+<p>　　　　<span>在图中可以看到有两个线程：</span></p>
+<ol>
+<li style="list-style-type: none;"><ol>
+<li><span>一个是服务端的一个线程，这个线程负责源源不断的从</span><span lang="EN-US" xml:lang="EN-US">HAL</span><span>读取数据。</span></li>
+<li><span>另一个是客户端的一个线程，客户端线程负责从消息队列中读数据。</span></li>
+</ol></li>
+</ol>
+<p><span><span>　　<span style="color: #008080;"><strong>创建消息队列</strong></span></span></span></p>
+<p>　　　　<span>客户端可以创建多个消息队列，一个消息队列对应有一个与服务器通信的连接接口</span></p>
+<p><span>　<strong><span style="color: #008080;">　创建连接接口</span></strong></span></p>
+<p><span>　　　　服务端与客户端沟通的桥梁，服务端读取到</span><span lang="EN-US" xml:lang="EN-US">HAL</span><span>层数据后，会扫面有多少个与客户端连接的接口，然后往每个接口的管道中写数据</span></p>
+<p><span>　　<strong><span style="color: #008080;">创建管道</span></strong></span></p>
+<p><span>　　　　每一个连接接口都有对应的一个管道。</span></p>
+<p><span>　　上面是设计者设计数据传送的原理，但是目前</span><span lang="EN-US" xml:lang="EN-US">Android4.1</span><span>上面的数据传送不能完全按照上面的理解。</span></p>
+<p><span>　　因为在实际使用中，<strong><span style="color: #ff0000;">消息队列只会创建一个，也就是说客户端与服务端之间的通信只有一个连接接口，只有一个管道传数据。</span></strong></span></p>
+<p><span>　　<span style="color: #ff00ff;"><strong>那么数据的形式是怎么从</strong></span></span><span style="color: #ff00ff;"><strong><span lang="EN-US" xml:lang="EN-US">HAL</span>层传到<span lang="EN-US" xml:lang="EN-US">JAVA</span>层的呢？</strong></span></p>
+<p><span>　　其实数据是以一个结构体</span><span style="color: #0000ff;"><strong><span lang="EN-US" xml:lang="EN-US">sensors_event_t</span></strong></span><span>的形式从</span><span lang="EN-US" xml:lang="EN-US">HAL</span><span>层传到</span><span lang="EN-US" xml:lang="EN-US">JNI</span><span>层。看看</span><span lang="EN-US" xml:lang="EN-US">HAL</span><span>的</span><span lang="EN-US" xml:lang="EN-US">sensors_event_t</span><span>结构体：</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;f4f9df7c-0bd7-4892-bda2-93eaba08c91f&#39;)"><img id="code_img_closed_f4f9df7c-0bd7-4892-bda2-93eaba08c91f" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_f4f9df7c-0bd7-4892-bda2-93eaba08c91f" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;f4f9df7c-0bd7-4892-bda2-93eaba08c91f&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_f4f9df7c-0bd7-4892-bda2-93eaba08c91f" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">typedef struct sensors_event_t {
+    int32_t version;
+    int32_t sensor;            </span><span style="color: #008000;">//</span><span style="color: #008000;">标识符</span>
+    int32_t type;             <span style="color: #008000;">//</span><span style="color: #008000;">传感器类型</span>
+<span style="color: #000000;">    int32_t reserved0;
+    int64_t timestamp;        </span><span style="color: #008000;">//</span><span style="color: #008000;">时间戳</span>
+<span style="color: #000000;">    union {
+        </span><span style="color: #0000ff;">float</span>           data[16<span style="color: #000000;">];
+        sensors_vec_t   acceleration;   </span><span style="color: #008000;">//</span><span style="color: #008000;">加速度</span>
+        sensors_vec_t   magnetic;      <span style="color: #008000;">//</span><span style="color: #008000;">磁矢量</span>
+        sensors_vec_t   orientation;     <span style="color: #008000;">//</span><span style="color: #008000;">方向</span>
+        sensors_vec_t   gyro;          <span style="color: #008000;">//</span><span style="color: #008000;">陀螺仪</span>
+        <span style="color: #0000ff;">float</span>           temperature;     <span style="color: #008000;">//</span><span style="color: #008000;">温度</span>
+        <span style="color: #0000ff;">float</span>           distance;        <span style="color: #008000;">//</span><span style="color: #008000;">距离</span>
+        <span style="color: #0000ff;">float</span>           light;           <span style="color: #008000;">//</span><span style="color: #008000;">光照</span>
+        <span style="color: #0000ff;">float</span>           pressure;         <span style="color: #008000;">//</span><span style="color: #008000;">压力</span>
+        <span style="color: #0000ff;">float</span>           relative_humidity;  <span style="color: #008000;">//</span><span style="color: #008000;">相对湿度</span>
+<span style="color: #000000;">    };
+    uint32_t        reserved1[</span>4<span style="color: #000000;">];
+} sensors_event_t;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　在</span><span lang="EN-US" xml:lang="EN-US">JNI</span><span>层有一个</span><strong><span style="color: #0000ff;" lang="EN-US" xml:lang="EN-US">ASensorEvent</span></strong><span>结构体与</span><span lang="EN-US" xml:lang="EN-US">sensors_event_t</span><span>向对应，</span><span lang="EN-US" xml:lang="EN-US">frameworks/native/include/android/sensor.h</span>：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;e729bb72-d8fd-4764-9c6b-1a00e513f812&#39;)"><img id="code_img_closed_e729bb72-d8fd-4764-9c6b-1a00e513f812" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_e729bb72-d8fd-4764-9c6b-1a00e513f812" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;e729bb72-d8fd-4764-9c6b-1a00e513f812&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_e729bb72-d8fd-4764-9c6b-1a00e513f812" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">typedef struct ASensorEvent {
+    int32_t version;
+    int32_t sensor;
+    int32_t type;
+    int32_t reserved0;
+    int64_t timestamp;
+    union {
+        </span><span style="color: #0000ff;">float</span>           data[16<span style="color: #000000;">];
+        ASensorVector   vector;
+        ASensorVector   acceleration;
+        ASensorVector   magnetic;
+        </span><span style="color: #0000ff;">float</span><span style="color: #000000;">           temperature;
+        </span><span style="color: #0000ff;">float</span><span style="color: #000000;">           distance;
+        </span><span style="color: #0000ff;">float</span><span style="color: #000000;">           light;
+        </span><span style="color: #0000ff;">float</span><span style="color: #000000;">           pressure;
+    };
+    int32_t reserved1[</span>4<span style="color: #000000;">];
+} ASensorEvent;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<h2>&nbsp;</h2>
+<hr>
+<h2><span>交互调用时序图</span></h2>
+<p><span>　　<img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01185248-59dbf3ff31df4508b3e885c64f8acec0.jpg" alt="" width="907" height="667"></span></p>
+<p><span>　　经过前面的介绍，现在知道了客户端实现的方式及服务端的实现，但是没有具体讲到它们是如何进行通信的，现在看看客户端与服务端之间的通信。</span></p>
+<p><span>　　主要涉及的是进程间通信，有</span><span lang="EN-US" xml:lang="EN-US">IBind</span><span>和管道通信。</span></p>
+<p><span>　　<strong><span style="color: #993366;">客户端通过</span></strong></span><strong><span style="color: #993366;" lang="EN-US" xml:lang="EN-US">IBind</span></strong><span><strong><span style="color: #993366;">通信获取到服务端的远程调用</span></strong>，<span style="color: #0000ff;"><strong>然后通过管道进行</strong></span></span><span style="color: #0000ff;"><strong><span lang="EN-US" xml:lang="EN-US">sensor</span>数据的传输。</strong></span></p>
+<h3><span>服务端</span></h3>
+<p><span><span lang="EN-US" xml:lang="EN-US">　　native</span><span>层实现了</span><span lang="EN-US" xml:lang="EN-US">sensor</span><span>服务的核心实现，</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>服务的主要流程的实现在</span><strong><span style="color: #ff0000;" lang="EN-US" xml:lang="EN-US">sensorservice</span></strong><span>类中，下面重点分析下这个类的流程。</span></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;baab5abf-7103-4bbc-b4b8-d7e8c409c416&#39;)"><img id="code_img_closed_baab5abf-7103-4bbc-b4b8-d7e8c409c416" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_baab5abf-7103-4bbc-b4b8-d7e8c409c416" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;baab5abf-7103-4bbc-b4b8-d7e8c409c416&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_baab5abf-7103-4bbc-b4b8-d7e8c409c416" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> SensorService :
+        </span><span style="color: #0000ff;">public</span> BinderService&lt;SensorService&gt;<span style="color: #000000;">,
+        </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> BnSensorServer,
+        </span><span style="color: #0000ff;">protected</span> Thread</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　看看</span><span lang="EN-US" xml:lang="EN-US">sensorService</span><span>继承的类</span><span lang="EN-US" xml:lang="EN-US">:</span></p>
+<p><span>　　　　继承</span><span lang="EN-US" xml:lang="EN-US">BinderService&lt;SensorService&gt;</span><span>这个模板类添加到系统服务</span><span lang="EN-US" xml:lang="EN-US">,</span><span>用于</span><span lang="EN-US" xml:lang="EN-US">Ibinder</span><span>进程间通信。</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;86e6c5f5-ae7d-48d6-bc15-a8469c8e2e9c&#39;)"><img id="code_img_closed_86e6c5f5-ae7d-48d6-bc15-a8469c8e2e9c" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_86e6c5f5-ae7d-48d6-bc15-a8469c8e2e9c" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;86e6c5f5-ae7d-48d6-bc15-a8469c8e2e9c&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_86e6c5f5-ae7d-48d6-bc15-a8469c8e2e9c" class="cnblogs_code_hide">
+<pre>template&lt;typename SERVICE&gt;
+<span style="color: #0000ff;">class</span><span style="color: #000000;"> BinderService
+{
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #0000ff;">static</span><span style="color: #000000;"> status_t publish() {
+        sp</span>&lt;IServiceManager&gt;<span style="color: #000000;"> sm(defaultServiceManager());
+        </span><span style="color: #0000ff;">return</span> sm-&gt;addService(String16(SERVICE::getServiceName()), <span style="color: #0000ff;">new</span><span style="color: #000000;"> SERVICE());
+    }
+ 
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> publishAndJoinThreadPool() {
+        sp</span>&lt;ProcessState&gt;<span style="color: #000000;"> proc(ProcessState::self());
+        sp</span>&lt;IServiceManager&gt;<span style="color: #000000;"> sm(defaultServiceManager());
+        sm</span>-&gt;addService(String16(SERVICE::getServiceName()), <span style="color: #0000ff;">new</span><span style="color: #000000;"> SERVICE());
+        ProcessState::self()</span>-&gt;<span style="color: #000000;">startThreadPool();
+        IPCThreadState::self()</span>-&gt;<span style="color: #000000;">joinThreadPool();
+    }
+ 
+    </span><span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> instantiate() { publish(); }
+};
+}; </span><span style="color: #008000;">//</span><span style="color: #008000;"> namespace android</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　在前面的介绍中，</span><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>服务的实例是在</span><span lang="EN-US" xml:lang="EN-US">System_init.cpp</span><span>中调用</span><span lang="EN-US" xml:lang="EN-US">SensorService::instantiate()</span><span>创建的，即调用了上面的</span><span lang="EN-US" xml:lang="EN-US">instantiate()</span><span>方法，接着调用了</span><span lang="EN-US" xml:lang="EN-US">publish(),</span><span>在该方法中，我们看到了</span><span lang="EN-US" xml:lang="EN-US">new SensorService</span><span>的实例，并且调用了</span><span lang="EN-US" xml:lang="EN-US">defaultServiceManager::addService()</span><span>将</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>服务添加到了系统服务管理中，<strong><span style="color: #ff0000;">客户端可以通过</span></strong></span><strong><span style="color: #ff0000;"><span lang="EN-US" xml:lang="EN-US">defaultServiceManager:getService()</span>获取到<span lang="EN-US" xml:lang="EN-US">Sensor</span>服务的实例。</span></strong></p>
+<p><span>　　<span>继承</span><span lang="EN-US" xml:lang="EN-US">BnSensorServer</span><span>这个是</span><span lang="EN-US" xml:lang="EN-US">sensor</span><span>服务抽象接口类提供给客户端调用：</span></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;206c0bc2-87cf-4013-b7c5-7387919dc214&#39;)"><img id="code_img_closed_206c0bc2-87cf-4013-b7c5-7387919dc214" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_206c0bc2-87cf-4013-b7c5-7387919dc214" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;206c0bc2-87cf-4013-b7c5-7387919dc214&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_206c0bc2-87cf-4013-b7c5-7387919dc214" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> Sensor;
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> ISensorEventConnection;
+ 
+</span><span style="color: #0000ff;">class</span> ISensorServer : <span style="color: #0000ff;">public</span><span style="color: #000000;"> IInterface
+{
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    DECLARE_META_INTERFACE(SensorServer);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">获取Sensor列表</span>
+virtual Vector&lt;Sensor&gt; getSensorList() = 0<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">创建一个连接的接口,这些都是提供给客户端的抽象接口,服务端实例化时候必须实现</span>
+    virtual sp&lt;ISensorEventConnection&gt; createSensorEventConnection() = 0<span style="color: #000000;">;
+};
+</span><span style="color: #0000ff;">class</span> BnSensorServer : <span style="color: #0000ff;">public</span> BnInterface&lt;ISensorServer&gt;<span style="color: #000000;">
+{
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">传输打包数据的通讯接口,在BnSensorServer被实现</span>
+<span style="color: #000000;">    virtual status_t    onTransact( uint32_t code,
+                                    </span><span style="color: #0000ff;">const</span> Parcel&amp;<span style="color: #000000;"> data,
+                                    Parcel</span>*<span style="color: #000000;"> reply,
+                                    uint32_t flags </span>= 0<span style="color: #000000;">);
+};
+}; </span><span style="color: #008000;">//</span><span style="color: #008000;"> namespace android</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span lang="EN-US" xml:lang="EN-US">　　ISensorServer</span><span>接口提供了两个抽象方法给客户端调用，关键在于</span><strong><span style="color: #ff0000;" lang="EN-US" xml:lang="EN-US">createSensorEventConnection()</span></strong>方法，该在服务端被实现，在客户端被调用，并返回一个<span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span>的实例，创建连接，<strong><span style="color: #800080;">客户端拿到<span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span>实例之后，可以对<span lang="EN-US" xml:lang="EN-US">sensor</span>进行通信操作，仅仅作为通信的接口而已，它并没有用来传送<span lang="EN-US" xml:lang="EN-US">Sensor</span>数据，因为<span lang="EN-US" xml:lang="EN-US">Sensor</span>数据量比较大，<span lang="EN-US" xml:lang="EN-US">IBind</span>实现比较困难。</span><span style="color: #008080;">真正实现<span lang="EN-US" xml:lang="EN-US">Sensor</span>数据传送的是管道，在创建<span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span>实例中，创建了<span lang="EN-US" xml:lang="EN-US">BitTube</span>对象，里面创建了管道，用于客户端与服务端的通信。</span></strong></p>
+<h3><span>客户端</span></h3>
+<p><span>　　时序图</span></p>
+<p><span>　　<img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01210112-b5030e7a04af4907bd62cde774c1597a.png" alt="" width="937" height="1121"></span></p>
+<p><span><span>　　客户端主要在</span><span lang="EN-US" xml:lang="EN-US">SensorManager.cpp</span><span>中创建消息队列</span></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;141e0cc9-c1ff-4521-8b49-670e3f675557&#39;)"><img id="code_img_closed_141e0cc9-c1ff-4521-8b49-670e3f675557" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_141e0cc9-c1ff-4521-8b49-670e3f675557" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;141e0cc9-c1ff-4521-8b49-670e3f675557&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_141e0cc9-c1ff-4521-8b49-670e3f675557" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">class</span><span style="color: #000000;"> ISensorEventConnection;
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Sensor;
+</span><span style="color: #0000ff;">class</span><span style="color: #000000;"> Looper;
+ 
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> ----------------------------------------------------------------------------</span>
+ 
+<span style="color: #0000ff;">class</span> SensorEventQueue : <span style="color: #0000ff;">public</span> ASensorEventQueue, <span style="color: #0000ff;">public</span><span style="color: #000000;"> RefBase
+{
+</span><span style="color: #0000ff;">public</span><span style="color: #000000;">:
+            SensorEventQueue(</span><span style="color: #0000ff;">const</span> sp&lt;ISensorEventConnection&gt;&amp;<span style="color: #000000;"> connection);
+    virtual </span>~<span style="color: #000000;">SensorEventQueue();
+    virtual </span><span style="color: #0000ff;">void</span><span style="color: #000000;"> onFirstRef();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">获取管道句柄</span>
+    <span style="color: #0000ff;">int</span> getFd() <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">向管道写数据</span>
+    <span style="color: #0000ff;">static</span> ssize_t write(<span style="color: #0000ff;">const</span> sp&lt;BitTube&gt;&amp;<span style="color: #000000;"> tube,
+            ASensorEvent </span><span style="color: #0000ff;">const</span>*<span style="color: #000000;"> events, size_t numEvents);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">向管道读数据</span>
+    ssize_t read(ASensorEvent*<span style="color: #000000;"> events, size_t numEvents);
+ 
+    status_t waitForEvent() </span><span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    status_t wake() </span><span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">使能Sensor传感器</span>
+    status_t enableSensor(Sensor <span style="color: #0000ff;">const</span>* sensor) <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    status_t disableSensor(Sensor </span><span style="color: #0000ff;">const</span>* sensor) <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    status_t setEventRate(Sensor </span><span style="color: #0000ff;">const</span>* sensor, nsecs_t ns) <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+ 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> these are here only to support SensorManager.java</span>
+    status_t enableSensor(int32_t handle, int32_t us) <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+    status_t disableSensor(int32_t handle) </span><span style="color: #0000ff;">const</span><span style="color: #000000;">;
+ 
+</span><span style="color: #0000ff;">private</span><span style="color: #000000;">:
+sp</span>&lt;Looper&gt; getLooper() <span style="color: #0000ff;">const</span><span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">连接接口，在SensorService中创建的</span>
+sp&lt;ISensorEventConnection&gt;<span style="color: #000000;"> mSensorEventConnection;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">管道指针</span>
+    sp&lt;BitTube&gt;<span style="color: #000000;"> mSensorChannel;
+    mutable Mutex mLock;
+    mutable sp</span>&lt;Looper&gt;<span style="color: #000000;"> mLooper;
+};</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p>&nbsp;</p>
+<p><span lang="EN-US" xml:lang="EN-US">　　<strong><span style="color: #993366;">SensorEventQueue</span></strong></span><strong><span style="color: #993366;">类作为消息队列，作用非常重要，在创建其实例的时候，传入了<span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span>的实例，</span></strong><span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span><span>继承于</span><span lang="EN-US" xml:lang="EN-US">ISensorEventConnection</span><span>。</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">　　SensorEventConnection</span><span>其实是客户端调用</span><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>的</span><span lang="EN-US" xml:lang="EN-US">createSensorEventConnection()</span><span>方法创建的，它是<strong><span style="color: #ff0000;">客户端与服务端沟通的桥梁，</span></strong>通过这个桥梁，可以完成一下任务：</span></p>
+<ol>
+<li><span>获取管道的句柄</span></li>
+<li><span>往管道读写数据</span></li>
+<li><span>通知服务端对</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>使能</span></li>
+</ol>
+<h3>&nbsp;</h3>
+<hr>
+<h2><span>流程解析</span></h2>
+<h3><span>客户端获取</span><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>服务实例</span></h3>
+<p><span><span>　　客户端初始化的时候，即</span><span lang="EN-US" xml:lang="EN-US">SystemSensorManager</span><span>的构造函数中，通过</span><span lang="EN-US" xml:lang="EN-US">JNI</span><span>调用，创建</span><span lang="EN-US" xml:lang="EN-US">native</span><span>层</span><span lang="EN-US" xml:lang="EN-US">SensorManager</span><span>的实例，然后调用</span><span lang="EN-US" xml:lang="EN-US">SensorManager::assertStateLocked()</span><span>方法做一些初始化的动作。</span></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;883f426f-a6fa-4834-9fb2-4a720b1d8a8b&#39;)"><img id="code_img_closed_883f426f-a6fa-4834-9fb2-4a720b1d8a8b" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_883f426f-a6fa-4834-9fb2-4a720b1d8a8b" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;883f426f-a6fa-4834-9fb2-4a720b1d8a8b&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_883f426f-a6fa-4834-9fb2-4a720b1d8a8b" class="cnblogs_code_hide">
+<pre>status_t SensorManager::assertStateLocked() <span style="color: #0000ff;">const</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span> (mSensorServer ==<span style="color: #000000;"> NULL) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> try for one second</span>
+        <span style="color: #0000ff;">const</span> String16 name("sensorservice"<span style="color: #000000;">);
+        ……
+            status_t err </span>= getService(name, &amp;<span style="color: #000000;">mSensorServer);
+        ……
+        mSensors </span>= mSensorServer-&gt;<span style="color: #000000;">getSensorList();
+        size_t count </span>=<span style="color: #000000;"> mSensors.size();
+        mSensorList </span>= (Sensor <span style="color: #0000ff;">const</span>**)malloc(count * sizeof(Sensor*<span style="color: #000000;">));
+        </span><span style="color: #0000ff;">for</span> (size_t i=0 ; i&lt;count ; i++<span style="color: #000000;">) {
+            mSensorList[i] </span>= mSensors.array() +<span style="color: #000000;"> i;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> NO_ERROR;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p>&nbsp;</p>
+<p><span>　　前面我们讲到过，</span><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>的创建的时候调用了</span><span lang="EN-US" xml:lang="EN-US">defaultServiceManager:getService()</span><span>将服务添加到了系统服务管理中。</span></p>
+<p><span>　　现在我们又调用</span><span lang="EN-US" xml:lang="EN-US">defaultServiceManager::geService()</span><span>获取到</span><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>服务的实例。</span></p>
+<p><span>　　在通过</span><span lang="EN-US" xml:lang="EN-US">IBind</span><span>通信，就可以获取到</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>列表，所以在客户端初始化的时候，做了两件事情：</span></p>
+<ol>
+<li>&nbsp;<span>获取</span><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>实例引用</span></li>
+<li>&nbsp;<span>获取</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>传感器列表</span></li>
+</ol>
+<h3>注册SensorLisenter</h3>
+<p>　　时序图</p>
+<p>　　<img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01205643-15b9b40704844f4e838d57c0cc191eb1.png" alt=""></p>
+<p><span>　　new&nbsp;ListenerDelegate(SensorEventListener listener, Sensor sensor, Handler handler)&nbsp;</span></p>
+<p><span><span>　　在这个构造函数中会创建一个<strong><span style="color: #ff0000;">Handler</span></strong>，它会在获取到Sensor数据的时候被调用。</span></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;4340f40d-be01-4813-b2ca-7dab4073b17d&#39;)"><img id="code_img_closed_4340f40d-be01-4813-b2ca-7dab4073b17d" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_4340f40d-be01-4813-b2ca-7dab4073b17d" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;4340f40d-be01-4813-b2ca-7dab4073b17d&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_4340f40d-be01-4813-b2ca-7dab4073b17d" class="cnblogs_code_hide">
+<pre>mHandler = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Handler(looper) {  
+                @Override  
+                </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> handleMessage(Message msg) {  
+                    </span><span style="color: #0000ff;">final</span> SensorEvent t =<span style="color: #000000;"> (SensorEvent)msg.obj;  
+                    </span><span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> handle =<span style="color: #000000;"> t.sensor.getHandle();  
+  
+                    </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (t.sensor.getType()) {  
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Only report accuracy for sensors that support it.  </span>
+                        <span style="color: #0000ff;">case</span><span style="color: #000000;"> Sensor.TYPE_MAGNETIC_FIELD:  
+                        </span><span style="color: #0000ff;">case</span><span style="color: #000000;"> Sensor.TYPE_ORIENTATION:  
+                            </span><span style="color: #008000;">//</span><span style="color: #008000;"> call onAccuracyChanged() only if the value changes  </span>
+                            <span style="color: #0000ff;">final</span> <span style="color: #0000ff;">int</span> accuracy =<span style="color: #000000;"> mSensorAccuracies.get(handle);  
+                            </span><span style="color: #0000ff;">if</span> ((t.accuracy &gt;= 0) &amp;&amp; (accuracy !=<span style="color: #000000;"> t.accuracy)) {  
+                                mSensorAccuracies.put(handle, t.accuracy);  
+                                mSensorEventListener.onAccuracyChanged(t.sensor, t.accuracy);  
+                            }  
+                            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;  
+                        </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:  
+                            </span><span style="color: #008000;">//</span><span style="color: #008000;"> For other sensors, just report the accuracy once  </span>
+                            <span style="color: #0000ff;">if</span> (mFirstEvent.get(handle) == <span style="color: #0000ff;">false</span><span style="color: #000000;">) {  
+                                mFirstEvent.put(handle, </span><span style="color: #0000ff;">true</span><span style="color: #000000;">);  
+                                mSensorEventListener.onAccuracyChanged(  
+                                        t.sensor, SENSOR_STATUS_ACCURACY_HIGH);  
+                            }  
+                            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;  
+                    }  
+  
+                    mSensorEventListener.onSensorChanged(t);  
+                    sPool.returnToPool(t);  
+                }  
+            };  </span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p>&nbsp;</p>
+<h3><span>创建消息队列</span></h3>
+<p><span>　　时序图</span></p>
+<p><span>　　<img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01205843-84d68fb8fb8f4fb793b2a1c5faa31e6d.png" alt="" width="877" height="479"></span></p>
+<p><span>　　当客户端第一次注册监听器的时候，就需要创建一个消息队列，也就是说，</span><strong><span style="color: #800080;"><span lang="EN-US" xml:lang="EN-US">android</span>在目前的实现中，只创建了一个消息队列，一个消息队列中有一个管道，用于服务端与客户断传送<span lang="EN-US" xml:lang="EN-US">Sensor</span>数据。</span></strong></p>
+<p><span>　　在</span><span lang="EN-US" xml:lang="EN-US">SensorManager.cpp</span><span>中的</span><span lang="EN-US" xml:lang="EN-US">createEventQueue</span><span>方法创建消息队列：</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;235824c5-bbce-4088-b183-764785eb0792&#39;)"><img id="code_img_closed_235824c5-bbce-4088-b183-764785eb0792" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_235824c5-bbce-4088-b183-764785eb0792" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;235824c5-bbce-4088-b183-764785eb0792&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_235824c5-bbce-4088-b183-764785eb0792" class="cnblogs_code_hide">
+<pre>sp&lt;SensorEventQueue&gt;<span style="color: #000000;"> SensorManager::createEventQueue()
+{
+    sp</span>&lt;SensorEventQueue&gt;<span style="color: #000000;"> queue;
+    Mutex::Autolock _l(mLock);
+</span><span style="color: #0000ff;">while</span> (assertStateLocked() ==<span style="color: #000000;"> NO_ERROR) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">创建连接接口</span>
+        sp&lt;ISensorEventConnection&gt; connection =<span style="color: #000000;">
+                mSensorServer</span>-&gt;<span style="color: #000000;">createSensorEventConnection();
+        </span><span style="color: #0000ff;">if</span> (connection ==<span style="color: #000000;"> NULL) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> SensorService just died.</span>
+            LOGE("createEventQueue: connection is NULL. SensorService died."<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">continue</span><span style="color: #000000;">;
+        }
+</span><span style="color: #008000;">//</span><span style="color: #008000;">创建消息队列</span>
+        queue = <span style="color: #0000ff;">new</span><span style="color: #000000;"> SensorEventQueue(connection);
+        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> queue;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　客户端与服务器创建一个</span><span style="color: #ff0000;"><strong><span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span></strong></span><span>连接接口，<span style="color: #0000ff;"><strong>而一个消息队列中包含一个连接接口。</strong></span></span></p>
+<p><span>　　创建连接接口：</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;3038eb3f-2d99-42e4-ad6e-6740eb16ea01&#39;)"><img id="code_img_closed_3038eb3f-2d99-42e4-ad6e-6740eb16ea01" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_3038eb3f-2d99-42e4-ad6e-6740eb16ea01" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;3038eb3f-2d99-42e4-ad6e-6740eb16ea01&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_3038eb3f-2d99-42e4-ad6e-6740eb16ea01" class="cnblogs_code_hide">
+<pre>sp&lt;ISensorEventConnection&gt;<span style="color: #000000;"> SensorService::createSensorEventConnection()
+{
+    sp</span>&lt;SensorEventConnection&gt; result(<span style="color: #0000ff;">new</span> SensorEventConnection(<span style="color: #0000ff;">this</span><span style="color: #000000;">));
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> result;
+}
+SensorService::SensorEventConnection::SensorEventConnection(
+        </span><span style="color: #0000ff;">const</span> sp&lt;SensorService&gt;&amp;<span style="color: #000000;"> service)
+    : mService(service), mChannel(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> BitTube ())
+{
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　关键在于</span><strong><span style="color: #ff0000;" lang="EN-US" xml:lang="EN-US">BitTube</span></strong><span>，在构造函数中创建了管道：</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;71215f99-a503-442e-8e7b-44ed3dc0cc82&#39;)"><img id="code_img_closed_71215f99-a503-442e-8e7b-44ed3dc0cc82" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_71215f99-a503-442e-8e7b-44ed3dc0cc82" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;71215f99-a503-442e-8e7b-44ed3dc0cc82&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_71215f99-a503-442e-8e7b-44ed3dc0cc82" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">BitTube::BitTube()
+    : mSendFd(</span>-1), mReceiveFd(-1<span style="color: #000000;">)
+{
+    </span><span style="color: #0000ff;">int</span> sockets[2<span style="color: #000000;">];
+    </span><span style="color: #0000ff;">if</span> (socketpair(AF_UNIX, SOCK_SEQPACKET, 0, sockets) == 0<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">int</span> size =<span style="color: #000000;"> SOCKET_BUFFER_SIZE;
+        setsockopt(sockets[</span>0], SOL_SOCKET, SO_SNDBUF, &amp;<span style="color: #000000;">size, sizeof(size));
+        setsockopt(sockets[</span>0], SOL_SOCKET, SO_RCVBUF, &amp;<span style="color: #000000;">size, sizeof(size));
+        setsockopt(sockets[</span>1], SOL_SOCKET, SO_SNDBUF, &amp;<span style="color: #000000;">size, sizeof(size));
+        setsockopt(sockets[</span>1], SOL_SOCKET, SO_RCVBUF, &amp;<span style="color: #000000;">size, sizeof(size));
+        fcntl(sockets[</span>0<span style="color: #000000;">], F_SETFL, O_NONBLOCK);
+        fcntl(sockets[</span>1<span style="color: #000000;">], F_SETFL, O_NONBLOCK);
+        mReceiveFd </span>= sockets[0<span style="color: #000000;">];
+        mSendFd </span>= sockets[1<span style="color: #000000;">];
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        mReceiveFd </span>= -<span style="color: #000000;">errno;
+        ALOGE(</span>"BitTube: pipe creation failed (%s)", strerror(-<span style="color: #000000;">mReceiveFd));
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　其中：</span><span lang="EN-US" xml:lang="EN-US">fds[0]</span><span>就是对应的</span><span lang="EN-US" xml:lang="EN-US">mReceiveFd,</span><span>是管道的读端，</span><span lang="EN-US" xml:lang="EN-US">sensor</span><span>数据的读取端，对应的是客户端进程访问的。</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">　　fds[1]</span><span>就是对应</span><span lang="EN-US" xml:lang="EN-US">mSendFd,</span><span>是管道的写端</span><span lang="EN-US" xml:lang="EN-US">,sensor</span><span>数据写入端</span><span lang="EN-US" xml:lang="EN-US">,</span><span>是</span><span lang="EN-US" xml:lang="EN-US">sensor</span><span>的服务进程访问的一端。</span></p>
+<p><span>　　通过</span><span lang="EN-US" xml:lang="EN-US">pipe(fds)</span><span>创建管道</span><span lang="EN-US" xml:lang="EN-US">,</span><span>通过</span><span lang="EN-US" xml:lang="EN-US">fcntl</span><span>来设置操作管道的方式</span><span lang="EN-US" xml:lang="EN-US">,</span><span>设置通道两端的操作方式为</span><span lang="EN-US" xml:lang="EN-US">O_NONBLOCK</span>&nbsp;<span>，非阻塞</span><span lang="EN-US" xml:lang="EN-US">IO</span><span>方式，</span><span lang="EN-US" xml:lang="EN-US">read</span><span>或</span><span lang="EN-US" xml:lang="EN-US">write</span><span>调用返回</span><span lang="EN-US" xml:lang="EN-US">-1</span><span>和</span><span lang="EN-US" xml:lang="EN-US">EAGAIN</span><span>错误。</span></p>
+<p><span>　　<span style="color: #ff00ff;"><strong>总结下消息队列</strong></span></span></p>
+<p><span>　　客户端第一次注册监听器的时候，就需要创建一个消息队列，客户端创了</span><span lang="EN-US" xml:lang="EN-US">SensorThread</span><span>线程从消息队列里面读取数据。</span></p>
+<p><span lang="EN-US" xml:lang="EN-US">　　SensorEventQueue</span><span>中有一个</span><span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span><span>实例的引用，</span><span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span><span>中有一个</span><span lang="EN-US" xml:lang="EN-US">BitTube</span><span>实例的引用。</span></p>
+<h3><span>使能</span><span lang="EN-US" xml:lang="EN-US">Sensor</span></h3>
+<p><span lang="EN-US" xml:lang="EN-US"><span>　　客户端创建了连接接口</span><span lang="EN-US" xml:lang="EN-US">SensorEventConnection</span><span>后，可以调用其方法使能</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>传感器：</span></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;85c66bbc-e5bd-4edf-bf47-0ac64a6e6ac5&#39;)"><img id="code_img_closed_85c66bbc-e5bd-4edf-bf47-0ac64a6e6ac5" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_85c66bbc-e5bd-4edf-bf47-0ac64a6e6ac5" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;85c66bbc-e5bd-4edf-bf47-0ac64a6e6ac5&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_85c66bbc-e5bd-4edf-bf47-0ac64a6e6ac5" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">status_t SensorService::SensorEventConnection::enableDisable(
+        </span><span style="color: #0000ff;">int</span><span style="color: #000000;"> handle, bool enabled)
+{
+    status_t err;
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (enabled) {
+        err </span>= mService-&gt;enable(<span style="color: #0000ff;">this</span><span style="color: #000000;">, handle);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        err </span>= mService-&gt;disable(<span style="color: #0000ff;">this</span><span style="color: #000000;">, handle);
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> err;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p>　　<span lang="EN-US" xml:lang="EN-US">handle</span><span>对应着</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>传感器的句柄</span></p>
+<h3><span>服务端往管道写数据</span></h3>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;60ae4db7-6ebd-4865-a87a-7e2b554e674f&#39;)"><img id="code_img_closed_60ae4db7-6ebd-4865-a87a-7e2b554e674f" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_60ae4db7-6ebd-4865-a87a-7e2b554e674f" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;60ae4db7-6ebd-4865-a87a-7e2b554e674f&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_60ae4db7-6ebd-4865-a87a-7e2b554e674f" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">bool SensorService::threadLoop()
+{
+    ……
+    </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> {
+        count </span>=<span style="color: #000000;"> device.poll(buffer, numEventMax);
+ 
+        recordLastValue(buffer, count);
+        ……
+ 
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> send our events to clients...</span>
+        <span style="color: #0000ff;">const</span> SortedVector&lt; wp&lt;SensorEventConnection&gt; &gt;<span style="color: #000000;"> activeConnections(
+                getActiveConnections());
+        size_t numConnections </span>=<span style="color: #000000;"> activeConnections.size();
+        </span><span style="color: #0000ff;">for</span> (size_t i=0 ; i&lt;numConnections ; i++<span style="color: #000000;">) {
+            sp</span>&lt;SensorEventConnection&gt;<span style="color: #000000;"> connection(
+                    activeConnections[i].promote());
+            </span><span style="color: #0000ff;">if</span> (connection != 0<span style="color: #000000;">) {
+                connection</span>-&gt;<span style="color: #000000;">sendEvents(buffer, count, scratch);
+            }
+        }
+    } </span><span style="color: #0000ff;">while</span> (count &gt;= 0 ||<span style="color: #000000;"> Thread::exitPending());
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　前面介绍过，在</span><span lang="EN-US" xml:lang="EN-US">SensorService</span><span>中，创建了一个线程不断从</span><span lang="EN-US" xml:lang="EN-US">HAL</span><span>层读取</span><span lang="EN-US" xml:lang="EN-US">Sensor</span><span>数据，就是在</span><span style="color: #0000ff;"><strong><span lang="EN-US" xml:lang="EN-US">threadLoop</span></strong></span><span>方法中。</span></p>
+<p><span>　　关键在与下面了一个</span><span lang="EN-US" xml:lang="EN-US">for</span><span>循环，其实是扫描有多少个客户端连接接口，然后就往没每个连接的管道中写数据。</span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;42088b74-d5db-41bd-9f0f-44b58ecb0d69&#39;)"><img id="code_img_closed_42088b74-d5db-41bd-9f0f-44b58ecb0d69" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_42088b74-d5db-41bd-9f0f-44b58ecb0d69" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;42088b74-d5db-41bd-9f0f-44b58ecb0d69&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_42088b74-d5db-41bd-9f0f-44b58ecb0d69" class="cnblogs_code_hide">
+<pre><span style="color: #000000;">status_t SensorService::SensorEventConnection::sendEvents(
+        sensors_event_t </span><span style="color: #0000ff;">const</span>*<span style="color: #000000;"> buffer, size_t numEvents,
+        sensors_event_t</span>*<span style="color: #000000;"> scratch)
+{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> filter out events not for this connection</span>
+    size_t count = 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (scratch) {
+      ……
+    }
+    ……
+    </span><span style="color: #0000ff;">if</span> (count == 0<span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+ 
+    ssize_t size </span>= mChannel-&gt;write(scratch, count*<span style="color: #000000;">sizeof(sensors_event_t));
+    ……
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　调用该连接接口的</span><strong><span style="color: #0000ff;" lang="EN-US" xml:lang="EN-US">BitTube::write():</span></strong></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;d5a7c7d5-05bc-4457-92e9-8ee818c75889&#39;)"><img id="code_img_closed_d5a7c7d5-05bc-4457-92e9-8ee818c75889" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_d5a7c7d5-05bc-4457-92e9-8ee818c75889" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;d5a7c7d5-05bc-4457-92e9-8ee818c75889&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_d5a7c7d5-05bc-4457-92e9-8ee818c75889" class="cnblogs_code_hide">
+<pre>ssize_t BitTube::write(<span style="color: #0000ff;">void</span> <span style="color: #0000ff;">const</span>*<span style="color: #000000;"> vaddr, size_t size)
+{
+    ssize_t err, len;
+    </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> {
+        len </span>= ::send(mSendFd, vaddr, size, MSG_DONTWAIT |<span style="color: #000000;"> MSG_NOSIGNAL);
+        err </span>= len &lt; 0 ? errno : 0<span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">while</span> (err ==<span style="color: #000000;"> EINTR);
+    </span><span style="color: #0000ff;">return</span> err == 0 ? len : -<span style="color: #000000;">err;
+ 
+} }</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p><span>　　到此，服务端就完成了往管道的写端写入数据。</span></p>
+<h3><span>客户端读管道数据</span></h3>
+<p><span>　　时序图</span></p>
+<p><span>　　<img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/01205939-5592836d330d46e29de045aa1947e21c.png" alt=""></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;5c552945-54aa-4c46-8e3b-57869c3c71d1&#39;)"><img id="code_img_closed_5c552945-54aa-4c46-8e3b-57869c3c71d1" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_5c552945-54aa-4c46-8e3b-57869c3c71d1" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;5c552945-54aa-4c46-8e3b-57869c3c71d1&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_5c552945-54aa-4c46-8e3b-57869c3c71d1" class="cnblogs_code_hide">
+<pre>ssize_t SensorEventQueue::read(ASensorEvent*<span style="color: #000000;"> events, size_t numEvents)
+{
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> BitTube::recvObjects(mSensorChannel, events, numEvents);
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p><span>　　调用到了</span><strong><span style="color: #0000ff;"><span lang="EN-US" xml:lang="EN-US">BitTube::read</span>()：</span></strong></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show(&#39;f3870762-3914-42f6-9b96-f92ee9716cb4&#39;)"><img id="code_img_closed_f3870762-3914-42f6-9b96-f92ee9716cb4" class="code_img_closed" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ContractedBlock.gif" alt=""><img id="code_img_opened_f3870762-3914-42f6-9b96-f92ee9716cb4" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide(&#39;f3870762-3914-42f6-9b96-f92ee9716cb4&#39;,event)" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/ExpandedBlockStart.gif" alt="">
+<div id="cnblogs_code_open_f3870762-3914-42f6-9b96-f92ee9716cb4" class="cnblogs_code_hide">
+<pre><span style="color: #0000ff;">static</span> ssize_t recvObjects(<span style="color: #0000ff;">const</span> sp&lt;BitTube&gt;&amp;<span style="color: #000000;"> tube,
+            T</span>*<span style="color: #000000;"> events, size_t count) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> recvObjects(tube, events, count, sizeof(T));
+    }
+ssize_t BitTube::recvObjects(</span><span style="color: #0000ff;">const</span> sp&lt;BitTube&gt;&amp;<span style="color: #000000;"> tube,
+        </span><span style="color: #0000ff;">void</span>*<span style="color: #000000;"> events, size_t count, size_t objSize)
+{
+    ssize_t numObjects </span>= 0<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">for</span> (size_t i=0 ; i&lt;count ; i++<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">char</span>* vaddr = reinterpret_cast&lt;<span style="color: #0000ff;">char</span>*&gt;(events) + objSize *<span style="color: #000000;"> i;
+        ssize_t size </span>= tube-&gt;<span style="color: #000000;">read(vaddr, objSize);
+        </span><span style="color: #0000ff;">if</span> (size &lt; 0<span style="color: #000000;">) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> error occurred</span>
+            <span style="color: #0000ff;">return</span><span style="color: #000000;"> size;
+        } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (size == 0<span style="color: #000000;">) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> no more messages</span>
+            <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+        numObjects</span>++<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> numObjects;
+}
+ 
+ssize_t BitTube::read(</span><span style="color: #0000ff;">void</span>*<span style="color: #000000;"> vaddr, size_t size)
+{
+    ssize_t err, len;
+    </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> {
+        len </span>=<span style="color: #000000;"> ::recv(mReceiveFd, vaddr, size, MSG_DONTWAIT);
+        err </span>= len &lt; 0 ? errno : 0<span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">while</span> (err ==<span style="color: #000000;"> EINTR);
+    </span><span style="color: #0000ff;">if</span> (err == EAGAIN || err ==<span style="color: #000000;"> EWOULDBLOCK) {
+        </span><span style="color: #0000ff;">return</span> 0<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> err == 0 ? len : -<span style="color: #000000;">err;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code </span></div>
+<p>&nbsp;</p>
+<hr>
+<h2>参考文章</h2>
+<p>http://blog.sina.com.cn/u/2314572533</p>
+<p>http://blog.csdn.net/cs_lht</p></div><div id="MySignature" style="display: block;"><div id="lcwSignature">    
+<div>QQ联系方式：lcw@v.gg<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&amp;uin=552158509&amp;site=qq&amp;menu=yes"><img border="0" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/pa" alt="欢迎联系十狼" title="欢迎联系十狼"></a></div>
+<div>出处：<a href="http://www.cnblogs.com/lcw" target="_blank">lcw.cnblogs.com</a></div>
+<div>邮箱：wwwlllll@126.com</div>
+<div>本文申明：本文版权归作者和博客园共有，欢迎转载，转载请注明出处.</div>
+</div></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/lcw/category/519285.html" target="_blank">Z技术（Android）</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/lcw/tag/Android/">Android</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(3402770,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;4b666cd5-fccf-e211-8d02-90b11c0b17d6&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/lcw/" target="_blank"><img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/20160111225452.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/lcw/">Leo.cheng</a><br>
+            <a href="http://home.cnblogs.com/u/lcw/followees">关注 - 0</a><br>
+            <a href="http://home.cnblogs.com/u/lcw/followers">粉丝 - 109</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;4b666cd5-fccf-e211-8d02-90b11c0b17d6&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(3402770,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(3402770,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/lcw/p/3396457.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/lcw/p/3396457.html" title="发布于2013-10-30 18:43">【流媒体】初识流媒体与流媒体技术</a><br><a href="http://www.cnblogs.com/lcw/p/3402816.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/lcw/p/3402816.html" title="发布于2013-11-01 21:30">【Android】Sensor框架HAL层解读</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2013-11-01 21:04</span> <a href="http://www.cnblogs.com/lcw/">Leo.cheng</a> 阅读(<span id="post_view_count">6000</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=3402770" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/lcw/p/3402770.html#" onclick="AddToWz(3402770);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=153957,cb_entryId=3402770,cb_blogApp=currentBlogApp,cb_blogUserGuid='4b666cd5-fccf-e211-8d02-90b11c0b17d6',cb_entryCreatedDate='2013/11/1 21:04:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/lcw/p/3402770.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/lcw/p/3402770.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="我的AR之旅">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="http://www.gcpowertools.com.cn/products/activereports/excel.htm?utm_source=cnblogs&amp;utm_medium=blogpage&amp;utm_term=bottom&amp;utm_content=AR&amp;utm_campaign=community" target="_blank">【报表】Excel 报表开发18 招式，人人都能做报表</a><br><a href="http://click.aliyun.com/m/15483" target="_blank">【活动】阿里云海外云服务全面降价助力企业全球布局</a><br><a href="https://group.cnblogs.com/topic/76829.html" target="_blank">【实用】40+篇云服务器操作及运维基础知识！</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="https://cn.udacity.com/course/data-analyst-nanodegree--nd002-cn-basic/?utm_source=cnblogs&amp;utm_medium=referral&amp;utm_campaign=DAND03" target="_blank"><img width="300" height="250" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/24442-20170509155547285-603349158.jpg" alt="优达学城0509"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/569489/" target="_blank">蚂蚁金服CEO美国母校演讲：金钱不是成功的标准</a><br> ·  <a href="http://news.cnblogs.com/n/569488/" target="_blank">SIM卡再见！三星/苹果/华为联手推广e-SIM</a><br> ·  <a href="http://news.cnblogs.com/n/569487/" target="_blank">三星S8运行Win10真机曝光：手机变电脑</a><br> ·  <a href="http://news.cnblogs.com/n/569486/" target="_blank">杭州机场放大招：15公里内无人机无法起飞</a><br> ·  <a href="http://news.cnblogs.com/n/569485/" target="_blank">“想哭”勒索蠕虫是一场惊天炒作吗？</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="http://click.aliyun.com/m/17215/" target="_blank"><img width="468" height="60" src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/24442-20170417123605337-535991337.jpg" alt="阿里云E4"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br> ·  <a href="http://kb.cnblogs.com/page/566318/" target="_blank">我为什么鼓励工程师写blog</a><br> ·  <a href="http://kb.cnblogs.com/page/566528/" target="_blank">怎么轻松学习JavaScript</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><p><img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/o_头像.png" alt=""><a href="http://blog.51cto.com/contest2013/6751239" target="_blank"><img src="./【Android】Sensor框架Framework层解读 - Leo.cheng - 博客园_files/122216474968831.png" alt="" style="line-height: 1.5;"></a><br><a href="http://info.flagcounter.com/AXHv"><img src="http://s10.flagcounter.com/count/AXHv/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_12/viewers_0/labels_1/pageviews_1/flags_0/" alt="Flag Counter" border="0"></a></p><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/lcw/">Leo.cheng</a><br>园龄：<a href="http://home.cnblogs.com/u/lcw/" title="入园时间：2013-06-08">3年11个月</a><br>粉丝：<a href="http://home.cnblogs.com/u/lcw/followers/">109</a><br>关注：<a href="http://home.cnblogs.com/u/lcw/followees/">0</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;4b666cd5-fccf-e211-8d02-90b11c0b17d6&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/04/01&#39;);return false;">&lt;</a></td><td align="center">2017年5月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/06/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">30</td><td align="center">1</td><td align="center">2</td><td align="center">3</td><td align="center">4</td><td align="center">5</td><td class="CalWeekendDay" align="center">6</td></tr><tr><td class="CalWeekendDay" align="center">7</td><td align="center">8</td><td align="center">9</td><td align="center">10</td><td align="center">11</td><td align="center">12</td><td class="CalWeekendDay" align="center">13</td></tr><tr><td class="CalWeekendDay" align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalTodayDay" align="center">17</td><td align="center">18</td><td align="center">19</td><td class="CalWeekendDay" align="center">20</td></tr><tr><td class="CalWeekendDay" align="center">21</td><td align="center">22</td><td align="center">23</td><td align="center">24</td><td align="center">25</td><td align="center">26</td><td class="CalWeekendDay" align="center">27</td></tr><tr><td class="CalWeekendDay" align="center">28</td><td align="center">29</td><td align="center">30</td><td align="center">31</td><td class="CalOtherMonthDay" align="center">1</td><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td></tr><tr><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td><td class="CalOtherMonthDay" align="center">9</td><td class="CalOtherMonthDay" align="center">10</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_categories">
+<div class="catListPostCategory">
+<h3 class="catListTitle">随笔分类<span style="font-size:11px;font-weight:normal">(279)</span></h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/lcw/category/700989.html">A认知学（思维）(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/lcw/category/700993.html">B心理学（人性）</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/lcw/category/700994.html">C行为学（动机）</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/lcw/category/700995.html">D经济学（信息）</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/lcw/category/700996.html">E战略学（道术）</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/lcw/category/700997.html">F颠覆论（反省）(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/lcw/category/700998.html">G方法学（捷径）(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/lcw/category/700999.html">H生活学（得失）</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/lcw/category/701000.html">I养生学（中医）</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_9" href="http://www.cnblogs.com/lcw/category/701001.html">J市场学（商业）</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_10" href="http://www.cnblogs.com/lcw/category/701002.html">K产品</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_11" href="http://www.cnblogs.com/lcw/category/701004.html">L科学（其它）</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_12" href="http://www.cnblogs.com/lcw/category/701003.html">M哲学（辩证）</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_13" href="http://www.cnblogs.com/lcw/category/519285.html">Z技术（Android）(45)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_14" href="http://www.cnblogs.com/lcw/category/492961.html">Z技术（Arithmetic）(28)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_15" href="http://www.cnblogs.com/lcw/category/492964.html">Z技术（ARM/Embedded）(36)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_16" href="http://www.cnblogs.com/lcw/category/492952.html">Z技术（C/C++/Objective-c）(41)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_17" href="http://www.cnblogs.com/lcw/category/499673.html">Z技术（DB/Mysql）(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_18" href="http://www.cnblogs.com/lcw/category/521587.html">Z技术（Delphi）(10)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_19" href="http://www.cnblogs.com/lcw/category/499674.html">Z技术（GTK/QT）(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_20" href="http://www.cnblogs.com/lcw/category/499525.html">Z技术（Java）(14)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_21" href="http://www.cnblogs.com/lcw/category/492966.html">Z技术（Linux/Kernel/Driver）(55)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_22" href="http://www.cnblogs.com/lcw/category/528891.html">Z技术（Net/Protocol）(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_23" href="http://www.cnblogs.com/lcw/category/499675.html">Z技术（OS/Security）(4)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_24" href="http://www.cnblogs.com/lcw/category/613867.html">Z技术（Other）(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_25" href="http://www.cnblogs.com/lcw/category/589562.html">Z技术（Patterns/Design）(13)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_26" href="http://www.cnblogs.com/lcw/category/492955.html">Z技术（PMP/Scrum）(8)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_27" href="http://www.cnblogs.com/lcw/category/627129.html">Z技术（XML/Shell/Script）(10)</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListPostArchive">
+<h3 class="catListTitle">随笔档案<span style="font-size:11px;font-weight:normal">(279)</span></h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/lcw/archive/2016/01.html">2016年1月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/lcw/archive/2015/05.html">2015年5月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/lcw/archive/2015/01.html">2015年1月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/lcw/archive/2014/12.html">2014年12月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/lcw/archive/2014/11.html">2014年11月 (6)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/lcw/archive/2014/10.html">2014年10月 (6)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/lcw/archive/2014/09.html">2014年9月 (4)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/lcw/archive/2014/08.html">2014年8月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/lcw/archive/2014/07.html">2014年7月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/lcw/archive/2014/06.html">2014年6月 (23)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_10" href="http://www.cnblogs.com/lcw/archive/2014/05.html">2014年5月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_11" href="http://www.cnblogs.com/lcw/archive/2014/04.html">2014年4月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_12" href="http://www.cnblogs.com/lcw/archive/2014/03.html">2014年3月 (7)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_13" href="http://www.cnblogs.com/lcw/archive/2014/02.html">2014年2月 (14)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_14" href="http://www.cnblogs.com/lcw/archive/2014/01.html">2014年1月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_15" href="http://www.cnblogs.com/lcw/archive/2013/12.html">2013年12月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_16" href="http://www.cnblogs.com/lcw/archive/2013/11.html">2013年11月 (6)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_17" href="http://www.cnblogs.com/lcw/archive/2013/10.html">2013年10月 (17)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_18" href="http://www.cnblogs.com/lcw/archive/2013/09.html">2013年9月 (19)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_19" href="http://www.cnblogs.com/lcw/archive/2013/08.html">2013年8月 (20)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_20" href="http://www.cnblogs.com/lcw/archive/2013/07.html">2013年7月 (18)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_21" href="http://www.cnblogs.com/lcw/archive/2013/06.html">2013年6月 (116)</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListImageCategory">
+<h3 class="catListTitle">相册<span style="font-size:11px;font-weight:normal">(42)</span></h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_2_Link_0" href="http://www.cnblogs.com/lcw/gallery/522233.html" rel="nofollow">Android Mind Mapping(11)</a> </li>
+
+<li><a id="CatList_LinkList_2_Link_1" href="http://www.cnblogs.com/lcw/gallery/522236.html" rel="nofollow">ARM Mind Mapping (1)</a> </li>
+
+<li><a id="CatList_LinkList_2_Link_2" href="http://www.cnblogs.com/lcw/gallery/493296.html" rel="nofollow">Linux Kernel Mind Mapping (30)</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListPersonal Column">
+<h3 class="catListTitle">创十三专栏</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_3_Link_0" href="http://liucw.blog.51cto.com/" rel="nofollow">51CTO Blogs</a> </li>
+
+<li><a id="CatList_LinkList_3_Link_1" href="http://book.douban.com/people/infohacker" rel="nofollow">Douban List</a> </li>
+
+<li><a id="CatList_LinkList_3_Link_2" href="http://wolften.lofter.com/" rel="nofollow">创十三轻博客</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_scorerank" class="sidebar-block">
+<div class="catListBlogRank">
+<h3 class="catListTitle">积分与排名</h3>
+<ul>
+	<li class="liScore">
+		积分 -	124215
+	</li>
+	<li class="liRank">
+		排名 -	1895
+	</li>
+</ul>
+</div>
+
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+	<div id="RecentCommentsBlock"><ul>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/3297889.html#3617038">1. Re:【驱动】linux下I2C驱动架构全面分析</a></li>
+        <li class="recent_comment_body">写的很好很好...必须的赞一个</li>
+        <li class="recent_comment_author">--SpringBamboo</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/5162978.html#3518330">2. Re:思维的八层境界（深度好文）</a></li>
+        <li class="recent_comment_body">好文</li>
+        <li class="recent_comment_author">--编程笔记</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/3340899.html#3439793">3. Re:【Android】Handler详解</a></li>
+        <li class="recent_comment_body">在73行：  MyHandlerActivity.this会提示有问题。</li>
+        <li class="recent_comment_author">--langren919</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/3297889.html#3366886">4. Re:【驱动】linux下I2C驱动架构全面分析</a></li>
+        <li class="recent_comment_body">此文写的如此清晰，了不得！</li>
+        <li class="recent_comment_author">--鱼竿的传说</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/3204980.html#3311146">5. Re:【C/C++】C语言复习笔记－17种小算法－解决实际问题</a></li>
+        <li class="recent_comment_body">输出小于指定数的所有素数——有一个小问题：根据你的判断，1也是一个素数！所以我觉得PoutPrime()函数应该为如下：void PoutPrime(int a)//输出所有小于或等于该数的素数43 ......</li>
+        <li class="recent_comment_author">--叶十一少</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/3297889.html#3310465">6. Re:【驱动】linux下I2C驱动架构全面分析</a></li>
+        <li class="recent_comment_body">谢谢博主的分享。</li>
+        <li class="recent_comment_author">--bob.z</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/3551810.html#3201790">7. Re:【XMPP】Smack源码之初步认识</a></li>
+        <li class="recent_comment_body">感谢分享</li>
+        <li class="recent_comment_author">--ithaibo</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/3297889.html#3028559">8. Re:【驱动】linux下I2C驱动架构全面分析</a></li>
+        <li class="recent_comment_body">写的太详细了。学习中。</li>
+        <li class="recent_comment_author">--lenmon</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/3505294.html#2954282">9. Re:【XMPP】基于XMPP的即时通讯解决方案</a></li>
+        <li class="recent_comment_body">@IT追梦-Fay引用经过你的介绍,改变了我对这个xmpp的印象.呵呵，工作一直在接触这方面的东西嘛，欢迎交流...</li>
+        <li class="recent_comment_author">--成鹏致远</li>
+        <li class="recent_comment_title"><a href="http://www.cnblogs.com/lcw/p/3505294.html#2950229">10. Re:【XMPP】基于XMPP的即时通讯解决方案</a></li>
+        <li class="recent_comment_body">楼主对这方便深有研究啊,经过你的介绍,改变了我对这个xmpp的印象,我以前使用xmpp的时候感觉十分慢.看来是别人配置和性能问题了.学习了.</li>
+        <li class="recent_comment_author">--IT追梦-Fay</li>
+</ul>
+</div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/lcw/p/3565459.html">1. 【Socket】关于socket长连接的心跳包(9195)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3297889.html">2. 【驱动】linux下I2C驱动架构全面分析(6419)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3402770.html">3. 【Android】Sensor框架Framework层解读(6000)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3370639.html">4. 【Android】ADB常用指令与logcat日志(5231)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3352864.html">5. 【delphi】Byte数组与String类型的转换(4758)</a></li><li><a href="http://www.cnblogs.com/lcw/p/1c6e97eb41a4e119bf84db9fbf7c0e24.html">6. 【阅读推荐】改变你思维模式的书单(4180)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3402816.html">7. 【Android】Sensor框架HAL层解读(3201)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3337937.html">8. 【内核】linux内核启动流程详细分析(3195)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3351759.html">9. 【delphi】delphi操作sqlite3(2421)</a></li><li><a href="http://www.cnblogs.com/lcw/p/4059291.html">10. 【敏捷开发】详解敏捷测试(2273)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"><ul><li><a href="http://www.cnblogs.com/lcw/p/3335505.html">1. 【Android】HAL分析(8)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3204980.html">2. 【C/C++】C语言复习笔记－17种小算法－解决实际问题(7)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3603386.html">3. 【Android】Eclipse性能优化，快捷方式，文档注释(5)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3601257.html">4. 【敏捷开发】结对编程(4)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3297889.html">5. 【驱动】linux下I2C驱动架构全面分析(4)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3162609.html">6. 【C/C++】struct探索·extern "C"含义探索 ·C++与C的混合编程·C 语言高效编程的几招(3)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3159378.html">7. 【驱动】DM9000网卡驱动分析(2)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3506110.html">8. 【Android】Android输入子系统(2)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3505294.html">9. 【XMPP】基于XMPP的即时通讯解决方案(2)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3394545.html">10. 【Git】Git与GitHub 入门(1)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"><ul><li><a href="http://www.cnblogs.com/lcw/p/3619181.html">1. 【敏捷开发】Android团队开发规范(3)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3297889.html">2. 【驱动】linux下I2C驱动架构全面分析(3)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3204980.html">3. 【C/C++】C语言复习笔记－17种小算法－解决实际问题(3)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3540969.html">4. JAVA（三）JAVA常用类库/JAVA IO(2)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3506110.html">5. 【Android】Android输入子系统(2)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3416730.html">6. 【流媒体】UPnP的工作过程(2)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3565459.html">7. 【Socket】关于socket长连接的心跳包(2)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3159491.html">8. 【电子基础】总结·嵌入式硬件基础(2)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3159502.html">9. 【Socket】linux下http服务器开发(2)</a></li><li><a href="http://www.cnblogs.com/lcw/p/3169285.html">10. 【Linux技术】linux库文件编写·入门(2)</a></li></ul></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 Leo.cheng
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+<div class="bdshare-slide-button-box bdshare-slide-style-l2" style="top: 124px; width: 0px; z-index: 99999; left: 0px;" data-bd-bind="1494988480247"><a href="http://www.cnblogs.com/lcw/p/3402770.html#" onclick="return false;" class="bdshare-slide-button" style="right: -24px;"></a><div class="bdshare-slide-list-box" style="width: 0px; display: none;"><div class="bdshare-slide-top">分享到</div><div class="bdshare-slide-list"><ul class="bdshare-slide-list-ul" style="width: 226px;"></ul></div><div class="bdshare-slide-bottom" style="width: 226px;"><a href="http://www.cnblogs.com/lcw/p/3402770.html#" onclick="return false;" class="slide-more" data-cmd="more">更多...</a></div></div></div></body></html>

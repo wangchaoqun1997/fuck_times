@@ -1,0 +1,23 @@
+[ANSI Colors on Black (2)]
+text=939393
+cyan(bold)=00ffff
+text(bold)=939393
+magenta=c000c0
+green=00c000
+green(bold)=969696
+background=171717
+cyan=00c0c0
+red(bold)=ff0000
+yellow=969696
+magenta(bold)=ff00ff
+yellow(bold)=969696
+red=c00000
+white=c0c0c0
+blue(bold)=006ddb
+white(bold)=ffffff
+black=000000
+blue=393939
+black(bold)=808080
+[Names]
+name0=ANSI Colors on Black (2)
+count=1

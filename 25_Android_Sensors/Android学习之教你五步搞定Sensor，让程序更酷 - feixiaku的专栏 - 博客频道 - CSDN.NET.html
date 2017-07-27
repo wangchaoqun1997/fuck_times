@@ -1,0 +1,1317 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0054)http://blog.csdn.net/feixiaku/article/details/45136525 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/hm.js.下载"></script>  
+
+    <script type="text/javascript" async="" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/zczm"></script><script src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/push.js.下载"></script><script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/tracking.js.下载" charset="utf-8"></script>  
+
+    <script type="text/javascript">
+        var protocol = window.location.protocol;
+        document.write('<script type="text/javascript" src="' + protocol + '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random() + '"></' + 'script>');
+    </script><script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/repoAddr2.js.下载"></script>
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://blog.csdn.net/feixiaku/article/details/45136525#">
+
+    <title>Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏
+        - 博客频道 - CSDN.NET</title>
+    
+    <meta name="description" content="首先介绍下，啥叫传感器。Sensor（传感器）： 维基百科告诉我：传感器是接收信号或刺激并反应的器件，能将待测物理量或化学量转换成另一对应输出的装置。比如：重力传感器，方向传感器Android对每个设备的传感器都进行了抽象，SensorManger类用来控制传感器,Sensor用来描述具体的传感器，SensorEventListener用来监听传感器值的改变。进入主题： 只">
+    <script src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/jquery.js.下载" type="text/javascript"></script>
+      <script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/jquery-version.js.下载"></script>
+    <script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/ad.js.下载"></script>
+        <!--new top-->
+       
+        <link rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/index.css">
+        <!--new top-->
+    
+      <!-- ad begin -->
+         <script language="javascript" type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/tracking.js(1).下载"></script>
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/style.css">
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/feixiaku/rss/list">
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/default.css">
+ 
+
+
+<script>
+        (function () {
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+</script>
+
+
+<script src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/share.js.下载"></script><link rel="stylesheet" type="text/css" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/job_reco.css"><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><link href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/bdsstyle.css" rel="stylesheet" type="text/css"><script src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/wxLogin.js.下载"></script><link rel="stylesheet" type="text/css" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/style(1).css"><link type="text/css" rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/style(2).css"><script src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/get_ads.php" type="text/javascript"></script><script src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/logger.js.下载"></script><link rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/share_style0_16.css"></head>
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><iframe frameborder="0" style="display: none;" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/saved_resource.html"></iframe><div id="MathJax_Message" style="display: none;"></div>
+
+
+    <!-- 广告位开始 -->
+        <ins data-revive-zoneid="149" data-revive-id="8c38e720de1c90a6f6ff52f3f89c4d57" id="revive-0-0"></ins>
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/html.js.下载" type="text/javascript"></script><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar_logo" class="img blog-icon"></a></div>          <div class="pull-right login-wrap unlogin">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="http://passport.csdn.net/account/mobileregister?ref=toolbar&amp;action=mobileRegister">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search" method="get" target="_blank">                      <input type="hidden" value="toolbar" name="ref" accesskey="2">                      <div class="border">                        <input placeholder="搜索" type="text" value="" name="q" accesskey="2"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label"><span class="red_txt">*</span>标题</label>                          <div class="col-sm-10">                            <input id="inputTitle" type="text" placeholder="" class="title form-control">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group" style="display:none;">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input id="input-url" type="text" placeholder="" class="url form-control">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" type="text" class="form-control tag">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">位置</label>                        <div class="col-sm-10">                          <div class="my_lib_box">                            个人主页&nbsp;-&nbsp;<a href="http://my.csdn.net/" target="_blank">我的知识</a>                          </div>                          <div class="checkbox">                            <div class="pull-left">                              <label>                                <input type="checkbox" name="share" class="save_lib_map" checked="checked">同时保存至：                              </label>                            </div>                            <div class="pull-left">                              <div class="dropdown">                                <button id="toolbar_sele_map" type="button">                                  选择知识图谱                                  <i class="fa fa-chevron-down"></i>                                </button>                                <div class="top_arr"></div>                                <div class="outside">                                  <ul class="dropdown-menu" id="toolbar_Design_knowledge"><li>选择知识图谱</li></ul>                                </div>                              </div>                            </div>                            <div class="pull-left new_txt">                              <a href="http://lib.csdn.net/my/create/structure" target="_blank">新建？</a>                            </div>                          </div>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left" style="display:none">                            <div class="checkbox">                              <label>                                <input type="checkbox" name="share" checked="checked" class="share">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="display:none" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note">                      <div class="box"></div>                    <iframe src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/saved_resource(1).html" frameborder="0" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix" style="display:none;"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt style="border: none;"><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/100x100.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="avatar"><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/100x100.jpg"></a></dt>                        <dd class="info" style="border: none;"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname"></a><a class="set-nick" href="https://passport.csdn.net/account/profile">设置昵称<span class="write-icon"></span></a><span class="dec"><a class="fill-dec" href="http://my.csdn.net/" target="_blank">编辑自我介绍，让更多人了解你<span class="write-icon"></span></a></span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="http://my.csdn.net/my/account/changepwd?ref=toolbar" class="pull-left"><span class="icon-cog"></span>帐号设置</a><a href="https://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-left" style="margin-left:132px; width:18px; height:27px; white-space:nowrap; overflow:hidden;"><span class="icon-signout"></span><span class="out">退出</span></a></div>                  </div>                </div>              </li>              <li class="apps">                <div id="chasnew123" class="hasnew" style="display: none;"></div>                <div id="cappsarea123" class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd> <a href="http://lib.csdn.net/?ref=toolbar" target="_blank">知识库</a></dd>                      <dd><a href="http://ask.csdn.net/?ref=toolbar" target="_blank">技术问答</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                      <dd style="display:none"> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd style="display:none"> <a href="http://job.csdn.net/?ref=toolbar" target="_blank">JOB<img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="http://edu.csdn.net/?ref=toolbar" target="_blank">学院<img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://huiyi.csdn.net/?ref=toolbar" target="_blank">活动</a></dd>                      <dd> <a href="http://www.csto.com/?ref=toolbar" target="_blank">CSTO</a></dd>                      <dd> <a href="http://mall.csdn.net/?ref=toolbar" target="_blank">C币兑换<img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://cto.csdn.net/?ref=toolbar" target="_blank">CTO俱乐部</a></dd>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/feixiaku">feixiaku的专栏</a></h2>
+            <h3></h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/feixiaku?viewmode=contents"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_mulu&#39;])">
+                    <img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/feixiaku?viewmode=list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_zhaiyao&#39;])">
+                    <img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/feixiaku/rss/list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_RSS&#39;])">
+                    <img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "feixiaku";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/feixiaku";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+
+<a href="http://blog.csdn.net/csdnproduct/article/details/70145129" target="_blank">
+<font color="blue"><strong>【公告】关于开启用户注册及登录手机短信验证的通知</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/70147263" target="_blank">
+<font color="red">CSDN日报20170412 ——《程序员该如何定位？看这四大方向》
+</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/60961185" target="_blank">
+<font color="blue"><strong>博客搬家，有礼相送</strong>
+</font></a>
+</div>                        </div>
+                        
+
+
+
+  
+<link href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/comment1.css" type="text/css" rel="stylesheet">
+<link href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/style1.css" type="text/css" rel="stylesheet">
+<script language="JavaScript" type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/jquery.cookie.js.下载"></script>
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/main.js.下载"></script>
+<link rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/markdown_views.css">
+<link rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/category.css">
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/MathJax.js.下载"></script>
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/web-storage-cache.min.js.下载"></script>
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/replace.min.js.下载"></script>
+
+<link rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/prettify.css">
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/prettify.js.下载"></script>
+
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+           
+            var isBole = false;
+            
+      
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=Android%e5%ad%a6%e4%b9%a0%e4%b9%8b%e6%95%99%e4%bd%a0%e4%ba%94%e6%ad%a5%e6%90%9e%e5%ae%9aSensor%ef%bc%8c%e8%ae%a9%e7%a8%8b%e5%ba%8f%e6%9b%b4%e9%85%b7&u=http://blog.csdn.net/feixiaku/article/details/45136525"
+
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Repost"></span>
+
+
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/feixiaku/article/details/45136525">
+        Android学习之教你五步搞定Sensor，让程序更酷            
+        </a></span>
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_r">
+            <span class="link_postdate">2015-04-20 00:11</span>
+            <span class="link_view" title="阅读次数">3859人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="http://blog.csdn.net/feixiaku/article/details/45136525#comments" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_pinglun&#39;])">评论</a>(1)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle(&#39;Android%e5%ad%a6%e4%b9%a0%e4%b9%8b%e6%95%99%e4%bd%a0%e4%ba%94%e6%ad%a5%e6%90%9e%e5%ae%9aSensor%ef%bc%8c%e8%ae%a9%e7%a8%8b%e5%ba%8f%e6%9b%b4%e9%85%b7&#39;,&#39;45136525&#39;);return false;" title="收藏" target="_blank">收藏</a></span>
+             <span class="link_report"> <a href="http://blog.csdn.net/feixiaku/article/details/45136525#report" onclick="javascript:report(45136525,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>
+    <div class="embody" style="display:none" id="embody">
+        <span class="embody_t">本文章已收录于：</span>
+        <div class="embody_c" id="lib" value="{&quot;err&quot;:0,&quot;msg&quot;:&quot;ok&quot;,&quot;data&quot;:[]}"></div>
+    </div>
+    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label onclick="GetCategoryArticles(&#39;1372558&#39;,&#39;feixiaku&#39;,&#39;top&#39;,&#39;45136525&#39;);">
+                        <span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_fenlei&#39;]);">Android<em>（47）</em></span>
+                      <img class="arrow-down" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a href="http://blog.csdn.net/feixiaku/article/category/1372558" target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_1372558">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+    <script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/category.js.下载"></script>  
+
+  
+
+  
+  
+     
+
+<div id="article_content" class="article_content">
+
+<p style="color:rgb(54,46,43)">首先介绍下，啥叫传感器。</p>
+<p align="left" style="color:rgb(54,46,43)">Sensor（传感器）：&nbsp;维基百科告诉我：<strong>传感器</strong>是接收信号或刺激并反应的器件，能将待测物理量或化学量转换成另一对应输出的装置。</p>
+<p align="left" style="color:rgb(54,46,43)">比如：重力传感器，方向传感器</p>
+<p align="left" style="color:rgb(54,46,43)"><a href="http://lib.csdn.net/base/android" class="replace_word" title="Android知识库" target="_blank" style="color:#df3434; font-weight:bold;">Android</a>对每个设备的传感器都进行了抽象，SensorManger类用来控制传感器,Sensor用来描述具体的传感器，SensorEventListener用来监听传感器值的改变。</p>
+<p align="left" style="color:rgb(54,46,43)">进入主题：</p>
+<p align="left" style="color:rgb(54,46,43)">&nbsp;</p>
+<p align="left" style="color:rgb(54,46,43)">只需要五步，你就能搞定Sensor。让你的程序变的更酷。</p>
+<p align="left" style="color:rgb(54,46,43)">&nbsp;</p>
+<p align="left" style="color:rgb(54,46,43)"></p>
+<div>
+<div>
+<div style="color:silver"><strong>[java]</strong>&nbsp;<a target="_blank" href="http://blog.csdn.net/ldj299/article/details/6455803#" title="view plain" style="color:rgb(160,160,160)">view plain</a><a target="_blank" href="http://blog.csdn.net/ldj299/article/details/6455803#" title="copy" style="color:rgb(160,160,160)">copy</a>
+<div></div>
+</div>
+</div>
+<ol start="1" style="color:rgb(92,92,92)">
+<li style="color:inherit"><span style="color:black"><span style="color:rgb(0,130,0)">//第一步：获得SensorManager对象,返回的就是一个硬件设备的控制器</span>&nbsp;&nbsp;</span></li><li><span style="color:black">SensorManager&nbsp;sensorManager&nbsp;=&nbsp;(SensorManager)getSystemService(SERVICE_NAME);&nbsp;&nbsp;</span></li><li style="color:inherit"><span style="color:black"><span style="color:rgb(0,130,0)">//第二步：获得特定的传感器</span>&nbsp;&nbsp;</span></li><li><span style="color:black">Sensor&nbsp;accelerSensor&nbsp;=&nbsp;sensorManager.getDefaultSensor(Sensor.&nbsp;TYPE_ACCELEROMETER);&nbsp;&nbsp;</span></li><li style="color:inherit"><span style="color:black"><span style="color:rgb(0,130,0)">//第三步：创建SensorEventListener监听传感器的值改变并且做出相应的动作</span>&nbsp;&nbsp;</span></li><li><span style="color:black">SensorEventListener&nbsp;mySensorListener&nbsp;=&nbsp;<span style="color:rgb(0,102,153)">new</span>&nbsp;SensorEventListener()&nbsp;{&nbsp;&nbsp;</span></li><li style="color:inherit"><span style="color:black">&nbsp;<span style="color:rgb(0,130,0)">//传感器的值改变调用此方法</span>&nbsp;&nbsp;</span></li><li><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(100,100,100)">@Override</span>&nbsp;&nbsp;</span></li><li style="color:inherit"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,102,153)">public</span>&nbsp;</span><span style="color:rgb(0,102,153)">void</span>&nbsp;onSensorChanged(SensorEvent&nbsp;event)&nbsp;{&nbsp;&nbsp;</li><li><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,102,153)">float</span>&nbsp;x&nbsp;=&nbsp;event.values[</span><span style="color:rgb(192,0,0)">0</span>];&nbsp;&nbsp;</li><li style="color:inherit"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,102,153)">float</span>&nbsp;y&nbsp;=&nbsp;event.values[</span><span style="color:rgb(192,0,0)">1</span>];&nbsp;&nbsp;</li><li><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,102,153)">float</span>&nbsp;z&nbsp;=&nbsp;event.values[</span><span style="color:rgb(192,0,0)">2</span>];&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li><li style="color:inherit"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,130,0)">//获得值之后，你就可以进行相应的处理啦</span>&nbsp;&nbsp;</span></li><li><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span style="color:blue">"~~~X&nbsp;is&nbsp;:"</span>+x);&nbsp;&nbsp;</span></li><li style="color:inherit"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span style="color:blue">"---Y&nbsp;is&nbsp;:"</span>+y);&nbsp;&nbsp;</span></li><li><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span style="color:blue">"+++Z&nbsp;is&nbsp;:"</span>+z);&nbsp;&nbsp;</span></li><li style="color:inherit"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,130,0)">//传感器的精确度改变调用此方法</span>&nbsp;&nbsp;</span></li><li style="color:inherit"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(100,100,100)">@Override</span>&nbsp;&nbsp;</span></li><li><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:rgb(0,102,153)">public</span>&nbsp;</span><span style="color:rgb(0,102,153)">void</span>&nbsp;onAccuracyChanged(Sensor&nbsp;sensor,&nbsp;<span style="color:rgb(0,102,153)">int</span>&nbsp;accuracy)&nbsp;{&nbsp;&nbsp;</li><li style="color:inherit"><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li><span style="color:black">}&nbsp;&nbsp;</span></li><li style="color:inherit"><span style="color:black"><span style="color:rgb(0,130,0)">//第四步：注册传感器事件监听事件</span>&nbsp;&nbsp;</span></li><li><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sensorManager.registerListener(mySensorListener,&nbsp;accelerSensor,&nbsp;SensorManager.SENSOR_DELAY_NORMAL);&nbsp;&nbsp;</span></li><li style="color:inherit"><span style="color:black"><span style="color:rgb(0,130,0)">//第五步：注销传感器事件的监听</span>&nbsp;&nbsp;</span></li><li><span style="color:black">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sensorManager.unregisterListener(mySensorListener);&nbsp;&nbsp;</span></li></ol>
+</div>
+&nbsp;
+<div style="color:rgb(54,46,43)">补充：</div>
+<div style="color:rgb(54,46,43)"><br>
+</div>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p align="left" style="color:rgb(54,46,43)">第二步中可以获得如下传感器,</p>
+<p align="left" style="color:rgb(54,46,43)">&nbsp;</p>
+<p align="left" style="color:rgb(54,46,43)">传感器类型列表：</p>
+<p style="color:rgb(54,46,43)">Sensor.TYPE_ACCELEROMETER:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;加速计传感器</p>
+<p style="color:rgb(54,46,43)">Sensor.TYPE_GYROSCOPE:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;回转仪传感器</p>
+<p style="color:rgb(54,46,43)">Sensor.TYPE_LIGHT:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;光传感器，动态控制屏幕亮度</p>
+<p style="color:rgb(54,46,43)">Sensor.TYPE_MAGNETIC_FIELD:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;磁场传感器</p>
+<p style="color:rgb(54,46,43)">Sensor.TYPE_ORIENTATION:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;方向传感器</p>
+<p style="color:rgb(54,46,43)">Sensor.TYPE_PRESSURE:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;压力传感器</p>
+<p style="color:rgb(54,46,43)">Sensor.TYPE_PROXIMIY:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;邻近距离传感器</p>
+<p style="color:rgb(54,46,43)">Sensor.TYPE_TEMPERATURE:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;温度传感器</p>
+<p align="left" style="color:rgb(54,46,43)">&nbsp;</p>
+<p align="left" style="color:rgb(54,46,43)">有些手机不支持部分感应装置你可以判断sensor是否为null，为null时你可以提示用户。</p>
+<p align="left" style="color:rgb(54,46,43)"><br>
+</p>
+<p align="left" style="color:rgb(54,46,43)">你也可以使用下面的语句获得设备可用的的传感器列表：</p>
+<p align="left" style="color:rgb(54,46,43)">List&lt;Sensor&gt; allSensors = sensorManger.getSensorList(Sensor.TYPE_ALL);</p>
+<p align="left" style="color:rgb(54,46,43)">&nbsp;</p>
+<p align="left" style="color:rgb(54,46,43)">在第三步中，</p>
+<p align="left" style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;三个参数分别为：SensorEventListener、Sensor、传感器的更新速率</p>
+<p align="left" style="color:rgb(54,46,43)">&nbsp;</p>
+<p align="left" style="color:rgb(54,46,43)">前两个参数都是之前声明的。</p>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p style="color:rgb(54,46,43)">第三个参数，有四个选择。</p>
+<p style="color:rgb(54,46,43)">传感器更新速率：</p>
+<p style="color:rgb(54,46,43)">SensorManager.SENSOR_DELAY_FASTEST:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;指定可能最快的传感器更新速率</p>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p style="color:rgb(54,46,43)">SensorManager.SENSOR_DELAY_GAME:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;指定适合在游戏中使用的更新速率</p>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p style="color:rgb(54,46,43)">SensorManager.SENSOR_DELAY_NORMAL:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;指定默认的更新速率</p>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p style="color:rgb(54,46,43)">SensorManager.SENSOR_DELAY_UI:</p>
+<p style="color:rgb(54,46,43)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;指定适合于更新UI的更新速率</p>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p style="color:rgb(54,46,43)">第四步一般是在onResume()中进行。</p>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p style="color:rgb(54,46,43)">第五步一般在onPause()中进行。</p>
+<p style="color:rgb(54,46,43)">这样Activity是和用户交互时才使用它们。</p>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p style="color:rgb(54,46,43)">我写了一个方向传感器的简单例子，有兴趣的同学可以下载：</p>
+<p style="color:rgb(54,46,43)"><a target="_blank" href="http://download.csdn.net/source/3326822" style="color:rgb(106,57,6)">http://download.csdn.net/source/3326822</a></p>
+<p style="color:rgb(54,46,43)">&nbsp;</p>
+<p style="color:rgb(54,46,43)">就这样你就可以进入Android的Sensor世界了，在接下来的文章中，我会结合游戏和实例来详细介绍部分传感器。</p>
+<p align="left" style="color:rgb(54,46,43)">时候也不早了，今天就到这里了，谢谢大家。</p>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad bdshare-button-style0-16" style="float: right;" data-mod="popu_172" data-bd-bind="1492051415220">
+<a href="http://blog.csdn.net/feixiaku/article/details/45136525#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important" target="_blank"></a>
+<a href="http://blog.csdn.net/feixiaku/article/details/45136525#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间" style="background-position:0 -52px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/feixiaku/article/details/45136525#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博" style="background-position:0 -104px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/feixiaku/article/details/45136525#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博" style="background-position:0 -260px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/feixiaku/article/details/45136525#" class="bds_renren" data-cmd="renren" title="分享到人人网" style="background-position:0 -208px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/feixiaku/article/details/45136525#" class="bds_weixin" data-cmd="weixin" title="分享到微信" style="background-position:0 -1612px !important" target="_blank"></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   <link rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/blog_detail.css">
+
+    
+<!--172.16.140.12-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+<script type="text/javascript">
+    var fromjs = $("#fromjs");
+    if (fromjs.length > 0) {
+            $("#fromjs .markdown_views pre").addClass("prettyprint");
+            prettyPrint();
+
+            $('pre.prettyprint code').each(function () {
+                var lines = $(this).text().split('\n').length;
+                var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                $(this).addClass('has-numbering').parent().append($numbering);
+                for (i = 1; i <= lines; i++) {
+                    $numbering.append($('<li/>').text(i));
+                };
+                $numbering.fadeIn(1700);
+            });
+
+            $('.pre-numbering li').css("color", "#999");
+        }
+
+    
+
+</script>
+
+ 
+
+
+        <div id="digg" articleid="45136525">
+            <dl id="btnDigg" class="digg digg_disable" onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>0</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable" onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" target="_blank">&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" target="_blank">&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;]);location.href=&#39;/feixiaku/article/details/45134633&#39;;">上一篇</span><a href="http://blog.csdn.net/feixiaku/article/details/45134633" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;])">TCP的三次握手(建立连接）和四次挥手(关闭连接）</a></li>
+                <li class="next_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;]);location.href=&#39;/feixiaku/article/details/45155587&#39;;">下一篇</span><a href="http://blog.csdn.net/feixiaku/article/details/45155587" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;])">Android studio 导入github工程</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+        <div class="similar_article" style="">
+                <h4>我的同类文章</h4>
+                <div class="similar_c" style="margin:20px 0px 0px 0px">
+                    <div class="similar_c_t">
+                                <label class="similar_cur">
+                                    <span style="cursor:pointer" onclick="GetCategoryArticles(&#39;1372558&#39;,&#39;feixiaku&#39;,&#39;foot&#39;,&#39;45136525&#39;);">Android<em>（47）</em></span>
+                                </label>
+                    </div>
+                   
+                    <div class="similar_wrap tracking-ad" data-mod="popu_141" style="max-height:195px;">
+                        <a href="http://blog.csdn.net/" style="display:none" target="_blank">http://blog.csdn.net</a>
+                        <ul class="similar_list fl"><li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45155587" id="foot_aritcle_45155587undefined12492057308910276" target="_blank" title="Android studio 导入github工程">Android studio 导入github工程</a><span>2015-04-20</span><label><i>阅读</i><b>37915</b></label></li> <li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45124041" id="foot_aritcle_45124041undefined4213360059457012" target="_blank" title="LayoutInflater的inflate函数用法详解">LayoutInflater的inflate函数用法详解</a><span>2015-04-19</span><label><i>阅读</i><b>156</b></label></li> <li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45123835" id="foot_aritcle_45123835undefined7275832843934651" target="_blank" title="Android 自定义View (一)">Android 自定义View (一)</a><span>2015-04-19</span><label><i>阅读</i><b>166</b></label></li> <li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45116951" id="foot_aritcle_45116951undefined6726196815177778" target="_blank" title="Android中Context">Android中Context</a><span>2015-04-18</span><label><i>阅读</i><b>173</b></label></li> <li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45065711" id="foot_aritcle_45065711undefined2375465574843385" target="_blank" title="pthread_key_t和pthread_key_create()详解">pthread_key_t和pthread_key_create()详解</a><span>2015-04-15</span><label><i>阅读</i><b>195</b></label></li> </ul>
+
+                        <ul class="similar_list fr"><li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45129973" id="foot_aritcle_45129973undefined07362303160999684" target="_blank" title="minSdkVersion、targetSdkVersion、targetApiLevel的区别">minSdkVersion、targetSdkVersion、targetApiLevel的区别</a><span>2015-04-19</span><label><i>阅读</i><b>217</b></label></li> <li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45123909" id="foot_aritcle_45123909undefined2135304378170355" target="_blank" title="Android自定义Button的点击效果">Android自定义Button的点击效果</a><span>2015-04-19</span><label><i>阅读</i><b>242</b></label></li> <li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45123529" id="foot_aritcle_45123529undefined6661179569416573" target="_blank" title="android笔记--Intent和IntentFilter详解">android笔记--Intent和IntentFilter详解</a><span>2015-04-19</span><label><i>阅读</i><b>215</b></label></li> <li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45066005" id="foot_aritcle_45066005undefined2150586050744101" target="_blank" title="Android JNI（实现自己的JNI_OnLoad函数）">Android JNI（实现自己的JNI_OnLoad函数）</a><span>2015-04-15</span><label><i>阅读</i><b>205</b></label></li> <li><em>•</em><a href="http://blog.csdn.net/feixiaku/article/details/45065381" id="foot_aritcle_45065381undefined799220768895659" target="_blank" title="Android JNI（实现自己的JNI_OnLoad函数）">Android JNI（实现自己的JNI_OnLoad函数）</a><span>2015-04-15</span><label><i>阅读</i><b>179</b></label></li> </ul>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1372558" class="MoreArticle">更多文章</a></div>
+                </div>
+            </div>    
+    <script type="text/javascript">
+        $(function () {
+            GetCategoryArticles('1372558', 'feixiaku','foot','45136525');
+        });
+    </script>
+      
+</div>
+
+     <div>
+                <script type="text/javascript">
+                    /*博客内容页下方Banner1-960*90，创建于2016-12-13*/
+                    var cpro_id = "u2843955";
+                </script>
+                <script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2843955_0"><iframe id="iframeu2843955_0" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/zczm.html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+    </div>
+
+<div id="suggest">
+
+</div>
+         <script language="javascript" type="text/javascript">     
+             $(function(){
+                 $.get("/feixiaku/svc/GetSuggestContent/45136525",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+<style>
+.blog-ass-articl dd {
+color: #369;
+width: 99%; /*修改行*/
+float: left;
+overflow: hidden;
+font: normal normal 12px/23px "SimSun";
+height: 23px;
+margin: 0;
+padding: 0 0 0 10px;
+margin-right: 30px;
+background: url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;
+}
+</style>
+
+ <link rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/replace.css">
+
+<div id="relate" data-mod="popu_218" class="tracking-ad" style="display: block;">
+        <div class="relate_t">
+            <h3><span>参考知识库</span></h3>
+        </div>
+        <div class="relate_c"><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/android"><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/1455589744328_328.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/android">Android知识库</a></h4><p><label><span>33079</span><em>关注</em><i>|</i><span>2675</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/dotnet"><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/1470876331285_285.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/dotnet">.NET知识库</a></h4><p><label><span>3675</span><em>关注</em><i>|</i><span>833</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/javase"><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/1453169124297_297.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/javase">Java SE知识库</a></h4><p><label><span>25456</span><em>关注</em><i>|</i><span>479</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/javaee"><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/1456818035722_722.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/javaee">Java EE知识库</a></h4><p><label><span>17351</span><em>关注</em><i>|</i><span>1301</span><em>收录</em></label></p></dd></dl><dl class="relate_list"><dt><a target="_blank" href="http://lib.csdn.net/base/java"><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/1453701371636_636.jpg" alt="img"></a></dt><dd><h4><a target="_blank" href="http://lib.csdn.net/base/java">Java 知识库</a></h4><p><label><span>25312</span><em>关注</em><i>|</i><span>1456</span><em>收录</em></label></p></dd></dl></div>
+</div>
+ 
+
+<dl class="blog-ass-articl" id="res-relatived"> 
+    <div class="embody embody_b" id="libkeyparent" style="display:none">
+            <span class="embody_t">更多资料请参考：</span>
+            <div class="embody_c" id="libkey"></div>
+    </div>
+
+
+     <dt><span>猜你在找</span></dt>    
+
+
+   
+
+
+    <div id="adCollege" style="width: 42%;float: left;"> 
+        <script src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/job_reco.js.下载" type="text/javascript"></script> 
+        <script type="text/javascript">
+            csdn.position.showEdu({
+                sourceType: "blog",
+                searchType: "detail",
+                searchKey: "45136525",
+                username: "",
+                recordcount: "5",
+                containerId: "adCollege" //容器DIV的id。 
+            });
+            
+            setEduLoc();
+
+            function setEduLoc() {               
+                var edus = $("#adCollege div dd a");
+                if (edus.length == 0) {
+                    setTimeout(function () {
+                        setEduLoc();
+                    }, 500);
+                }
+                else {
+                    var eduLoc = "?ref=blog&loc=0";
+                    $.each(edus, function (index,item) {
+                        var href = $(this).attr("href") + eduLoc;
+                        $(this).attr("href", href);
+                    });
+                }
+            }
+
+        </script> 
+    <div class="tracking-ad" data-mod="popu_84"><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1072?ref=blog&amp;loc=0" title="移动端游戏UI设计-二部曲" strategy="v4:content" target="_blank">移动端游戏UI设计-二部曲</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3239?ref=blog&amp;loc=0" title="推箱子游戏项目实战2016（JAVA）" strategy="v4:content" target="_blank">推箱子游戏项目实战2016（JAVA）</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/3670?ref=blog&amp;loc=0" title="Android核心技术——AndroidUI组件" strategy="v4:content" target="_blank">Android核心技术——AndroidUI组件</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/1671?ref=blog&amp;loc=0" title="Cocos2d-x 3.x高级视频教程：ObjC、Swift、C++、Java交互" strategy="v4:content" target="_blank">Cocos2d-x 3.x高级视频教程：ObjC、Swift、C++、Java交互</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px; white-space: nowrap;"><a href="http://edu.csdn.net/course/detail/2628?ref=blog&amp;loc=0" title="VR环境下独特的人机交互设计" strategy="v4:content" target="_blank">VR环境下独特的人机交互设计</a></dd></div></div>  
+
+    
+     <div id="res" data-mod="popu_36" class="tracking-ad" style="width: 42%; float: left; margin-right: 30px; display: block;"><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/hsyouxishe/article/details/50848482" title="五步搞定Android开发环境部署非常详细的Android开发环境搭建教程" strategy="SearchAlgorithm" target="_blank">五步搞定Android开发环境部署非常详细的Android开发环境搭建教程</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/binnygoal/article/details/51167209" title="五步搞定Android开发环境部署非常详细的Android开发环境搭建教程" strategy="SearchAlgorithm" target="_blank">五步搞定Android开发环境部署非常详细的Android开发环境搭建教程</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/alec1987/article/details/45922951" title="五步搞定Android开发环境部署非常详细的Android开发环境搭建教程" strategy="SearchAlgorithm" target="_blank">五步搞定Android开发环境部署非常详细的Android开发环境搭建教程</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/zy598403285/article/details/44860335" title="五步搞定Android开发环境部署非常详细的Android开发环境搭建教程" strategy="SearchAlgorithm" target="_blank">五步搞定Android开发环境部署非常详细的Android开发环境搭建教程</a></dd><dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="http://blog.csdn.net/wanderinglove/article/details/46043051" title="一行代码不用敲15分钟轻松搞定GIS开发GISer福音教你如何从下载到使用webappbuilder创建第一个应用程序不用申请有使用期限的企业账号哦" strategy="SearchAlgorithm" target="_blank">一行代码不用敲15分钟轻松搞定GIS开发GISer福音教你如何从下载到使用webappbuilder创建第一个应用程序不用申请有使用期限的企业账号哦</a></dd></div>
+   
+</dl>
+
+
+<script type="text/javascript">
+    $(function () {
+        setTimeout(function () {
+            var searchtitletags = 'Android学习之教你五步搞定Sensor，让程序更酷' + ',' + $("#tags").html();
+            searchService({
+                index: 'blog',
+                query: searchtitletags,
+                from: 5,
+                size: 5,
+                appendTo: '#res',
+                url: 'recommend',
+                his: 2,
+                client: "blog_cf_enhance",
+                tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+            });
+        }, 500);
+    });    
+
+ </script>  
+
+
+    <div id="ad_cen">        
+                    <script type="text/javascript">
+                        /*博客内容页下方Banner-728*90，创建于2014-7-3*/
+                        var cpro_id = "u1607657";
+                    </script>
+                    <script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u1607657_0"><iframe id="iframeu1607657_0" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/zczm(1).html" width="728" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:728px;height:90px" allowtransparency="true"></iframe></div>
+    </div>  
+
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list"><dl class="comment_item comment_topic" id="comment_item_6296503"><dt class="comment_head" floor="1">1楼 <span class="user"><a class="username" href="http://blog.csdn.net/javanetjapengbs" target="_blank">javanetjapengbs</a> <span class="ptime">2016-09-28 18:07发表</span>  <a href="http://blog.csdn.net/feixiaku/article/details/45136525#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="6296503" username="javanetjapengbs"> <a href="http://blog.csdn.net/feixiaku/article/details/45136525#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/feixiaku/article/details/45136525#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/javanetjapengbs" target="_blank"><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/3_javanetjapengbs.jpg" width="40" height="40"></a></dd><dd class="comment_body">简单明了</dd></dl><div class="clear"></div></div>
+    <div id="comment_bar" style="display: none;">
+    </div>
+    <div id="comment_form"><div class="guest_link">您还没有登录,请<a href="javascript:void(0);" onclick="javascript:loginbox();">[登录]</a>或<a href="http://passport.csdn.net/account/register?from=http%3A%2F%2Fblog.csdn.net%2Ffeixiaku%2Farticle%2Fdetails%2F45136525">[注册]</a></div></div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '45136525';
+    var commentscount = 1;
+    var islock = false
+</script>
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/comment.js.下载"></script>
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top" style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop" style="display: none;" title="返回顶部" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_huidaodingbu&#39;])">         
+         <img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+<div class="tag_list" style="">
+
+    <h5>
+        <a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+    <div class="classify">
+<a title="全部主题" href="http://www.csdn.net/tag" target="_blank" onclick="LogClickCount(this,336);">全部主题</a>
+<a title="Hadoop" href="http://g.csdn.net/5272865" target="_blank" onclick="LogClickCount(this,336);">Hadoop</a>
+<a title="AWS" href="http://g.csdn.net/5272866" target="_blank" onclick="LogClickCount(this,336);">AWS</a>
+<a title="移动游戏" href="http://g.csdn.net/5272870" target="_blank" onclick="LogClickCount(this,336);">移动游戏</a>
+<a title="Java" href="http://g.csdn.net/5272871" target="_blank" onclick="LogClickCount(this,336);">Java</a>
+<a title="Android" href="http://g.csdn.net/5272872" target="_blank" onclick="LogClickCount(this,336);">Android</a>
+<a title="iOS" href="http://g.csdn.net/5272873" target="_blank" onclick="LogClickCount(this,336);">iOS</a>
+<a title="Swift" href="http://g.csdn.net/5272868" target="_blank" onclick="LogClickCount(this,336);">Swift</a>
+<a title="智能硬件" href="http://g.csdn.net/5272869" target="_blank" onclick="LogClickCount(this,336);">智能硬件</a>
+<a title="Docker" href="http://g.csdn.net/5272867" target="_blank" onclick="LogClickCount(this,336);">Docker</a>
+<a title="OpenStack" href="http://g.csdn.net/5272925" target="_blank" onclick="LogClickCount(this,336);">OpenStack</a>
+<a title="VPN" href="http://www.csdn.net/tag/vpn" target="_blank" onclick="LogClickCount(this,336);">VPN</a>
+<a title="Spark" href="http://g.csdn.net/5272924" target="_blank" onclick="LogClickCount(this,336);">Spark</a>
+<a title="ERP" href="http://www.csdn.net/tag/erp" target="_blank" onclick="LogClickCount(this,336);">ERP</a>
+<a title="IE10" href="http://www.csdn.net/tag/ie10" target="_blank" onclick="LogClickCount(this,336);">IE10</a>
+<a title="Eclipse" href="http://www.csdn.net/tag/eclipse" target="_blank" onclick="LogClickCount(this,336);">Eclipse</a>
+<a title="CRM" href="http://www.csdn.net/tag/crm" target="_blank" onclick="LogClickCount(this,336);">CRM</a>
+<a title="JavaScript" href="http://www.csdn.net/tag/javascript" target="_blank" onclick="LogClickCount(this,336);">JavaScript</a>
+<a title="数据库" href="http://www.csdn.net/tag/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" onclick="LogClickCount(this,336);">数据库</a>
+<a title="Ubuntu" href="http://www.csdn.net/tag/ubuntu" target="_blank" onclick="LogClickCount(this,336);">Ubuntu</a>
+<a title="NFC" href="http://www.csdn.net/tag/nfc" target="_blank" onclick="LogClickCount(this,336);">NFC</a>
+<a title="WAP" href="http://www.csdn.net/tag/wap" target="_blank" onclick="LogClickCount(this,336);">WAP</a>
+<a title="jQuery" href="http://www.csdn.net/tag/jquery" target="_blank" onclick="LogClickCount(this,336);">jQuery</a>
+<a title="BI" href="http://www.csdn.net/tag/bi" target="_blank" onclick="LogClickCount(this,336);">BI</a>
+<a title="HTML5" href="http://www.csdn.net/tag/html5" target="_blank" onclick="LogClickCount(this,336);">HTML5</a>
+<a title="Spring" href="http://www.csdn.net/tag/spring" target="_blank" onclick="LogClickCount(this,336);">Spring</a>
+<a title="Apache" href="http://www.csdn.net/tag/apache" target="_blank" onclick="LogClickCount(this,336);">Apache</a>
+<a title=".NET" href="http://www.csdn.net/tag/.net" target="_blank" onclick="LogClickCount(this,336);">.NET</a>
+<a title="API" href="http://www.csdn.net/tag/api" target="_blank" onclick="LogClickCount(this,336);">API</a>
+<a title="HTML" href="http://www.csdn.net/tag/html" target="_blank" onclick="LogClickCount(this,336);">HTML</a>
+<a title="SDK" href="http://www.csdn.net/tag/sdk" target="_blank" onclick="LogClickCount(this,336);">SDK</a>
+<a title="IIS" href="http://www.csdn.net/tag/iis" target="_blank" onclick="LogClickCount(this,336);">IIS</a>
+<a title="Fedora" href="http://www.csdn.net/tag/fedora" target="_blank" onclick="LogClickCount(this,336);">Fedora</a>
+<a title="XML" href="http://www.csdn.net/tag/xml" target="_blank" onclick="LogClickCount(this,336);">XML</a>
+<a title="LBS" href="http://www.csdn.net/tag/lbs" target="_blank" onclick="LogClickCount(this,336);">LBS</a>
+<a title="Unity" href="http://www.csdn.net/tag/unity" target="_blank" onclick="LogClickCount(this,336);">Unity</a>
+<a title="Splashtop" href="http://www.csdn.net/tag/splashtop" target="_blank" onclick="LogClickCount(this,336);">Splashtop</a>
+<a title="UML" href="http://www.csdn.net/tag/uml" target="_blank" onclick="LogClickCount(this,336);">UML</a>
+<a title="components" href="http://www.csdn.net/tag/components" target="_blank" onclick="LogClickCount(this,336);">components</a>
+<a title="Windows Mobile" href="http://www.csdn.net/tag/windowsmobile" target="_blank" onclick="LogClickCount(this,336);">Windows Mobile</a>
+<a title="Rails" href="http://www.csdn.net/tag/rails" target="_blank" onclick="LogClickCount(this,336);">Rails</a>
+<a title="QEMU" href="http://www.csdn.net/tag/qemu" target="_blank" onclick="LogClickCount(this,336);">QEMU</a>
+<a title="KDE" href="http://www.csdn.net/tag/kde" target="_blank" onclick="LogClickCount(this,336);">KDE</a>
+<a title="Cassandra" href="http://www.csdn.net/tag/cassandra" target="_blank" onclick="LogClickCount(this,336);">Cassandra</a>
+<a title="CloudStack" href="http://www.csdn.net/tag/cloudstack" target="_blank" onclick="LogClickCount(this,336);">CloudStack</a>
+<a title="FTC" href="http://www.csdn.net/tag/ftc" target="_blank" onclick="LogClickCount(this,336);">FTC</a>
+<a title="coremail" href="http://www.csdn.net/tag/coremail" target="_blank" onclick="LogClickCount(this,336);">coremail</a>
+<a title="OPhone " href="http://www.csdn.net/tag/ophone" target="_blank" onclick="LogClickCount(this,336);">OPhone </a>
+<a title="CouchBase" href="http://www.csdn.net/tag/couchbase" target="_blank" onclick="LogClickCount(this,336);">CouchBase</a>
+<a title="云计算" href="http://www.csdn.net/tag/%E4%BA%91%E8%AE%A1%E7%AE%97" target="_blank" onclick="LogClickCount(this,336);">云计算</a>
+<a title="iOS6" href="http://www.csdn.net/tag/iOS6" target="_blank" onclick="LogClickCount(this,336);">iOS6</a>
+<a title="Rackspace " href="http://www.csdn.net/tag/rackspace" target="_blank" onclick="LogClickCount(this,336);">Rackspace </a>
+<a title="Web App" href="http://www.csdn.net/tag/webapp" target="_blank" onclick="LogClickCount(this,336);">Web App</a>
+<a title="SpringSide" href="http://www.csdn.net/tag/springside" target="_blank" onclick="LogClickCount(this,336);">SpringSide</a>
+<a title="Maemo" href="http://www.csdn.net/tag/maemo" target="_blank" onclick="LogClickCount(this,336);">Maemo</a>
+<a title="Compuware" href="http://www.csdn.net/tag/compuware" target="_blank" onclick="LogClickCount(this,336);">Compuware</a>
+<a title="大数据" href="http://www.csdn.net/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE" target="_blank" onclick="LogClickCount(this,336);">大数据</a>
+<a title="aptech" href="http://www.csdn.net/tag/aptech" target="_blank" onclick="LogClickCount(this,336);">aptech</a>
+<a title="Perl" href="http://www.csdn.net/tag/perl" target="_blank" onclick="LogClickCount(this,336);">Perl</a>
+<a title="Tornado" href="http://www.csdn.net/tag/tornado" target="_blank" onclick="LogClickCount(this,336);">Tornado</a>
+<a title="Ruby" href="http://www.csdn.net/tag/ruby" target="_blank" onclick="LogClickCount(this,336);">Ruby</a>
+<a title="Hibernate" href="http://www.csdn.net/tag/hibernate" target="_blank" onclick="LogClickCount(this,336);">Hibernate</a>
+<a title="ThinkPHP" href="http://www.csdn.net/tag/thinkphp" target="_blank" onclick="LogClickCount(this,336);">ThinkPHP</a>
+<a title="HBase" href="http://www.csdn.net/tag/hbase" target="_blank" onclick="LogClickCount(this,336);">HBase</a>
+<a title="Pure" href="http://www.csdn.net/tag/pure" target="_blank" onclick="LogClickCount(this,336);">Pure</a>
+<a title="Solr" href="http://www.csdn.net/tag/solr" target="_blank" onclick="LogClickCount(this,336);">Solr</a>
+<a title="Angular" href="http://www.csdn.net/tag/angular" target="_blank" onclick="LogClickCount(this,336);">Angular</a>
+<a title="Cloud Foundry" href="http://www.csdn.net/tag/cloudfoundry" target="_blank" onclick="LogClickCount(this,336);">Cloud Foundry</a>
+<a title="Redis" href="http://www.csdn.net/tag/redis" target="_blank" onclick="LogClickCount(this,336);">Redis</a>
+<a title="Scala" href="http://www.csdn.net/tag/scala" target="_blank" onclick="LogClickCount(this,336);">Scala</a>
+<a title="Django" href="http://www.csdn.net/tag/django" target="_blank" onclick="LogClickCount(this,336);">Django</a>
+<a title="Bootstrap" href="http://www.csdn.net/tag/bootstrap" target="_blank" onclick="LogClickCount(this,336);">Bootstrap</a>
+    </div>
+
+</div>
+  <script language="javascript" type="text/javascript">     
+      $(function(){
+              setTimeout(function(){
+                  $.get("/feixiaku/svc/GetTagContent",function(data){
+                      $(".tag_list").html(data).show();
+                  });     
+              });
+          },500);                       
+ </script> 
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+</script>
+ <script language="javascript" type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/async_new.js.下载"></script>      
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/feixiaku" target="_blank">
+    <img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/1_feixiaku.jpg" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/feixiaku" class="user_name" target="_blank">feixiaku</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter" title="[发私信]" onclick="window.open(&#39;http://msg.csdn.net/letters/model?receiver=feixiaku&#39;,&#39;_blank&#39;,&#39;height=350,width=700&#39;);_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_sixin&#39;])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>297562次</span></li>
+    <li>积分：<span>3379</span> </li>    
+    <li>等级： <span style="position:relative;display:inline-block;z-index:1">
+            <img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/blog5.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：3379 </div>
+        </span>  </li>
+    <li>排名：<span>第8514名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>12篇</span></li>
+    <li>转载：<span>350篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>40条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字"></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog">
+        <input type="hidden" name="q" id="inputQ">
+        <input type="hidden" name="t" value="blog">
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1307079" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">C/C++</a><span>(46)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1307080" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">OpenCV</a><span>(11)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1307081" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">杂谈</a><span>(14)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1309833" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">ARM</a><span>(11)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1311166" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">DSP</a><span>(7)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1311167" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">FPGA</a><span>(18)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1329267" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">面试</a><span>(9)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1361259" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">H264</a><span>(48)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1363636" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">HEVC</a><span>(6)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1366730" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">读书感</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1372555" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Lunix</a><span>(46)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1372558" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">Android</a><span>(48)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1381103" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">MMX/SSE</a><span>(11)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1400401" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">ffmpeg</a><span>(23)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1402038" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">流媒体</a><span>(41)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1402485" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">JAVA</a><span>(40)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/1443961" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">图像处理</a><span>(8)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/2406521" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">操作系统</a><span>(4)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/5721335" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">linux</a><span>(7)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/feixiaku/article/category/5797981" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">vim配置</a><span>(2)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list"><li><a href="http://blog.csdn.net/feixiaku/article/month/2016/06">2016年06月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2016/04">2016年04月</a><span>(8)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2016/03">2016年03月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2016/02">2016年02月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2015/12">2015年12月</a><span>(4)</span></li><span class="hidelist" style="display:none;"><li><a href="http://blog.csdn.net/feixiaku/article/month/2015/09">2015年09月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2015/08">2015年08月</a><span>(8)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2015/06">2015年06月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2015/05">2015年05月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2015/04">2015年04月</a><span>(20)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2015/03">2015年03月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2015/02">2015年02月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/12">2014年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/11">2014年11月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/10">2014年10月</a><span>(6)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/09">2014年09月</a><span>(44)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/08">2014年08月</a><span>(35)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/07">2014年07月</a><span>(20)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/04">2014年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/03">2014年03月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/02">2014年02月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2014/01">2014年01月</a><span>(9)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2013/12">2013年12月</a><span>(11)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2013/10">2013年10月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2013/08">2013年08月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2013/07">2013年07月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2013/06">2013年06月</a><span>(6)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2013/05">2013年05月</a><span>(11)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2013/04">2013年04月</a><span>(72)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2013/03">2013年03月</a><span>(43)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2013/01">2013年01月</a><span>(13)</span></li><li><a href="http://blog.csdn.net/feixiaku/article/month/2012/12">2012年12月</a><span>(13)</span></li></span><div id="archive_list_button" class="list_closed">展开</div></div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/45155587" title="Android studio 导入github工程">Android studio 导入github工程</a><span>(37946)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/12885657" title="我精心整理的一些大牌男装正品店">我精心整理的一些大牌男装正品店</a><span>(12915)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/9362251" title="深入剖析mean shift 图像分割 原理及代码">深入剖析mean shift 图像分割 原理及代码</a><span>(9522)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/9076155" title="OpenCV移植到DSP上">OpenCV移植到DSP上</a><span>(9168)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/40746435" title="【M3U8】测试地址及android播放器">【M3U8】测试地址及android播放器</a><span>(7533)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/22506449" title="几个开源的视频编解码器介绍">几个开源的视频编解码器介绍</a><span>(6724)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/43638699" title="VLC播放基于HLS协议m3u8文件的几个问题">VLC播放基于HLS协议m3u8文件的几个问题</a><span>(6717)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/8627811" title="多核DSP C6678 SRIO借口调试笔记">多核DSP C6678 SRIO借口调试笔记</a><span>(6138)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/37943007" title="如何写一个最简单的操作系统">如何写一个最简单的操作系统</a><span>(5224)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/19766615" title="高斯平滑滤波器">高斯平滑滤波器</a><span>(4366)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/9362251" title="深入剖析mean shift 图像分割 原理及代码">深入剖析mean shift 图像分割 原理及代码</a><span>(6)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/45155587" title="Android studio 导入github工程">Android studio 导入github工程</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/8627811" title="多核DSP C6678 SRIO借口调试笔记">多核DSP C6678 SRIO借口调试笔记</a><span>(4)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/18278197" title="如何使用cygwin编译 ffmpeg">如何使用cygwin编译 ffmpeg</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/8627814" title="关于多核DSP C6678共享存储器问题的理解">关于多核DSP C6678共享存储器问题的理解</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/39077197" title="自己动手写RTP服务器——用RTP协议传输TS流">自己动手写RTP服务器——用RTP协议传输TS流</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/17886779" title="HEVC 参考帧管理（RPS）">HEVC 参考帧管理（RPS）</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/8647036" title="32个学习FPGA的热门网站">32个学习FPGA的热门网站</a><span>(2)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/8833766" title="x264的PSNR是如何计算出来的">x264的PSNR是如何计算出来的</a><span>(1)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/feixiaku/article/details/9042703" title="计算机本科/硕士找offer的总结">计算机本科/硕士找offer的总结</a><span>(1)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/poem_qianmo/article/details/69849858" target="_blank">* 【《Real-Time Rendering 3rd》 提炼总结】(一) 全书知识点总览</a></li>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/69936363" target="_blank">* CSDN日报20170409 ——《扯蛋的密码规则》</a></li>
+<li><a href="http://blog.csdn.net/ynnmnm/article/details/69791337" target="_blank">* Shader2D: 一些2D效果的Shader实现</a></li>
+<li><a href="http://blog.csdn.net/zuoxiaolong8810/article/details/69736864" target="_blank">* 一个屌丝程序猿的人生（六十一）</a></li>
+<li><a href="http://blog.csdn.net/harvic880925/article/details/69787359" target="_blank">* 自定义控件三部曲视图篇（三）——瀑布流容器WaterFallLayout实现</a></li>
+<li><a href="http://blog.csdn.net/javawebrookie/article/details/61419785" target="_blank">* 面向服务的体系架构（SOA）—架构篇</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="http://blog.csdn.net/feixiaku/article/details/18278197#comments">如何使用cygwin编译 ffmpeg</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/health7788" class="user_name">health7788</a>:
+不是说用cygwin么，怎么变成了mingw
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/cordova/article/details/53955195#comments">2017网易游戏研发工程师春招面试</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/feixiaku" class="user_name">feixiaku</a>:
+长链接和短链接的优劣是什么？
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/feixiaku/article/details/9362251#comments">深入剖析mean shift 图像分割 原理及代码</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/haha____" class="user_name">haha____</a>:
+辛苦了，请问有没有meanshift的matlab代码呢？
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/feixiaku/article/details/9362251#comments">深入剖析mean shift 图像分割 原理及代码</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/haha____" class="user_name">haha____</a>:
+你好，请问有没有meanshift的matlab代码呢？
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/feixiaku/article/details/8627814#comments">关于多核DSP C6678共享存储器问题的理解</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/Jiangguannan" class="user_name">Jiangguannan</a>:
+我想问一下楼主，DDR3默认配置也是L2吗？总体结构就是MSMC，DDR3默认配置为L2？
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/feixiaku/article/details/9431461#comments">Camshift算法原理(opencv源码剖析)(上)</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/WangQiang319670" class="user_name">WangQiang319670</a>:
+请问你是在哪个版本的OpenCV下做的，Prosac.h:232: error: 'cvStackA...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/feixiaku/article/details/45136525#comments">Android学习之教你五步搞定Sensor，让程序更酷</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/javanetjapengbs" class="user_name">javanetjapengbs</a>:
+简单明了
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/feixiaku/article/details/45136525#comments">关于多核DSP C6678共享存储器问题的理解</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/u013652348" class="user_name">电梯俩1TB</a>:
+MSMC怎么配成L3呢？
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/feixiaku/article/details/45155587#comments">Android studio 导入github工程</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/winnerWangDoIt" class="user_name">winnerWangDoIt</a>:
+第一个方法管用，赞。第二种方法把前面四步做完了就可以直接file-&gt;new-&gt;import Modu...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/feixiaku/article/details/8627804#comments">多核DSP C6678下CCS5.2 环境下分析L1P,L1D,L2 cache的方法</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/gonghuiyun19910610" class="user_name">小芸小小芸</a>:
+请问L2分析是在哪呢？在profile中没有找到呢？
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+
+                   <!-- 广告位开始 --> 
+                    <div class="J_adv" data-view="true" data-mod="ad_popu_190" data-mtp="63" data-order="40" data-con="ad_content_1260" style="width: 200px; height: 200px;"><div id="nav_show_top_stop" style="width: 200px; height: 200px; z-index: 1000; position: fixed; top: 3054px;"><div id="cpro_u2734128"><iframe id="iframeu2734128_0" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/zczm(2).html" width="200" height="200" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:200px;height:200px" allowtransparency="true"></iframe></div></div><script> var naviga_offsetTop = 0; function naviga_stay_top(){ var scrollTop = jQuery(document).scrollTop(); if( scrollTop > naviga_offsetTop ){jQuery('#nav_show_top_stop').css({'position': 'fixed'});jQuery('#nav_show_top_stop').css({'top': '0px'}); } else {jQuery('#nav_show_top_stop').css({'position': 'fixed'});jQuery('#nav_show_top_stop').css({'top': naviga_offsetTop - scrollTop + 'px'}); } }function onload_function(){naviga_offsetTop = jQuery('#nav_show_top_stop').position().top; jQuery(window).bind('scroll', naviga_stay_top); jQuery(window).bind('mousewheel',naviga_stay_top); jQuery(document).bind('scroll', naviga_stay_top); jQuery(document).bind('mousewheel',naviga_stay_top); }jQuery(document).ready( onload_function ); </script><script type="text/javascript">    (window.cproArray = window.cproArray || []).push({        id: 'u2734128'      });  </script>  <script src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/c.js.下载" type="text/javascript"></script></div> 
+                    <!-- 广告位结束 -->
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/cnick.js.下载"></script>
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/newblog.min.js.下载"></script>
+
+
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/showblogmedal.ashx"></script>
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/JavaScript1.js.下载"></script><link rel="stylesheet" type="text/css" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/pub_footer_2014.css"><div class="pub_fo"><div id="pub_footerall" class="pub_footer_new"><dl><dt></dt> <dd class="foot_sub_menu"><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a><span>|</span><a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a><span>|</span><a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a><span>|</span><a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a><span>|</span><a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a><span>|</span><a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a><span>|</span><a href="mailto:webmaster@csdn.net">问题报告</a><span>|</span><a target="_blank" href="http://www.csdn.net/friendlink.html">合作伙伴</a><span>|</span><a href="http://bbs.csdn.net/forums/Service" target="_blank">论坛反馈</a></dd><dd class="foot_contact"><a href="javascript:void(0);" target="_blank" class="qq">网站客服</a><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2251809102&amp;site=qq&amp;menu=yes" target="_blank" class="qq">杂志客服</a><a href="http://e.weibo.com/csdnsupport/profile" target="_blank" class="weibo">微博客服</a><a href="mailto:webmaster@csdn.net" class="email" title="联系邮箱">webmaster@csdn.net</a><span class="phone" title="服务热线">400-600-2320</span><span class="interval">|</span><span>北京创新乐知信息技术有限公司 版权所有</span><span class="interval">|</span><span>江苏知之为计算机有限公司</span><span class="interval">|</span><span>江苏乐知网络技术有限公司</span></dd><dd class="foot_copyright"><span>京&nbsp;ICP&nbsp;证&nbsp;09002463&nbsp;号</span><span class="interval">|</span><span>Copyright © 1999-2016, CSDN.NET, All Rights Reserved&nbsp;</span><a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div></div><div id="note1" class="csdn_note" style="display:none; position:absolute; z-index:9999; width:440px">  <span class="notice_top_arrow"><span class="inner"></span></span>  <div class="box"></div></div><div class="csdn_notice_tip" style="display:none; position:absolute; z-index:9990; width:170px">  <iframe src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/saved_resource(2).html" frameborder="0" scrolling="no" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe>  <div class="tip_text">您有<strong>0</strong>条新通知</div>  <a href="javascript:void 0" class="close2"></a></div><script id="noticeScript" type="text/javascript" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/notify.js.下载"></script>
+
+    <script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/login.js.下载"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script><img src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/pv.aspx" border="0" width="0" height="0">
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/counter.js.下载"></script><script type="text/javascript" charset="UTF-8" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/msg.popup.js.下载"></script>
+<script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/ad-blog.js.下载"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div><input type="hidden" id="aa_g_data_ids">
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/toolbar.js.下载"></script>
+     <!--new top-->
+   
+    <link href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/ask_float_block.css" type="text/css" rel="stylesheet">
+    <script language="JavaScript" type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/wmd.js.下载"></script>
+    <script language="JavaScript" type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/showdown.js.下载"></script>
+    <script language="JavaScript" type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/prettify.js(1).下载"></script>
+    <script language="JavaScript" type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/ask_float_block.js.下载"></script>
+   
+
+   
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/52b5334.js.下载"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    <link rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/blog_code.css">
+    <script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/saveToCode.js.下载"></script>
+      <script type="text/javascript" src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/main.js(1).下载"></script>
+
+     <link rel="stylesheet" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/fa.css">
+
+    <div class="pop_CA_cover" style="display:none"></div>
+    <div class="pop pop_CA" style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon" id="fapancle" onclick="$(&#39;.pop_CA&#39;).hide();$(&#39;.pop_CA_cover&#39;).hide();"></span>
+          </div>
+          <iframe src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/saved_resource(3).html" id="fa" frameborder="0" width="100%" height="360" scrolling="no">
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;   
+ </iframe></div><div id="tag-suggest-pop">
+  <div class="relative">
+    <div class="close"></div>
+    <div class="content"></div>
+  </div>
+</div><link rel="stylesheet" type="text/css" media="screen" href="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/ask_float_fonts_css-6b30a53970eb5c3a2a045e3df585b475.css"><div data-mod="popu_64" class="csdn-tracking-statistics" chg-blk="0"><a id="com-quick-reply" title="快速回复" style="top:469px"></a><a id="com-quick-collect" title="我要收藏" style="top:507px"></a><a id="com-d-top-a" style="top: 545px; display: none;" title="返回顶部" onclick=""></a> </div><div class="pop_edit ask_second comm_ask_second"><h3>提问</h3><span class="ask_float_span">您的问题将会被发布在“<a class="ask_float_channel" href="http://ask.csdn.net/" target="_blank" style="cursor:pointer">技术问答</a>”频道</span><a href="http://blog.csdn.net/feixiaku/article/details/45136525#" nodetype="close" class="close">×</a><div class="context"><div class="err_div"><span class="err_ico"></span><span class="err_txt">该问题已存在，请勿重复提问</span></div><div class="input_div"><input id="askInputSecond" type="text" style="font-size:14px;" placeholder="问题标题"></div><div class="cm_box"><div class="cm_dialog"></div> <div class="pop_cm cm_add_link"><input type="text" placeholder="链接内容" id="af_cm_link_txt"><input type="text" placeholder="链接地址" id="af_cm_link_url"><input type="text" placeholder="链接提示" id="af_cm_link_tit"><div class="text-right"><span class="btn btn-default btn-sm" id="add_link_btn">插入链接</span> </div> </div><div class="pop_cm cm_add_img"><div class="nav-tabs"><a class="img_tab active" href="http://blog.csdn.net/feixiaku/article/details/45136525#tab_upload">本地上传</a><a class="img_tab" href="http://blog.csdn.net/feixiaku/article/details/45136525#tab_weburl">网络图片</a></div><div class="tab_panel active" id="tab_upload"><div class="set_img"><iframe src="./Android学习之教你五步搞定Sensor，让程序更酷 - feixiaku的专栏 - 博客频道 - CSDN.NET_files/upload.html"></iframe></div></div><div class="tab_panel" id="tab_weburl"><input type="text" placeholder="图片地址" id="af_cm_img_url"><input type="text" placeholder="图片说明" id="af_cm_img_alt"><div class="text-right"><span class="btn btn-default btn-sm" id="add_img_btn">插入图片</span> </div></div> </div></div> <textarea id="editor_all" rows="8" style="display: none;"></textarea><div class="editor-toolbar"><i class="separator">|</i><a class="icon-headline" title="标题一（Ctrl+Alt+1）"></a><a class="icon-heading" title="标题二（Ctrl+Alt+2）"></a><a class="icon-bold" title="粗体（Ctrl+B）"></a><a class="icon-italic" title="斜体（Ctrl+I）"></a><i class="separator">|</i><a class="icon-quote-left" title="引用（Ctrl+’）"></a><a class="icon-code" title="插入代码片（Ctrl+,）"></a><a class="icon-list-ul" title="无序列表（Ctrl+L）"></a><a class="icon-list-ol" title="有序列表（Ctrl+Alt+L）"></a><i class="separator">|</i><a class="icon-link" title="添加链接（Ctrl+K）"></a><a class="icon-picture" title="添加图片（Ctrl+Alt+I）"></a><i class="separator">|</i><a class="icon-reply" title="撤退（Ctrl+Z）"></a><a class="icon-share-alt" title="前进（Ctrl+Shift+Z）"></a><i class="separator">|</i><a class="icon-info" href="http://ask.csdn.net/pages/markdown" target="_blank" title="markdown语法参考"></a><a class="icon-preview" title="预览"></a><i class="separator">|</i></div><div class="CodeMirror cm-s-paper CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none; font-size: 4px;" tabindex="0"></textarea></div><div class="CodeMirror-hscrollbar"><div style="height: 1px;"></div></div><div class="CodeMirror-vscrollbar"><div style="width: 1px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-gutter-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="min-width: 33px;"><div style="position: relative;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre>&nbsp;<span style="display: inline-block; width: 1px; margin-right: -1px;">&nbsp;</span></pre></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"></div><div class="CodeMirror-cursor" style="visibility: hidden;">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor" style="visibility: hidden;">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px;"></div><div class="CodeMirror-gutters" style="display: none;"></div></div></div><div class="editor-statusbar"><span class="lines">0</span><span class="words">0</span><span class="cursor">0:0</span></div><div class="div_tags clearfix"><div id="divSearchTags" class="tags_con"><input type="text"></div><input type="hidden" name="txtSearchTags"></div><div id="ask2_tagRecomm_div" class="drt_tagRecomm tracking-ad" data-mod="popu_73"><span class="drt_tit">推荐标签：</span></div></div><div class="success"><div class="left_area"><input id="chk_cb" type="checkbox"><span class="wyxs">我要悬赏</span><input id="cb_num" class="cb_num" readonly="true"><span class="phib_rii"><span> 币</span></span></div><a href="http://blog.csdn.net/feixiaku/article/details/45136525#" nodetype="cancel" class="cancel">取消</a><a href="http://blog.csdn.net/feixiaku/article/details/45136525#" nodetype="ok" class="ok">发布</a></div></div><div id="common_ask_div_sc" class="searchContainer"><div class="sTitle">可能存在类似的问题：</div><div class="sFooter"><a class="sFirstNewAsk">我想提一个新问题</a></div></div><div id="mask_code"></div><div class="gist_edit"><div class="save_snippets clearfix"><div class="tit"><h3>保存代码片</h3><span>整理和分享保存的代码片，请访问<a href="https://code.csdn.net/snippets_manage" target="_blank">代码笔记</a></span></div><div class="con_form"><ul class="gist_edit_list clearfix"><li><span class="red">*</span><span class="txt">标题</span><input id="form_title" class="form-input" placeholder="Android学习之教你五步搞定Sensor，让程序更酷" type="text"></li><li><span class="red">*</span><span class="txt">描述</span><textarea id="form-textarea" class="form-textarea" placeholder="Android学习之教你五步搞定Sensor，让程序更酷： http://blog.csdn.net/feixiaku/article/details/45136525"></textarea></li><li><span class="red">&nbsp;</span><span class="txt">标签</span><div id="divSearchTags"><input id="insertTag" class="insertTag" placeholder="请输入标签，按Enter生成(最多5项)" type="text" value="" name="insertTag" maxlength="21" style="color: rgb(51, 51, 51);"><input id="OrganTag" class="OrganTag" type="hidden" name="OrganTag" value=""><input id="OldOrganTag" class="OldOrganTag" type="hidden" name="OldOrganTag" value=""><input type="hidden" name="txtSearchTags"></div></li></ul></div><div class="bottom-bar"><a href="javascript:;" class="btn-submit btn-cancel">取消</a><span class="tracking-ad" data-mod="popu_250"><a class="btn-submit btn-confirm" href="javascript:;" target="_blank">确定</a></span></div></div></div></body></html>

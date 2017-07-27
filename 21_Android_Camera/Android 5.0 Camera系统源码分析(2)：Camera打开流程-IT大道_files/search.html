@@ -1,0 +1,58 @@
+
+<!-- saved from url=(0253)http://ads-union.jd.com/search?type=search&pt=5&unionId=17794&siteId=455203265&mid=0&w=300&h=0&euid=&cuid=&pid=464513571&pvt=4&pv=abd0bce2ae2641618a60da4d7229e9fc&cUnionId=&extColumns=z_0&hashot=true&hasLogo=true&hotwords=&charSet=UTF-8&windowSize=300,0 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>京东购物搜索推广</title>
+<style type="text/css">
+input:focus {
+	outline: none;
+}
+</style>
+<link media="all" href="./base.css" type="text/css" rel="stylesheet">
+<script type="text/javascript">
+	var clickUrl = "//union-click.jd.com/jdc?type=union&p=BxUCURtZEQQSN1ErWiUDIkMKQwVKWVA3DF4eVAkMGRNdHQpZRxgHRQclUkFSVEgJQQFCU1YcXhUFEg4FHFpAUhdSUxhYHVYaUAcrBFFfTzdVHV0dByI3NGlrXmwT&t=W1dCFBBFC0RUQUpADgpQTFs=&e=&tu=#targetUrl";
+	function search(key) {
+		var keyUrl = 'http://search.jd.com/Search?keyword=' + key
+				+ '&enc=utf-8';
+		keyUrl = clickUrl.replace("#targetUrl", encodeURIComponent(keyUrl));
+		window.open(keyUrl);
+	}
+</script>
+<script src="./jquery-1.2.6.pack.js.下载" type="text/javascript"></script>
+</head>
+<body>
+	<div style="min-width: 300px;">
+				<div style="float: left; width: 131px;">
+			<img src="./search-logo.png">
+		</div>
+				<div>
+			<div style="overflow: hidden; zoom: 1; padding-top: 10px;">
+				<div style="z-index: 11; height: 30px; margin-bottom: 3px; border: 3px solid #E4393C">
+					<div style="height: 30px; overflow: hidden">
+						<div style="width: 78px; float: right;">
+							<input type="button" value="搜索" onclick="search(document.getElementById(&#39;key&#39;).value);" style="width: 100%; margin: 0; padding: 0; height: 30px; border: 0; width: 78px; background: #E4393C; font-size: 14px; font-weight: 700; color: #fff; cursor: pointer;">
+						</div>
+						<div style="overflow: hidden; zoom: 1; height: 30px;">
+							&nbsp; <input type="text" value="校园之星" autocomplete="off" onkeydown="javascript:if(event.keyCode==13) search(this.value);" accesskey="s" id="key" style="display:inline-block; margin: 0; height: 30px;padding:0 2px; line-height:30px; border: 0; width: 90%; background-position: 0 -360px; background-color: #fff; background-repeat: repeat-x; color: #999; font-family: arial, &#39;\5b8b\4f53&#39;; font-size: 14px;">&nbsp;
+						</div>
+					</div>
+				</div>
+								<div style="height: 15px; color: #999; overflow: hidden; font-size: 12px;" id="hotwords">
+												<script type="text/javascript" src="./get"></script>
+						<script>
+						setTimeout(function(){
+							$($("#hotwords").find('a')).each(function(i,e){
+								e=$(e);
+								e.bind("click",function(){search(e.text());});
+								e.attr("href","javascript:void(0)");
+								e.attr("target","");
+								//alert(e.attr("onclick"));
+							});
+						},2000);
+						</script>
+										</div>
+							</div>
+		</div>
+	</div>
+
+</body></html>

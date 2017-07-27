@@ -1,0 +1,1107 @@
+/*公 url('http://ww3.sinaimg.cn/large/8942f980gw1eo75tmozysj211y0lcti2.jpg')用*/
+body {
+    font-size:15px;
+    padding:0;
+    margin:0;
+    font-family:"微软雅黑","宋体",Arial;
+    background:#205424 no-repeat top center fixed;
+    background-size:100% 100%;
+    min-width:1200px;
+}
+#home {
+    opacity: 0.95;
+    filter: alpha(opacity=95);
+    box-shadow:0 0 10px #000;
+    margin:40px auto;
+    width:1200px;
+    background:#fff;
+    overflow:auto;
+    border:solid 1px #fff;
+}
+/*段落*/
+.postBody p,.postCon p {
+    margin:7px 0;
+    line-height:24px;
+}
+h1 {
+    margin:0;
+}
+h3 {
+    font-size:15px;
+    font-weight:bold;
+}
+/*超链接*/
+a {
+    color:#464646;
+    text-decoration:none;
+}
+a:hover {
+    text-decoration:underline;
+}
+a:visited,a:hover {
+    color:#464646;
+}
+ul {
+    list-style:none;
+    margin:0;
+    padding:0;
+}
+image {
+    border:none;
+}
+#header {
+    padding:20px;
+}
+/*博客标题*/
+#blogTitle,#blogTitle a {
+    font-weight:bold;
+    color:#666;
+}
+#blogTitle .title {
+    margin-top:10px;
+    height:100px;
+    line-height:100px;
+    font-size:36px;
+    padding-left:120px;
+    background:#fff url('http://images.cnblogs.com/cnblogs_com/libaoheng/305804/o_light2.png') no-repeat;
+}
+.headermaintitle {
+    }#blogTitle,#blogTitle a:hover {
+    text-decoration:none;
+}
+/*子标题*/
+.subtitle {
+    padding-left:30px;
+    font-size:14px;
+    color:#999;
+    font-weight:normal;
+    margin:10px 0;
+}
+/*导航栏*/
+#navigator {
+    font-size:16px;
+    height:48px;
+    background:#55895B;
+    text-align:center;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+#navList li {
+    margin:0;
+    line-height:48px;
+    display:inline-block;
+    float:left;
+}
+#navList li:hover {
+    background:#6DA47D;
+}
+#navList li a {
+    padding:0 30px;
+    text-decoration:none;
+    line-height:48px;
+    border:0;
+    color:#fff;
+    display:-moz-inline-box;
+    display:inline-block;
+}
+.blogStats {
+    height:48px;
+    color:#fff;
+    line-height:48px;
+}
+#main {
+    padding:20px;
+}
+/*左边*/
+#sideBarMain {
+    padding:0 10px 0 0;
+    background:#fff;
+    margin:0 0 20px 0;
+    width:190px;
+    font-size:12px;
+    line-height:22px;
+}
+#sideBarMain a {
+    color:#666;
+}
+#leftcontentcontainer {
+    color:#666;
+}
+.newsItem {
+    color:#666;
+}
+/*公告*/
+#profile_block {
+    margin-top:0px;
+    line-height:24px;
+    text-align:left;
+}
+/*主面板*/
+#mainContent {
+    margin-top:0px;
+    padding-top:0px;
+    padding-right:0px;
+    background:#fff;
+    padding-bottom:0px;
+    float:right;
+    width:960px;
+    padding-left:0px;
+}
+/*每日文章列表*/
+.day {
+    background:#fff;
+    padding:0;
+    margin:0 0 20px 0;
+}
+/*博客标题*/
+.postTitle a {
+    color:#464646;
+}
+.postTitle {
+    padding-bottom:10px;
+    font-size:20px;
+    font-weight:bold;
+    color:#464646;
+    background:url('http://images.cnblogs.com/cnblogs_com/libaoheng/305804/o_br229512.link(en-us,MSDN.10).gif') no-repeat 0 3px;
+    padding-left:30px;
+}
+.dayTitle {
+    display:none;
+}
+/*摘要*/
+.c_b_p_desc {
+    padding:10px;
+    line-height:24px;
+    color:#888;
+}
+.c_b_p_desc a {
+    color:#888;
+}
+.c_b_p_desc a:hover {
+    text-decoration:none;
+    border-bottom-width:1px;
+    border-bottom-style:dotted;
+}
+/*右侧图片*/
+.desc_img {
+    margin-left:10px;
+    border:solid 1px #fff;
+    box-shadow:0 0 10px #aaa;
+}
+/*博文页*/
+#topics .post {
+    background:#fff;
+}
+.postCon {
+    padding:10px 20px 0 20px;
+}
+.postDesc {
+    margin:0 30px;
+    margin-bottom:2px;
+    padding:8px 0px;
+    font-size:12px;
+    color:#aaa;
+    background:#fff;
+    text-align:right;
+}
+.postDesc a {
+    color:#AAA;
+}
+.postBody {
+    padding:0;
+}
+/*google搜索框*/
+#google_q,#q {
+    height:22px;
+    width:120px;
+    border:solid 1px #ccc;
+    box-shadow:inset 0 0 3px #ddd;
+    border-radius:4px;
+}
+/*搜索按钮*/
+.btn_my_zzk {
+    font-family:'Microsoft Yahei';
+    border:none;
+    height:26px;
+    width:60px;
+    padding:1px;
+    font-size:14px;
+    cursor:pointer;
+    position:relative;
+    vertical-align:middle;
+    display:inline-block;
+    background:#55895B;
+    border-radius:4px;
+    color:#fff;
+}
+.btn_my_zzk:hover {
+    background:#6DA47D;
+}
+/*评论按钮*/
+
+#btn_comment_submit {
+    border:none;
+    height:48px;
+    width:120px;
+}
+/*评论按钮*/
+.comment_btn {
+    font-family:'Microsoft Yahei';
+    border:none;
+    height:48px;
+    width:120px;
+    font-size:18px;
+    cursor:pointer;
+    position:relative;
+    vertical-align:middle;
+    display:inline-block;
+    background:#55895B;
+    color:#fff;
+}
+#btn_comment_submit:hover {
+    background:#6DA47D;
+}
+/*评论标题*/
+.feedback_area_title {
+    padding:10px;
+    font-size:24px;
+    font-weight:bold;
+    color:#55895B;
+    border-bottom:solid 6px #55895B;
+}
+.feedbackListSubtitle {
+    font-size:12px;
+    color:#888;
+}
+.feedbackListSubtitle a {
+    color:#888;
+}
+.comment_quote {
+    background:#FCFAAC;
+    padding:15px;
+    border:1px solid #CCC;
+}
+#commentform_title {
+    color:#55895B;
+    background-image:none;
+    background-repeat:no-repeat;
+    margin-bottom:10px;
+    padding:10px 20px 10px 10px;
+    font-size:24px;
+    font-weight:bold;
+    border-bottom:solid 6px #55895B;
+}
+/*评论框*/
+#comment_form {
+    margin:10px 0;
+    padding:0;
+}
+.commentform {
+    margin:10px 0;
+    padding:10px 20px;
+    background:#fff;
+}
+/*评论输入域*/
+#tbCommentBody {
+    font-family:'MIcrosoft Yahei';
+    margin-top:10px;
+    width:940px;
+    max-width:940px;
+    min-width:940px;
+    background:white;
+    color:#333;
+    border:2px solid #fff;
+    box-shadow:inset 0 0 8px #aaa;
+    padding:10px;
+    height:120px;
+    font-size:14px;
+    min-height:120px;
+}
+/*评论条目*/
+.feedbackItem {
+    font-size:14px;
+    line-height:24px;
+    margin:10px 0;
+    padding:20px;
+    background:#F2F2F2;
+    box-shadow:0 0 5px #aaa;
+}
+.feedbackListSubtitle {
+    font-weight:normal;
+}
+/*分类页*/
+.entrylist {
+    padding:10px 20px;
+    background:#fff;
+}
+.entrylistItem {
+    margin:10px 0;
+    padding:10px;
+}
+.entrylistPosttitle {
+    font-size:18px;
+    font-weight:bold;
+    background:url('http://images.cnblogs.com/cnblogs_com/libaoheng/305804/o_br229512.link(en-us,MSDN.10).gif') no-repeat 0 3px;
+    padding-left:30px;
+}
+.entrylistPostSummary {
+    padding:10px;
+}
+.entrylistItemPostDesc {
+    font-size:12px;
+    color:#999;
+    padding-left:40px;
+}
+/*尾部*/
+#footer {
+    font-size:12px;
+    margin:20px;
+    padding:12px;
+    text-align:center;
+    background:#55895B;
+    color:#DDD;
+    font-size:14px;
+}
+/*文章内图片*/
+#cnblogs_post_body p img {
+    margin:10px;
+}
+/*顶一下*/
+.diggnum {
+    font-size:28px;
+    color:#6DA47D;
+    font-family:'Microsoft Yahei';
+}
+#div_digg .diggnum {
+    line-height:100px;
+}
+.diggit {
+    float:left;
+    width:128px;
+    height:128px;
+    background:url('http://images.cnblogs.com/cnblogs_com/libaoheng/305804/o_dig.gif') no-repeat;
+    background-position:0 0;
+    text-align:center;
+    cursor:pointer;
+}
+.diggit:hover {
+    background-position:-128px 0;
+}
+/*green_channel*/
+#green_channel {
+    text:align:right;
+    background:#6DA47D;
+    padding-left:20px;
+    font-weight:normal;
+    font-size:15px;
+    width:920px;
+    border:none;
+    color:#fff;
+    padding:20px;
+    border-radius:4px;
+}
+/*最新评论*/
+#myposts .PostList {
+    font-size:14px;
+    line-height:24px;
+    margin:10px 0;
+    padding:20px;
+    background:#F2F2F2;
+    box-shadow:0 0 5px #aaa;
+}
+#myposts .postTitl2 a {
+    color:#6DA47D;
+}
+ /* advertise */
+ #site_nav_under,#ad_under_post_holder,#under_post_news,#google_ad_c2,#under_post_kb{
+     width:0;
+     height:0;
+     display:none;
+     overflow:hidden;
+ }
+#backtop a { /* back to top button */
+	position: fixed;
+	bottom: 0px; /* 小按钮到浏览器底边的距离 */
+	right: 50px; /* 小按钮到浏览器右边框的距离 */
+	color: #333; /* 小按钮中文字的颜色 */
+	z-index: 1000;
+	background: #cfcfcf; /* 小按钮底色 */
+	padding: 10px; /* 小按钮中文字到按钮边缘的距离 */
+	border-radius: 4px; /* 小按钮圆角的弯曲程度（半径）*/
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	font-weight: normal; /* 小按钮中文字的粗细 */
+	text-decoration: none !important;
+}
+
+backtop a:hover { /* 小按钮上有鼠标悬停时 */
+	background: #333; /* 小按钮的底色 */
+	color: #fff; /* 文字颜色 */
+}
+@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
+#cnblogs_post_body {
+  margin: 20px 0;
+}
+
+.cnblogs-markdown {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  color: #333;
+  overflow: hidden;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.cnblogs-markdown a {
+  background: transparent;
+}
+
+.cnblogs-markdown a:active,
+.cnblogs-markdown a:hover {
+  outline: 0;
+}
+
+.cnblogs-markdown strong {
+  font-weight: bold;
+}
+
+.cnblogs-markdown h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.cnblogs-markdown img {
+  border: 0;
+}
+
+.cnblogs-markdown hr {
+  box-sizing: content-box;
+  height: 0;
+}
+
+.cnblogs-markdown pre {
+  overflow: auto;
+}
+
+.cnblogs-markdown code,
+.cnblogs-markdown kbd,
+.cnblogs-markdown pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.cnblogs-markdown input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.cnblogs-markdown html input[disabled] {
+  cursor: default;
+}
+
+.cnblogs-markdown input {
+  line-height: normal;
+}
+
+.cnblogs-markdown input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.cnblogs-markdown table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.cnblogs-markdown td,
+.cnblogs-markdown th {
+  padding: 0;
+}
+
+.cnblogs-markdown * {
+  box-sizing: border-box;
+}
+
+.cnblogs-markdown input {
+  font: 13px/1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.cnblogs-markdown a {
+  color: #4183c4;
+  text-decoration: none;
+}
+
+.cnblogs-markdown a:hover,
+.cnblogs-markdown a:active {
+  text-decoration: underline;
+}
+
+.cnblogs-markdown hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.cnblogs-markdown hr:before {
+  display: table;
+  content: "";
+}
+
+.cnblogs-markdown hr:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.cnblogs-markdown h1,
+.cnblogs-markdown h2,
+.cnblogs-markdown h3,
+.cnblogs-markdown h4,
+.cnblogs-markdown h5,
+.cnblogs-markdown h6 {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  line-height: 1.1;
+}
+
+.cnblogs-markdown blockquote {
+  margin: 0;
+}
+
+.cnblogs-markdown ul,
+.cnblogs-markdown ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.cnblogs-markdown ol ol,
+.cnblogs-markdown ul ol {
+  list-style-type: lower-roman;
+}
+
+.cnblogs-markdown ul ul ol,
+.cnblogs-markdown ul ol ol,
+.cnblogs-markdown ol ul ol,
+.cnblogs-markdown ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.cnblogs-markdown dd {
+  margin-left: 0;
+}
+
+.cnblogs-markdown code {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.cnblogs-markdown pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.cnblogs-markdown .octicon {
+  font: normal normal normal 16px/1 octicons-anchor;
+  display: inline-block;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.cnblogs-markdown .octicon-link:before {
+  content: '\f05c';
+}
+
+.cnblogs-markdown>*:first-child {
+  margin-top: 0 !important;
+}
+
+.cnblogs-markdown>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.cnblogs-markdown a:not(:link):not(:visited) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cnblogs-markdown .anchor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  padding-right: 6px;
+  padding-left: 30px;
+  margin-left: -30px;
+}
+
+.cnblogs-markdown .anchor:focus {
+  outline: none;
+}
+
+.cnblogs-markdown h1,
+.cnblogs-markdown h2,
+.cnblogs-markdown h3,
+.cnblogs-markdown h4,
+.cnblogs-markdown h5,
+.cnblogs-markdown h6 {
+  position: relative;
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.cnblogs-markdown h1 .octicon-link,
+.cnblogs-markdown h2 .octicon-link,
+.cnblogs-markdown h3 .octicon-link,
+.cnblogs-markdown h4 .octicon-link,
+.cnblogs-markdown h5 .octicon-link,
+.cnblogs-markdown h6 .octicon-link {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+.cnblogs-markdown h1:hover .anchor,
+.cnblogs-markdown h2:hover .anchor,
+.cnblogs-markdown h3:hover .anchor,
+.cnblogs-markdown h4:hover .anchor,
+.cnblogs-markdown h5:hover .anchor,
+.cnblogs-markdown h6:hover .anchor {
+  padding-left: 8px;
+  margin-left: -30px;
+  text-decoration: none;
+}
+
+.cnblogs-markdown h1:hover .anchor .octicon-link,
+.cnblogs-markdown h2:hover .anchor .octicon-link,
+.cnblogs-markdown h3:hover .anchor .octicon-link,
+.cnblogs-markdown h4:hover .anchor .octicon-link,
+.cnblogs-markdown h5:hover .anchor .octicon-link,
+.cnblogs-markdown h6:hover .anchor .octicon-link {
+  display: inline-block;
+}
+
+.cnblogs-markdown h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em !important;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.cnblogs-markdown h1 .anchor {
+  line-height: 1;
+}
+
+.cnblogs-markdown h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em !important;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.cnblogs-markdown h2 .anchor {
+  line-height: 1;
+}
+
+.cnblogs-markdown h3 {
+  font-size: 1.5em!important;
+  line-height: 1.43;
+}
+
+.cnblogs-markdown h3 .anchor {
+  line-height: 1.2;
+}
+
+.cnblogs-markdown h4 {
+  font-size: 1.25em !important; 
+}
+
+.cnblogs-markdown h4 .anchor {
+  line-height: 1.2;
+}
+
+.cnblogs-markdown h5 {
+  font-size: 1em !important;
+}
+
+.cnblogs-markdown h5 .anchor {
+  line-height: 1.1;
+}
+
+.cnblogs-markdown h6 {
+  font-size: 1em !important;
+  color: #777;
+}
+
+.cnblogs-markdown h6 .anchor {
+  line-height: 1.1;
+}
+
+.cnblogs-markdown p,
+.cnblogs-markdown blockquote,
+.cnblogs-markdown ul,
+.cnblogs-markdown ol,
+.cnblogs-markdown dl,
+.cnblogs-markdown table,
+.cnblogs-markdown pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.cnblogs-markdown hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.cnblogs-markdown ul,
+.cnblogs-markdown ol {
+  padding-left: 2em;
+  font-size: 14px;
+}
+
+.cnblogs-markdown ul ul,
+.cnblogs-markdown ul ol,
+.cnblogs-markdown ol ol,
+.cnblogs-markdown ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.cnblogs-markdown li>p {
+  margin-top: 16px;
+}
+
+.cnblogs-markdown dl {
+  padding: 0;
+}
+
+.cnblogs-markdown dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.cnblogs-markdown dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.cnblogs-markdown blockquote {
+  color: #333;
+  padding: 10px 15px;
+  border: none;
+  border-left: 10px solid #D6DBDF;
+}
+
+.cnblogs-markdown blockquote>:first-child {
+  margin-top: 0;
+}
+
+.cnblogs-markdown blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.cnblogs-markdown table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.cnblogs-markdown table th {
+  font-weight: bold;
+}
+
+.cnblogs-markdown table th,
+.cnblogs-markdown table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.cnblogs-markdown table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.cnblogs-markdown table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.cnblogs-markdown img {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.cnblogs-markdown code {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+  border: none !important;
+  display: inline-block;
+}
+
+.cnblogs-markdown code:before,
+.cnblogs-markdown code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+/*only for syntaxhighlighter */
+/*--start--*/
+.cnblogs-markdown .syntaxhighlighter table td.code {
+  width:95% !important; 
+}
+
+.cnblogs-markdown .syntaxhighlighter code {
+  font-family: "Consolas","Bitstream Vera Sans Mono","Courier New",Courier,monospace!important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+}
+
+.cnblogs-markdown .syntaxhighlighter code:before,
+.cnblogs-markdown .syntaxhighlighter code:before {
+  letter-spacing: -0.5em;
+}
+/*--end--*/
+
+.cnblogs-markdown pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.cnblogs-markdown .highlight {
+  margin-bottom: 16px;
+}
+
+.cnblogs-markdown .highlight pre,
+.cnblogs-markdown pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.cnblogs-markdown .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.cnblogs-markdown pre {
+  word-wrap: normal;
+}
+
+.cnblogs-markdown pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.cnblogs-markdown pre code:before,
+.cnblogs-markdown pre code:after {
+  content: normal;
+}
+
+.cnblogs-markdown kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+}
+
+.cnblogs-markdown .pl-c {
+  color: #969896;
+}
+
+.cnblogs-markdown .pl-c1,
+.cnblogs-markdown .pl-mdh,
+.cnblogs-markdown .pl-mm,
+.cnblogs-markdown .pl-mp,
+.cnblogs-markdown .pl-mr,
+.cnblogs-markdown .pl-s1 .pl-v,
+.cnblogs-markdown .pl-s3,
+.cnblogs-markdown .pl-sc,
+.cnblogs-markdown .pl-sv {
+  color: #0086b3;
+}
+
+.cnblogs-markdown .pl-e,
+.cnblogs-markdown .pl-en {
+  color: #795da3;
+}
+
+.cnblogs-markdown .pl-s1 .pl-s2,
+.cnblogs-markdown .pl-smi,
+.cnblogs-markdown .pl-smp,
+.cnblogs-markdown .pl-stj,
+.cnblogs-markdown .pl-vo,
+.cnblogs-markdown .pl-vpf {
+  color: #333;
+}
+
+.cnblogs-markdown .pl-ent {
+  color: #63a35c;
+}
+
+.cnblogs-markdown .pl-k,
+.cnblogs-markdown .pl-s,
+.cnblogs-markdown .pl-st {
+  color: #a71d5d;
+}
+
+.cnblogs-markdown .pl-pds,
+.cnblogs-markdown .pl-s1,
+.cnblogs-markdown .pl-s1 .pl-pse .pl-s2,
+.cnblogs-markdown .pl-sr,
+.cnblogs-markdown .pl-sr .pl-cce,
+.cnblogs-markdown .pl-sr .pl-sra,
+.cnblogs-markdown .pl-sr .pl-sre,
+.cnblogs-markdown .pl-src {
+  color: #183691;
+}
+
+.cnblogs-markdown .pl-v {
+  color: #ed6a43;
+}
+
+.cnblogs-markdown .pl-id {
+  color: #b52a1d;
+}
+
+.cnblogs-markdown .pl-ii {
+  background-color: #b52a1d;
+  color: #f8f8f8;
+}
+
+.cnblogs-markdown .pl-sr .pl-cce {
+  color: #63a35c;
+  font-weight: bold;
+}
+
+.cnblogs-markdown .pl-ml {
+  color: #693a17;
+}
+
+.cnblogs-markdown .pl-mh,
+.cnblogs-markdown .pl-mh .pl-en,
+.cnblogs-markdown .pl-ms {
+  color: #1d3e81;
+  font-weight: bold;
+}
+
+.cnblogs-markdown .pl-mq {
+  color: #008080;
+}
+
+.cnblogs-markdown .pl-mi {
+  color: #333;
+  font-style: italic;
+}
+
+.cnblogs-markdown .pl-mb {
+  color: #333;
+  font-weight: bold;
+}
+
+.cnblogs-markdown .pl-md,
+.cnblogs-markdown .pl-mdhf {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.cnblogs-markdown .pl-mdht,
+.cnblogs-markdown .pl-mi1 {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.cnblogs-markdown .pl-mdr {
+  color: #795da3;
+  font-weight: bold;
+}
+
+.cnblogs-markdown .pl-mo {
+  color: #1d3e81;
+}
+
+.cnblogs-markdown kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+  padding-top: 20px;
+}
+
+.cnblogs-markdown .task-list-item {
+  list-style-type: none;
+}
+
+.cnblogs-markdown .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.cnblogs-markdown .task-list-item input {
+  margin: 0 0.35em 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+.cnblogs-markdown :checked+.radio-label {
+  z-index: 1;
+  position: relative;
+  border-color: #4183c4;
+}
