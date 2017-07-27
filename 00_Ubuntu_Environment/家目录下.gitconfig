@@ -1,0 +1,11 @@
+[alias]
+	loggg = log --name-status --graph
+	logg = log --graph
+[color]
+	ui = true
+[user]
+	email = chaoqun.wang@ivglass.com
+	name = chaoqun.wang
+[gui] encoding = utf-8
+[core]
+	quotepath = false
