@@ -1,0 +1,1 @@
+document.writeln("<script type=\"text\/javascript\">\/*Linux公社悬浮侧栏120*270，创建于2012-7-31*\/ var cpro_id = \'u1004368\';<\/script><script src=\"http:\/\/cpro.baidu.com\/cpro\/ui\/f.js\" type=\"text\/javascript\"><\/script>")

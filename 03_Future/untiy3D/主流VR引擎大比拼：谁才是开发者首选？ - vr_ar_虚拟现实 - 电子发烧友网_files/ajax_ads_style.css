@@ -1,0 +1,114 @@
+@charset "utf-8";
+/*
+   ajax_ads_style.css
+   发烧友门户js加载的广告样式
+
+   Created by lc on 2016-12-09.
+   Copyright 2016 lc. All rights reserved.
+*/
+/**文章详情页IC广告**********************************************/
+
+/*banner*/
+
+#ic-ads-switch{
+	position: relative;
+	*z-index: 1;
+	margin: 20px 0;
+	height: 130px;
+}
+
+#ic-ads-switch a{
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	*z-index: 1;
+}
+#ic-ads-switch img{
+	/*width: 100%;*/
+}
+
+#ic-ads-switch p{
+	bottom: 5px;
+	height: 18px;
+	position: absolute;
+	text-align: center;
+	width: 100%;
+	z-index: 50;
+}
+#ic-ads-switch span{
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	cursor: pointer;
+	display: inline-block;
+	height: 8px;
+	margin: 0 6px;
+	width: 8px;
+	background: #ccc;
+	border: 1px solid #fff;
+}
+#ic-ads-switch span.now {
+	background: #d22;
+}
+
+/*banner  end*/
+/*产品报表*/
+#ic-ads-tab{
+	border-collapse: collapse;
+	border: 1px solid #ddd;
+	width: 100%;
+	border-top: none;
+	margin-top: 20px;
+
+}
+#ic-ads-tab caption{
+	background: #f2f2f2;
+	padding: 3px;
+	text-align: left;
+	padding:5px 10px ;
+	border: 1px solid #ddd;
+	border-bottom: none;
+}
+#ic-ads-tab thead{
+	background: #d22;
+	color: #fff;
+	font-weight:normal;
+	text-align: center;
+	line-height: 30px;
+	padding: 5px 10px;
+}
+#ic-ads-tab td{
+	border: 1px solid #ddd;
+	line-height: 25px;
+	padding: 5px 10px;
+	vertical-align: middle;
+}
+#ic-ads-tab .color_red{
+	color: #d22;
+}
+#ic-ads-tab img{
+	width: 60px;
+	display: block;
+	margin: 0 auto;
+}
+#ic-ads-tab .btn{
+	background: #DD2222;
+	color: #fff;
+	text-decoration: none;
+	padding: 0 10px;
+	line-height:25px;
+	border-radius: 3px;
+	display: block;
+	margin: 0 auto;
+	width: 50px;
+	text-align: center;
+}
+#ic-ads-tab .btn:hover{
+	opacity: .8;
+}
+/*产品报表end*/
+
+/**文章详情页IC广告**********************************************/

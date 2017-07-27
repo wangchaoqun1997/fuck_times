@@ -1,0 +1,73 @@
+.m-logo,.u-arrow,.u-arrowr,.m-btn,.dot{background: url(../img/logo-24.png) no-repeat -9999px -9999px;_background: url(../img/logo-8.png) no-repeat -9999px -9999px;}
+.f-fl{float: left;display: inline;}
+.f-block{display: block;}
+.f-none{display: none;}
+.f-cl{clear: left;}
+
+/*popularize-1*/
+.g-bdc-1{width: 1196px;height: 121px;border:2px solid #D32049;overflow: hidden;}
+.m-logo{width: 176px;height: 121px;background-position: 2px 16px;background-color: #D32049;}
+.u-product .pic{position: relative;width: 121px;height: 121px;overflow: hidden;}
+.u-product .info{width: 149px;height: 121px;overflow: hidden;font-family: "Helvetica Neue",Helvetica,Arial,"Hiragino Sans GB",\5FAE\8F6F\96C5\9ED1,tahoma,simsun,\5b8b\4f53;}
+.u-product .info .name{display: block;position: relative;top:20px;line-height: 20px;font-size: 14px;}
+.u-product .info .price{position: relative;top:34px;font-size: 28px;color: #D32049;}
+.u-product .info .price span{font-size: 18px;}
+.u-product .list{width: 70px;height:121px;}
+.u-product .list a{display: block;width: 70px;height: 39px;margin-top: 1px;text-align: center;line-height: 39px; background-color: #eee;color: #616161;overflow:hidden;}
+.u-product .list .current{background-color: #D32049;color: #FFF;}
+
+/*popularize-2*/
+.g-product{float: left;width:618px;height: 96px;overflow: hidden;}
+.g-product .productbox .productboxinner{width:618px;}
+.g-bdc-2{width: 956px;height: 96px;}
+.m-logo-1{width: 156px;height: 96px;background-position: -217px 12px;}
+.u-arrow{width: 31px;height: 96px;background-color: #eee;background-position: -585px 27px;}
+.u-arrow:hover{background-position: -628px 27px;}
+.u-product-1 .pic{width: 96px;height: 96px;}
+.u-product-1 .info{width: 110px;height: 96px;}
+.u-product-1 .info .name{top:14px;line-height: 20px;font-size: 12px;}
+.u-product-1 .info .price{font-size: 24px;top:18px;left: 2px;}
+.u-product-1 .info .price span{font-size: 18px;}
+.u-arrowr{width: 31px;height: 96px;background-color: #eee;background-position: -593px -53px;}
+.u-arrowr:hover{background-position: -639px -52px;}
+.m-btn{width: 120px;height: 96px;border: 0;background-color:#D32049;background-position: -402px 16px;}
+
+/*popularize-3*/
+.g-product-1{width:418px;}
+.g-product-1 .productbox .productboxinner{width:418px;}
+.g-bdc-3{width: 636px;height: 96px;}
+.u-product-2 .info{width: 113px;height: 96px;}
+
+/*popularize-4*/
+.m-logo-2{width: 136px;height: 96px;background-position: -227px 12px;}
+.g-bdc-4{width: 616px;height: 96px;}
+
+/*popularize-5*/
+.g-bdc-5{width: 296px;height: 246px;}
+.m-logo-3{width: 32px;height: 246px;background-position: -553px 65px;}
+.u-product-3{position: absolute;}
+.u-product-3 .pic{float:left; position: relative;width: 246px;height: 246px;overflow: hidden;}
+.u-product-3 .pic img{display:block;position: absolute;top: 0;left: 0;width: 246px;height: 246px;}
+.u-product-3 .dots{position: relative;top: 40px;width: 18px;height: 206px;}
+.u-product-3 .dots .dot{display: inline-block;width: 10px;height: 10px;margin-bottom: 10px;background-position: -671px -3px;}
+/*.u-product-3 .dots .dot:hover{background-position: -671px -47px;}*/
+.u-product-3 .info{position: absolute;bottom: 0;left: 0; width: 246px;height: 36px;background-color: #fff;}
+.u-product-3 .info .name{position: absolute;top: 10px;left: 10px; font-size: 14px;}
+.u-product-3 .info .price{position: absolute;top: 6px;right: 10px;font-size: 24px;}
+.u-product-3 .choice{position: absolute;top: 10px;left: 10px;width: 72px;height: 36px;}
+.u-product-3 .choice a{display: block;width: 36px;height: 36px;background: url(../img/proclass-24.png) no-repeat 0 0;_background: url(../img/proclass-8.png) no-repeat 0 0;}
+.u-product-3 .choice .choice-2{background-position: -36px 0;}
+
+/*popularize-6*/
+.g-bdc-6{width: 296px;height: 96px;}
+.m-logo-4{width: 116px;height: 96px;background-position: -692px 15px;}
+.u-product-4{width: 180px;height: 96px;}
+.u-product-4 .info{width: 80px;}
+.u-product-4 .info .name{line-height: 16px;margin-top: -2px;}
+.u-product-4 .info .price{line-height: 100%;/*margin-left: 4px;*/}
+
+/*ad-multi*/
+.u-product-1 .info .name{word-wrap: break-word;overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;height: 40px;}
+/*ad-single*/
+.u-product-4 .info .name{word-wrap: break-word;overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;height: 48px;}
+.dm_ad_hover { display: inline-block; position: absolute; bottom: 0; right: 0; width: 24px; height: 18px; overflow: hidden; line-height: 999px; background: url(../img/short.png) top right no-repeat; z-index: 100 } .dm_ad_hover:hover { width: 81px; background: url(../img/full_kaola.png) }

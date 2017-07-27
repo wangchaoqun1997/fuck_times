@@ -1,0 +1,79 @@
+/*
+*用于顶部下拉导航！
+*/
+(function(){
+    var setHTML='\
+<div class="sub_dis_wrap">\
+    <h3 class="disTitle"><a href="http://www.elecfans.com/" target="_blank">电子发烧友</a></h3>\
+    <ul class="disList">\
+        <li><a href="http://www.elecfans.com/news/hangye/" target="_blank">电子新闻</a></li>\
+        <li><a href="http://www.elecfans.com/soft/" target="_blank">资料下载</a></li>\
+        <li><a href="http://www.elecfans.com/dianlutu/" target="_blank">电子电路</a></li>\
+        <li><a href="http://www.elecfans.com/article/interview/" target="_blank">高端访谈</a></li>\
+    </ul>\
+    <ul class="disList">\
+        <li><a href="http://www.elecfans.com/technical/all/" target="_blank">设计技术</a></li>\
+        <li><a href="http://www.elecfans.com/application/" target="_blank">行业应用</a></li>\
+        <li><a href="http://www.elecfans.com/tags/" target="_blank">电子标签</a></li>\
+        <li><a href="http://www.elecfans.com/tekan/" target="_blank">电子特刊</a></li>\
+    </ul>\
+    <ul class="disList" style="margin-right: 0;">\
+        <li><a href="http://bbs.elecfans.com/forum.php" target="_blank">工程师社区</a></li>\
+        <li><a href="http://event.elecfans.com/index/seminar.html" target="_blank">技术研讨会</a></li>\
+        <li><a href="http://webinar.elecfans.com/" target="_blank">在线研讨会</a></li>\
+        <li><a href="http://www.elecfans.com/yuanqijian/" target="_blank">电子元器件</a></li>\
+    </ul>\
+</div>\
+<div class="sub_dis_wrap">\
+    <h3 class="disTitle"><a>特色服务</a></h3>\
+    <ul class="disList">\
+        <li><a href="http://bbs.elecfans.com/try.html" target="_blank">开发板试用</a></li>\
+        <li><a href="http://z.elecfans.com/" target="_blank">聚丰众筹</a></li>\
+        <li><a href="http://d.elecfans.com/" target="_blank">电子说</a></li>\
+        <li><a href="http://www.elecfans.com/tools/" target="_blank">在线工具</a></li>\
+    </ul>\
+    <ul class="disList" style="margin-right: 0;">\
+        <li><a href="http://t.elecfans.com/" target="_blank">发烧友学院</a></li>\
+        <li><a href="http://www.elecfans.com/project/?bbsnav" target="_blank">项目作品</a></li>\
+        <li><a href="http://pdf.elecfans.com/" target="_blank">Datasheet查询</a></li>\
+        <li><a href="http://bbs.elecfans.com/forum.php" target="_blank">电子问答</a></li>\
+    </ul>\
+</div>\
+<div class="sub_dis_wrap">\
+    <h3 class="disTitle"><a href="http://www.hqpcb.com/" target="_blank">华强PCB</a></h3>\
+    <ul class="disList" style="margin-right: 0;">\
+        <li><a href="http://www.hqpcb.com/online.html" target="_blank">在线算价</a></li>\
+        <li><a href="http://www.hqpcb.com/pay.html" target="_blank">付款方式</a></li>\
+        <li><a href="http://www.hqpcb.com/orderstep.html" target="_blank">下单流程</a></li>\
+        <li><a href="http://www.hqpcb.com/product.html" target="_blank">产品展示</a></li>\
+    </ul>\
+</div>\
+<div class="sub_dis_wrap" style="border-right: 0;">\
+    <h3 class="disTitle"><a href="http://www.hqchip.com/" target="_blank">华强芯城</a></h3>\
+    <ul class="disList">\
+        <li><a href="http://www.hqchip.com/" target="_blank">元器件搜索</a></li>\
+        <li><a href="http://www.hqchip.com/fangan/" target="_blank">方案中心</a></li>\
+        <li><a href="http://www.hqchip.com/mozu/" target="_blank">模组专区</a></li>\
+        <li><a href="http://www.hqchip.com/promote/" target="_blank">现货库存</a></li>\
+    </ul>\
+    <ul class="disList" style="margin-right: 0;">\
+        <li><a href="http://www.hqchip.com/glist/all_cate.html" target="_blank">元器件分类</a></li>\
+        <li><a href="http://www.hqchip.com/kaifaban/" target="_blank">开发板专区</a></li>\
+        <li><a href="http://www.hqchip.com/bom/" target="_blank">BOM服务</a></li>\
+        <li><a href="http://bbs.elecfans.com/forum.php?gid=263" target="_blank">原厂专区</a></li>\
+    </ul>\
+</div>\
+';
+
+
+try{
+	document.querySelector("#website_nav").innerHTML=setHTML;
+}catch(e){
+    try {
+    	document.getElementById("website_nav").innerHTML=setHTML;
+    } catch(e) {
+        
+    }
+}
+
+})();

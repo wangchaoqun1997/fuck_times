@@ -1,0 +1,796 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <title>Linux输入子系统：事件的编码 -- event-codes.txt - DroidPhone的专栏
+        - 博客频道 - CSDN.NET</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="description" content="输入系统协议用类型types和编码codecs来表示输入设备的值并用此来通知用户空间的应用程序。这篇文档对这些类型和编码进行了说明并且指出什么时候和如何使用这些类型和编码。&nbsp;一个单一的硬件事件可以产生多个输入事件，每个输入事件包含一个单一数据项的新的数据值。EV_SYN是一个特别的事件类型，它用来把同一时刻产生的多个输入数据分割为多个数据包。在下面的描述中，术语事件（event）是指一个涵盖类">
+    <script src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/ga.js" async="" type="text/javascript"></script><script src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/jquery.js" type="text/javascript"></script>
+    <script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/ad.js"></script>
+        <!--new top-->
+       
+        <link rel="stylesheet" href="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/index.css">
+        <!--new top-->
+
+    <link rel="Stylesheet" type="text/css" href="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/style_003.css">
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/DroidPhone/rss/list">
+    <link rel="shortcut icon" href="http://blog.csdn.net/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/default.css">
+ 
+
+<script src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/tracking.js" charset="utf-8" type="text/javascript"></script><script src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/main.js" charset="utf-8" type="text/javascript"></script><link type="text/css" rel="stylesheet" href="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/bdsstyle.css"><link rel="stylesheet" type="text/css" href="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/style_002.css"><link href="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/style.css" rel="stylesheet" type="text/css"><script src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/logger.js"></script></head>
+<body><iframe style="display: none;" frameborder="0"></iframe><div style="display: block;" id="bdshare_s"><iframe id="bdsIfr" style="position:absolute;display:none;z-index:9999;" frameborder="0"></iframe><div style="display: none;" id="bdshare_l"><div id="bdshare_l_c"><h6>分享到</h6><ul><li><a href="#" class="bds_mshare mshare">一键分享</a></li><li><a href="#" class="bds_qzone qqkj">QQ空间</a></li><li><a href="#" class="bds_tsina xlwb">新浪微博</a></li><li><a href="#" class="bds_bdysc bdysc">百度云收藏</a></li><li><a href="#" class="bds_renren rrw">人人网</a></li><li><a href="#" class="bds_tqq txwb">腾讯微博</a></li><li><a href="#" class="bds_bdxc bdxc">百度相册</a></li><li><a href="#" class="bds_kaixin001 kxw">开心网</a></li><li><a href="#" class="bds_tqf txpy">腾讯朋友</a></li><li><a href="#" class="bds_tieba bdtb">百度贴吧</a></li><li><a href="#" class="bds_douban db">豆瓣网</a></li><li><a href="#" class="bds_tsohu shwb">搜狐微博</a></li><li><a href="#" class="bds_bdhome bdhome">百度新首页</a></li><li><a href="#" class="bds_sqq sqq">QQ好友</a></li><li><a href="#" class="bds_thx thx">和讯微博</a></li><li><a href="#" class="bds_more">更多...</a></li></ul><p><a href="#" class="goWebsite">百度分享</a></p></div></div></div>
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/html.js" type="text/javascript"></script><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar" target="_blank" class="img blog-icon"></a></div>          <div class="pull-right login-wrap unlogin">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="https://passport.csdn.net/account/register?ref=toolbar">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search?ref=toolbar" method="get" target="_blank">                      <div class="border">                        <input placeholder="搜索" name="q" accesskey="2" type="text"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label">标题</label>                          <div class="col-sm-10">                            <input value="Linux输入子系统：事件的编码 -- event-codes.txt - DroidPhone的专栏 - 博客频道 - CSDN.NET" id="inputTitle" placeholder="" class="title form-control" type="text">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input value="http://blog.csdn.net/droidphone/article/details/8432055" id="input-url" placeholder="" class="url form-control" type="text">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" class="form-control tag" type="text">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">摘要</label>                        <div class="col-sm-10">                          <textarea id="input-description" class="form-control description"></textarea>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left">                            <div class="checkbox">                              <label>                                <input name="share" checked="checked" class="share" type="checkbox">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="display:none" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note">                      <div class="box"></div>                    <iframe src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/a.htm" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent" frameborder="0"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt><a href="http://share.csdn.net/slides/new?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/100x100.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="https://my.csdn.net/?ref=toolbar" class="avatar"><img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/100x100.jpg"></a></dt>                        <dd class="info"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname"></a><a class="set-nick" href="https://passport.csdn.net/account/profile">设置昵称<span class="write-icon"></span></a><span class="dec"><a class="fill-dec" href="https://passport.csdn.net/account/profile" target="_blank">编辑自我介绍，让更多人了解你<span class="write-icon"></span></a></span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="https://passport.csdn.net/account/profile?ref=toolbar" class="pull-left"><span class="icon settings"></span>设置</a><a href="http://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-right"><span class="icon quit"></span>退出</a></div>                  </div>                </div>              </li>              <li class="apps">                <div class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd><a href="http://share.csdn.net/?ref=toolbar" target="_blank">Share</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                      <dd> <a href="http://huiyi.csdn.net/meeting?ref=toolbar" target="_blank">会议</a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/droidphone">DroidPhone的专栏</a></h2>
+            <h3>欢迎各位大虾交流，本人联系方式：droid.phx@gmail.com</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>
+                <li id="btnContents"><a href="http://blog.csdn.net/droidphone?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/droidphone?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/droidphone/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/ico_rss.gif">订阅</span></a></li>
+</ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "DroidPhone";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/droidphone";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+
+<a href="http://bss.csdn.net/cview/reg/?project_id=804&amp;identy_id=839" target="_blank"><font color="red">“程序人生”中国软件开发者职业生涯调查
+</font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<a href="http://bbs.csdn.net/topics/390724670" target="_blank">
+<font color="red">CSDN社区“三八节”特别活动</font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<a href="http://www.csdn.net/article/2014-03-06/2818653" target="_blank">
+<font color="blue">开发者职业生涯调查之未来</font></a>
+
+
+
+
+</div>                    <link href="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/comment1.css" type="text/css" rel="stylesheet">
+<link href="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/style1.css" type="text/css" rel="stylesheet">
+<div id="article_details" class="details">
+    <div class="article_title">
+    <span class="ico ico_type_Translated"></span>
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/droidphone/article/details/8432055">
+        Linux输入子系统：事件的编码 -- event-codes.txt
+        </a></span>
+    </h1>
+</div>
+
+    <div class="article_manage">
+        <span class="link_categories">
+        分类：
+            <a href="http://blog.csdn.net/DroidPhone/article/category/1311863">Linux输入子系统</a> 
+        </span>
+    <span class="link_postdate">2012-12-25 09:57</span>
+    <span class="link_view" title="阅读次数">2575人阅读</span>
+    <span class="link_comments" title="评论次数"><a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(0)</span>
+    <span class="link_collect"><a href="javascript:void(0);" onclick="javascript:_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shoucang']);collectArticle('Linux输入子系统：事件的编码 -- event-codes.txt','8432055');return false;" title="收藏">收藏</a></span>
+    <span class="link_report"><a href="#report" onclick="javascript:_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_jubao']);report(8432055,2);return false;" title="举报">举报</a></span>
+    
+</div>
+
+    
+<div style="clear:both"></div><div style="border:solid 1px #ccc; background:#eee; float:left; min-width:200px;padding:4px 10px;"><p style="text-align:right;margin:0;"><span style="float:left;">目录<a href="#" title="系统根据文章中H1到H6标签自动生成文章目录">(?)</a></span><a href="#" onclick="javascript:return openct(this);" title="展开">[+]</a></p><ol style="display:none;margin-left:14px;padding-left:14px;line-height:160%;"><li><a href="#t0">
+
+本文由DroidPhone 翻译httpblogcsdnnetdroidphone
+
+Kernel版本V3410
+
+
+&nbsp;Event types</a></li><li><a href="#t1">Event codes</a></li><ol><li><a href="#t2">EV_SYN</a></li><li><a href="#t3">EV_KEY</a></li><li><a href="#t4">EV_REL</a></li><li><a href="#t5">EV_ABS</a></li><li><a href="#t6">EV_SW</a></li><li><a href="#t7">EV_MSC</a></li><li><a href="#t8">EV_LED</a></li><li><a href="#t9">EV_REP</a></li><li><a href="#t10">EV_SND</a></li><li><a href="#t11">EV_FF</a></li><li><a href="#t12">EV_PWR</a></li></ol><li><a href="#t13">设备特性Device properties</a></li><ol><li><a href="#t14">INPUT_PROP_DIRECT  INPUT_PROP_POINTER</a></li><li><a href="#t15">INPUT_PROP_BUTTONPAD</a></li><li><a href="#t16">INPUT_PROP_SEMI_MT</a></li></ol><li><a href="#t17">使用指引</a></li><ol><li><a href="#t18">鼠标</a></li><li><a href="#t19">触摸屏</a></li><li><a href="#t20">触控板</a></li><li><a href="#t21">Tablets</a></li></ol></ol></div><div style="clear:both"></div><div id="article_content" class="article_content">
+
+<p>输入系统协议用类型types和编码codecs来表示输入设备的值并用此来通知用户空间的应用程序。这篇文档对这些类型和编码进行了说明并且指出什么时候和如何使用这些类型和编码。</p>
+<p>&nbsp;一个单一的硬件事件可以产生多个输入事件，每个输入事件包含一个单一数据项的新的数据值。EV_SYN是一个特别的事件类型，它用来把
+同一时刻产生的多个输入数据分割为多个数据包。在下面的描述中，术语事件（event）是指一个涵盖类型，编码和参数值的单一输入事件。</p>
+<p>&nbsp;input协议是一个基于状态的协议，只有当相应事件编码对应的参数值发生变化时才会发送该事件。不过，状态是由Linux的输入子系
+统进行维护，驱动程序无需维护输入的状态，就算参数值没有变化时向输入子系统发出事件也不会有问题。用户空间可以用linux/input.h 
+中定义的EVIOCG*ioctls来获得当前事件编码和参数的状态。设备的所支持的上报事件种类也可以通过sysfs的class/input
+/event*/device/capabilities/来获取，设备的特性和可以通过class/input/event*/device
+/properties来获取。</p>
+<h2><a name="t0"></a>
+<p style="color:rgb(51,51,51); font-family:Arial; font-size:14px; line-height:26px">
+<span style="font-weight:normal">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></p>
+<p style="color:rgb(51,51,51); font-family:Arial; font-size:14px; line-height:26px">
+<span style="font-weight:normal">本文由DroidPhone 翻译：<a href="http://blog.csdn.net/droidphone" style="color:rgb(51,102,153); text-decoration:initial">http://blog.csdn.net/droidphone</a></span></p>
+<p style="color:rgb(51,51,51); font-family:Arial; font-size:14px; line-height:26px">
+<span style="font-weight:normal">Kernel版本：V3.4.10</span></p>
+<p style="color:rgb(51,51,51); font-family:Arial; font-size:14px; line-height:26px">
+<span style="font-weight:normal">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></p>
+&nbsp;Event types:</h2>
+<p>===========</p>
+<p>types对应于一个相同逻辑输入结构的一组Codes。每个type都有一组可用的codes用于产生输入事件。每个type可用的codes的详细信息请参考Codes一节的内容。</p>
+<p>* EV_SYN:</p>
+<p>&nbsp; - 用于事件间的分割标志。事件可能按时间或空间进行分割，就像在多点触摸协议中的例子。</p>
+<p>&nbsp;* EV_KEY:</p>
+<p>&nbsp; - 用来描述键盘，按键或者类似键盘设备的状态变化。</p>
+<p>&nbsp;* EV_REL:</p>
+<p>&nbsp; - 用来描述相对坐标轴上数值的变化，例如：鼠标向左方移动了5个单位。</p>
+<p>&nbsp;* EV_ABS:</p>
+<p>&nbsp;&nbsp;-用来描述相对坐标轴上数值的变化，例如：描述触摸屏上坐标的值。</p>
+<p>&nbsp;* EV_MSC:</p>
+<p>&nbsp; - 当不能匹配现有的类型时，使用该类型进行描述。</p>
+<p>&nbsp;* EV_SW:</p>
+<p>&nbsp; - 用来描述具备两种状态的输入开关。</p>
+<p>&nbsp;* EV_LED:</p>
+<p>&nbsp; - 用于控制设备上的LED灯的开和关。</p>
+<p>&nbsp;* EV_SND:</p>
+<p>&nbsp; - 用来给设备输出提示声音。</p>
+<p>&nbsp;* EV_REP:</p>
+<p>&nbsp; -用于可以自动重复的设备（autorepeating）。</p>
+<p>&nbsp;* EV_FF:</p>
+<p>&nbsp; - 用来给输入设备发送强制回馈命令。（震动？）</p>
+<p>&nbsp;* EV_PWR:</p>
+<p>&nbsp; - 特别用于电源开关的输入。.</p>
+<p>&nbsp;* EV_FF_STATUS:</p>
+<p>&nbsp; - 用于接收设备的强制反馈状态。</p>
+<h2><a name="t1"></a>&nbsp;Event codes:</h2>
+<p>===========</p>
+<p>Event codes 用于对事件的type进行更精确的定义</p>
+<h4><a name="t2"></a>&nbsp;EV_SYN:</h4>
+<p>----------</p>
+<p>EV_SYN 事件没有对values进行具体的定义， 它们的使用方式仅在发送evdev的事件串中有定义。</p>
+<p>&nbsp;* SYN_REPORT:</p>
+<p>&nbsp; - 
+当多个输入数据在同一时间发生变化时，SYN_REPORT用于把这些数据进行打包和包同步。例如，一次鼠标的移动可以上报REL_X和REL_Y两个数
+值，然后发出一个SYN_REPORT。下一次鼠标移动可以再次发出REL_X和REL_Y两个数值，然后经跟这另一个SYN_REPORT。</p>
+<p>&nbsp;* SYN_CONFIG:</p>
+<p>&nbsp; -TBD</p>
+<p>&nbsp;* SYN_MT_REPORT:</p>
+<p>&nbsp; - 用于同步和分离触摸事件。更多的信息请参考内核文档：multi-touch-protocol.txt。</p>
+<p>&nbsp;* SYN_DROPPED:</p>
+<p>&nbsp; - 用来指出evdev客户的事件队列的的缓冲区溢出。客户端顶盖忽略所有的事件，包括下一个SYN_REPORT事件，并且要查询设备来获得它的状态（使用EVIOCG* ioctls）。</p>
+<h4><a name="t3"></a>&nbsp;EV_KEY:</h4>
+<p>----------</p>
+<p>EV_KEY事件采取KEY_&lt;name&gt; 
+或BTN_&lt;name&gt;的形式，比如，KEY_A代表键盘上的A键，当一个按键被按下时，一个带有按键编码和value为1的事件被发出。当
+一个按键被释放时，一个value为0的事件被发出。有些硬件当按键重复时会发出事件，这些事件的value值为2。通
+常，KEY_&lt;name&gt;用作键盘上的按键，而BTN_&lt;name&gt;则用于开关按钮事件。</p>
+<p>&nbsp;几个 EV_KEY的 codes具有特别的意义:</p>
+<p>&nbsp;* BTN_TOOL_&lt;name&gt;:</p>
+<p>- 
+这些codes用于配合触控板，平板和触摸屏这些设备的输入，这些设备可以使用手指，笔或者其它工具。当一个事件发生并且检测到某种工具在使用时，相应的
+BTN_TOOL_&lt;name&gt; 
+code事件应该把value设为1，当该工具不再和输入设备进行交互时，value应该复位为0。所有的触控板，当事件发生时，平板和触摸屏映泰至少使
+用一种BTN_TOOL_&lt;name&gt; code。</p>
+<p>&nbsp;* BTN_TOUCH:</p>
+<p>BTN_TOUCH用于触摸接触事件。当一个输入工具被判定为有意义的物理接触时，这一特性的value值应该设为1。所谓有意义的物理接触可以是
+任何的接触，又或者是满足某种定义条件的接触。例如，触摸板可以当触摸的压力达到某一个值以上时才把value设为1，一个用笔的平板当笔划过但没有接触
+到平板的表面时，把BTN_TOOL_PEN的value设为1，而把BTN_TOUCH的value设为0.</p>
+<p>&nbsp;注意：为了配合一些老的传统mousedev模拟驱动程序可以工作，BTN_TOUCH必须作为一个同步帧的第一个evdevcode发出。</p>
+<p>&nbsp;注意：出于历史的原因，用户空间会把带有BTN_TOOL_FINGER和 
+BTN_TOUCH的触摸设备解释为触摸板，而类似的不带BTN_TOOL_FINGER的触摸设备则被解释为触摸屏。为了与目前的用户空间应用向后兼
+容，建议遵循这一区分原则。以后，这一区分方法将会失效，而会使用设备属性ioctl 
+EVIOCGPROP（定义在linux/input.h）来传送设备的类型。</p>
+<p>&nbsp;* BTN_TOOL_FINGER, BTN_TOOL_DOUBLETAP,BTN_TOOL_TRIPLETAP, BTN_TOOL_QUADTAP:</p>
+<p>- 
+这些codes表明一个，两个，三个和四个手指参与触摸板和触摸屏的操作。例如，如果用户使用两只手指在触摸板上试图滚动屏幕上的内容，在运动期间，应该
+发送value为1的BTN_TOOL_DOUBLETAP。注意的是所有的BTN_TOOL_&lt;name&gt;codes 和 
+BTN_TOUCH 
+code是用于正交目的的，一个触摸板由手指碰触时，应该在这两组中各生成一个事件code，至少在一个同步帧中带有一个value为1的
+BTN_TOOL_&lt;name&gt;code。</p>
+<p>&nbsp;注意：出于历史原因，一些驱动会在同一个同步帧内发送多个value为1的上报手指数的codes，但是这一方法现在已经过时了（不再使用）。</p>
+<p>&nbsp;注意：在多手指触摸驱动中，应该使用input_mt_report_finger_count()函数来发出以上这些codes，详情请参看内核文档：multi-touch-protocol.txt。</p>
+<h4><a name="t4"></a>&nbsp;EV_REL:</h4>
+<p>----------</p>
+<p>EV_REL事件描述了某种特性的相对变化量。例如，鼠标向左方移动了几个单位距离，但是他的绝对位置是未知的。如果我们可以知道绝对位置，那我们应该使用EV_ABS而不是EV_REL。</p>
+<p>&nbsp;下面这些属于EV_REL的codes有特别的意义：</p>
+<p>&nbsp;* REL_WHEEL, REL_HWHEEL:</p>
+<p>&nbsp; - 这两个codes用于对应的垂直方向和水平方向的滚轮。</p>
+<h4><a name="t5"></a>&nbsp;EV_ABS:</h4>
+<p>----------</p>
+<p>EV_ABS事件描述了某一特性的绝对变化值，例如，触摸板会用它发出当前位置的绝对坐标值。</p>
+<p>&nbsp;以下这些属于EV_ABS的 codes有特殊的意义：</p>
+<p>&nbsp;* ABS_DISTANCE:</p>
+<p>- 用来描述触摸工具离触摸表面的距离。这一事件应该只有当触摸工具在表面悬空滑过时发出，也就是说，在靠经触摸表面，但是BTN_TOUCH的value是0的时候。如果输入设备可以工作在3维坐标时，应该考虑使用ABS_Z会更好。</p>
+<p>&nbsp;* ABS_MT_&lt;name&gt;:</p>
+<p>- 用于描述多手指触摸输入设备。详情请参考内核文档：multi-touch-protocol.txt。</p>
+<h4><a name="t6"></a>&nbsp;EV_SW:</h4>
+<p>----------</p>
+<p>EV_SW事件用于描述一个两态开关的状态，比如，SW_LID code用来指出笔记本电脑的屏幕已经合上了。</p>
+<p>&nbsp;当绑定一个设备或者从suspend状态中resuming回来，驱动程序必须上报开关的当前状态。从而保证设备，内核和用户空间的状态保持同步。</p>
+<p>&nbsp;在resume时，如果开关的状态和suspend之前相同，input子系统会这一重复的状态上报消息。驱动程序任何时候都无需记住开关的状态。</p>
+<h4><a name="t7"></a>&nbsp;EV_MSC:</h4>
+<p>----------</p>
+<p>当事件不能用其它事件类型描述时，使用EV_MSC是将进行输入和输出事件的上报。</p>
+<h4><a name="t8"></a>&nbsp;EV_LED:</h4>
+<p>----------</p>
+<p>EV_LED事件用来设置或查询设备上LED的状态。</p>
+<h4><a name="t9"></a>&nbsp;EV_REP:</h4>
+<p>----------</p>
+<p>EV_REP 用来指出自动重复事件（autorepeating）。</p>
+<h4><a name="t10"></a>&nbsp;EV_SND:</h4>
+<p>----------</p>
+<p>EV_SND用于对那些简单的发声设备发出发音指令。</p>
+<h4><a name="t11"></a>&nbsp;EV_FF:</h4>
+<p>----------</p>
+<p>EV_FF事件用来初始化具有强制反馈能力的设备，并可以让这些设备发出反馈动作。</p>
+<h4><a name="t12"></a>&nbsp;EV_PWR:</h4>
+<p>----------</p>
+<p>EV_PWR事件是一个特殊的类型，它是电源管理的专用事件，目前没有对它做出良好的定义，将来会完善这一事件。</p>
+<h2><a name="t13"></a>&nbsp;设备特性（Device properties）:</h2>
+<p>=================</p>
+<p>正常情况下，用户空间基于设备发出的数据（比如事件的types）来建立一个输入设备，当两个设备都发出相同的事件types时，这时设备特性就可以提供额外的识别信息。</p>
+<h4><a name="t14"></a>&nbsp;INPUT_PROP_DIRECT + INPUT_PROP_POINTER:</h4>
+<p>--------------------------------------</p>
+<p>INPUT_PROP_DIRECT特性表明设备的坐标直接和屏幕坐标向对应（无需琐碎的转换操作，像缩放，反转，旋转等）。非直接输入设备则需要一些必要的变换，比如触摸板上绝对到相对的变换。典型的直接输入设备有：触摸屏，手写板；非直接输入设备有：触摸板，鼠标。</p>
+<p>&nbsp;INPUT_PROP_POINTER特性表明设备不是利用屏幕来获取输入信息，从而需要一个屏幕上的指针来跟踪用户的移动。典型的指针设备有：触控板，鼠标；非指针设备：触摸屏。</p>
+<p>&nbsp;如果INPUT_PROP_DIRECT或者 INPUT_PROP_POINTER都没有设置，设备将会被认为是未定义，它的类型需要按传统的方式利用事件的types推导出来。</p>
+<h4><a name="t15"></a>&nbsp;INPUT_PROP_BUTTONPAD:</h4>
+<p>--------------------</p>
+<p>有些触摸板，它的按键位于触摸板的底部，这样按下触摸板会产生一次按键消息，对于这种设备，应该设置该特性。自2009年以来，配置这种触控板的notebooks和macbooks变多越来越普遍。</p>
+<p>&nbsp;最初，这种按键特性是在bcm5974的驱动中通过名字的版本字段来进行编码，为了向后兼容性，用户空间有必要按这两种方法都进行检查。</p>
+<h4><a name="t16"></a>&nbsp;INPUT_PROP_SEMI_MT:</h4>
+<p>------------------</p>
+<p>在2008年至2011年之间，很多触摸板只能检测到多个接触点，但是不知道它们的独立位置，只是知道触点的数量和包围它们的一个矩形。对于这样的设备，应该设置这个半多点触摸特性。</p>
+<p>&nbsp;不同的设备，这个矩形可能包围所有的触控点，就像边界框一样，也可能只是包围了一部分触控点，比如最后的两个触控点。这种不确定性限制了这个矩形的用处，只是有些手势识别会对它进行分析。</p>
+<p>&nbsp;如果没有设置INPUT_PROP_SEMI_MT特性，该设备被假设为全多点触控设备。</p>
+<h2><a name="t17"></a>&nbsp;使用指引:</h2>
+<p>==========</p>
+<p>以下的使用指引确保了单点触摸和多点触摸可以正常地工作，更详尽的信息请参考文档：multi-touch-protocol.txt。</p>
+<h4><a name="t18"></a>&nbsp;鼠标:</h4>
+<p>----------</p>
+<p>当鼠标移动时，REL_{X,Y}必须被上报。主键被按下时，BTN_LEFT必须被上报。 其它按键按下时，BTN_{MIDDLE,RIGHT,4,5,etc.}应该被上报。鼠标上的滚轮滚动时，REL_WHEEL and REL_HWHEEL事件应该被上报。</p>
+<h4><a name="t19"></a>&nbsp;触摸屏:</h4>
+<p>----------</p>
+<p>触摸发生时，必须要用ABS_{X,Y}上报触摸的位置。触摸有效时，BTN_TOUCH必须被上报，而不必用BTN_{MOUSE,LEFT,MIDDLE,RIGHT}来表明一次触摸事件。有可能的话，BTN_TOOL_&lt;name&gt;事件也可以应该上报。</p>
+<p>&nbsp;对于新的硬件，应该设置INPUT_PROP_DIRECT特性。</p>
+<h4><a name="t20"></a>&nbsp;触控板:</h4>
+<p>----------</p>
+<p>传统的触控板只是想上面鼠标所说那样上报相对位置信息即可。</p>
+<p>&nbsp;具备绝对位置信息的触控板需要通过ABS_{X,Y}上报触控点的位置信息。同样，触摸有效时应该上报BTN_TOUCH事件。如果支持多点触摸，应该通过BTN_TOOL_&lt;name&gt;上报有效触摸的数量。</p>
+<p>&nbsp;对于新的硬件，应该设置INPUT_PROP_POINTER特性。</p>
+<h4><a name="t21"></a>&nbsp;Tablets:</h4>
+<p>----------</p>
+<p>当笔或其它工具被有效检测后，必须上报BTN_TOOL_&lt;name&gt;事件，必须用ABS_{X,Y}上报触控的位置信息，同时应该上
+报BTN_TOUCH事件。当触控工具上的按钮有效时，应该上报BTN_{STYLUS,STYLUS2}消息。除了BTN_{MOUSE,LEFT}以
+外，其它任意的按键消息都可以用于上报平板上的按键，对于没有标记的按键，BTN_{0,1,2,etc}是个不错的选择，避免使用有特别意义的按键：像
+BTN_FORWARD之类，除非设备上特别标明了就是这一按键。</p>
+<p>&nbsp;对于新的硬件，INPUT_PROP_DIRECT和 INPUT_PROP_POINTER都应该被设置。</p>
+
+</div>
+
+
+
+<!-- Baidu Button BEGIN -->
+<div id="bdshare" class="bdshare_t bds_tools get-codes-bdshare" style="float: right;">
+<a href="#" title="分享到QQ空间" class="bds_qzone"></a>
+<a href="#" title="分享到新浪微博" class="bds_tsina"></a>
+<a href="#" title="分享到腾讯微博" class="bds_tqq"></a>
+<a href="#" title="分享到人人网" class="bds_renren"></a>
+<a href="#" title="分享到网易微博" class="bds_t163"></a>
+<span class="bds_more">更多</span>
+<a title="累计分享0次" href="#" class="shareCount">0</a>
+</div>
+<!-- Baidu Button END -->
+
+
+<!--192.168.100.34-->
+<div class="article_next_prev">
+            <li class="prev_article"><span>上一篇：</span><a href="http://blog.csdn.net/droidphone/article/details/8432013" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">Linux输入子系统：input.txt</a></li>
+            <li class="next_article"><span>下一篇：</span><a href="http://blog.csdn.net/droidphone/article/details/8432151" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">Linux输入子系统：输入设备编程指南 -- input-programming.txt</a></li>
+</div>
+
+<!-- Baidu Button BEGIN -->
+<script src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/bds_s_v2.js" type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434"></script>
+
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+</div>
+      <dl class="blog-associat-tag">
+        <dt>相关主题推荐</dt>
+        <dd>
+                <a href="http://www.csdn.net/tag/%E7%BC%96%E7%A0%81" target="_blank">编码</a> 
+                <a href="http://www.csdn.net/tag/linux" target="_blank">linux</a> 
+                <a href="http://www.csdn.net/tag/%E5%A4%9A%E7%82%B9%E8%A7%A6%E6%91%B8" target="_blank">多点触摸</a> 
+                <a href="http://www.csdn.net/tag/%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F" target="_blank">应用程序</a> 
+                <a href="http://www.csdn.net/tag/%E6%89%8B%E5%8A%BF%E8%AF%86%E5%88%AB" target="_blank">手势识别</a> 
+        </dd>
+    </dl> 
+    <dl class="blog-ass-articl">
+        <dt>相关博文推荐</dt>
+            <dd>
+                <a href="http://blog.csdn.net/reality_jie/article/details/20630491" title="Linux修改默认启动级别" target="_blank">Linux修改默认启动级别</a></dd>
+            <dd>
+                <a href="http://blog.csdn.net/u013936564/article/details/20627243" title="手机程序PowaTag或将开启购物新模式" target="_blank">手机程序PowaTag或将开启购物新模式</a></dd>
+            <dd>
+                <a href="http://blog.csdn.net/tch8502/article/details/20626591" title="Linux操作系统下编辑保存退出命令" target="_blank">Linux操作系统下编辑保存退出命令</a></dd>
+            <dd>
+                <a href="http://blog.csdn.net/TCH8502/article/details/20625687" title="linux 安装ffmpeg" target="_blank">linux 安装ffmpeg</a></dd>
+            <dd>
+                <a href="http://blog.csdn.net/hursing/article/details/20367381" title="Linux Mint下安装支持SPDY协议的Wireshark" target="_blank">Linux Mint下安装支持SPDY协...</a></dd>
+            <dd>
+                <a href="http://blog.csdn.net/zhuriyuxiao/article/details/20627361" title="Linux 预读代码分析" target="_blank">Linux 预读代码分析</a></dd>
+            <dd>
+                <a href="http://blog.csdn.net/caiwenfeng_for_23/article/details/20626831" title="Android 4.2 原生系统有哪些方法实现全屏下隐藏导航栏？" target="_blank">Android 4.2 原生系统有哪些方...</a></dd>
+            <dd>
+                <a href="http://blog.csdn.net/u012995513/article/details/20626157" title="用 Python 脚本实现对 Linux 服务器的监控" target="_blank">用 Python 脚本实现对 Linux...</a></dd>
+    </dl>
+
+    <div id="ad_cen">
+        <script type="text/javascript">            BAIDU_CLB_SLOT_ID = "117306";</script>
+        <script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/o.js"></script>
+    </div>
+    <script type="text/javascript">
+        //new Ad(4, 'ad_cen');
+    </script>
+<div id="comment_title" class="panel_head">
+    查看评论<a name="comments"></a></div>
+<div id="comment_list"><br>&nbsp;&nbsp;暂无评论<br><br><div class="clear"></div></div>
+<div id="comment_bar">
+</div>
+<div id="comment_form"><div class="guest_link">您还没有登录,请<a href="javascript:void(0);" onclick="javascript:csdn.showLogin(function (dat) {js_logined(dat.data.userName);});">[登录]</a>或<a href="http://passport.csdn.net/account/register?from=http%3A%2F%2Fblog.csdn.net%2Fdroidphone%2Farticle%2Fdetails%2F8432055">[注册]</a></div></div>
+<div class="announce">
+    * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+<script type="text/javascript">
+    var fileName = '8432055';
+    var commentscount = 0;
+    var islock = false
+</script>
+<script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/comment.js"></script>
+    <div id="ad_bot">
+    </div>
+    <script type="text/javascript">
+    new Ad(5, 'ad_bot');
+    </script>
+<div id="report_dialog">
+</div>
+<div id="d-top" style="display: none;">
+    <a id="d-top-a" href="#" title="回到顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])">
+        <img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/top.png" alt="TOP"></a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        var d_top = $('#d-top');
+        document.onscroll = function ()
+        {
+            var scrTop = (document.body.scrollTop || document.documentElement.scrollTop);
+            if (scrTop > 500)
+            {
+                d_top.show();
+            } else
+            {
+                d_top.hide();
+            }
+        }
+        $('#d-top-a').click(function ()
+        {
+            scrollTo(0, 0);
+            this.blur();
+            return false;
+        });
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+<div class="tag_list">
+    <h5>
+        <a href="http://www.csdn.net/tag/" target="_blank">核心技术类目</a></h5>
+    <div class="classify">
+<a title="全部主题" href="http://www.csdn.net/tag" target="_blank" onclick="LogClickCount(this,336);">全部主题</a>
+<a title="Java" href="http://www.csdn.net/tag/Java" target="_blank" onclick="LogClickCount(this,336);">Java</a>
+<a title="VPN" href="http://www.csdn.net/tag/vpn" target="_blank" onclick="LogClickCount(this,336);">VPN</a>
+<a title="Android" href="http://www.csdn.net/tag/android" target="_blank" onclick="LogClickCount(this,336);">Android</a>
+<a title="iOS" href="http://www.csdn.net/tag/ios" target="_blank" onclick="LogClickCount(this,336);">iOS</a>
+<a title="ERP" href="http://www.csdn.net/tag/erp" target="_blank" onclick="LogClickCount(this,336);">ERP</a>
+<a title="IE10" href="http://www.csdn.net/tag/ie10" target="_blank" onclick="LogClickCount(this,336);">IE10</a>
+<a title="Eclipse" href="http://www.csdn.net/tag/eclipse" target="_blank" onclick="LogClickCount(this,336);">Eclipse</a>
+<a title="CRM" href="http://www.csdn.net/tag/crm" target="_blank" onclick="LogClickCount(this,336);">CRM</a>
+<a title="JavaScript" href="http://www.csdn.net/tag/javascript" target="_blank" onclick="LogClickCount(this,336);">JavaScript</a>
+<a title="Ubuntu" href="http://www.csdn.net/tag/ubuntu" target="_blank" onclick="LogClickCount(this,336);">Ubuntu</a>
+<a title="NFC" href="http://www.csdn.net/tag/nfc" target="_blank" onclick="LogClickCount(this,336);">NFC</a>
+<a title="WAP" href="http://www.csdn.net/tag/wap" target="_blank" onclick="LogClickCount(this,336);">WAP</a>
+<a title="jQuery" href="http://www.csdn.net/tag/jquery" target="_blank" onclick="LogClickCount(this,336);">jQuery</a>
+<a title="数据库" href="http://www.csdn.net/tag/%E6%95%B0%E6%8D%AE%E5%BA%93" target="_blank" onclick="LogClickCount(this,336);">数据库</a>
+<a title="BI" href="http://www.csdn.net/tag/bi" target="_blank" onclick="LogClickCount(this,336);">BI</a>
+<a title="HTML5" href="http://www.csdn.net/tag/html5" target="_blank" onclick="LogClickCount(this,336);">HTML5</a>
+<a title="Spring" href="http://www.csdn.net/tag/spring" target="_blank" onclick="LogClickCount(this,336);">Spring</a>
+<a title="Apache" href="http://www.csdn.net/tag/apache" target="_blank" onclick="LogClickCount(this,336);">Apache</a>
+<a title="Hadoop" href="http://www.csdn.net/tag/hadoop" target="_blank" onclick="LogClickCount(this,336);">Hadoop</a>
+<a title=".NET" href="http://www.csdn.net/tag/.net" target="_blank" onclick="LogClickCount(this,336);">.NET</a>
+<a title="API" href="http://www.csdn.net/tag/api" target="_blank" onclick="LogClickCount(this,336);">API</a>
+<a title="HTML" href="http://www.csdn.net/tag/html" target="_blank" onclick="LogClickCount(this,336);">HTML</a>
+<a title="SDK" href="http://www.csdn.net/tag/sdk" target="_blank" onclick="LogClickCount(this,336);">SDK</a>
+<a title="IIS" href="http://www.csdn.net/tag/iis" target="_blank" onclick="LogClickCount(this,336);">IIS</a>
+<a title="Fedora" href="http://www.csdn.net/tag/fedora" target="_blank" onclick="LogClickCount(this,336);">Fedora</a>
+<a title="XML" href="http://www.csdn.net/tag/xml" target="_blank" onclick="LogClickCount(this,336);">XML</a>
+<a title="LBS" href="http://www.csdn.net/tag/lbs" target="_blank" onclick="LogClickCount(this,336);">LBS</a>
+<a title="Unity" href="http://www.csdn.net/tag/unity" target="_blank" onclick="LogClickCount(this,336);">Unity</a>
+<a title="Splashtop" href="http://www.csdn.net/tag/splashtop" target="_blank" onclick="LogClickCount(this,336);">Splashtop</a>
+<a title="UML" href="http://www.csdn.net/tag/uml" target="_blank" onclick="LogClickCount(this,336);">UML</a>
+<a title="components" href="http://www.csdn.net/tag/components" target="_blank" onclick="LogClickCount(this,336);">components</a>
+<a title="Windows Mobile" href="http://www.csdn.net/tag/windowsmobile" target="_blank" onclick="LogClickCount(this,336);">Windows Mobile</a>
+<a title="Rails" href="http://www.csdn.net/tag/rails" target="_blank" onclick="LogClickCount(this,336);">Rails</a>
+<a title="QEMU" href="http://www.csdn.net/tag/qemu" target="_blank" onclick="LogClickCount(this,336);">QEMU</a>
+<a title="KDE" href="http://www.csdn.net/tag/kde" target="_blank" onclick="LogClickCount(this,336);">KDE</a>
+<a title="Cassandra" href="http://www.csdn.net/tag/cassandra" target="_blank" onclick="LogClickCount(this,336);">Cassandra</a>
+<a title="CloudStack" href="http://www.csdn.net/tag/cloudstack" target="_blank" onclick="LogClickCount(this,336);">CloudStack</a>
+<a title="FTC" href="http://www.csdn.net/tag/ftc" target="_blank" onclick="LogClickCount(this,336);">FTC</a>
+<a title="coremail" href="http://www.csdn.net/tag/coremail" target="_blank" onclick="LogClickCount(this,336);">coremail</a>
+<a title="OPhone " href="http://www.csdn.net/tag/ophone" target="_blank" onclick="LogClickCount(this,336);">OPhone </a>
+<a title="CouchBase" href="http://www.csdn.net/tag/couchbase" target="_blank" onclick="LogClickCount(this,336);">CouchBase</a>
+<a title="云计算" href="http://www.csdn.net/tag/%E4%BA%91%E8%AE%A1%E7%AE%97" target="_blank" onclick="LogClickCount(this,336);">云计算</a>
+<a title="iOS6" href="http://www.csdn.net/tag/iOS6" target="_blank" onclick="LogClickCount(this,336);">iOS6</a>
+<a title="Rackspace " href="http://www.csdn.net/tag/rackspace" target="_blank" onclick="LogClickCount(this,336);">Rackspace </a>
+<a title="Web App" href="http://www.csdn.net/tag/webapp" target="_blank" onclick="LogClickCount(this,336);">Web App</a>
+<a title="SpringSide" href="http://www.csdn.net/tag/springside" target="_blank" onclick="LogClickCount(this,336);">SpringSide</a>
+<a title="Maemo" href="http://www.csdn.net/tag/maemo" target="_blank" onclick="LogClickCount(this,336);">Maemo</a>
+<a title="Compuware" href="http://www.csdn.net/tag/compuware" target="_blank" onclick="LogClickCount(this,336);">Compuware</a>
+<a title="大数据" href="http://www.csdn.net/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE" target="_blank" onclick="LogClickCount(this,336);">大数据</a>
+<a title="aptech" href="http://www.csdn.net/tag/aptech" target="_blank" onclick="LogClickCount(this,336);">aptech</a>
+<a title="Perl" href="http://www.csdn.net/tag/perl" target="_blank" onclick="LogClickCount(this,336);">Perl</a>
+<a title="Tornado" href="http://www.csdn.net/tag/tornado" target="_blank" onclick="LogClickCount(this,336);">Tornado</a>
+<a title="Ruby" href="http://www.csdn.net/tag/ruby" target="_blank" onclick="LogClickCount(this,336);">Ruby</a>
+<a title="Hibernate" href="http://www.csdn.net/hibernate" target="_blank" onclick="LogClickCount(this,336);">Hibernate</a>
+<a title="ThinkPHP" href="http://www.csdn.net/tag/thinkphp" target="_blank" onclick="LogClickCount(this,336);">ThinkPHP</a>
+<a title="Spark" href="http://www.csdn.net/tag/spark" target="_blank" onclick="LogClickCount(this,336);">Spark</a>
+<a title="HBase" href="http://www.csdn.net/tag/hbase" target="_blank" onclick="LogClickCount(this,336);">HBase</a>
+<a title="Pure" href="http://www.csdn.net/tag/pure" target="_blank" onclick="LogClickCount(this,336);">Pure</a>
+<a title="Solr" href="http://www.csdn.net/tag/solr" target="_blank" onclick="LogClickCount(this,336);">Solr</a>
+<a title="Angular" href="http://www.csdn.net/tag/angular" target="_blank" onclick="LogClickCount(this,336);">Angular</a>
+<a title="Cloud Foundry" href="http://www.csdn.net/tag/cloudfoundry" target="_blank" onclick="LogClickCount(this,336);">Cloud Foundry</a>
+<a title="Redis" href="http://www.csdn.net/tag/redis" target="_blank" onclick="LogClickCount(this,336);">Redis</a>
+<a title="Scala" href="http://www.csdn.net/tag/scala" target="_blank" onclick="LogClickCount(this,336);">Scala</a>
+<a title="Django" href="http://www.csdn.net/tag/django" target="_blank" onclick="LogClickCount(this,336);">Django</a>
+<a title="Bootstrap" href="http://www.csdn.net/tag/bootstrap" target="_blank" onclick="LogClickCount(this,336);">Bootstrap</a>
+    </div>
+</div>
+
+                    <div class="clear">
+                    </div>
+                </div>
+            </div>
+            <div id="side">
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/DroidPhone" target="_blank">
+    <img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/1_droidphone.gif" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/DroidPhone" class="user_name" target="_blank">DroidPhone</a></span>
+</div>
+<div class="interact">
+<a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_guanzhu'])"></a>
+<a href="javascript:void(0);" class="letter" onclick="loginto(1)" title="[发私信]"></a>
+</div>
+<div id="blog_medal">
+<div id="bms_box"><a href="http://medal.blog.csdn.net/allmedal.aspx" target="_blank"><img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/holdon_s2.gif" onmouseover="m_over_m(this,0)" onmouseout="m_out_m()" alt=""></a></div></div>
+<ul id="blog_rank">
+    <li>访问：<span>423690次</span></li>
+    <li>积分：<span>3670分</span></li>
+    <li>排名：<span>第2036名</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>46篇</span></li>
+    <li>转载：<span>0篇</span></li>
+    <li>译文：<span>4篇</span></li>
+    <li>评论：<span>379条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search" target="_blank">
+        <span><input id="inputSearch" class="blogsearch" title="请输入关键字" type="text"></span>
+        <input id="btnSubmit" value="搜索" title="search in blog" type="submit">
+        <input name="q" id="inputQ" type="hidden">
+        <input name="t" value="blog" type="hidden">
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">
+<li>
+<a href="http://blog.csdn.net/droidphone/article/category/721261">移动开发之Android</a><span>(11)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/category/1118439">Linux内核架构</a><span>(15)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/category/788233">Linux设备驱动</a><span>(16)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/category/1118445">Linux电源管理</a><span>(3)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/category/1118446">Linux音频子系统</a><span>(15)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/category/1118447">Linux中断子系统</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/category/1263459">Linux时间管理系统</a><span>(8)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/category/1311863">Linux输入子系统</a><span>(4)</span>
+</li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list"><li><a href="http://blog.csdn.net/droidphone/article/month/2013/11">2013年11月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2013/10">2013年10月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2013/07">2013年07月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2012/12">2012年12月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2012/10">2012年10月</a><span>(4)</span></li><span class="hidelist" style="display:none;"><li><a href="http://blog.csdn.net/droidphone/article/month/2012/09">2012年09月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2012/05">2012年05月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2012/04">2012年04月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2012/03">2012年03月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2012/02">2012年02月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2012/01">2012年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2011/08">2011年08月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2011/07">2011年07月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2011/05">2011年05月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2011/04">2011年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2011/03">2011年03月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2010/11">2010年11月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2010/10">2010年10月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2010/09">2010年09月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/droidphone/article/month/2010/08">2010年08月</a><span>(1)</span></li></span><div id="archive_list_button" class="list_closed">展开</div></div>
+</ul>
+</div>
+<div id="hotarticls" class="panel">
+<ul class="panel_head"><span>阅读排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/5941344" title="Android Audio System 之一：AudioTrack如何与AudioFlinger交换音频数据">Android Audio System 之一：AudioTrack如何与AudioFlinger交换音频数据</a><span>(40441)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/6271122" title="Linux ALSA声卡驱动之一：ALSA架构简介">Linux ALSA声卡驱动之一：ALSA架构简介</a><span>(27739)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/5949280" title="Android Audio System 之三： AudioPolicyService 和 AudioPolicyManager">Android Audio System 之三： AudioPolicyService 和 AudioPolicyManager</a><span>(26782)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/5951999" title="Android Audio System 之二：AudioFlinger">Android Audio System 之二：AudioFlinger</a><span>(26119)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/6289712" title="Linux ALSA声卡驱动之二：声卡的创建">Linux ALSA声卡驱动之二：声卡的创建</a><span>(20516)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/6308006" title="Linux ALSA声卡驱动之三：PCM设备的创建">Linux ALSA声卡驱动之三：PCM设备的创建</a><span>(18883)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/5972568" title="Android SurfaceFlinger中的SharedClient -- 客户端（Surface）和服务端（Layer）之间的显示缓冲区管理">Android SurfaceFlinger中的SharedClient -- 客户端（Surface）和服务端（Layer）之间的显示缓冲区管理</a><span>(18832)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/7283833" title="Linux ALSA声卡驱动之七：ASoC架构中的Codec">Linux ALSA声卡驱动之七：ASoC架构中的Codec</a><span>(14481)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/5799792" title="Android中的sp和wp指针">Android中的sp和wp指针</a><span>(14399)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/6409983" title="Linux ALSA声卡驱动之四：Control设备的创建">Linux ALSA声卡驱动之四：Control设备的创建</a><span>(13330)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/5941344" title="Android Audio System 之一：AudioTrack如何与AudioFlinger交换音频数据">Android Audio System 之一：AudioTrack如何与AudioFlinger交换音频数据</a><span>(51)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/7316061" title="Linux ALSA声卡驱动之八：ASoC架构中的Platform">Linux ALSA声卡驱动之八：ASoC架构中的Platform</a><span>(30)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/5972568" title="Android SurfaceFlinger中的SharedClient -- 客户端（Surface）和服务端（Layer）之间的显示缓冲区管理">Android SurfaceFlinger中的SharedClient -- 客户端（Surface）和服务端（Layer）之间的显示缓冲区管理</a><span>(21)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/6308006" title="Linux ALSA声卡驱动之三：PCM设备的创建">Linux ALSA声卡驱动之三：PCM设备的创建</a><span>(19)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/6289712" title="Linux ALSA声卡驱动之二：声卡的创建">Linux ALSA声卡驱动之二：声卡的创建</a><span>(18)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/7445825" title="Linux中断（interrupt）子系统之一：中断系统基本原理">Linux中断（interrupt）子系统之一：中断系统基本原理</a><span>(16)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/5951999" title="Android Audio System 之二：AudioFlinger">Android Audio System 之二：AudioFlinger</a><span>(16)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/7489756" title="Linux中断（interrupt）子系统之三：中断流控处理层">Linux中断（interrupt）子系统之三：中断流控处理层</a><span>(14)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/5799792" title="Android中的sp和wp指针">Android中的sp和wp指针</a><span>(13)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/droidphone/article/details/6271122" title="Linux ALSA声卡驱动之一：ALSA架构简介">Linux ALSA声卡驱动之一：ALSA架构简介</a><span>(11)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend"></ul>
+</div>
+<script type="text/javascript">
+ new Ad(12, 'ad_commend');
+</script><div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/7497787#comments">Linux中断（interrupt）子系统之四：驱动程序接口层 &amp; 中断通用逻辑层</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/zlq741342765" class="user_name">zlq741342765</a>:
+博主，膜拜
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/7489756#comments">Linux中断（interrupt）子系统之三：中断流控处理层</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/F599GTB" class="user_name">F599GTB</a>:
+@DroidPhone:楼主，你画程序执行的流程图的工具全程是什么？
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/12793293#comments">ALSA声卡驱动中的DAPM详解之一：kcontrol</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/Whisper_J" class="user_name">Whisper_J</a>:
+@DroidPhone:大侠，我现在调试音频芯片WM8960遇到很大的问题，困惑了好久，能加qq请教...
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/7231605#comments">Linux ALSA声卡驱动之六：ASoC架构中的Machine</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/cqcdscu999" class="user_name">cqcdscu999</a>:
+@u012389631:我也遇到相同的问题了。我在流程图上面看到调用了这个dai_link_from...
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/8074892#comments">Linux时间子系统之六：高精度定时器（HRTIMER）的原理和实现</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/u011938775" class="user_name">_海哲</a>:
+xuexile
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/8074892#comments">Linux时间子系统之六：高精度定时器（HRTIMER）的原理和实现</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/u011938775" class="user_name">_海哲</a>:
+xuexile
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/9346981#comments">Linux动态频率调节系统CPUFreq之一：概述</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/ff5102154" class="user_name">ff5102154</a>:
+请教一下cat scaling_governor 得出interactive，这是什么控制模式？
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/14146319#comments">ALSA声卡驱动中的DAPM详解之六：精髓所在，牵一发而动全身</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/Alivepea" class="user_name">Alivepea</a>:
+我也写了一点自己对alsa的理解。如果帮忙指正谬误，十分感谢:-)《内核ALSA简览》http://...
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/6308006#comments">Linux ALSA声卡驱动之三：PCM设备的创建</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/yinming4u" class="user_name">yinming4u</a>:
+@hello_xiaowen:同感
+    </p>
+    </li>
+    <li>
+    <a href="http://blog.csdn.net/DroidPhone/article/details/7467436#comments">Linux中断（interrupt）子系统之二：arch相关的硬件封装层</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/wangwenxue1989" class="user_name">wangwenxue1989</a>:
+CPU一旦响应IRQ中断后，ARM会自动把CPSR中的I位置位，表明禁止新的IRQ请求，直到中断控制...
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+</div>
+
+            <div class="clear">
+            </div>
+        </div>
+        
+
+<script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/newblog.js"></script>
+<script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/showblogmedal.js"></script>
+<script type="text/javascript">
+    document.write('<script type="text/javascript" src="http://csdnimg.cn/pubfooter/js/publib_footer.js?' + Math.floor(new Date() / 120000).toString(36) + '="></' + 'script>');
+</script><script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/publib_footer.js"></script><link rel="stylesheet" type="text/css" href="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/pub_footer_2012.css"><div id="pub_footerall" class="pub_footerall"><dl><dt></dt> <dd><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a>|<a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a>|<a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a>|<a href="http://www.csdn.net/company/account.html" target="_blank">银行汇款帐号</a>|<a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a>|<a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a>|<a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a>|<a href="mailto:webmaster@csdn.net">问题报告</a>|<a target="_blank" href="http://www.csdn.net/friendlink.html">合作伙伴</a>|<a href="http://bbs.csdn.net/forums/Service" target="_blank">论坛反馈</a></dd><dd><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2355263776&amp;site=qq&amp;menu=yes" target="_blank" class="qq">客服1</a> <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2251809102&amp;site=qq&amp;menu=yes" target="_blank" class="qq">客服2</a> <a href="http://e.weibo.com/csdnsupport/profile" target="_blank" class="weibo">微博客服</a> <a href="mailto:webmaster@csdn.net" class="email" title="联系邮箱">webmaster@csdn.net</a> <span class="phone" title="服务热线">400-600-2320</span></dd><dd>京&nbsp;ICP&nbsp;证&nbsp;070598&nbsp;号</dd><dd>北京创新乐知信息技术有限公司 版权所有</dd><dd>江苏乐知网络技术有限公司 提供商务支持</dd><dd>Copyright © 1999-2014, CSDN.NET, All Rights Reserved&nbsp;<a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div><div id="note1" class="csdn_note" style="display:none; position:absolute; z-index:9999; width:440px">  <span class="notice_top_arrow"><span class="inner"></span></span>  <div class="box"></div></div><div class="csdn_notice_tip" style="display:none; position:absolute; z-index:9990; width:170px">  <iframe src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/a_002.htm" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent" frameborder="0" scrolling="no"></iframe>  <div class="tip_text">您有<strong>0</strong>条新通知</div>  <a href="javascript:void%200" class="close2"></a></div><script id="noticeScript" type="text/javascript" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/notify.js"></script>
+    <script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/login.js"></script>
+<script type="text/javascript">document.write("<img src=http://counter.csdn.net/pv.aspx?id=24 border=0 width=0 height=0>");</script><img src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/pv.txt" border="0" height="0" width="0">
+<script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/counter.js"></script><script type="text/javascript" charset="UTF-8" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/msg.js"></script>
+<script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/ad-blog.js"></script>
+<script type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/count.js"></script><iframe src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/logs.htm" frameborder="0" height="0" width="0"></iframe>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a>"
+                    + "<a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+    });
+</script>
+
+    </div>
+      <!--new top-->
+    
+    <script id="csdn-toolbar-id" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" type="text/javascript" src="Linux%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%EF%BC%9A%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BC%96%E7%A0%81%20--%20event-codes.txt%20-%20DroidPhone%E7%9A%84%E4%B8%93%E6%A0%8F%20-%20%E5%8D%9A%E5%AE%A2%E9%A2%91%E9%81%93%20-%20CSDN.NET_files/toolbar.js"></script>
+     <!--new top-->
+
+
+<div style="display: block;" id="tag-suggest-pop">
+  <div class="relative">
+    <div class="close"></div>
+    <div class="content">
+      <span>更多相关资源：</span>
+      <a href="http://www.csdn.net/tag/%E7%B1%BB" target="_blank">类</a>
+    </div>
+  </div>
+</div></body></html>

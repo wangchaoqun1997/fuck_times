@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)http://www.lofter.com/recommendblog?email=thinki_cao@163.com -->
+<html lang="zh"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LOFTER（乐乎） - 记录生活，发现同好</title>
+  <meta name="keywords" content="图片社交、照片社交、摄影作品、手机摄影、同人文、平面设计、cosplay、达人、女神图片、时尚搭配、二次元">
+
+<meta http-equiv="x-ua-compatible" content="ie=emulateie7">
+<meta name="author" content="netease">
+<meta name="version" content="1.0">
+<meta name="keywords" content="图片社交、照片社交、摄影作品、手机摄影、同人文、平面设计、cosplay、达人、女神图片、时尚搭配、二次元">
+<meta name="description" content="">
+
+  <script type="text/javascript">
+   (function(window,document){
+        
+        document.uniqueID!=document.uniqueID&&!!location.hash&&(location.hash=location.hash);
+        window.focus();
+    })(this,document);
+  </script>
+<style type="text/css">
+html,body{font-family:"Hiragino Sans GB","Microsoft YaHei","微软雅黑",tahoma,arial,simsun,"宋体";text-align:left;font-size:12px;line-height:normal;background-color:transparent;}
+*{margin:0;padding:0;}
+li{list-style:none;}
+a{color:#666;text-decoration:none;}
+img{border:0 none;}
+
+.m-iframepostlist .type{background:url(/rsc/img/icon24.png?036) no-repeat 999px 999px;_background:url(/rsc/img/icon.png?036) no-repeat 999px 999px;}
+.m-iframepostlist .first{background:url(/rsc/img/addinbanenr.png?002) no-repeat;}
+
+.m-iframepostlist{height:125px;margin-right:-5px;}
+.m-iframepostlist li{position:relative;float:left;width:125px;height:125px;margin:0 5px 10px 0;overflow:hidden;background:#ddd;}
+.m-iframepostlist a{height:100%;}
+.m-iframepostlist a,.m-iframepostlist img,.m-iframepostlist span,.m-iframepostlist strong{display:block;}
+.m-iframepostlist .txt{padding:10px 10px 0;}
+.m-iframepostlist .txt strong{max-height:42px;_height:21px;margin:0 0 8px;overflow:hidden;font-size:16px;}
+.m-iframepostlist .txt span{max-height:69px;overflow:hidden;line-height:23px;}
+.m-iframepostlist .type{position:absolute;top:50%;left:50%;width:57px;height:57px;margin:-28px 0 0 -28px;_width:52px;_height:52px;_margin:-26px 0 0 -26px;filter:alpha(opacity=90);}
+.m-iframepostlist .movie .type{background-position:0 -2180px;*background-position:0 -2300px;}
+.m-iframepostlist .music .type{background-position:0 -2240px;*background-position:0 -2358px;}
+.m-iframepostlist .first{text-indent:-999px;overflow:hidden;}
+.m-iframepostlist .first-1{background-position:0 0;}
+.m-iframepostlist .first-2{background-position:-131px 0;}
+.m-iframepostlist .first-3{background-position:-262px 0;}
+.m-iframepostlist .first-4{background-position:-393px 0;}
+.m-iframepostlist .first-5{background-position:-524px 0;}
+
+.m-iframepostlist .imgwrap{position:absolute;top:50%;}
+.m-iframepostlist .imgwrap img{width:125px;}
+.m-iframepostlist .imgwrap2{position:relative;}
+.m-iframepostlist .firstimg{visibility:hidden;}
+.m-iframepostlist .lastimg{position:absolute;top:-50%;}
+
+/*  LOFTER-19450:博客更多文章模块样式更换  */
+.m-iframepostlist .blogfirst{text-indent:-999px;overflow:hidden;background:url(/rsc/img/blogfirst.png?002) 0 0 no-repeat;}
+</style>
+</head>
+
+<body>
+
+<div class="m-iframepostlist">
+	<ul class="list" id="ullist">
+		<li class="blogfirst" id="joinLink">
+			<a target="_blank" id="joinLofterLink" href="http://www.lofter.com/?act=qbpersonalpagelogin_20141014_01">加入LOFTER</a>
+		</li>
+	<li class="text"><a href="http://thinkicao.lofter.com/post/1cc7920a_9b8dcbc" target="_blank"><span class="txt"><strong>Linux内核dma engine subsystem简介</strong><span>最近接触到了pinctrl subsystem，进行简单总结一下它的作用以及发展由来，主要参考资料为： Embedded Linux conferrence 2015（作者Maxime Ripard）： An Overview of the DMAEngine Subsystem Xilinx工程师的ppt（作者 John Linn，看经历貌似对zynq做了很多contribution）： Linux DMA in Device Drivers Based on 3.14 Linux kernel Embedded Linux Conference 2014：...</span></span></a></li><li class="text"><a href="http://thinkicao.lofter.com/post/1cc7920a_70a813f" target="_blank"><span class="txt"><strong>Ethernet Driver调试总结</strong><span>最近在调试IP Camera Soc的Ethernet IP的Linux Driver，期间遇到不少问题，也走了不少弯路，因此特地将遇到的问题总结下来，以备日后温故而知新。 常用的工具： ATKKPING：主要用于测试网络丢包率，仅限于Windows平台下使用，它可以不间断地向某个IP地址发送ICMP（ping）包，并同时统计丢包个数和丢包率，截图如下： 还有一种比较暴力的做法就是同时开多个ATKKPING进程，一起ping :-P，一般来说正常情况下从host往target发送ping包时，仅会在一开始会有1-2个包超时，后面不会丢！ps：还有一个Ping...</span></span></a></li><li class="text"><a href="http://thinkicao.lofter.com/post/1cc7920a_9c15eaf" target="_blank"><span class="txt"><strong>Linux Network &amp; Ethernet Driver Offload浅析</strong><span>目前Kernel stack提供了若干Network Offload选项来降低cpu loading，常见的features选项如下： 名称内核FLAG Scatter Gather NETIF_F_SG IP Checksum NETIF_F_IP_CSUM Tcp Segment Offload NETIF_F_TSO Generic Segment Offload NETIF_F_GSOScatter Gather： 在内核stack中进行分段时会检测该选项...</span></span></a></li><li class="text"><a href="http://thinkicao.lofter.com/post/1cc7920a_9b86824" target="_blank"><span class="txt"><strong>Linux内核pinctrl subsystem简介</strong><span>最近接触到了pinctrl subsystem，进行简单总结一下它的作用以及发展由来，主要参考资料为： LWN文章：The pin control subsystem Linaro的ppt（作者同时也是pinctrl subsystem的maintainer，Linus Walleij 来自 ST-Ericsson）： Pin Control Sybsystem – Building Pins and GPIO from the ground up pinctrl的作用，通过麦肯锡的“空 雨 伞”记录方式呈现（非常容易让人抓住重点，感谢warfalcon童鞋的推荐）... </span></span></a></li><li class="text"><a href="http://thinkicao.lofter.com/post/1cc7920a_3a7bd64" target="_blank"><span class="txt"><strong>电子半导体行业应届生就业现状总结</strong><span>作为一个刚刚进入电子/半导体（这里主要是指的半导体）行业的小鸟，谈谈我对于目前半导体（下文中均用IC代替）行业的理解与总结。 得益于国家的经济发展以及战略需求，近几年国内的IC公司招聘规模一直在不断地扩大，尤其是今年更是达到了一个高峰，所以对于想了解以及打算从事该行业的童鞋们，我这里做一个简要的介绍。 公司分类 首先根据我的理解，按照地区对电子半导体公司做了一个简要的分类： 欧美 INTEL,AMD,FREESCALE,MARVELL,QUALCOMM,NVIDIA 日韩... </span></span></a></li></ul>
+</div>
+
+
+<script>
+var _postAry = [], _showPostAry = [], _post, _linode, _classname = ['text','img','music','movie'], _texthtml, _blogLink='http://thinkicao.lofter.com/';
+_postAry.push({type:1, permalink:'1cc7920a_9b8dcbc',imgurl:'', title:'Linux内核dma engine subsystem简介', content:'最近接触到了pinctrl subsystem，进行简单总结一下它的作用以及发展由来，主要参考资料为： Embedded Linux conferrence 2015（作者Maxime Ripard）： An Overview of the DMAEngine Subsystem Xilinx工程师的ppt（作者 John Linn，看经历貌似对zynq做了很多contribution）： Linux DMA in Device Drivers Based on 3.14 Linux kernel Embedded Linux Conference 2014：...', noticeLinkTitle:'Linux内核dma engi...'});
+_postAry.push({type:1, permalink:'1cc7920a_70a813f',imgurl:'', title:'Ethernet Driver调试总结', content:'最近在调试IP Camera Soc的Ethernet IP的Linux Driver，期间遇到不少问题，也走了不少弯路，因此特地将遇到的问题总结下来，以备日后温故而知新。 常用的工具： ATKKPING：主要用于测试网络丢包率，仅限于Windows平台下使用，它可以不间断地向某个IP地址发送ICMP（ping）包，并同时统计丢包个数和丢包率，截图如下： 还有一种比较暴力的做法就是同时开多个ATKKPING进程，一起ping :-P，一般来说正常情况下从host往target发送ping包时，仅会在一开始会有1-2个包超时，后面不会丢！ps：还有一个Ping...', noticeLinkTitle:'Ethernet Driver...'});
+_postAry.push({type:1, permalink:'1cc7920a_9c15eaf',imgurl:'', title:'Linux Network &amp; Ethernet Driver Offload浅析', content:'目前Kernel stack提供了若干Network Offload选项来降低cpu loading，常见的features选项如下： 名称内核FLAG Scatter Gather NETIF_F_SG IP Checksum NETIF_F_IP_CSUM Tcp Segment Offload NETIF_F_TSO Generic Segment Offload NETIF_F_GSOScatter Gather： 在内核stack中进行分段时会检测该选项...', noticeLinkTitle:'Linux Network &amp;...'});
+_postAry.push({type:1, permalink:'1cc7920a_9b86824',imgurl:'', title:'Linux内核pinctrl subsystem简介', content:'最近接触到了pinctrl subsystem，进行简单总结一下它的作用以及发展由来，主要参考资料为： LWN文章：The pin control subsystem Linaro的ppt（作者同时也是pinctrl subsystem的maintainer，Linus Walleij 来自 ST-Ericsson）： Pin Control Sybsystem – Building Pins and GPIO from the ground up pinctrl的作用，通过麦肯锡的“空 雨 伞”记录方式呈现（非常容易让人抓住重点，感谢warfalcon童鞋的推荐）... ', noticeLinkTitle:'Linux内核pinctrl...'});
+_postAry.push({type:1, permalink:'1cc7920a_3a7bd64',imgurl:'', title:'电子半导体行业应届生就业现状总结', content:'作为一个刚刚进入电子/半导体（这里主要是指的半导体）行业的小鸟，谈谈我对于目前半导体（下文中均用IC代替）行业的理解与总结。 得益于国家的经济发展以及战略需求，近几年国内的IC公司招聘规模一直在不断地扩大，尤其是今年更是达到了一个高峰，所以对于想了解以及打算从事该行业的童鞋们，我这里做一个简要的介绍。 公司分类 首先根据我的理解，按照地区对电子半导体公司做了一个简要的分类： 欧美 INTEL,AMD,FREESCALE,MARVELL,QUALCOMM,NVIDIA 日韩... ', noticeLinkTitle:'电子半导体行业应届生就业现状总...'});
+
+if(_postAry.length >5) {
+for(var i=0;i<5;i++) {
+var _length = _postAry.length, _index = Math.floor(Math.random()*_length);
+_showPostAry.push(_postAry[_index]);
+_postAry.splice(_index,1);
+}
+} else {
+_showPostAry = _postAry;
+}
+
+for(var i=0,l=_showPostAry.length; i<l; i++) {
+_post = _showPostAry[i];
+_type = _post.type;
+_linode = document.createElement('li');
+_linode.className = _classname[_post.type-1];
+_anode = document.createElement('a');
+_anode.href = _blogLink+'post/'+_post.permalink;
+_anode.target = '_blank';
+_anode.onclick = function(){
+try{
+var _img = new Image();
+_img.src = 'http://www.lofter.com/statistic.png?act=qbbkgdwz_20141022_01&t=' + new Date().getTime();
+}catch(e){}
+};
+
+if(_type === 1) {
+_texthtml = '<span class="txt"><strong>'+ _post.title +'</strong><span>'+ _post.content +'</span></span>'
+} else {
+if(!!_post.imgurl) {
+if(_type === 2) {
+_texthtml = '<span class="imgwrap"><span class="imgwrap2"><img class="firstimg" src="'+_post.imgurl+'" alt="'+_post.noticeLinkTitle+'"/><img class="lastimg" src="'+_post.imgurl+'" alt="'+_post.noticeLinkTitle+'"/></span></span>';
+} else if(_type === 3) {
+_texthtml = '<span class="imgwrap"><span class="imgwrap2"><img class="firstimg" src="http://imgsize.ph.126.net/?imgurl='+_post.imgurl+'_125x125x0.jpg"/><img class="lastimg" src="http://imgsize.ph.126.net/?imgurl='+_post.imgurl+'_125x125x0.jpg"/></span></span>';
+} else if(_type === 4) {
+_texthtml = '<span class="imgwrap"><span class="imgwrap2"><img class="firstimg" src="'+_post.imgurl+'"/><img class="lastimg" src="'+_post.imgurl+'"/></span></span>';
+}
+}
+_texthtml += '<span class="type"></span>';
+}
+
+_anode.innerHTML = _texthtml;
+_linode.appendChild(_anode);
+document.getElementById('ullist').appendChild(_linode);
+}
+</script>
+
+
+</body></html>

@@ -1,0 +1,2283 @@
+var ELECFANS = {};
+
+ELECFANS.register = function(object) {
+
+	var arr = object.split('.'),
+		obj = ELECFANS;
+
+	for (var i = (arr[0] == 'ELECFANS' ? 1 : 0); i < arr.length; i++) {
+		obj[arr[i]] = obj[arr[i]] || {};
+		obj = obj[arr[i]];
+	}
+}
+
+var ELECFANS_HOST = window.location.host;
+var ELECFANS_DOMAIN_ARR = ELECFANS_HOST.split('.');
+var ELECFANS_DOMAIN_LEN = ELECFANS_DOMAIN_ARR.length;
+var ELECFANS_DOMAIN = ELECFANS_DOMAIN_ARR[(ELECFANS_DOMAIN_LEN - 2)] + '.' + ELECFANS_DOMAIN_ARR[(ELECFANS_DOMAIN_LEN - 1)];
+var ELECFANS_BBS = 'http://bbs.' + ELECFANS_DOMAIN;
+var ELECFANS_HOME = 'http://home.' + ELECFANS_DOMAIN;
+
+ELECFANS.register('UI');
+ELECFANS.register('Interactive');
+
+
+// 路障广告***************************************/
+$(function(){
+	// 显示路障广告
+	var showTdkAd = function(ad_url) {
+		var docHeight = $(document).height(),docWidth = $(document).width();
+		var setStyle=
+				'<style type="text/css">'+
+				'/*2015-07-20 tdk弹窗广告*/'+
+				'#fix-tdkad{position: fixed;z-index: 99999;width: 640px;height: 480px;top: 50%;left: 50%;margin:-240px 0 0 -320px;}'+
+				'#tdk-close{ background: url(http://www.elecfans.com/images2013/close.png) no-repeat 0 0; cursor: pointer; width: 24px; height: 24px; position: absolute; display: block; right: -12px; top: -12px; z-index: 101;}'+
+				'#road-block-bg { background: #999; display: block; position: absolute; left: 0; top: 0; z-index: 99; opacity: 0.5; }'+
+				'</style>'
+			;
+		$('body').append(setStyle+'<div id="fix-tdkad"><iframe width="640" height="480" frameborder="0" src="'+ad_url+'" scrolling="no"></iframe><span id="tdk-close" title="点击关闭"></span></div><div id="road-block-bg"></div>');
+		$(document).on("click", "#tdk-close", function(){
+			closeTdkAd();
+		});
+	}
+	// 关闭路障广告
+	var closeTdkAd = function(){
+		if($('#fix-tdkad').length){
+			$('#fix-tdkad').animate({
+				"opacity" : 0
+			}, 500, function(){
+				$('#fix-tdkad').remove();
+				$('#road-block-bg').hide();
+			});
+		}
+	}
+	// cookie 设置函数
+	$.extend({
+		cookieHelper: function(name, value, options) {
+			if (typeof value != 'undefined') { // name and value given, set cookie
+				options = options || {};
+				if (value === null) {
+					value = '';
+					options.expires = -1;
+				}
+				var expires = '';
+				if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {
+					var date;
+					if (typeof options.expires == 'number') {
+						date = new Date();
+						date.setTime(date.getTime() + (options.expires * 60 * 60 * 1000));
+					} else {
+						date = options.expires;
+					}
+					expires = '; expires=' + date.toUTCString(); // use expires attribute, max-age is not supported by IE
+				}
+				var path = options.path ? '; path=' + options.path : '';
+				var domain = options.domain ? '; domain=' + options.domain : '';
+				var secure = options.secure ? '; secure' : '';
+				document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');
+			} else { // only name given, get cookie
+				var cookieValue = null;
+				if (document.cookie && document.cookie != '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = jQuery.trim(cookies[i]);
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) == (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+		}
+	});
+	// 获取当前栏目ID
+	var get_current_typeid = function() {
+		var ad_id = 0;
+		if( $('#adChannel').length > 0 ) {
+			ad_id = $('#adChannel').val();
+		}
+		return ad_id;
+	}
+
+	if($.cookieHelper("tdkad") !== "yes"){
+		var ad_id = get_current_typeid();
+		// 栏目ID为0的页面没有对应的路障广告
+		if (ad_id == 0) {
+			return false;
+		}
+		$.ajax({
+			type:'GET',
+			url:'/webapi/advertisement/roadblock',
+			data: {site_name:'www', typeid: ad_id},
+			dataType:'json',
+			success: function(response) {
+				if (response.error_code != 0) {
+					return false;
+				}
+				var data = response.data;
+				$.cookieHelper("tdkad", "yes", {expires:data['frequency'], path:"/"});
+				showTdkAd(data['ad_url']);
+				setTimeout(function(){closeTdkAd();}, 30000);
+			}
+		});
+	}
+});
+
+// 路障广告 end***************************************/
+
+// 文章页面右侧添加德州仪器（TI）2015-06-24 by cqm
+$(function() {
+	var AdHtmlRight = $('#AdHtmlRight');
+	if ($(".col-sub").length !== 0 && AdHtmlRight.length !== 0) {
+		var tiHtml = '<div class="tab-content tab-show ti" id="openx-ti-company"></div>';
+		AdHtmlRight.before(tiHtml);
+	}
+});
+
+// document.domain = 'elecfans.com';
+$(function() {
+	// 判断是XP系统，导航用13号字体
+	if (navigator.userAgent.indexOf("Windows NT 5") !== -1) {
+		$(".nav-a").css("font-size", "13px")
+	}
+
+	// 文章栏目及详情页面头部广告更换为左右方式
+	if ($('#TopLeaderboard').length > 0) {
+		var html = '<div id="newTopAdArea" class="clearfix" style="width:1000px;margin:0 auto;"><div id="newTopAdRight" style="float:right;width:260px;height:90px;overflow:hidden;"></div></div>';
+		$('#header').prepend(html);
+		$('#newTopAdArea').append($('#TopLeaderboard').removeClass());
+	}
+
+
+	// 2015-01-05页面新增特刊内容 点击往期杂志弹出杂志选项
+	$(".old-magazine span").click(function(e) {
+		$(this).siblings("ul").slideDown('fast');
+	});
+	$(".old-magazine").mouseleave(function() {
+		$(this).children('ul').hide();
+	})
+	$.ajaxSetup({
+		cache: false
+	});
+	ELECFANS.UI.index_poster = (function() {
+		if (typeof(ad_id) == 'undefined') {
+			ad_id = '';
+		}
+		var isArticlePage = $('body').is('.article-page');
+		/*底部直播广告对应的ad_id 和id*/
+		var isBttomAd = new Array();
+		isBttomAd[993] = 722;
+		isBttomAd[138] = 723;
+		isBttomAd[934] = 724;
+		isBttomAd[45] = 725;
+		isBttomAd[947] = 726;
+		isBttomAd[1064] = 727;
+		isBttomAd[875] = 728;
+		isBttomAd[201] = 729;
+		isBttomAd[987] = 730;
+		isBttomAd[986] = 731;
+		isBttomAd[840] = 732;
+		isBttomAd[988] = 733;
+		isBttomAd[898] = 734;
+		isBttomAd[834] = 735;
+		isBttomAd[1062] = 736;
+		isBttomAd[1055] = 737;
+
+
+
+
+		isBttomAd[200] = 744;
+		isBttomAd[996] = 745;
+		isBttomAd[56] = 746;
+		isBttomAd[55] = 748;
+		isBttomAd[967] = 749;
+		isBttomAd[155] = 750;
+		isBttomAd[57] = 751;
+		isBttomAd[148] = 752;
+		isBttomAd[783] = 753;
+		isBttomAd[83] = 754;
+		isBttomAd[59] = 755;
+		isBttomAd[922] = 757;
+		isBttomAd[144] = 758;
+		isBttomAd[840] = 759;
+		isBttomAd[50] = 760;
+		isBttomAd[47] = 761;
+		isBttomAd[922] = 762;
+
+		if (!!isArticlePage) {
+			function getCookie(name)
+			{
+				var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+				if(arr=document.cookie.match(reg))
+					return unescape(arr[2]);
+				else
+					return null;
+			}
+			var getBottomAd = getCookie('getBottomAd');
+			if(getBottomAd !=1){
+				/*
+				 * 获取底部横幅的开始结束时间和间隔时间
+				 * */
+				$.ajax({
+					url:'/webapi/advertisement/bottombanner',
+					type:'post',
+					success:function(data){
+						var timestamp = Date.parse(new Date());
+						timestamp = timestamp / 1000;
+						if(timestamp>data.list.start_time && timestamp<data.list.end_time){
+							var loginTip ='<div class="w100" id="log-tip1"><div class="close" id="close"></div></div>';
+							$("body").append(loginTip);
+							$("#log-tip1").css({'padding':'0px','height':'148px','z-index':'10','text-align':'center'});
+							/*如果ad_id没判断到指向ROS*/
+							if(isBttomAd[ad_id]==undefined){
+								isBttomAd[ad_id]=742;
+							}
+							openX_ad(isBttomAd[ad_id],'#log-tip1',1000,194);
+							$("#log-tip1 iframe").css({'margin-top':'-32px'});
+							$('#close').click(function(){
+								var Days = data.list.ad_info.frequency/24;
+								var exp = new Date();
+								exp.setTime(exp.getTime() + Days*24*60*60*1000);
+								document.cookie = 'getBottomAd' + "="+ '1' + ";expires=" +  exp.toGMTString();
+								$("#log-tip1").hide();
+							});
+						}
+					}
+				})
+
+			}
+
+		}
+
+
+		switch (ad_id) {
+			case '148':
+				openX_ad(14, '#TopLeaderboard', 728, 90);
+				openX_ad(359, '#newTopAdRight', 260, 90);
+				openX_ad(16, '#MiddleLeaderboard', 728, 90);
+				openX_ad(18, '#BottomLeaderboard', 728, 90);
+				openX_ad(15, '#Right1', 300, 600);
+				openX_ad(17, '#Right2', 300, 250);
+				openX_ad(20, '#Right3', 300, 250);
+				openX_ad(21, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(591, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(592, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '155':
+				openX_ad(7, '#TopLeaderboard', 728, 90);
+				openX_ad(357, '#newTopAdRight', 260, 90);
+				openX_ad(8, '#MiddleLeaderboard', 728, 90);
+				openX_ad(9, '#BottomLeaderboard', 728, 90);
+				openX_ad(10, '#Right1', 300, 600);
+				openX_ad(11, '#Right2', 300, 250);
+				openX_ad(12, '#Right3', 300, 250);
+				openX_ad(13, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(589, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(590, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '144':
+				openX_ad(29, '#TopLeaderboard', 728, 90);
+				openX_ad(365, '#newTopAdRight', 260, 90);
+				openX_ad(27, '#MiddleLeaderboard', 728, 90);
+				openX_ad(25, '#BottomLeaderboard', 728, 90);
+				openX_ad(28, '#Right1', 300, 600);
+				openX_ad(26, '#Right2', 300, 250);
+				openX_ad(23, '#Right3', 300, 250);
+				openX_ad(24, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(595, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(596, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '200':
+				openX_ad(36, '#TopLeaderboard', 728, 90);
+				openX_ad(356, '#newTopAdRight', 260, 90);
+				openX_ad(34, '#MiddleLeaderboard', 728, 90);
+				openX_ad(32, '#BottomLeaderboard', 728, 90);
+				openX_ad(35, '#Right1', 300, 600);
+				openX_ad(37, '#Right2', 300, 250);
+				openX_ad(31, '#Right3', 300, 250);
+				openX_ad(30, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(567, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(568, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '47':
+				openX_ad(44, '#TopLeaderboard', 728, 90);
+				openX_ad(368, '#newTopAdRight', 260, 90);
+				openX_ad(42, '#MiddleLeaderboard', 728, 90);
+				openX_ad(40, '#BottomLeaderboard', 728, 90);
+				openX_ad(43, '#Right1', 300, 600);
+				openX_ad(41, '#Right2', 300, 250);
+				openX_ad(39, '#Right3', 300, 250);
+				openX_ad(38, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(597, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(598, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '59':
+				openX_ad(51, '#TopLeaderboard', 728, 90);
+				openX_ad(363, '#newTopAdRight', 260, 90);
+				openX_ad(49, '#MiddleLeaderboard', 728, 90);
+				openX_ad(47, '#BottomLeaderboard', 728, 90);
+				openX_ad(50, '#Right1', 300, 600);
+				openX_ad(48, '#Right2', 300, 250);
+				openX_ad(46, '#Right3', 300, 250);
+				openX_ad(45, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(593, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(594, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '56':
+				openX_ad(58, '#TopLeaderboard', 728, 90);
+				openX_ad(353, '#newTopAdRight', 260, 90);
+				openX_ad(56, '#MiddleLeaderboard', 728, 90);
+				openX_ad(54, '#BottomLeaderboard', 728, 90);
+				openX_ad(57, '#Right1', 300, 600);
+				openX_ad(55, '#Right2', 300, 250);
+				openX_ad(53, '#Right3', 300, 250);
+				openX_ad(52, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(573, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(574, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '57':
+				openX_ad(72, '#TopLeaderboard', 728, 90);
+				openX_ad(358, '#newTopAdRight', 260, 90);
+				openX_ad(70, '#MiddleLeaderboard', 728, 90);
+				openX_ad(68, '#BottomLeaderboard', 728, 90);
+				openX_ad(71, '#Right1', 300, 600);
+				openX_ad(69, '#Right2', 300, 250);
+				openX_ad(67, '#Right3', 300, 250);
+				openX_ad(66, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(571, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(572, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '841':
+				openX_ad(79, '#TopLeaderboard', 728, 90);
+				openX_ad(366, '#newTopAdRight', 260, 90);
+				openX_ad(77, '#MiddleLeaderboard', 728, 90);
+				openX_ad(75, '#BottomLeaderboard', 728, 90);
+				openX_ad(78, '#Right1', 300, 600);
+				openX_ad(76, '#Right2', 300, 250);
+				openX_ad(74, '#Right3', 300, 250);
+				openX_ad(73, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(575, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(576, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '38':
+				openX_ad(86, '#TopLeaderboard', 728, 90);
+				openX_ad(362, '#newTopAdRight', 260, 90);
+				openX_ad(84, '#MiddleLeaderboard', 728, 90);
+				openX_ad(82, '#BottomLeaderboard', 728, 90);
+				openX_ad(85, '#Right1', 300, 600);
+				openX_ad(83, '#Right2', 300, 250);
+				openX_ad(81, '#Right3', 300, 250);
+				openX_ad(80, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(577, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(578, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '967':
+				openX_ad(93, '#TopLeaderboard', 728, 90);
+				openX_ad(355, '#newTopAdRight', 260, 90);
+				openX_ad(91, '#MiddleLeaderboard', 728, 90);
+				openX_ad(89, '#BottomLeaderboard', 728, 90);
+				openX_ad(92, '#Right1', 300, 600);
+				openX_ad(90, '#Right2', 300, 250);
+				openX_ad(88, '#Right3', 300, 250);
+				openX_ad(87, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(579, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(580, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '783':
+				openX_ad(100, '#TopLeaderboard', 728, 90);
+				openX_ad(360, '#newTopAdRight', 260, 90);
+				openX_ad(98, '#MiddleLeaderboard', 728, 90);
+				openX_ad(96, '#BottomLeaderboard', 728, 90);
+				openX_ad(99, '#Right1', 300, 600);
+				openX_ad(97, '#Right2', 300, 250);
+				openX_ad(95, '#Right3', 300, 250);
+				openX_ad(94, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(581, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(582, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '55':
+				openX_ad(107, '#TopLeaderboard', 728, 90);
+				openX_ad(354, '#newTopAdRight', 260, 90);
+				openX_ad(105, '#MiddleLeaderboard', 728, 90);
+				openX_ad(103, '#BottomLeaderboard', 728, 90);
+				openX_ad(106, '#Right1', 300, 600);
+				openX_ad(104, '#Right2', 300, 250);
+				openX_ad(102, '#Right3', 300, 250);
+				openX_ad(101, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(583, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(584, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '922':
+				openX_ad(114, '#TopLeaderboard', 728, 90);
+				openX_ad(364, '#newTopAdRight', 260, 90);
+				openX_ad(112, '#MiddleLeaderboard', 728, 90);
+				openX_ad(110, '#BottomLeaderboard', 728, 90);
+				openX_ad(113, '#Right1', 300, 600);
+				openX_ad(111, '#Right2', 300, 250);
+				openX_ad(109, '#Right3', 300, 250);
+				openX_ad(108, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(585, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(586, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '50':
+				openX_ad(121, '#TopLeaderboard', 728, 90);
+				openX_ad(367, '#newTopAdRight', 260, 90);
+				openX_ad(119, '#MiddleLeaderboard', 728, 90);
+				openX_ad(117, '#BottomLeaderboard', 728, 90);
+				openX_ad(120, '#Right1', 300, 600);
+				openX_ad(118, '#Right2', 300, 250);
+				openX_ad(116, '#Right3', 300, 250);
+				openX_ad(115, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(587, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(588, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '931':
+				openX_ad(130, '#TopLeaderboard', 728, 90);
+				openX_ad(370, '#newTopAdRight', 260, 90);
+				openX_ad(134, '#MiddleLeaderboard', 728, 90);
+				openX_ad(129, '#BottomLeaderboard', 728, 90);
+				openX_ad(135, '#Right1', 300, 600);
+				openX_ad(133, '#Right2', 300, 250);
+				openX_ad(132, '#Right3', 300, 250);
+				openX_ad(131, '#ArticleAd', 300, 250);
+				break;
+			case '934':
+				openX_ad(137, '#TopLeaderboard', 728, 90);
+				openX_ad(341, '#newTopAdRight', 260, 90);
+				openX_ad(141, '#MiddleLeaderboard', 728, 90);
+				openX_ad(136, '#BottomLeaderboard', 728, 90);
+				openX_ad(142, '#Right1', 300, 600);
+				openX_ad(140, '#Right2', 300, 250);
+				openX_ad(139, '#Right3', 300, 250);
+				openX_ad(138, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(536, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(537, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '947':
+				openX_ad(144, '#TopLeaderboard', 728, 90);
+				openX_ad(343, '#newTopAdRight', 260, 90);
+				openX_ad(148, '#MiddleLeaderboard', 728, 90);
+				openX_ad(143, '#BottomLeaderboard', 728, 90);
+				openX_ad(149, '#Right1', 300, 600);
+				openX_ad(147, '#Right2', 300, 250);
+				openX_ad(146, '#Right3', 300, 250);
+				openX_ad(145, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(540, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(542, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '986':
+				openX_ad(151, '#TopLeaderboard', 728, 90);
+				openX_ad(347, '#newTopAdRight', 260, 90);
+				openX_ad(155, '#MiddleLeaderboard', 728, 90);
+				openX_ad(150, '#BottomLeaderboard', 728, 90);
+				openX_ad(156, '#Right1', 300, 600);
+				openX_ad(154, '#Right2', 300, 250);
+				openX_ad(153, '#Right3', 300, 250);
+				openX_ad(152, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(551, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(552, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '840':
+				openX_ad(158, '#TopLeaderboard', 728, 90);
+				openX_ad(348, '#newTopAdRight', 260, 90);
+				openX_ad(162, '#MiddleLeaderboard', 728, 90);
+				openX_ad(157, '#BottomLeaderboard', 728, 90);
+				openX_ad(163, '#Right1', 300, 600);
+				openX_ad(161, '#Right2', 300, 250);
+				openX_ad(160, '#Right3', 300, 250);
+				openX_ad(159, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(554, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(555, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '987':
+				openX_ad(165, '#TopLeaderboard', 728, 90);
+				openX_ad(346, '#newTopAdRight', 260, 90);
+				openX_ad(169, '#MiddleLeaderboard', 728, 90);
+				openX_ad(164, '#BottomLeaderboard', 728, 90);
+				openX_ad(170, '#Right1', 300, 600);
+				openX_ad(168, '#Right2', 300, 250);
+				openX_ad(167, '#Right3', 300, 250);
+				openX_ad(166, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(549, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(550, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '45':
+				openX_ad(172, '#TopLeaderboard', 728, 90);
+				openX_ad(342, '#newTopAdRight', 260, 90);
+				openX_ad(176, '#MiddleLeaderboard', 728, 90);
+				openX_ad(171, '#BottomLeaderboard', 728, 90);
+				openX_ad(177, '#Right1', 300, 600);
+				openX_ad(175, '#Right2', 300, 250);
+				openX_ad(174, '#Right3', 300, 250);
+				openX_ad(173, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(538, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(539, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '988':
+				openX_ad(186, '#TopLeaderboard', 728, 90);
+				openX_ad(349, '#newTopAdRight', 260, 90);
+				openX_ad(190, '#MiddleLeaderboard', 728, 90);
+				openX_ad(185, '#BottomLeaderboard', 728, 90);
+				openX_ad(191, '#Right1', 300, 600);
+				openX_ad(189, '#Right2', 300, 250);
+				openX_ad(188, '#Right3', 300, 250);
+				openX_ad(187, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(556, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(557, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '138':
+				openX_ad(193, '#TopLeaderboard', 728, 90);
+				openX_ad(340, '#newTopAdRight', 260, 90);
+				openX_ad(197, '#MiddleLeaderboard', 728, 90);
+				openX_ad(192, '#BottomLeaderboard', 728, 90);
+				openX_ad(198, '#Right1', 300, 600);
+				openX_ad(196, '#Right2', 300, 250);
+				openX_ad(195, '#Right3', 300, 250);
+				openX_ad(194, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(534, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(535, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '834':
+				openX_ad(207, '#TopLeaderboard', 728, 90);
+				openX_ad(351, '#newTopAdRight', 260, 90);
+				openX_ad(211, '#MiddleLeaderboard', 728, 90);
+				openX_ad(206, '#BottomLeaderboard', 728, 90);
+				openX_ad(212, '#Right1', 300, 600);
+				openX_ad(210, '#Right2', 300, 250);
+				openX_ad(209, '#Right3', 300, 250);
+				openX_ad(208, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(560, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(561, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '201':
+				openX_ad(130, '#TopLeaderboard', 728, 90);
+				openX_ad(345, '#newTopAdRight', 260, 90);
+				openX_ad(134, '#MiddleLeaderboard', 728, 90);
+				openX_ad(129, '#BottomLeaderboard', 728, 90);
+				openX_ad(135, '#Right1', 300, 600);
+				openX_ad(133, '#Right2', 300, 250);
+				openX_ad(132, '#Right3', 300, 250);
+				openX_ad(131, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(547, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(548, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '875':
+				openX_ad(126, '#TopLeaderboard', 728, 90);
+				openX_ad(344, '#newTopAdRight', 260, 90);
+				openX_ad(128, '#MiddleLeaderboard', 728, 90);
+				openX_ad(127, '#BottomLeaderboard', 728, 90);
+				openX_ad(125, '#Right1', 300, 600);
+				openX_ad(124, '#Right2', 300, 250);
+				openX_ad(123, '#Right3', 300, 250);
+				openX_ad(122, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(545, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(546, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '898':
+				openX_ad(200, '#TopLeaderboard', 728, 90);
+				openX_ad(350, '#newTopAdRight', 260, 90);
+				openX_ad(204, '#MiddleLeaderboard', 728, 90);
+				openX_ad(199, '#BottomLeaderboard', 728, 90);
+				openX_ad(205, '#Right1', 300, 600);
+				openX_ad(203, '#Right2', 300, 250);
+				openX_ad(202, '#Right3', 300, 250);
+				openX_ad(201, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(558, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(559, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '996':
+				openX_ad(65, '#TopLeaderboard', 728, 90);
+				openX_ad(352, '#newTopAdRight', 260, 90);
+				openX_ad(63, '#MiddleLeaderboard', 728, 90);
+				openX_ad(61, '#BottomLeaderboard', 728, 90);
+				openX_ad(64, '#Right1', 300, 600);
+				openX_ad(62, '#Right2', 300, 250);
+				openX_ad(60, '#Right3', 300, 250);
+				openX_ad(59, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(569, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(570, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '1062':
+				openX_ad(608, '#MiddleLeaderboard', 728, 90);
+				openX_ad(616, '#BottomLeaderboard', 728, 90);
+				openX_ad(610, '#Right1', 300, 600);
+				openX_ad(606, '#Right2', 300, 250);
+				openX_ad(613, '#Right3', 300, 250);
+				openX_ad(614, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(563, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(564, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '1055':
+				openX_ad(620, '#MiddleLeaderboard', 728, 90);
+				openX_ad(621, '#BottomLeaderboard', 728, 90);
+				openX_ad(623, '#Right1', 300, 600);
+				openX_ad(617, '#Right2', 300, 250);
+				openX_ad(618, '#Right3', 300, 250);
+				openX_ad(619, '#ArticleAd', 300, 250);
+				if (!isArticlePage) {
+					openX_ad(565, '#openx-ti-company', 300, 345);
+				} else {
+					openX_ad(566, '#openx-ti-company', 300, 345);
+				}
+				break;
+			case '165':
+				//ZhanHui
+				openX_ad(267, '#TopLeaderboard', 728, 90);
+				openX_ad(370, '#newTopAdRight', 260, 90);
+				openX_ad(246, '#MiddleLeaderboard', 728, 90);
+				openX_ad(247, '#ad_490_80_1', 490, 80);
+				openX_ad(248, '#ad_490_80_2', 490, 80);
+				openX_ad(249, '#ad_490_80_3', 490, 80);
+				openX_ad(250, '#ad_490_80_4', 490, 80);
+				openX_ad(251, '#ad_240_80_1_1', 240, 80);
+				openX_ad(252, '#ad_240_80_1_2', 240, 80);
+				openX_ad(253, '#ad_240_80_1_3', 240, 80);
+				openX_ad(254, '#ad_240_80_1_4', 240, 80);
+				openX_ad(255, '#ad_240_80_1_5', 240, 80);
+				openX_ad(256, '#ad_240_80_1_6', 240, 80);
+				openX_ad(257, '#ad_240_80_1_7', 240, 80);
+				openX_ad(258, '#ad_240_80_1_8', 240, 80);
+				openX_ad(259, '#ad_240_80_2_1', 240, 80);
+				openX_ad(260, '#ad_240_80_2_2', 240, 80);
+				openX_ad(261, '#ad_240_80_2_3', 240, 80);
+				openX_ad(262, '#ad_240_80_2_4', 240, 80);
+				openX_ad(263, '#ad_240_80_2_5', 240, 80);
+				openX_ad(264, '#ad_240_80_2_6', 240, 80);
+				openX_ad(265, '#ad_240_80_2_7', 240, 80);
+				openX_ad(266, '#ad_240_80_2_8', 240, 80);
+				break;
+			case 'taglist':
+				openX_ad(226, '#TopLeaderboard', 728, 90);
+				openX_ad(370, '#newTopAdRight', 260, 90);
+				openX_ad(217, '#MiddleLeaderboard', 728, 90);
+				openX_ad(218, '#Right1', 300, 600);
+				openX_ad(216, '#Right2', 300, 250);
+				openX_ad(215, '#Right3', 300, 250);
+				openX_ad(213, '#BottomLeaderboard', 728, 90);
+				break;
+			case 'homepage':
+				openX_ad(226, '#TopLeaderLeft', 728, 90);
+				openX_ad(273, '#TopLeaderRight', 260, 90);
+				openX_ad(243, '#J_300_90', 300, 90);
+				openX_ad(1, '#MiddleLeaderboard', 728, 90);
+				openX_ad(2, '#BottomLeaderboard', 728, 90);
+				openX_ad(3, '#Right2', 300, 250);
+				openX_ad(4, '#Right3', 300, 250);
+				openX_ad(5, '#LeftAd', 300, 250);
+				openX_ad(6, '#IndexRightBottom', 300, 600);
+				openX_ad(268, '#index_ad_240_90_1', 240, 90);
+				openX_ad(269, '#index_ad_240_90_2', 240, 90);
+				openX_ad(270, '#index_ad_240_90_3', 240, 90);
+				openX_ad(271, '#index_ad_240_90_4', 240, 90);
+				break;
+			case '0':
+				openX_ad(226, '#TopLeaderboard', 728, 90);
+				openX_ad(370, '#newTopAdRight', 260, 90);
+				openX_ad(243, '#J_300_90', 300, 90);
+				openX_ad(1, '#MiddleLeaderboard', 728, 90);
+				openX_ad(2, '#BottomLeaderboard', 728, 90);
+				openX_ad(3, '#Right2', 300, 250);
+				openX_ad(4, '#Right3', 300, 250);
+				openX_ad(5, '#LeftAd', 300, 250);
+				openX_ad(6, '#IndexRightBottom', 300, 600);
+				break;
+			// 新科技 栏目
+			case '1067':
+			case '1063':
+			case '1068':
+			case '1069':
+			case '1070':
+			case '1071':
+			case '1072':
+				// openX_ad(214, '#TopLeaderboard', 728, 90);
+				openX_ad(370, '#newTopAdRight', 260, 90);
+				// openX_ad(217, '#MiddleLeaderboard', 728, 90);
+				baidu_ad('u2873653', '#MiddleLeaderboard', 728, 90);
+				// openX_ad(213, '#BottomLeaderboard', 728, 90);
+				openX_ad(218, '#Right1', 300, 600);
+				// openX_ad(216, '#Right2', 300, 250);
+				baidu_ad('u2873657', '#Right2', 300, 250);
+				openX_ad(215, '#Right3', 300, 250);
+				// openX_ad(13, '#ArticleAd', 300, 250);
+				baidu_ad('u2873657', '#ArticleAd', 300, 250);
+				break;
+			default:
+				openX_ad(214, '#TopLeaderboard', 728, 90);
+				openX_ad(370, '#newTopAdRight', 260, 90);
+				openX_ad(217, '#MiddleLeaderboard', 728, 90);
+				openX_ad(213, '#BottomLeaderboard', 728, 90);
+				openX_ad(218, '#Right1', 300, 600);
+				openX_ad(216, '#Right2', 300, 250);
+				openX_ad(215, '#Right3', 300, 250);
+				openX_ad(13, '#ArticleAd', 300, 250);
+				break;
+
+		}
+		openX_ad(781, '#AdHtmlRight', 300, 125);
+		openX_ad(313, '#NewsDetailAdHtmlRight', 300, 280);
+
+		// 门户首页幻灯切换更新为广告 2015-07-09
+		if ($("#index-slider1").length) {
+			openX_ad(314, '#index-slider1', 320, 240);
+			openX_ad(315, '#index-slider2', 320, 240);
+			openX_ad(316, '#index-slider3', 320, 240);
+			openX_ad(371, '#index-slider4', 320, 240);
+		}
+
+		// 增加树莓派广告 2015-05-08
+		// 首页广告
+		openX_ad(304, '#ad-berry', 300, 250);
+		// 栏目和内容页面广告 右栏最上面
+		if ($('#new-adsm-berry').length === 0 && $(".col-sub").length !== 0 && $("#AdHtmlRight").length !== 0) {
+			// 老模板
+			$(".col-sub").prepend('<div style="width:300px;height:250px;margin:10px 0" id="new-adsm-berry"></div>');
+		}
+		if (is_need_replace(305) == true) {
+			baidu_ad('u2873657', '#new-adsm-berry', 300, 250);
+		} else {
+			openX_ad(305, '#new-adsm-berry', 300, 250);
+		}
+
+		function openX_ad(posterid, htmlid, width, height) {
+			if ($(htmlid).length > 0) {
+				var randomnumber = Math.random();
+				var ga = document.createElement('iframe');
+				ga.src = 'http://www1.elecfans.com/www/delivery/myafr.php?target=_blank&cb=' + randomnumber + '&zoneid=' + posterid;
+				ga.width = width;
+				ga.height = height;
+				ga.frameBorder = 0;
+				ga.scrolling = 'no';
+				var s = $(htmlid).append(ga);
+			}
+		}
+
+		function baidu_ad(posterid, htmlid, width, height) {
+			if ($(htmlid).length > 0) {
+				var randomnumber = Math.random();
+				var ga = document.createElement('iframe');
+				ga.src = 'http://www.elecfans.com/webapi/advertisement/baiduAd.html?target=_blank&cb=' + randomnumber + '&zoneid=' + posterid;
+				ga.width = width;
+				ga.height = height;
+				ga.frameBorder = 0;
+				ga.scrolling = 'no';
+				var s = $(htmlid).append(ga);
+			}
+		}
+
+		function is_need_replace(zoneid) {
+			if (zoneid != 305) {
+				return false;
+			}
+			switch (ad_id) {
+				case '1067':
+				case '1063':
+				case '1068':
+				case '1069':
+				case '1070':
+				case '1071':
+				case '1072':
+					return true;
+					break;
+			}
+			return false;
+		}
+
+		// 新式广告位广告方式  <div class="openx_ad_zone" ad-id="325" ad-width="270" ad-height="14"></div>
+		$('.openx_ad_zone').each(function() {
+			var posterid = $(this).attr('ad-id');
+			var width = $(this).attr('ad-width');
+			var height = $(this).attr('ad-height');
+			var randomnumber = Math.random();
+			var ga = document.createElement('iframe');
+			ga.src = 'http://www1.elecfans.com/www/delivery/myafr.php?target=_blank&cb=' + randomnumber + '&zoneid=' + posterid;
+			ga.width = width;
+			ga.height = height;
+			ga.frameBorder = 0;
+			ga.scrolling = 'no';
+			$(this).append(ga);
+		});
+	})();
+
+	ELECFANS.UI.pdf_search = (function() {
+
+		inputDefault('.pdf-ipt');
+
+		var $pdf = $('.pdf-tab'),
+			$pdf_form = $('.pdf-form'),
+			ipt_def = '请输入要搜索的元器件的型号';
+
+		for (var i = 0, max = $pdf.length; i < max; i++) {
+
+			var $tag = $pdf.eq(i).find('li');
+			eventHolder($tag);
+
+		}
+		for (var i = 0, form_len = $pdf_form.length; i < form_len; i++) {
+
+			var $form = $pdf_form.eq(i).find('form');
+			formSubmit($form);
+
+		}
+
+		function eventHolder(obj) {
+			var $tag_parents = obj.parents('.pdf-tab');
+			obj.on('click', function() {
+
+				var $this = $(this),
+					type = $this.attr('name'),
+					$form = $tag_parents.siblings('.pdf-form');
+
+				$form.find('.pdf-type').val(type);
+
+				if ($this.is('.curr')) {
+
+					return false;
+
+				} else {
+
+					$this.addClass('curr');
+					$this.siblings('li').removeClass('curr');
+				}
+
+			})
+
+		}
+
+		function formSubmit(obj) {
+
+			obj.on('submit', function() {
+				var $ipt = $(this).find('.pdf-ipt'),
+					val = $ipt.val();
+				if (val == '' || val == ipt_def) {
+					$ipt.focus();
+					return false;
+				}
+			})
+
+		}
+
+	})()
+
+	ELECFANS.UI.Glogbal_searchTab = (function() {
+
+		var $obj = $('.search-tab li'),
+			$typeId = $('#typeid'),
+			$searchBox = $('#searchBox'),
+			$tips = $('.search-def-label'),
+			tyepId, index = 0;
+
+		$obj.on('click', function() {
+			var $this = $(this);
+			$obj.removeClass('curr-tab');
+			$this.addClass('curr-tab');
+			typeId = $this.attr('typeid');
+			$typeId.val(typeId);
+			index = $obj.index(this);
+
+			//2015-02-05 门户首页搜索框修改 开始
+			if (index == 0) {
+				$(".search-ipt-area").hide();
+				$("#searchBtn").hide();
+				$("#bdcs").show();
+				if ($("#bdcs-search-form-input").val() == '') {
+					$tips.hide().eq(0).show();
+				} else {
+					$tips.hide();
+				}
+			} else if (index == 1) {
+				$("#bdcs").hide();
+				$(".search-ipt-area").show();
+				$("#searchBtn").show();
+				if ($searchBox.val() == '') {
+					$tips.hide().eq(1).show();
+				} else {
+					$tips.hide();
+				}
+			}
+			//					if($searchBox.val() == ''){
+			//						$tips.hide().eq(index).show();
+			//					}
+			return false;
+		});
+
+		$("#bdcs-search-form-input").focus(function() {
+			$('.search-def-label').hide();
+		}).blur(function() {
+			if ($("#bdcs-search-form-input").val() == '') {
+				$('.search-def-label').hide().eq(0).show();
+			}
+		});
+		setTimeout(function() {
+			$("#bdcs-search-form-input").attr("placeholder", "")
+		}, 1500);
+		//2015-02-05 门户首页搜索框修改 结束
+
+		$searchBox.focus(function() {
+
+			$tips.hide();
+
+		}).blur(function() {
+
+			if ($searchBox.val() == '') {
+				$tips.hide().eq(1).show();
+			}
+
+		});
+
+	})()
+	ELECFANS.UI.adScroll = (function() {
+		var $box = $('.box_240'),
+			i = 0,
+			timer, interval = 5000;
+		$box.hover(function() {
+			clearInterval(timer);
+		}, function() {
+
+			timer = setInterval(function() {
+				var fir = $box.find('ul:first'),
+					fir_height = fir.outerHeight();
+
+				fir.animate({
+					"marginTop": -fir_height + 'px'
+				}, 600, function() {
+					fir.css('marginTop', '0').appendTo($box);
+				})
+
+			}, interval)
+
+
+		}).trigger('mouseleave');
+
+
+	})()
+	ELECFANS.UI.returnTop = (function() {
+		var topHtm = '<div href="javascript:void(0)" class="returnTop"></div>',
+			returnTop;
+
+		$(window).on('scroll', function() {
+
+			var scrollTopNum = $(document).scrollTop(),
+				winHeight = $(window).height();
+
+			if (scrollTopNum > 500) {
+				if ($('.returnTop').length > 0) {
+
+				} else {
+					$("body").append(topHtm);
+					returnTop = $(".returnTop")
+					$(".returnTop").fadeIn("fast")
+				}
+
+			} else if ($('.returnTop').length > 0) {
+
+				returnTop.fadeOut("fast")
+				returnTop.remove();
+			}
+			// 给 IE6 定位
+			if (!-[1, ] && !window.XMLHttpRequest) {
+				returnTop.css("top", scrollTopNum + winHeight - 200);
+				returnTop.remove();
+			}
+
+		})
+		$(".returnTop").live('click', function() {
+			$("html, body").animate({
+				scrollTop: 0
+			}, 100);
+		});
+
+	})()
+
+	// 搜索伪静态 ------
+	if ($("#search").length > 0) {
+		$("#searchBtn").click(function() {
+			var searchBox = $("#searchBox").val();
+			var typeid = $("#typeid").val();
+			var keyword = searchBox.replace(/\//, " ");
+			var action = "/search/0_title_" + typeid + "_" + keyword;
+			if (!searchBox) {
+				$.blockUI({
+					message: '<p class="pt10 pb10 fb f26">请输入您要搜索的关键字</p>',
+					css: {
+						marginLeft: '-190px',
+						top: '20%',
+						width: '380px',
+						textAlign: 'center',
+						color: '#fff'
+					},
+					timeout: 1200
+				});
+				$("#searchBox").focus();
+				return false;
+			}
+			if (typeid == 2) {
+				//// modify by liuping 2014年11月24日
+				//action = 'http://ic.elecfans.com/' + keyword + '.html';
+				action = 'http://www.hqchip.com/search/'+keyword+'.html';
+				location.href = action;
+				return false;
+			}
+			////去掉搜索伪静态 by kevin 2012.12.25
+			//location.href=action;
+			//return false;
+		});
+
+		$("#searchBox").keydown(function(event) {
+			if (event.keyCode == 13) {
+				$("#searchBtn").click();
+				return false;
+			}
+		});
+	} // 搜索结束-----
+	//tab选项卡----------
+	seoTab(".tab-title");
+	//IE6背景图片缓存
+	if (ie6) {
+		document.execCommand("BackgroundImageCache", false, true);
+	};
+
+	//导航 -------------------------------------------------
+	// 导航  ---------------------------------
+	var $nav = $("#nav");
+	var $nav_li = $nav.find("li.nav-item");
+	var $dropdown_toggle = $nav.find("a.dropdown-toggle");
+	var $dropdown_menu = $nav.find(".dropdown-menu");
+	$dropdown_toggle.mouseDelay(false, "navGroup").hover(function() {
+		//获取其父元素li 相对ul的偏移
+		var left = $(this).parents('li').position().left
+		//先隐藏所有的下拉菜单
+		$dropdown_menu.css("top", "-9999px");
+		//先去掉所有a.dropdown-toggle当前状态
+		$dropdown_toggle.removeClass("nav-hover");
+		//显示当前状态并显示下来菜单
+		$(this).addClass("nav-hover").siblings(".dropdown-menu").css({
+			"top": "34px",
+			"left": -left
+		});
+
+
+	}, function() {
+		$dropdown_menu.css("top", "-9999px");
+		$dropdown_toggle.removeClass("nav-hover");
+	});
+	//鼠标在下拉菜单区域
+	$dropdown_menu.mouseDelay(false, "navGroup").hover(null, function() {
+		$(this).css("top", "-9999px");
+		$dropdown_toggle.removeClass("nav-hover");
+	});
+	// 2015-02-11 新增更多导航区域
+	$("#nav .see-more .nav-a").mouseover(function() {
+		$(this).siblings(".seem-menu").show();
+	});
+	$("#nav .see-more").mouseleave(function() {
+		$(this).find(".seem-menu").hide();
+	});
+	// 大的二维码显示隐藏
+	$("#erwms").hover(function() {
+		$("#erwml").show();
+	}, function() {
+		$("#erwml").hide();
+	});
+	// 2015-02-11		End
+
+	//End 导航 ---------------------------------------------------------------------
+	////不是文章页，显示登录信息，文章页登录已合并
+	var isArticlePage = $("body").is(".article-page");
+	if (!isArticlePage) {
+		CheckLogin();
+	}
+
+	////add by liuping 非注册邮件订阅
+	/*$('.btn-emailFeed').click(function() {
+	 var curObj = $(this);
+	 if (!($('.u-name').length > 0)) {
+	 curObj.attr('href', 'http://www.elecfans.com/subscribe/index.html');
+	 }
+	 });*/
+});
+// End document.ready ------------------------------
+
+//微信
+$(window).scroll(function() {
+	var scrollTop = $(window).scrollTop();
+	if (($('#pfwx').length > 0) || (scrollTop < 0)) {
+		function resizewx() {
+			var pwidth = $(window).width();
+			if (pwidth < 1110) {
+				$('#pfwx').css('display', 'none');
+			} else {
+				var rwidth = 1020 + (pwidth - 1000) / 2;
+				$('#pfwx').css('left', rwidth);
+				/*首页二维码暂时隐藏*/
+				$('#pfwx').css('display', 'none');
+			}
+		}
+		resizewx();
+		$(window).resize(function() {
+			resizewx();
+		});
+	}
+})
+
+
+
+//定义全局变量 ------------------------
+var ie6 = $.browser.msie && ($.browser.version == "6.0") && !$.support.style;
+var ie678 = $.browser.msie && ($.browser.version == "6.0" || $.browser.version == "7.0" || $.browser.version == "8.0");
+//注册地址
+var loginUrl = ELECFANS_HOME + '/do.php?ac=synclogin';
+var regUrl = ELECFANS_HOME + '/do.php?ac=syncregister';
+var forgetPwUrl = ELECFANS_HOME + '/do.php?ac=lostpasswd';
+
+/**
+ * JS 实现类似PHP的 in_array函数
+ * @author liuping
+ * @param  {[type]} needle    [description]
+ * @param  {[type]} haystack  [description]
+ * @param  {[type]} argStrict [description]
+ * @return {[type]}           [description]
+ */
+function in_array(needle, haystack, argStrict) {
+	var key = '',
+		strict = !!argStrict;
+	if (strict) {
+		for (key in haystack) {
+			if (haystack[key] === needle) {
+				return true;
+			}
+		}
+	} else {
+		for (key in haystack) {
+			if (haystack[key] == needle) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+//滚动到页面指定位置 ------------------------
+function windowScroll(o, target) {
+	$(o).live('click', function() {
+		var target_top = $(target).offset().top;
+		$("html,body").animate({
+			scrollTop: target_top
+		}, 800);
+		return false;
+	});
+};
+
+
+//定义“seoTab”函数
+function seoTab(obj) {
+	$(obj).hover(function() {
+		var $this = $(this);
+		if ($this.is(".tab-cur")) {
+			return false;
+		}
+		var tab_show_height = $this.siblings(".tab-show").height();
+		delayTime = setTimeout(function() {
+			$this.siblings(".tab-content").css({
+				position: "absolute",
+				top: "-9999em"
+			}).removeClass("tab-show").end()
+				.next(".tab-content").css({
+					position: "static",
+					height: tab_show_height
+				}).addClass("tab-show").end()
+				.addClass("tab-cur").siblings(".tab-title").removeClass("tab-cur");
+		}, 150)
+	}, function() {
+		if (!$(this).is(".tab-cur")) {
+			clearTimeout(delayTime);
+		}
+	});
+}
+
+//定义“输入框默认值”函数
+function inputDefault(obj) {
+	var $obj = $(obj);
+	var defaultVal = $obj.val();
+	$obj.focus(function() {
+		var iptval = $(this).val();
+		if (!this.defaultValue) {
+			this.defaultValue = defaultVal;
+		};
+		if (iptval == this.defaultValue) {
+			$(this).val("");
+		}
+		$(this).css("color", "#000");
+	});
+	$obj.blur(function() {
+		var iptval = $(this).val();
+		if (iptval == "") {
+			$(this).val(this.defaultValue);
+			$(this).css("color", "#999");
+		}
+	});
+};
+
+
+function addFavorite(url, title) {
+	try {
+
+		window.external.addFavorite(url, title);
+
+	} catch (e) {
+		try {
+
+			window.sidebar.addPanel(title, url, '');
+
+		} catch (e) {
+
+			alert("请按 Ctrl+D 键添加到收藏夹");
+		}
+	}
+}
+
+function setHomepage(sURL) {
+	if ($.browser.msie) {
+
+		document.body.style.behavior = 'url(#default#homepage)';
+		document.body.setHomePage(sURL);
+
+	} else {
+
+		alert("非 IE 浏览器请手动将本站设为首页");
+		return false;
+	}
+}
+
+
+//注册地址
+var loginUrl = ELECFANS_HOME + '/do.php?ac=synclogin';
+var regUrl = ELECFANS_HOME + '/do.php?ac=syncregister';
+var forgetPwUrl = ELECFANS_HOME + '/do.php?ac=lostpasswd';
+
+//顶部弹出登录框-------
+$("#btnLogin").on('click', function() {
+	//	var dialog = new LoginDialog({});
+	//		dialog.show();
+	$.ssoDialogLogin(); //单点登录//单点登录
+	return false;
+});
+
+//显示登录后信息
+sLoginUid = 0;
+sLoginUsername = '';
+flagBindingQQ = false;
+flagBindingWeibo = false;
+
+function EchoLoginInfo(data) {
+	var info = $.parseJSON(data),
+		top_loginHtm = '',
+		interflow = '.interflow';
+	top_loginHtm += ' <div class="top-dropdown my-info clearfix">' + ' <div class="top-dropdown-toggle">' + '<a href="' + ELECFANS_HOME + '" class="u-info"><img src="' + info.avatar + '" width="20" height="20"><strong class="u-name">' + info.username + '</strong></a>' + '<span class="drop-icon"></span>' + '</div>' + '<ul class="top-dropdown-menu yahei">' + '<li><a href="' + ELECFANS_HOME + '">My Elecfans</a></li>' + '<li><a href="'+ELECFANS_BBS+'/home.php?mod=spacecp">个人资料</a></li>' + '<li><a href="/member/mydata/">我的文档</a></li>' + '<li><a href="' + ELECFANS_HOME + '/infocenter.php?mod=space&do=favorite&type=all">收藏夹</a></li>' + '				<li><a href="' + ELECFANS_HOME + '/infocenter.php?mod=spacecp&ac=email&op=work">邮件订阅</a></li>' + '				<li><a  target="_self" href="' + ELECFANS_BBS + '/member.php?mod=logging&action=logout&refer=front">退出</a></li>' + '		</ul>' + ' </div>' + ' <div class="notice">' + ' 	<a class="grey9"  href="' + ELECFANS_BBS + '/home.php?mod=space&do=pm" class="notice-num">' + info.msgnum + '</a>' + ' </div>';
+	sLoginUid = info.uid;
+	sLoginUsername = info.username;
+	aUnionLogin = info['unionlogin'];
+	flagBindingQQ = false;
+	flagBindingWeibo = false;
+	userinfo = info;
+	if (in_array(1, aUnionLogin)) flagBindingQQ = true;
+	if (in_array(2, aUnionLogin)) flagBindingWeibo = true;
+
+	//顶部登录后信息
+	$("#login-info").html(top_loginHtm).show();
+
+	//判断用户是否为VIP用户
+	//if(info.vip==0){
+	//	var vipStr = '<div class="fr"><a class="vip-icon" href="http://vip.elecfans.com/" target="_blank" title="每天只需1块钱，玩转电子界人脉圈！" alt="每天只需1块钱，玩转电子界人脉圈！"></a></div>';
+	//	$(vipStr).insertBefore('.my-info');
+	//}else if(info.vip==1){
+	//	var vStr = '<span class="v-icon" alt="VIP会员" title="VIP会员"></span>';
+	//	$(vStr).insertBefore('.drop-icon');
+	//}
+
+	//顶部下拉菜单
+	$(".top-dropdown").mouseDelay().hover(function() {
+		$(".top-dropdown-menu").css("top", "23px");
+	}, function() {
+		$(".top-dropdown-menu").css("top", "-9999px");
+	});
+	//评论处登录信息
+	if (typeof(article_detail_avatar)=="function" && $("#comment").length > 0) {
+		var avatarUrl = article_detail_avatar(sLoginUid, 'middle');
+		$('#comment-c-avatar').attr('src', avatarUrl);
+		$('#comment-c-username').text(sLoginUsername);
+
+		if (flagBindingWeibo) $('#share-weibo').prop('checked', true);
+		if (flagBindingQQ) $('#share-qq').prop('checked', true);
+	}
+	$.unblockUI();
+}
+//检查登录  ---------------------------
+function CheckLogin() {
+	$.get(ElecfansApi_checklogin, function(data, textStatus) {
+		if (data != "") {
+			EchoLoginInfo(data);
+			CheckEmailInfo(data);
+			//2015-03-30 首页添加VIP状态标志
+			data = $.parseJSON(data);
+			if (data.vip === 1) {
+				$('.u-info').append('<span class="myvip" style="color:#ec7600;font-style:italic;"> VIP </span>');
+			}
+		} else {
+			$('#login-info').show();
+		}
+	});
+}
+
+//定义登录弹出框
+function LoginDialog(options) {
+	this.top = options.top || "30%";
+	this.width = options.width || 370;
+	this.height = options.height || 410;
+	this.tipContent = options.tipContent || "";
+}
+var cqm_login = '';
+cqm_login += '<div class="other-Login"><p><a class="other-login-link sina-login-link" target="_self" href="/thirdparty/weibo/index.php">使用微博账号登录</a></p><p><a class="other-login-link qq-login-link" target="_self" href="/thirdparty/qq/login.php">使用QQ账号登录</a></p></div>';
+cqm_login += '<div class="login-form">';
+cqm_login += '<span class="login-line">或者</span>';
+cqm_login += '<form method="post" action="' + ElecfansApi_login + '" name="userlogin" id="J_LoginForm" autocomplete="off">';
+cqm_login += '		<fieldset>';
+cqm_login += '				<legend>用户登录</legend>';
+cqm_login += '				<input type="hidden" name="fmdo" value="login" />';
+cqm_login += '				<input type="hidden" name="dopost" value="login" />';
+cqm_login += '				<div class="login-form-tip">6-36位英文或数字，区分大小写</div>';
+cqm_login += '				<div class="login-form-item">';
+cqm_login += '					<input class="login-input login-input-username" type="text" id="username" name="userid" placeholder="请输入用户名"/>';
+cqm_login += '				</div>';
+cqm_login += '				<div class="login-form-item">';
+cqm_login += '					<input class="login-input" type="password" id="password" name="pwd" maxlength="100"  placeholder="请输入密码"/>';
+cqm_login += '				</div>';
+cqm_login += '				<div class="btn-area login-btn-area group">';
+cqm_login += '					<span class="btn-hasLoading-wrap"><span class="loading"><img src="http://skin.elecfans.com/images/loading.gif" /></span><button type="submit" id="J_LoginSubmit" class="btn login-submit">登 录</button></span> <span style="font-size:14px;display:inline-block;margin-left:20px;"><a href="' + ELECFANS_BBS + '/member.php?mod=reg" target="_blank" style="text-decoration:underline;margin-right:10px;color:#1ea3e4;float:left;margin-top:10px;">注册</a>  <a rel="nofollow" target="_self" class="forgetPw" href="javascript:;" style="text-decoration:underline;margin-left:10px;">找回密码</a></span>';
+cqm_login += '				</div>';
+cqm_login += '		</fieldset>';
+cqm_login += '</form>';
+cqm_login += '</div>';
+LoginDialog.prototype = {
+	//弹出对话框，加载中状态...
+	show: function() {
+		//登录表单DOM
+		var loginForm_dom = cqm_login;
+
+		//对话框DOM
+		var html = '';
+		html += '<div class="dialog">';
+		html += '		<div class="dialog-hd" id="J_DialogTitle">登 录</div>';
+		html += '		<div class="dialog-bd" id="J_DialogContent">';
+		html += '			' + loginForm_dom + '';
+		html += '		</div>';
+		html += '		<div class="close-dialog">X</div>';
+		html += '</div>';
+
+		//blockUI ----------------------
+		$.blockUI({
+			message: html, //对话框DOM
+			css: {
+				top: "12%",
+				width: this.width + "px",
+				height: this.height + "px",
+				marginLeft: "-" + this.width / 2 + "px",
+				left: "50%",
+				color: "#000",
+				border: "8px solid #d8d8d8",
+				background: "#fff",
+				borderRadius: "5px"
+			},
+			overlayCSS: {
+				cursor: "pointer",
+				backgroundColor: '#111',
+				opacity: 0.3
+			},
+			showOverlay: true,
+			fadeIn: 200,
+			fadeOut: 400,
+			onBlock: function() {
+				$(".blockOverlay,.close-dialog").attr('title', '点击关闭').on('click', $.unblockUI);
+			}
+		});
+
+
+		//表单验证 -------------------------------------------------
+		var $username = $("#username");
+		var $password = $("#password");
+		var $loading = $("span.loading");
+		//提示文本
+		var username_empty = '请输入账号';
+		var username_err = '账号不存在';
+		var password_err = '密码错误,请重新输入';
+		var password_lenErr = '×密码不符合要求：<span class="grey9">6-36位,英文或数字</span>';
+		var password_empty = '请输入登录密码：<span class="grey9">6-36位,英文或数字</span>';
+		//表单验证 End -------------------------------------------------
+
+		//登录错误提示
+		function tipErr(obj, text, display) {
+			var display = display ? display : "block";
+			$("div.login-form-tip").html(text).css({
+				"display": display,
+				"color": "#c00"
+			});
+		}
+
+		//表单提交 -----------------------------------------------------
+		var successTip = this.successTip;
+		var tipContent = this.tipContent;
+
+		/*ajax登录*/
+		$("#J_LoginForm").ajaxForm({
+
+			beforeSubmit: loginRequest,
+			success: function(responseText, statusText) {
+				//隐藏loading
+				$loading.hide();
+				if (responseText == "用户名不存在") {
+					tipErr($username, username_err);
+					$username.focus().select();
+					return false;
+				}
+				if (responseText == "密码错误") {
+					tipErr($password, password_err);
+					$password.focus().select();
+					return false;
+				}
+				//执行登录检查
+				$("#J_Login").html('正在加载，请稍后...');
+				CheckLogin();
+
+				$(".blockPage").animate({
+					"height": "190px"
+				}, 200, function() {
+					var successTip_dom = '';
+					successTip_dom += '<div class="success-tip">';
+					successTip_dom += '		<h3 class="tip-title">登录成功</h3>';
+					successTip_dom += '		<div class="tip-content">' + tipContent + '</div>';
+					successTip_dom += '</div>';
+					//改变对话框标题
+					$("#J_DialogTitle").html('提示');
+					//改变对话框内容
+					$("#J_DialogContent").html(successTip_dom);
+					setTimeout(function() {
+						$.unblockUI();
+					}, 1400);
+				});
+
+				//执行同步登录js
+				eval("urlarr = " + responseText);
+				for (var i = 0; i < urlarr.length; i++) {
+					$.getScript(urlarr[i]);
+				}
+			} //end success:function
+		}); //end ajaxForm
+
+		//提交前验证
+		function loginRequest(formData, jqForm, options) {
+			//账号
+			var usernameVal = $username.val();
+			if (usernameVal.length > 0) {
+				tipErr($(this), "", "none");
+			} else {
+				tipErr($username, username_empty);
+				$username.focus().select();
+				return false;
+			}
+			//密码
+			var len = $password.val().length; //获取密码长度
+			if (len > 0) {
+				if (len < 3 || len > 36) { //密码长度不能小于6，大于36
+					tipErr($password, password_lenErr);
+					$password.focus().select();
+					return false;
+				} else {
+					tipErr($password, "", "none");
+				}
+			} else {
+				tipErr($password, password_empty);
+				$password.focus().select();
+				return false;
+			}
+			//显示loading
+			$loading.show();
+
+			var queryString = $.param(formData);
+			return true;
+		}
+
+
+
+		$(".forgetPw").click(function() {
+			$(".blockPage").animate({
+				"height": "300px"
+			}, 200, function() {
+				var forgot_password = '';
+				forgot_password += '<form method="post" autocomplete="off" id="lostpwform_LogH3" class="cl" onsubmit="" action="' + ELECFANS_BBS + '/member.php?mod=sendmailapi&apiname=getpassword&format=jsonp">';
+				forgot_password += '	<div class="lostpw-form">';
+				// forgot_password += '		<input type="hidden" name="formhash" value="c4139860">';
+				// forgot_password += '		<input type="hidden" name="handlekey" value="lostpwform">';
+				forgot_password += '		<div class="login-form-item">请输入您注册时填写的邮箱地址，我们会发送密码重置邮件给您：</div>';
+				forgot_password += '		<div class="login-form-item">';
+				forgot_password += '			<input type="text" name="email" id="lostpw_email" size="30" value="" tabindex="1" class="login-input login-input-email">';
+				forgot_password += '		</div>';
+				forgot_password += '		<div class="login-form-item" id="lostpwd-username-box" style="display:none;">';
+				forgot_password += '			<input type="text" name="username" id="lostpw_username" size="30" value="" tabindex="1" class="login-input login-input-username">';
+				forgot_password += '		</div>';
+				forgot_password += '		<div class="login-form-item">';
+				forgot_password += '			<button class="btn lostpw-submit" type="submit" id="lostpwsubmit" name="lostpwsubmit" value="true">提交</button> <a class="ml20" id="back-login-link" href="javascript:;" target="_self">想起密码了</a>';
+				forgot_password += '		</div>';
+				forgot_password += '	</div>';
+				forgot_password += '</form>';
+				//改变对话框标题
+				$("#J_DialogTitle").html('重置登录密码');
+				//改变对话框内容
+				$("#J_DialogContent").html(forgot_password);
+
+				$("#back-login-link").click(function() {
+					$(".blockPage").animate({
+						"height": "410px"
+					}, 200, function() {
+						//$("#J_DialogContent").html(loginForm_dom);
+						//						var dialog = new LoginDialog({});
+						//						dialog.show();
+						$.ssoDialogLogin(); //单点登录
+						return false;
+					})
+				})
+
+				function getpwdrequest(formData, jqForm, options) {
+					lostpwsubmit.disabled = true;
+					return true;
+				}
+
+				$("#lostpwform_LogH3").ajaxForm({
+					beforeSubmit: getpwdrequest,
+					dataType: 'jsonp',
+					success: function(responseText, statusText) {
+						lostpwsubmit.disabled = false;
+						if (responseText.status == 'successed') {
+							$("#J_DialogContent").html("找回密码的邮件发送成功");
+							setTimeout($.unblockUI, 2000);
+						} else {
+							if (responseText.needusername == '1') {
+								alert('该邮箱需要填写用户名');
+								$('#lostpwd-username-box').show();
+							} else {
+								alert(responseText.msg);
+							}
+						}
+					}
+				});
+			});
+		});
+
+	} //End Show();
+} //End Login.Dialog prototype
+
+
+
+//提示修改邮箱地址 20114年9月13日-16日 by 陈巧敏
+function CheckEmailInfo(data) {
+	$("#log-tip").remove();
+	var info = $.parseJSON(data);
+	var emailTip = '<div id="content_tips">'
+			// +	'<p id="email_tip"class="emailTip" >亲爱的<span class="username"></span>，为了保证能及时获取我们最新的资讯和服务、以及参与活动，请尽快验证您的邮箱。<a id="resend">重发验证邮件</a> 或 <a class="email_add">修改邮箱地址。</a></p>'
+		+ '<p id="email_tip" class="emailTip" >亲爱的<span class="username"></span>，为了保证能及时获取我们最新的资讯和服务、以及参与活动，请尽快验证您的邮箱。<a id="resend">重发验证邮件</a><a class="email_add" style="display:none;"></a></p>'
+			// +	'<p id="send" class="emailTip" style="display:none">邮件已发送，您将很快能收到，请尽快登录邮箱进行验证！如果没有收到，请检查垃圾邮箱、<a href="http://bbs.elecfans.com/jishu_503095_1_1.html" target="_blank">设置elecfans.net为白名单</a> 或 <a class="email_add">修改邮箱地址。</a></p>'
+		+ '<p id="send" class="emailTip" style="display:none">邮件已发送，您将很快能收到，请尽快登录邮箱进行验证！如果没有收到，请检查垃圾邮箱、<a href="http://bbs.elecfans.com/jishu_503095_1_1.html" target="_blank">设置elecfans.net为白名单</a><a class="email_add" style="display:none;"></a></p>' + '<p id="mod" class="emailTip" style="display:none">邮箱地址修改成功！我们已向你的邮箱 <span class="now_email"></span> 发送了一封验证邮件。请尽快登录邮箱进行验证！如果没有收到，请检查垃圾邮箱。</a></p>' + '<p id="email_send" class="email_notice" style="display:none">您已发送过验证邮件，请五分钟之后重发验证邮件或修改您的邮箱</p>' + '</div>' + '<div id="sendmail" style="display:none"></div>';
+
+	var emailModTip = '<div id="email_mod" style="display:none">' + '<p class="mod_title">修改邮箱地址</p>' + '<form method="post" name="email-form" id="email-form" action="' + ElecfansApi_checkemail + '" autocomplete="off">' + '<ul>' + '<li>当前邮箱地址：<span class="now_email"></span></li>' + '<li class="error" id="email-error"></li>' + '<li>' + '<label for="article-email-mod">&nbsp;&nbsp;新邮箱地址：</label><input class="email-input" type="text" id="article-email-mod" placeholder="请尽量使用公司邮箱" name="newemail">' + '</li>' + '<li class="clearfix">' + '<input class="sub" id="email_sub" name="email_sub" value="确定" type="submit"/>' + '<input class="res eclose" id="email_res" name="email_res" value="取消" type="reset"/>' + '</li>' + '</ul>' + '</form>' + '<div class="email_close eclose"></div>' + '<div class="suc" style="display:none">' + '<p class="suc_title">邮件地址修改成功</p>' + '<p class="suc-tip">我们已向你的邮箱 <span class="now_email"></span>发送了一封验证邮件。</p>' + '<p class="suc-tip">请尽快登录邮箱进行验证！</p>' + '</div>' + '</div>' + '<div class="blackTip" style="display:none"></div>';
+	var s_email = getCookie('s_email');
+	var nowexp = new Date();
+	var nowtime = nowexp.getTime();
+	var settime = 5 * 60 * 1000;
+	var send_cookie = false;
+	if (s_email) {
+		var timec = nowtime - s_email;
+		if (timec < settime) {
+			send_cookie = true;
+		}
+	}
+
+
+
+	// 判断邮箱是否已经验证
+	$.ajax({
+		type: 'GET',
+		url: 'http://passport.' + ELECFANS_DOMAIN + '/user/retriveEmailStatus/format/jsonp',
+		dataType: 'jsonp',
+		success: function(response) {
+			if (response.error_code == 0) {
+				var data = response.data;
+				if (data['emailstatus'] != 1) {
+					$("#top").after(emailTip);
+					$("body").append(emailModTip);
+					$('#email_tip').show();
+					$('.username').html(info.username);
+					$('.now_email').html(info.email);
+					//判断有背景广告，就向下移
+					if ($("#AD-background").length > 0) {
+						$("#AD-background").css("top", "40px");
+					}
+
+					var sendemail = true;
+					$('#resend').click(function() {
+						if (send_cookie) {
+							$('#email_send').show();
+							$('#email_tip').hide();
+						} else {
+							if (sendemail === false) return;
+							sendemail = false;
+							$.ajax({
+								type: 'GET',
+								url: 'http://passport.' + ELECFANS_DOMAIN + '/user/resendRegValidateEmail/siteid/11/format/jsonp',
+								dataType: 'jsonp',
+								success: function(response) {
+									if (response.error_code == 0) {
+										$('#send').show().siblings().hide();
+										setCookie('s_email', nowtime, 1, 'www.' + ELECFANS_DOMAIN);
+									} else {
+										alert(response.msg);
+									}
+								}
+							});
+						}
+					});
+					$('.email_add').click(function() {
+						if (send_cookie) {
+							$('#email_send').show();
+							$('#email_tip').hide();
+						} else {
+							$('#email_mod').show();
+							$('.blackTip').show();
+						}
+					});
+					//关闭对修改框
+					$('.eclose').click(function() {
+						$('#email_mod').hide();
+						$('.blackTip').hide();
+					});
+
+					var modErr = function(obj, text, display) {
+						var display = display ? display : "block";
+						$('#email-error').html(text).css({
+							"display": display,
+							"color": "#c00"
+						});
+					}
+
+					var emailmod = $('#article-email-mod');
+					var email_empty = '新邮箱地址不能为空';
+					var email_err = '请输入有效的邮箱地址，如：qiuliang@elecfans.com';
+					var email_exist = '输入的邮箱地址已注册';
+					//新邮箱地址校验
+					var emailRequest = function(formData, jqForm, options) {
+						var emailmodVal = emailmod.val();
+						if (emailmodVal.length > 0) {
+							if (!emailmodVal.match(/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/)) {
+								modErr(emailmod, email_err);
+								emailmod.focus().addClass('red-input');
+								return false;
+							} else if (emailmodVal == info.email) {
+								modErr(emailmod, '和原邮箱相同，请重新输入');
+								emailmod.focus().addClass('red-input');
+								return false;
+							} else {
+								$('#email_sub').val('发送中...').attr('disabled', 'disabled');
+								//var queryString = $.param(formData);
+								emailmod.removeClass('red-input');
+								return true;
+							}
+						} else {
+							modErr(emailmod, email_empty);
+							emailmod.focus().addClass('red-input');
+							return false;
+						}
+					}
+
+					/*ajax修改后发送*/
+					$("#email-form").ajaxForm({
+						beforeSubmit: emailRequest,
+						success: function(responseText, statusText) {
+							$('#email_sub').val('确定').removeAttr('disabled');
+							var r_msg = $.parseJSON(responseText);
+							if (r_msg.status == 2) {
+								modErr(emailmod, email_exist);
+								emailmod.focus().addClass('red-input');
+								return false;
+							} else {
+								var emailmodVal = emailmod.val();
+								$('.now_email').html(emailmodVal);
+								emailmod.removeClass('red-input');
+								//@TODO 发送邮件
+								$('#send').show().siblings().hide();
+								setCookie('s_email', nowtime, 1, 'www.' + ELECFANS_DOMAIN);
+
+								$('#mod').show().siblings().hide();
+								$('.suc').show().siblings('#email-form').hide(); //发送成功之后弹出提示
+
+								//发送邮件
+								return true;
+							}
+						}
+					}); //end ajaxForm
+
+				}
+			}
+		}
+	});
+}
+$(function() {
+	//导航 活动 下拉菜单左边$('.news_box')宽度设置
+	var n = $('.news_box').length,
+		a = (680 - 16 * n) / n;
+	$('.news_box').each(function() {
+		$('.news_box').css({
+			width: a + "px"
+		});
+	});
+});
+
+$(function() {
+	var getHost = window.location.host;
+	getHost = getHost.substring(getHost.indexOf("."), getHost.length); //获得二级域名
+	/*
+	 * 插入单点登录JS
+	 */
+	var setHost = "https://passport" + getHost; //设置域名
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = setHost + '/public/pc/js/sso.passport.js';
+	script.setAttribute("id", "sso_script");
+	script.setAttribute("data-ssoSite", setHost);
+	script.setAttribute("data-ssoReferer", location.href);
+	script.setAttribute("data-ssoSiteid", "11");
+	var body = document.getElementsByTagName("body").item(0);
+	body.appendChild(script);
+	/*
+	 * 用户完善资料页
+	 */
+	/*var setHost = "http://bbs" + getHost; //设置域名
+	 var script = document.createElement('script');
+	 script.type = 'text/javascript';
+	 script.src = setHost + '/static/js/organizing/js/organizing.js';
+	 var body = document.getElementsByTagName("body").item(0);
+	 body.appendChild(script);*/
+});
+
+
+
+/**
+ * 直播弹窗，页面 右下角
+ * @param  {[type]} $ [description]
+ * @return {[type]}   [description]
+ */
+(function($){
+	$.ajax({
+		type:'GET',
+		url:'/webapi/advertisement/liveElasticLayer?site_name=www',
+		dataType:'json',
+		success:function(response) {
+			if (response.error_code == 0 && response.data) {
+				var data = response.data;
+				var setHTML=$('\
+					<div style="position:fixed;bottom: 0px;right:0;z-index:5000;">\
+						<a href="'+data['live_url']+'" target="_blank"">\
+							<img src="http://www.elecfans.com/images2013/live_elastic_layer.png">\
+							<p style="position:fixed;bottom;margin-top: -135px;z-index: 6000;text-align: center;width: 300px;font-size: 12px;font-weight: bold;font-family: 微软雅黑;color:#3d3d3d;">'+data['event_name']+'</p>\
+							<p style="position:fixed;bottom;margin-top: -117px;z-index: 6000;text-align: center;width: 300px;font-size: 15px;font-weight: bold;font-family: 微软雅黑;color:#3d3d3d;">'+data['event_subject']+'</p>\
+							<p style="position:fixed;bottom;margin-top: -95px;z-index: 6000;text-align: center;width: 300px;font-size: 11px;font-weight: bold;font-family: 微软雅黑;color:#757575;">'+data['event_time']+'</p>\
+							<p style="position:fixed;bottom;margin-top: -78px;z-index: 6000;text-align: center;width: 300px;font-size: 11px;font-weight: bold;font-family: 微软雅黑;color:#757575;">'+data['event_desc']+'</p>\
+						</a>\
+						<i class="close_icon" style="position:fixed;bottom: 192px;right: 6px;width: 30px;height: 30px;z-index:5002;cursor:pointer;/* background: #ddd; */"></i>\
+					</div>\
+				');
+
+				$("body").append(setHTML);
+				setHTML.find("i").click(function(){
+					$(this).parent().remove();
+					return false;
+				});
+			}
+		}
+	});
+})(jQuery);
+/*
+ * PCB文章分类下方广告
+ * */
+(function($){
+	setTimeout(function(){
+
+
+		var PcbText=''+
+			'<div class="ad-pcb">'+
+			'<div id="Quotemain">'+
+			'<div id="homeQuote" class="home-quote">'+
+			'<h3 class="quote-font">PCB在线计价下单</h3>'+
+			'<div class="quote-logo">'+
+			'<img src="http://www.hqpcb.com/static/ui/images/4layer.png">'+
+			'</div>'+
+			'<div class="form-column">'+
+			'<div class="form-item size-item"><h4 class="label">板子大小：</h4>'+
+			'<div class=" two-input">'+
+			'<div class="textbox"><input type="text" placeholder="长" id="VmWidth">'+
+			'<div class="unit">cm</div>'+
+			'</div>'+
+			'<div class="icon">X</div>'+
+			'<div class="textbox"><input type="text" placeholder="宽" id="VmLength">'+
+			'<div class="unit"><span>cm</span></div>'+
+			'</div>'+
+			'</div>'+
+			'</div>'+
+			'<div class="form-item layer-item" style="vertical-align: top;"><h4 class="label">层数：</h4>'+
+			'<div>'+
+			'<div class="textbox choosebox" >'+
+			'<div class="choose-btn"><span class="btn-text">2</span><span class="icon icon-caret-down"></span></div>'+
+			'<div class="choose-menu" style="width: 98px; ">'+
+			'	<ul data-key="blayer" id="blayerOption" >'+
+			'	</ul>'+
+			'	</div>'+
+			'	</div>'+
+			'	</div>'+
+			'	</div>'+
+			'	</div>'+
+			'	<div class="form-column" style="margin: 2px 0 4px 0;">'+
+			'	<div class="form-item choose-textbox count-item"><h4 class="label">板子数量：</h4>'+
+			'<div>'+
+			'<div class="textbox choosebox wid164" >'+
+			'	<div class="choose-btn"><span class="btn-text">10</span><span class="icon icon-caret-down"></span></div>'+
+			'<div class="choose-menu wider" style="display: none;">'+
+			'	<ul data-key="bcount" id="bcountOption">'+
+			'</ul>'+
+			'	</div>'+
+			'	</div>'+
+			'	</div>'+
+			'	</div>'+
+			'	<div class="form-item height-item"><h4 class="label">厚度：</h4>'+
+			'<div >'+
+			'<div class="textbox choosebox">'+
+			'	<div class="choose-btn"><span class="btn-text">1.6</span><span class="icon icon-caret-down"></span></div>'+
+			'<div class="choose-menu" style="display: none;">'+
+			'	<ul data-key="bheight" id="bheightOption">'+
+			'	</ul>'+
+			'	</div>'+
+			'	</div>'+
+			'	</div>'+
+			'	</div>'+
+			'	</div>'+
+			'	<div >'+
+			'	<button class="Quotebtn full-width">PCB 在线计价</button>'+
+			'</div>'+
+			'</div>'+
+			'</div>'+
+			'<div class="branch_bar">'+
+			'<ul class="branch fixclear">'+
+			'<li><a href="http://www.hqpcb.com/quote?tid=32" title="发货很快，制作的也很精良！" target="_blank"><img src="/skin-2012/images/pcb_1.jpg"><div class="black-tit">“发货很快，制作的也很精良！”</div></a></li>'+
+			'<li><a href="http://www.hqpcb.com/quote?tid=32" title="做工一流，速度又快，还多送了几块。" target="_blank"><img src="/skin-2012/images/pcb_2.jpg"></a><div class="black-tit">“做工一流，速度又快，还多送了几块。”</div></li>'+
+			'<li><a href="http://www.hqpcb.com/quote?tid=32" title="板子做得不错，再做板子就选这家了。" target="_blank"><img src="/skin-2012/images/pcb_3.jpg"></a><div class="black-tit">“板子做得不错，再做板子就选这家了。”</div></li>'+
+			'</ul>'+
+			'<span class="bar_prev"><img src="/skin-2012/images/pcb_left.png"></span>'+
+			'<span class="bar_next"><img src="/skin-2012/images/pcb_right.png"></span>'+
+			'</div>'+
+			'</div>';
+		$(".share-wrap").after(PcbText);
+		//计价框
+		$(function(){
+			setQuoteDom();
+			var dataVm = {
+				blayer: 2,
+				bcount: 10,
+				bwidth: '',//X
+				blength: '',//Y
+				bheight:1.6,
+				url:''
+			}
+			dataVm.url='http://www.hqpcb.com/quote?btnid=2&layer='+dataVm.blayer+'&width='+dataVm.bwidth+'&length='+dataVm.blength+'&count='+dataVm.bcount+'&height='+dataVm.bheight+'&tid=32'
+			function setVmurl(){
+				dataVm.url = 'http://www.hqpcb.com/quote?btnid=2&layer='+dataVm.blayer+'&width='+dataVm.bwidth+'&length='+dataVm.blength+'&count='+dataVm.bcount+'&height='+dataVm.bheight+'&tid=32';
+			}
+			$('.Quotebtn').click(function(){
+				window.open(dataVm.url);
+			});
+
+			$("#VmWidth").change(function(){
+				dataVm.bwidth=$(this).val();
+				setVmurl();
+			});
+			$("#VmLength").change(function(){
+				dataVm.blength=$(this).val();
+				setVmurl();
+			});
+
+			function setQuoteDom(){
+				var blayerDom = '';
+				blayerDom += '';
+				blayerDom += '<li data="1">1</li>';
+				blayerDom += '<li data="2">2</li>';
+				blayerDom += '<li data="4">4</li>';
+				blayerDom += '<li data="6">6</li>';
+				blayerDom += '<li data="8">8</li>';
+				blayerDom += '<li data="10">10</li>';
+				blayerDom += '<li data="12">12</li>';
+				blayerDom += '<li data="14">14</li>';
+				blayerDom += '<li data="16">16</li>';
+				$("#blayerOption").html(blayerDom);
+
+				var bheightDom = '';
+				bheightDom += '<li data="0.4">0.4</li>';
+				bheightDom += '<li data="0.6">0.6</li>';
+				bheightDom += '<li data="0.8">0.8</li>';
+				bheightDom += '<li data="1.0">1.0</li>';
+				bheightDom += '<li data="1.2">1.2</li>';
+				bheightDom += '<li data="1.6">1.6</li>';
+				bheightDom += '<li data="2.0">2.0</li>';
+				bheightDom += '<li data="2.5">2.5</li>';
+				bheightDom += '<li data="3.0">3.0</li>';
+				$("#bheightOption").html(bheightDom);
+
+				var countDom = '';
+				countDom += '<li data="5">5</li>';
+				countDom += '<li data="10">10</li>';
+				countDom += '<li data="15">15</li>';
+				countDom += '<li data="20">20</li>';
+				countDom += '<li data="25">25</li>';
+				countDom += '<li data="30">30</li>';
+				countDom += '<li data="40">40</li>';
+				countDom += '<li data="50">50</li>';
+				countDom += '<li data="60">60</li>';
+				countDom += '<li data="80">80</li>';
+				countDom += '<li data="100">100</li>';
+				countDom += '<li data="120">120</li>';
+				countDom += '<li data="150">150</li>';
+				countDom += '<li data="200">200</li>';
+				countDom += '<li data="250">250</li>';
+				countDom += '<li data="300">300</li>';
+				countDom += '<li data="350">350</li>';
+				countDom += '<li data="400">400</li>';
+				countDom += '<li data="450">450</li>';
+				countDom += '<li data="500">500</li>';
+				countDom += '<li data="600">600</li>';
+				countDom += '<li data="700">700</li>';
+				countDom += '<li data="800">800</li>';
+				countDom += '<li data="900">900</li>';
+				countDom += '<li data="1000">1000</li>';
+				countDom += '<li data="1500">1500</li>';
+				countDom += '<li data="2000">2000</li>';
+				countDom += '<li data="2500">2500</li>';
+				countDom += '<li data="3000">3000</li>';
+				countDom += '<li data="3500">3500</li>';
+				countDom += '<li data="4000">4000</li>';
+				countDom += '<li data="4500">4500</li>';
+				countDom += '<li data="5000">5000</li>';
+				countDom += '<li data="5500">5500</li>';
+				countDom += '<li data="6000">6000</li>';
+				countDom += '<li data="6500">6500</li>';
+				countDom += '<li data="7000">7000</li>';
+				countDom += '<li data="7500">7500</li>';
+				countDom += '<li data="8000">8000</li>';
+				countDom += '<li data="8500">8500</li>';
+				countDom += '<li data="9000">9000</li>';
+				$("#bcountOption").html(countDom);
+
+			}
+			function countBheight(){
+				var min_height = 0.4,
+					max_height = 3.0,
+					def_height = 1.6;
+				var layer = parseInt(dataVm.blayer);
+				switch(layer){
+					case 1:
+						min_height = 0.6;
+						max_height = 2.0;
+						break;
+					case 2:
+						min_height = 0.4;
+						max_height = 2.5;
+						break;
+					case 4:
+						min_height = 0.6;
+						max_height = 2.5;
+						break;
+					case 6:
+						min_height = 0.8;
+						max_height = 3.0;
+						break;
+					case 8:
+						min_height = 1.0;
+						max_height = 3.0;
+						break;
+					case 10:
+						min_height = 1.2;
+						max_height = 3.0;
+						break;
+					case 12:
+					case 14:
+						min_height = 1.6;
+						max_height = 3.0;
+						break;
+					case 16:
+						min_height = 2.0;
+						max_height = 3.0;
+						def_height = 2.0;
+						break;
+				}
+				setBheight(min_height,max_height,def_height);
+			}
+			//板子层数与厚度的逻辑 -------------------------------------
+			function setBheight(min_height,max_height,def_height){
+				var option = $("#bheightOption").find("li");
+				option.show();
+				option.each(function(index,element){
+					var _this = $(this);
+					var bheight = _this.attr("data");
+					if(bheight < min_height){
+						_this.hide();
+					}
+					if(bheight > max_height){
+						_this.hide();
+					}
+
+				})
+				//设置默认值
+				dataVm.bheight = def_height;
+				$("#bheightOption").parent().parent().find('.btn-text').html(dataVm.bheight);
+			}
+			$("#Quotemain .icon").css('vertical-align','top');
+			$("#Quotemain").parents('.a_pr').css('overflow','visible');
+			$("#Quotemain").find(".choose-btn").on('click',function(){
+				var _this = $(this);
+				var $thisChooseMenu = _this.siblings(".choose-menu");
+				var $thisParent = _this.parent();
+				$(".choose-menu").not($thisChooseMenu).hide();
+
+				// 获取choosebox的宽度：width+左右边距
+				var width = $thisParent.width()+parseInt($thisParent.css("paddingLeft"))+parseInt($thisParent.css("paddingRight"));
+				//设置choose-menu宽度
+				if($thisChooseMenu.is(".wider")){
+					width = width*1.35;
+					if(width<230){
+						width = 230;
+					}
+				}
+				if($thisChooseMenu.is(".wider-large")){
+					width = width*2;
+					if(width<360){
+						width = 360;
+					}
+				}
+				//飞针测试针对性处理
+				$thisChooseMenu.width(width);
+				$thisChooseMenu.toggle();
+
+			})// End pcbForm
+			$("#Quotemain").find(".choose-menu").find("li").on('click',function(){
+				$(".choose-menu").hide();
+			})
+			//点击下拉菜单以外区域，关闭下单菜单
+			$(document).on('click', function(){
+				$(".choose-menu").hide();
+			}).on('click', '.choosebox', function(event){
+				event.stopPropagation();
+			})
+			//计价框
+			$("#homeQuote").find("ul[data-key]").on('click','li',function(){
+				var _this = $(this);
+				var $thisChooseBox = _this.parent().parent().parent(),
+					$btn = $thisChooseBox.find(".btn-text"),
+					html = _this.html(),
+					key = _this.parent().data("key"),
+					type = _this.parent().data("type"),
+					value = _this.attr("data");
+				//数据绑定 -------
+				if(type=='number'){
+					value = Number(value);
+				}
+				dataVm[key] = value;
+				//隐藏choose-menu
+				$(".choose-menu").hide();
+
+				//板子层数与板子厚度
+				if(key == "blayer"){
+					countBheight();
+
+				}
+				$btn.html(value)
+				setVmurl();
+			})//End click 事件
+		})
+		$(function(){
+			var timer = '';
+			var scrollTime = 300000000;
+			var moveTime = 500;
+			var moveWidth = $(".branch_bar").width();
+			var branch_len = $('.branch li').length;
+			var branch_img_len = $('.branch img').width();
+			var branch_img_count_len = parseInt(branch_len * branch_img_len);
+
+			$(".bar_next").click(function(){
+				if(!$(".branch li:first").is(":animated")){
+					$(".branch li:first").animate({'marginLeft':'-='+moveWidth+'px'},moveTime,function(){
+						$(".branch li:first").css('marginLeft',0);
+						$('.branch').append($(".branch li:first"));
+					});
+				}
+			});
+
+			$(".bar_prev").click(function(){
+				if(!$(".branch li:first").is(":animated")){
+					$('.branch').prepend($(".branch li:last"));
+					$('.branch li:first').css({'marginLeft':'-'+moveWidth+'px'});
+					$(".branch li:first").animate({'marginLeft':'+='+moveWidth+'px'},moveTime,function(){
+						$(".branch li:first").css('marginLeft','0px');
+					});
+				}
+			});
+
+			timer = setInterval(function(){
+				$(".next").click();
+			},scrollTime);
+
+			$(".branch_bar").mouseenter(function(){
+				clearInterval(timer);
+			});
+
+			$(".branch_bar").mouseleave(function(){
+				timer = setInterval(function(){
+					$(".next").click();
+				},scrollTime)
+			});
+		});
+	},1000)
+})(jQuery);
+//优惠券推广广告
+(function($){
+	function getCookie(name)
+	{
+		var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+		if(arr=document.cookie.match(reg))
+			return unescape(arr[2]);
+		else
+			return null;
+	}
+	var getCounponCook = getCookie('couponAd');
+	setTimeout(function(){
+	$("body").append(' <div id="coupon-ad" style="cursor:pointer;width: 260px;height: 220px;position: fixed;right: 32px;bottom: -15px;display: none;z-index: 2;">'+
+		'<div style="position: relative"><a id="couponClose" style="position: absolute;display: block;width: 16px;height: 16px;right: 0px;top: 0px;z-index: 2;"></a></div>'+
+		'<img src="/skin-2012/images/live_ad.png" />'+
+		'</div>');
+
+		if(getCounponCook==1||$("#log-tip1").length>0){
+			$("#coupon-ad").remove();
+		}
+		$("#pfwx").remove();
+
+
+	$("#coupon-ad").click(function(){
+		window.open("http://t.elecfans.com/live/spread");
+	});
+	$("#couponClose").click(function(e){
+		e.stopPropagation();
+		var Days = 1;
+		var exp = new Date();
+		exp.setTime(exp.getTime() + Days*24*60*60*1000);
+		document.cookie = 'couponAd' + "="+ '1' + ";expires=" +  exp.toGMTString();
+		$("#coupon-ad").remove();
+	});
+	$(window).scroll(function(){
+		if($(window).scrollTop()>200){
+			$("#coupon-ad").fadeIn();
+		}else{
+			$("#coupon-ad").fadeOut()
+		}
+	});
+	},2000)
+})(jQuery)

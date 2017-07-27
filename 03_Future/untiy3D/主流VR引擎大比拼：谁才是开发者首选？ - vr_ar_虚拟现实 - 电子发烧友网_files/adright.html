@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!-- saved from url=(0071)http://www.elecfans.com/templets/default/elecfans/homehtml/adright.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<style type="text/css">
+		*{ padding: 0; margin:0;}
+		body, button, input, select, textarea {color: #5F5F5F; font: 12px/1.5 宋体,arial; }
+		a {text-decoration: none; color: #004276; cursor: pointer; }
+		ol, ul {list-style: outside none none; }
+		.box_240{position:relative;}
+		.box_240 ul { padding:6px 8px; height:76px; overflow: hidden; }
+		.box_240 ul li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+		.box_240 ul li div {width: 260px;height:28px;overflow: hidden;margin: 0px;padding: 0px;}
+		</style>
+	<script src="./mobileAdapt.js.下载"></script></head>
+	<body>
+		<div class="box_240">
+			<ul style="display: block; overflow: hidden; height: 67.519px; padding: 5.32152px 7.09536px; margin: 0px; width: 216.522px; opacity: 0.88692;">
+				<li><div class="openx_ad_zone" ad-id="515" ad-width="260" ad-height="28"><iframe src="./myafr(8).html" width="260" height="28" frameborder="0" scrolling="no"></iframe></div></li>
+				<li><div class="openx_ad_zone" ad-id="516" ad-width="260" ad-height="28"><iframe src="./myafr(9).html" width="260" height="28" frameborder="0" scrolling="no"></iframe></div></li>
+				<li><div class="openx_ad_zone" ad-id="517" ad-width="260" ad-height="28"><iframe src="./myafr(10).html" width="260" height="28" frameborder="0" scrolling="no"></iframe></div></li>
+			</ul>
+			<ul>
+				<li><div class="openx_ad_zone" ad-id="518" ad-width="260" ad-height="28"><iframe src="./myafr(11).html" width="260" height="28" frameborder="0" scrolling="no"></iframe></div></li>
+				<li><div class="openx_ad_zone" ad-id="519" ad-width="260" ad-height="28"><iframe src="./myafr(12).html" width="260" height="28" frameborder="0" scrolling="no"></iframe></div></li>
+				<li><div class="openx_ad_zone" ad-id="520" ad-width="260" ad-height="28"><iframe src="./myafr(13).html" width="260" height="28" frameborder="0" scrolling="no"></iframe></div></li>
+			</ul>
+		</div>
+		<script type="text/javascript" src="./jquery-1.11.2.min.js.下载"></script>
+		<script type="text/javascript">
+		$(function(){
+			// 新式广告位广告方式  <div class="openx_ad_zone" ad-id="325" ad-width="270" ad-height="14"></div>
+			$('.openx_ad_zone').each(function(){
+				var posterid = $(this).attr('ad-id');
+				var width = $(this).attr('ad-width');
+				var height = $(this).attr('ad-height');
+				var randomnumber = Math.random();
+				var ga = document.createElement('iframe');
+				ga.src = 'http://www1.elecfans.com/www/delivery/myafr.php?target=_blank&cb='+randomnumber+'&zoneid='+posterid;
+				ga.width = width;
+				ga.height = height;
+				ga.frameBorder = 0;
+				ga.scrolling = 'no';
+				$(this).html(ga);
+			});
+			var $box = $('.box_240')
+			,i = 0
+			,timer
+			,interval = 5000;
+			$box.hover(function(){
+				clearInterval(timer);
+			}, function(){
+				timer = setInterval(function(){
+					$box.find('ul:first').toggle('slow');
+					// var fir =  $box.find('ul:first'),
+					// 	fir_height = fir.outerHeight();
+					// fir.animate({"marginTop":-fir_height+'px'}, 600, function(){
+					// 	fir.css('marginTop','0').appendTo($box);
+					// });
+				}, interval);
+			}).trigger('mouseleave');
+		});
+		</script>
+	
+</body></html>

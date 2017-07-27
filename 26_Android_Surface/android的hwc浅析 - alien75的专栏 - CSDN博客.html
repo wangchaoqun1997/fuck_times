@@ -1,0 +1,1206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0053)http://blog.csdn.net/alien75/article/details/39290109 -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" async="" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/nctm"></script>  
+        <script src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/hm.js.下载"></script><script type="text/javascript" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/tingyun-rum.js.下载"></script>
+            <link rel="canonical" href="http://blog.csdn.net/alien75/article/details/39290109"> 
+ <meta http-equiv="Cache-Control" content="no-siteapp"><link rel="alternate" media="handheld" href="http://blog.csdn.net/alien75/article/details/39290109#">
+
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848"> 
+       
+    <title>android的hwc浅析 - alien75的专栏
+        - CSDN博客</title>
+    
+    <meta name="description" content="注：本文档基于kk进行分析，着重于概念的精确定义和版本历史演变一、关于hwc的介绍广义的来讲是指利用硬件完成图像数据组合并显示的功能(能力)，狭义的来讲就是指Hwcomposer HAL。1、从广义的角度来分析，有几个概念需要精确定义(注意字母大小写差异)(1)hwc：利用硬件完成图像数据组合并显示的功能(能力)，具体到代码级别它是由多个类如SurfaceFling">
+
+    <meta name="keywords" content="">
+
+   
+    <script src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/blog_static_head.min.js.下载" type="text/javascript"></script>
+
+    
+        <!--new top-->
+       
+       
+        <!--new top-->
+    
+      <!-- ad begin -->
+         
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/style.css">
+
+    
+
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="http://blog.csdn.net/alien75/rss/list">
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico">
+    <link type="text/css" rel="stylesheet" href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/default.css">
+ 
+
+
+
+    <link href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/csdn_public_blog_detail.min.css" type="text/css" rel="stylesheet">
+     
+         <link rel="stylesheet" href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/csdn_blog_detail.min.css">
+
+  
+
+
+    <!-- 请置于所有广告位代码之前 --> 
+            <script src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/ds.js.下载"></script>
+
+<script src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/share.js.下载"></script><link rel="stylesheet" type="text/css" href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/style(1).css"><link rel="stylesheet" type="text/css" href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/style(2).css"><script src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/logger.js.下载"></script><link href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/bdsstyle.css" rel="stylesheet" type="text/css"><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Hover_Arrow {position: absolute; width: 15px; height: 11px; cursor: pointer}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; color: #666666}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_Menu_Close {position: absolute; width: 31px; height: 31px; top: -15px; left: -15px}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><link rel="stylesheet" href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/share_style0_16.css"></head>
+
+
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><div id="MathJax_Message" style="display: none;"></div><iframe frameborder="0" style="display: none;" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/saved_resource.html"></iframe><div class="csdn-toolbar csdn-toolbar-skin-black ">        <div class="container row center-block ">          <div class="col-md-3 pull-left logo clearfix"><a href="http://www.csdn.net/?ref=toolbar" title="CSDN首页" target="_blank" class="icon"></a><a title="频道首页" href="http://blog.csdn.net/?ref=toolbar_logo" class="img blog-icon"></a></div>          <div class="pull-right login-wrap ">            <ul class="btns">              <li class="loginlink"><a href="https://passport.csdn.net/account/login?ref=toolbar" target="_top">登录&nbsp;</a>|<a target="_top" href="http://passport.csdn.net/account/mobileregister?ref=toolbar&amp;action=mobileRegister">&nbsp;注册</a></li>              <li class="search">                <div class="icon on-search-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <form action="http://so.csdn.net/search" id="toolbar_search" method="get" target="_blank">                      <input type="hidden" value="toolbar" name="ref" accesskey="2">                      <div class="border">                        <input placeholder="搜索" type="text" value="" name="q" accesskey="2"><span class="icon-enter-sm"></span>                      </div>                    </form>                  </div>                </div>              </li>              <li class="favor">                <div class="icon on-favor-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div style="display:none;" class="favor-success"><span class="msg">收藏成功</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <div style="display:none;" class="favor-failed"><span class="icon-danger-lg"></span><span class="msg">收藏失败，请重新收藏</span>                      <div class="btns"><span class="btn btn-primary ok">确定</span></div>                    </div>                    <form role="form" class="form-horizontal favor-form">                      <div class="form-group">                        <div class="clearfix">                          <label for="input-title" class="col-sm-2 control-label"><span class="red_txt">*</span>标题</label>                          <div class="col-sm-10">                            <input id="inputTitle" type="text" placeholder="" class="title form-control">                          </div>                        </div>                        <div class="alert alert-danger"><strong></strong>标题不能为空</div>                      </div>                      <div class="form-group" style="display:none;">                        <label for="input-url" class="col-sm-2 control-label">网址</label>                        <div class="col-sm-10">                          <input id="input-url" type="text" placeholder="" class="url form-control">                        </div>                      </div>                      <div class="form-group">                        <label for="input-tag" class="col-sm-2 tag control-label">标签</label>                        <div class="col-sm-10">                          <input id="input-tag" type="text" class="form-control tag">                        </div>                      </div>                      <div class="form-group">                        <label for="input-description" class="description col-sm-2 control-label">位置</label>                        <div class="col-sm-10">                          <div class="my_lib_box">                            个人主页&nbsp;-&nbsp;<a href="http://my.csdn.net/" target="_blank">我的知识</a>                          </div>                          <div class="checkbox">                            <div class="pull-left">                              <label>                                <input type="checkbox" name="share" class="save_lib_map" checked="checked">同时保存至：                              </label>                            </div>                            <div class="pull-left">                              <div class="dropdown">                                <button id="toolbar_sele_map" type="button">                                  选择知识图谱                                  <i class="fa fa-chevron-down"></i>                                </button>                                <div class="top_arr"></div>                                <div class="outside">                                  <ul class="dropdown-menu" id="toolbar_Design_knowledge"><li>选择知识图谱</li></ul>                                </div>                              </div>                            </div>                            <div class="pull-left new_txt">                              <a href="http://lib.csdn.net/my/create/structure" target="_blank">新建？</a>                            </div>                          </div>                        </div>                      </div>                      <div class="form-group">                        <div class="col-sm-offset-2 col-sm-10 ft">                          <div class="col-sm-4 pull-left" style="display:none">                            <div class="checkbox">                              <label>                                <input type="checkbox" name="share" checked="checked" class="share">公开                              </label>                            </div>                          </div>                          <div class="col-sm-8 pull-right favor-btns">                            <button type="button" class="cancel btn btn-default">取消</button>                            <button type="submit" class="submit btn btn-primary">收藏</button>                          </div>                        </div>                      </div>                    </form>                  </div>                </div>              </li>              <li class="notify">                <div style="display:none" class="number"></div>                <div style="" class="icon-hasnotes-sm"></div>                <div id="header_notice_num"><div class="icon-hasnotes" style=""></div></div>                <div class="icon on-notify-icon">                  <div class="wrap">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div id="note1" class="csdn_note" style="left: -212px; top: 325px; display: none;">                      <div class="box"><div class="notifications notice_list_con curr">  <div class="menu_title">    <span class="title"><a href="http://msg.csdn.net/letters" target="_blank" class="read_all">查看所有私信</a><a href="http://msg.csdn.net/" target="_blank" class="go_all">查看所有通知</a></span>  </div>  <div class="loading"></div>  <div class="empty">暂没有新通知</div>  <div class="notice_content" style="overflow-y: auto; max-height: 270px;"></div></div><div class="notifications detail_con" style="display: none">  <div class="menu_title">    <span class="title">      <a class="go_back" href="javascript:void 0;">返回通知列表</a>      <a class="notifications_page_none nextnote" href="javascript:void 0;">下一条</a>      <a class="notifications_page prvnote" href="javascript:void 0;">上一条</a>    </span>  </div>  <div class="notice_content" style="overflow-y: scroll; height: 250px;"></div></div><div class="error"></div></div>                    <iframe src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/saved_resource(1).html" frameborder="0" allowtransparency="true" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe></div>                  </div>                </div>              </li>              <li class="ugc">                <div class="icon on-ugc-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <dl>                      <dt><a href="http://geek.csdn.net/news/expert?ref=toolbar" target="_blank" class="p-news clearfix" style="display:none;"><em class="icon"></em><span>分享资讯</span></a></dt>                      <dt style="border: none;"><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-doc clearfix"><em class="icon"></em><span>传PPT/文档</span></a></dt>                      <dt><a href="http://bbs.csdn.net/topics/new?ref=toolbar" target="_blank" class="p-ask clearfix"><em class="icon"></em><span>提问题</span></a></dt>                      <dt><a href="http://write.blog.csdn.net/postedit?ref=toolbar" target="_blank" class="p-blog clearfix"><em class="icon"></em><span>写博客</span></a></dt>                      <dt><a href="http://u.download.csdn.net/upload?ref=toolbar" target="_blank" class="p-src clearfix"><em class="icon"></em><span>传资源</span></a></dt>                      <dt><a href="https://code.csdn.net/projects/new?ref=toolbar" target="_blank" class="c-obj clearfix"><em class="icon"></em><span>创建项目</span></a></dt>                      <dt><a href="https://code.csdn.net/snippets/new?ref=toolbar" target="_blank" class="c-code clearfix"><em class="icon"></em><span>创建代码片</span></a></dt>                    </dl>                  </div>                </div>              </li>              <li class="profile">                <div class="icon on-profile-icon"><img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/2_wangchaoqun1997.jpg" class="curr-icon-img">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                    <div class="bd">                      <dl class="clearfix">                        <dt class="pull-left img"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="avatar"><img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/2_wangchaoqun1997.jpg"></a></dt>                        <dd class="info" style="border: none;"><a target="_blank" href="http://my.csdn.net/?ref=toolbar" class="nickname">wangchaoqun1997</a><span class="dec">驱动 linux驱动 android驱动 driver</span></dd>                      </dl>                    </div>                    <div class="ft clearfix"><a target="_blank" href="http://my.csdn.net/my/account/changepwd?ref=toolbar" class="pull-left"><span class="icon-cog"></span>帐号设置</a><a href="https://passport.csdn.net/account/logout?ref=toolbar" target="_top" class="pull-left" style="margin-left:132px; width:18px; height:27px; white-space:nowrap; overflow:hidden;"><span class="icon-signout"></span><span class="out">退出</span></a></div>                  </div>                </div>              </li>              <li class="apps">                <div id="chasnew123" class="hasnew" style="display: none;"></div>                <div id="cappsarea123" class="icon on-apps-icon">                  <div class="wrap clearfix">                    <div class="curr-icon-wrap">                      <div class="curr-icon"></div>                    </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>社区</h5>                      </dt>                      <dd> <a href="http://blog.csdn.net/?ref=toolbar" target="_blank">博客</a></dd>                      <dd> <a href="http://bbs.csdn.net/?ref=toolbar" target="_blank">论坛</a></dd>                      <dd> <a href="http://download.csdn.net/?ref=toolbar" target="_blank">下载</a></dd>                      <dd> <a href="http://lib.csdn.net/?ref=toolbar" target="_blank">知识库</a></dd>                      <dd><a href="http://ask.csdn.net/?ref=toolbar" target="_blank">技术问答</a></dd>                      <dd><a href="http://geek.csdn.net/?ref=toolbar" target="_blank">极客头条</a></dd>                      <dd style="display:none"> <a href="http://hero.csdn.net/?ref=toolbar" target="_blank">英雄会</a></dd>                    </dl>                  </div>                  <div class="detail">                    <dl>                      <dt>                        <h5>服务</h5>                      </dt>                      <dd style="display:none"> <a href="http://job.csdn.net/?ref=toolbar" target="_blank">JOB<img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="http://edu.csdn.net/?ref=toolbar" target="_blank">学院<img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                      <dd> <a href="https://code.csdn.net/?ref=toolbar" target="_blank">CODE</a></dd>                      <dd> <a href="http://huiyi.csdn.net/?ref=toolbar" target="_blank">活动</a></dd>                      <dd> <a href="http://www.csto.com/?ref=toolbar" target="_blank">CSTO</a></dd>                      <dd> <a href="http://mall.csdn.net/?ref=toolbar" target="_blank">C币兑换<img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/new.gif" style="display: none; margin-top: -26px; width: 23px;"></a></dd>                    </dl>                  </div>                  <div class="detail last">                    <dl>                      <dt>                        <h5>俱乐部</h5>                      </dt>                      <dd> <a href="http://cto.csdn.net/?ref=toolbar" target="_blank">CTO俱乐部</a></dd>                      <dd> <a href="http://student.csdn.net/?ref=toolbar" target="_blank">高校俱乐部</a></dd>                    </dl>                  </div>                </div>              </div>            </li>            </ul>          </div>        </div>    </div>
+     
+        <div class="tracking-ad" data-view="true" data-mod="ad_popu_72" data-mtp="62" data-order="40" data-con="ad_content_2072">
+                     <script id="popuLayer_js_q" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/popuLayer.js.下载" defer="defer" type="text/javascript"></script>
+                <div id="layerd" style="position: fixed; bottom: 0px; right: 0px; line-height: 0px; z-index: 1000; width: 300px; height: 278px;">
+    	                <div class="J_close layer_close" style="display:;background-color:#efefef;padding:0px;color:#333;font:12px/24px Helvetica,Tahoma,Arial,sans-serif;text-align:right;">关闭</div><!-- 广告占位容器 --><div id="cpro_u2895327"><iframe id="iframeu2895327_0" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/nctm.html" width="300" height="250" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:300px;height:250px" allowtransparency="true"></iframe></div></div>
+                <script>  document.getElementById("popuLayer_js_q").onload = function () { var styObjd = styObj = { width: "300px", "height": parseInt(250) + 28 }; window.CSDN.Layer.PopuLayer("#layerd", { storageName: "layerd", styleObj: styObjd, total: 50, expoire: 1000 * 60 }); }</script><!-- 投放代码 --><script type="text/javascript">                    /*服务器频道首页置顶Banner960*90，创建于2014-7-3*/    (window.cproArray = window.cproArray || []).push({ id: "u2895327" });  </script>  <script src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/c.js.下载" type="text/javascript"></script>
+     
+        </div>
+
+    <!-- 广告位开始 -->
+        
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/html.js.下载" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/alien75">alien75的专栏</a></h2>
+            <h3>宁静致远 淡泊明志</h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/alien75?viewmode=contents"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_mulu&#39;])">
+                    <img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/alien75?viewmode=list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_zhaiyao&#39;])">
+                    <img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/alien75/rss/list"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_RSS&#39;])">
+                    <img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "alien75";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/alien75";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "wangchaoqun1997";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod="popu_3"> 
+
+
+<a href="http://blog.csdn.net/turingbooks/article/details/76034232" target="_blank">
+<font color="red"><strong>评论送书 | 7月书讯：众多畅销书升级！ </strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/74550215" target="_blank">
+<font color="blue"><strong>征文 | 你会为 AI 转型么？</strong></font></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<a href="http://blog.csdn.net/epubit17/article/details/76066685" target="_blank">
+<font color="red"><strong>赠书 | AI专场（AI圣经！《深度学习》中文版）</strong></font></a>
+
+</div>                        </div>
+
+                        
+
+
+
+  
+
+
+
+
+
+
+<script type="text/javascript" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/category.js.下载"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+      var isBole = false; 
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=android%e7%9a%84hwc%e6%b5%85%e6%9e%90&u=http://blog.csdn.net/alien75/article/details/39290109"
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+    <h1>
+        <span class="link_title"><a href="http://blog.csdn.net/alien75/article/details/39290109">
+        android的hwc浅析        
+           
+        </a>
+        </span>
+
+         
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_r">
+            <span class="link_postdate">2014-09-15 11:05</span>
+            <span class="link_view" title="阅读次数">14884人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="http://blog.csdn.net/alien75/article/details/39290109#comments" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_pinglun&#39;])">评论</a>(5)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle(&#39;android%e7%9a%84hwc%e6%b5%85%e6%9e%90&#39;,&#39;39290109&#39;);return false;" title="收藏" target="_blank">收藏</a></span>
+             <span class="link_report"> <a href="http://blog.csdn.net/alien75/article/details/39290109#report" onclick="javascript:report(39290109,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label onclick="GetCategoryArticles(&#39;525316&#39;,&#39;alien75&#39;,&#39;top&#39;,&#39;39290109&#39;);">
+                        <span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_fenlei&#39;]);">linux<em>（31）</em></span>
+                      <img class="arrow-down" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a href="http://blog.csdn.net/alien75/article/category/525316" target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_525316">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+        <div class="bog_copyright">         
+            <p class="copyright_p">版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+
+<div id="article_content" class="article_content tracking-ad" data-mod="popu_307" data-dsm="post">
+
+<p>注：本文档基于kk进行分析，着重于概念的精确定义和版本历史演变</p>
+<p><br>
+</p>
+一、关于hwc的介绍<br>
+广义的来讲是指利用硬件完成图像数据组合并显示的功能(能力)，狭义的来讲就是指Hwcomposer HAL。<br>
+<br>
+<br>
+1、从广义的角度来分析，有几个概念需要精确定义(注意字母大小写差异)<br>
+(1)hwc：利用硬件完成图像数据组合并显示的功能(能力)，具体到代码级别它是由多个类如SurfaceFlinger、HWComposer、DisplayDevice等协同完成的一种功能(能力)。<br>
+(2)HWComposer：硬件组合抽象层，介于SurfaceFlinger和HAL之间，具体到代码级别就是一个类，封装对于Hwcomposer HAL和Gralloc HAL的使用。根据官方的介绍，Hwcomposer HAL有1.0、1.1、1.2、1.3等多个版本，当为1.1及之后版本时，HWComposer不再需要使用Gralloc HAL。<br>
+(3)Hwcomposer：具体到代码级别就是Hwcomposer HAL<br>
+(4)hw composer：具体到平台硬件级别就是composer硬件，如BE。<br>
+<br>
+<br>
+2、从狭义的角度来分析，Hwcomposer HAL是从Honeycomb(3.0)引入，取代2.3的Overlay实现方式(但不是必须的)，以降低代码实现及维护难度。它的实现版本经历了1.0到1.3的演变，在Jellybean MR1(4.2)实现的1.1版本，引入了硬件组合抽象层(HWComposer)的概念，向上对SurfaceFlinger完全隐藏了平台显示硬件特性，工作方式也修改成如下官方描述：<br>
+(1)SurfaceFlinger provides the HWC with a full list of layers, and asks, "how do you want to handle this?"<br>
+SurfaceFlinger提供所有软图层信息给HWComposer，询问其处理方式<br>
+(2)The HWC responds by marking each layer as "overlay" or "GLES composition"<br>
+HWComposer根据硬件性能决定是使用硬件图层合成器还是GPU合成<br>
+(3)SurfaceFlinger takes care of any GLES composition, passing the output buffer to HWC, and lets HWC handle the rest<br>
+SurfaceFlinger处理需要GPU合成的软图层，将结果递交给HWComposer做显示(通过Hwcomposer HAL)，需要硬件图层合成器合成的软图层由HWComposer自行处理(通过Hwcomposer HAL)<br>
+分析：这样设计的好处是可以充分发挥硬件性能，同时降低SurfaceFlinger和硬件平台的耦合度(方便移植)<br>
+<br>
+<br>
+3、Hwcomposer HAL的大概演变<br>
+(1)pre-1.1<br>
+只支持一个Display<br>
+(2)1.1(example: exynos5)<br>
+不需要Gralloc HAL<br>
+支持Multiple Display<br>
+支持hotplug<br>
+增加HWC_FRAMEBUFFER_TARGET合成类型<br>
+(3)1.2(example: msm8960、msm8x26)<br>
+支持Alpha运算(setPlaneAlpha)，之前由GPU完成<br>
+(4)1.3(example: msm8974)<br>
+支持Virtual Display图层合成，之前由GPU完成<br>
+支持crop(裁剪)<br>
+<br>
+<br>
+4、终端显示支持<br>
+从JellyBean(4.2)开始支持多屏幕，屏幕类型：<br>
+Primary Display：设备自带的屏幕，由SurfaceFlinger管理<br>
+External Display：通过HDMI连接，由SurfaceFlinger监控和管理<br>
+Virtual Display：这种方式是在4.2新增的(如基于Wifi Direct技术实现的Mircast)，由DisplayManagerService监控和管理。Virtual Display可选择全部或部分的图层进行合成，在KitKat之前，Hwcomposer只能管理Primary Display的合成，Virtual Display使用GLES进行合成；从KitKat开始，Hwcomposer也能参与Virtual Display的合成。Virtual Display的显示数据也是由BufferQueue处理<br>
+<br>
+<br>
+5、hwc能完成的工作<br>
+(1)Full-screen games in portrait and landscape mode<br>
+(2)Full-screen video with closed captioning and playback control<br>
+(3)The home screen(compositing the status bar, system bar, application window, and live wallpapers)<br>
+(4)Protected video playback<br>
+(5)Multiple display support<br>
+<br>
+<br>
+二、引用<br>
+http://source.anddroid.com/devices/graphics.html<br>
+http://blog.csdn.net/jinzhuojun/article/details/17427491<br>
+http://www.cnblogs.com/samchen2009/p/3364327.html<br>
+http://blog.csdn.net/brucexu1978/article/details/8976781<br>
+<br>
+<br>
+The Android graphics path, in depth.pdf<br>
+Android Graphics And Android EGL.pdf
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad bdshare-button-style0-16" style="float: right;" data-mod="popu_172" data-bd-bind="1501035202546">
+<a href="http://blog.csdn.net/alien75/article/details/39290109#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important" target="_blank"></a>
+<a href="http://blog.csdn.net/alien75/article/details/39290109#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间" style="background-position:0 -52px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/alien75/article/details/39290109#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博" style="background-position:0 -104px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/alien75/article/details/39290109#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博" style="background-position:0 -260px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/alien75/article/details/39290109#" class="bds_renren" data-cmd="renren" title="分享到人人网" style="background-position:0 -208px !important" target="_blank"></a>
+<a href="http://blog.csdn.net/alien75/article/details/39290109#" class="bds_weixin" data-cmd="weixin" title="分享到微信" style="background-position:0 -1612px !important" target="_blank"></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   
+
+<!--172.16.140.11-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/bds_s_v2.js.下载"></script>
+
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+
+
+ 
+
+
+        <div id="digg" articleid="39290109">
+            <dl id="btnDigg" class="digg digg_enable" onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>1</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_enable" onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>0</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" target="_blank">&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" target="_blank">&nbsp;</a></div>
+    <script type="text/javascript">
+                function btndigga() {
+                    $(".tracking-ad[data-mod='popu_222'] a").click();
+                }
+                function btnburya() {
+                    $(".tracking-ad[data-mod='popu_223'] a").click();
+                }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;]);location.href=&#39;http://blog.csdn.net/alien75/article/details/39252639&#39;;">上一篇</span><a href="http://blog.csdn.net/alien75/article/details/39252639" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_shangyipian&#39;])">高通方案camera子系统daemon存在原因</a></li>
+                <li class="next_article"><span onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;]);location.href=&#39;http://blog.csdn.net/alien75/article/details/40297951&#39;;">下一篇</span><a href="http://blog.csdn.net/alien75/article/details/40297951" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_xiayipian&#39;])">流驱动XXX_Init中分配内存引起的问题</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+            <div class="similar_article">
+                    <h4></h4>
+                    <div class="similar_c" style="margin:20px 0px 0px 0px">
+                        <div class="similar_c_t">
+                          &nbsp;&nbsp;相关文章推荐
+                        </div>
+                   
+                        <div class="similar_wrap tracking-ad" data-mod="popu_36">                       
+                            <ul class="similar_list fl">    
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/kc58236582/article/details/52856341" title="Android6.0 图像合成过程详解（一） setUpHWComposer函数" strategy="BlogCommendFromBaidu" target="_blank">Android6.0 图像合成过程详解（一） setUpHWComposer函数</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yangrendong/article/details/38494675" title="SurfaceFlinger详解" strategy="BlogCommendFromBaidu" target="_blank">SurfaceFlinger详解</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/kc58236582/article/details/70146317" title="显示HWC合成（hwc_display_contents_1_t，hwc_layer_1_t数据结构关系）" strategy="BlogCommendFromBaidu" target="_blank">显示HWC合成（hwc_display_contents_1_t，hwc_layer_1_t数据结构关系）</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/prike/article/details/49743213" title="hwc_composer_device_1" strategy="BlogCommendFromBaidu" target="_blank">hwc_composer_device_1</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/prike/article/details/49735285" title="hwc virtual display" strategy="BlogCommendFromBaidu" target="_blank">hwc virtual display</a>
+                                   </li>
+                            </ul>
+                              <ul class="similar_list fr">      
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/prike/article/details/49705817" title="hwc_procs_t，hwc_display_contents_1_t 理解" strategy="BlogCommendFromBaidu" target="_blank">hwc_procs_t，hwc_display_contents_1_t 理解</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/qwaszx523/article/details/52862795" title="hwc_layer_1" strategy="BlogCommendFromBaidu" target="_blank">hwc_layer_1</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/u014409795/article/details/51276480" title="Surfaceflinger中图像绘制流程" strategy="BlogCommendFromBaidu" target="_blank">Surfaceflinger中图像绘制流程</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/beifengfoguo/article/details/51556962" title="SurfaceFlinger 分析 一" strategy="BlogCommendFromBaidu" target="_blank">SurfaceFlinger 分析 一</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/u014409795/article/details/51354595" title="SurfaceFlinger中图像合成流程" strategy="BlogCommendFromBaidu" target="_blank">SurfaceFlinger中图像合成流程</a>
+                                   </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+      
+</div>
+
+    <div>
+        
+
+        <script type="text/javascript">
+            /*博客内容页下方Banner1-728*90，创建于2016-12-13*/
+            var cpro_id = "u2843949";
+        </script>
+        <script type="text/javascript" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/c.js.下载"></script><div id="BAIDU_SSP__wrapper_u2843949_0"><iframe id="iframeu2843949_0" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/nctm(1).html" width="728" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:728px;height:90px" allowtransparency="true"></iframe></div>
+
+     </div>
+
+<div id="suggest">
+
+</div>
+         <script language="javascript" type="text/javascript">     
+             $(function(){
+                 $.get("/alien75/svc/GetSuggestContent/39290109",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+        <dl class="blog-ass-articl tracking-ad" id="res-relatived" data-mod="popu_84"> 
+             <dt><span>猜你在找</span></dt>    
+           
+    
+           
+
+             
+
+                            <img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/700x160.jpg" style="width:700px;height:160px;">
+              
+                 
+        </dl>
+
+
+
+
+            
+                                    
+            
+                                    
+
+        <!-- 广告位开始 -->
+        <!-- 广告位结束 -->
+
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list"><dl class="comment_item comment_topic" id="comment_item_4349313"><dt class="comment_head" floor="2">2楼 <span class="user"><a class="username" href="http://blog.csdn.net/alien75" target="_blank">alien75</a> <span class="ptime">2014-09-30 10:37发表</span>  <a href="http://blog.csdn.net/alien75/article/details/39290109#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="4349313" username="alien75"> <a href="http://blog.csdn.net/alien75/article/details/39290109#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/alien75/article/details/39290109#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/alien75" target="_blank"><img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/3_alien75.jpg" width="40" height="40"></a></dd><dd class="comment_body"><fieldset><legend>引用“huangzhenyu1983”的评论：</legend>你好博主，向你请教个问题，SF通过GPU或HWC合层的时候分别是在什么时候dequeuebuffer...</fieldset><br>推荐看文章引用第二个链接</dd><dl class="comment_item comment_reply" id="comment_item_4349803"><dt class="comment_head" floor="2">Re: <span class="user"><a class="username" href="http://blog.csdn.net/huangzhenyu1983" target="_blank">huangzhenyu1983</a> <span class="ptime">2014-09-30 11:02发表</span>  <a href="http://blog.csdn.net/alien75/article/details/39290109#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="4349803" username="huangzhenyu1983"> <a href="http://blog.csdn.net/alien75/article/details/39290109#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/alien75/article/details/39290109#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/huangzhenyu1983" target="_blank"><img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/3_huangzhenyu1983.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复alien75：我看了你推荐的那篇文章，没有讲到是在什么时候dequeuebuffer。我打过log，发现是在执行GLConsumer::syncForReleaseLocked这个函数的eglCreateSyncKHR时会dequeuebuffer。但在这个地方dequeuebuffer很其奇怪，可惜这个函数在egl库里看不到代码。</dd><dl class="comment_item comment_reply" id="comment_item_4349819"><dt class="comment_head" floor="1">Re: <span class="user"><a class="username" href="http://blog.csdn.net/huangzhenyu1983" target="_blank">huangzhenyu1983</a> <span class="ptime">2014-09-30 11:03发表</span>  <a href="http://blog.csdn.net/alien75/article/details/39290109#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="4349819" username="huangzhenyu1983"> <a href="http://blog.csdn.net/alien75/article/details/39290109#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/alien75/article/details/39290109#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/huangzhenyu1983" target="_blank"><img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/3_huangzhenyu1983.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复huangzhenyu1983：我怀疑是我找错地方了。。。</dd></dl></dl><dl class="comment_item comment_reply" id="comment_item_4349473"><dt class="comment_head" floor="2">Re: <span class="user"><a class="username" href="http://blog.csdn.net/huangzhenyu1983" target="_blank">huangzhenyu1983</a> <span class="ptime">2014-09-30 10:46发表</span>  <a href="http://blog.csdn.net/alien75/article/details/39290109#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="4349473" username="huangzhenyu1983"> <a href="http://blog.csdn.net/alien75/article/details/39290109#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/alien75/article/details/39290109#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/huangzhenyu1983" target="_blank"><img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/3_huangzhenyu1983.jpg" width="40" height="40"></a></dd><dd class="comment_body">回复alien75：感谢！</dd></dl></dl><dl class="comment_item comment_topic" id="comment_item_4349005"><dt class="comment_head" floor="1">1楼 <span class="user"><a class="username" href="http://blog.csdn.net/huangzhenyu1983" target="_blank">huangzhenyu1983</a> <span class="ptime">2014-09-30 10:13发表</span>  <a href="http://blog.csdn.net/alien75/article/details/39290109#reply" class="cmt_btn reply" title="回复">[回复]</a> <span class="comment_manage" style="display:none;" commentid="4349005" username="huangzhenyu1983"> <a href="http://blog.csdn.net/alien75/article/details/39290109#quote" class="cmt_btn quote" title="引用">[引用]</a> <a href="http://blog.csdn.net/alien75/article/details/39290109#report" class="cmt_btn report" title="举报">[举报]</a></span></span></dt><dd class="comment_userface"><a href="http://blog.csdn.net/huangzhenyu1983" target="_blank"><img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/3_huangzhenyu1983.jpg" width="40" height="40"></a></dd><dd class="comment_body">你好博主，向你请教个问题，SF通过GPU或HWC合层的时候分别是在什么时候dequeuebuffer的呢？找了2天没找到地方。。。</dd></dl><div class="clear"></div></div>
+    <div id="comment_bar" style="display: none;">
+    </div>
+    <div id="comment_form"><a name="commentbox"></a><a name="reply"></a><a name="quote"></a><form action="http://blog.csdn.net/alien75/comment/submit?id=39290109" method="post" onsubmit="return subform(this);"><div class="commentform"><div class="panel_head">发表评论</div><ul><li class="left">用 户 名：</li><li class="right">wangchaoqun1997</li></ul><ul><li class="left">评论内容：</li><li class="right" style="position:relative;"><div id="ubbtools"><a href="http://blog.csdn.net/alien75/article/details/39290109#insertcode" code="code"><img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/code.gif" border="0" alt="插入代码" title="插入代码"></a></div><div id="lang_list" style="position: absolute; top: 28px; left: 0px; display: none;"><a class="long_name" href="http://blog.csdn.net/alien75/article/details/39290109#html">HTML/XML</a><a class="long_name" href="http://blog.csdn.net/alien75/article/details/39290109#objc">objective-c</a><a class="zhong_name" href="http://blog.csdn.net/alien75/article/details/39290109#delphi">Delphi</a><a class="zhong_name" href="http://blog.csdn.net/alien75/article/details/39290109#ruby">Ruby</a><a href="http://blog.csdn.net/alien75/article/details/39290109#php">PHP</a><a class="duan_name" href="http://blog.csdn.net/alien75/article/details/39290109#csharp">C#</a><a style=" border-right: none;" class="duan_name" href="http://blog.csdn.net/alien75/article/details/39290109#cpp">C++</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/alien75/article/details/39290109#javascript">JavaScript</a><a style=" border-bottom:none;" class="long_name" href="http://blog.csdn.net/alien75/article/details/39290109#vb">Visual Basic</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/alien75/article/details/39290109#python">Python</a><a style=" border-bottom:none;" class="zhong_name" href="http://blog.csdn.net/alien75/article/details/39290109#java">Java</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/alien75/article/details/39290109#css">CSS</a><a style="border-bottom:none;" class="duan_name" href="http://blog.csdn.net/alien75/article/details/39290109#sql">SQL</a><a style="border:none;" class="duan_name" href="http://blog.csdn.net/alien75/article/details/39290109#plain">其它</a></div><textarea class="comment_content" name="comment_content" id="comment_content" style="width: 400px; height: 200px;"></textarea></li></ul><ul><input type="hidden" id="comment_replyId" name="comment_replyId"><input type="hidden" id="comment_userId" name="comment_userId" value="521203"><input type="hidden" id="commentId" name="commentId" value=""><input type="submit" class="comment_btn" value="提交">&nbsp;&nbsp;<span id="tip_comment" style="color: Red; display: none;"></span></ul></div></form></div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '39290109';
+    var commentscount = 5;
+    var islock = false
+</script>
+
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top" style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop" style="display: none;" title="返回顶部" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_huidaodingbu&#39;])">         
+         <img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+    var articletitle='android的hwc浅析';
+
+</script>
+
+
+
+
+
+
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/alien75" target="_blank">
+    <img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/1_alien75.jpg" title="访问我的空间" style="max-width:90%">
+    </a>
+    <br>
+    <span><a href="http://my.csdn.net/alien75" class="user_name" target="_blank">alien75</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter" title="[发私信]" onclick="window.open(&#39;http://msg.csdn.net/letters/model?receiver=alien75&#39;,&#39;_blank&#39;,&#39;height=350,width=700&#39;);_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_sixin&#39;])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>462751次</span></li>
+    <li>积分：<span>6030</span> </li>    
+    <li>等级： <span style="position:relative;display:inline-block;z-index:1">
+            <img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/blog6.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：6030 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>117篇</span></li>
+    <li>转载：<span>89篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>207条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search csdn-tracking-statistics" target="_blank" data-mod="popu_306">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字"></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog">
+        <input type="hidden" name="q" id="inputQ">
+        <input type="hidden" name="t" value="blog">
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+   
+    $(function () {
+        $("#btnSubmit").unbind("click");
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {           
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            if ($("#inputSearch").val() == "") {               
+                alert("请录入搜索关键词！");                         
+                return false;
+            }
+            //var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";           
+            var url = "https://www.baidu.com/s?wd=" + encodeURIComponent($("#inputSearch").val()) + "%20site%3Ablog.csdn.net"
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="http://blog.csdn.net/alien75/article/category/525316" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">linux</a><span>(32)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/alien75/article/category/714443" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">GUI</a><span>(11)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/alien75/article/category/525313" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">wince</a><span>(102)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/alien75/article/category/525312" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">多媒体</a><span>(11)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/alien75/article/category/525315" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">心灵港湾</a><span>(5)</span>
+                </li>
+                 <li>
+                    <a href="http://blog.csdn.net/alien75/article/category/525317" onclick="_gaq.push([&#39;_trackEvent&#39;,&#39;function&#39;, &#39;onclick&#39;, &#39;blog_articles_wenzhangfenlei&#39;]); ">计算机基础</a><span>(39)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list"><li><a href="http://blog.csdn.net/alien75/article/month/2016/12">2016年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2016/11">2016年11月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2016/10">2016年10月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2016/09">2016年09月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2016/08">2016年08月</a><span>(1)</span></li><span class="hidelist" style="display:none;"><li><a href="http://blog.csdn.net/alien75/article/month/2016/05">2016年05月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2016/04">2016年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2016/03">2016年03月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2016/01">2016年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2015/11">2015年11月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2015/07">2015年07月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2015/06">2015年06月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2015/05">2015年05月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2015/04">2015年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2015/03">2015年03月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2015/02">2015年02月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2014/11">2014年11月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2014/10">2014年10月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2014/09">2014年09月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2014/08">2014年08月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2014/07">2014年07月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2014/04">2014年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2014/02">2014年02月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2013/12">2013年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2013/10">2013年10月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2013/09">2013年09月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2013/06">2013年06月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2013/04">2013年04月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2013/03">2013年03月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2013/01">2013年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2012/12">2012年12月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2012/05">2012年05月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2012/04">2012年04月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2012/03">2012年03月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2012/02">2012年02月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2012/01">2012年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2011/11">2011年11月</a><span>(7)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2011/10">2011年10月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2011/09">2011年09月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2011/08">2011年08月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2011/07">2011年07月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2011/03">2011年03月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2011/02">2011年02月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2011/01">2011年01月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/12">2010年12月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/11">2010年11月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/10">2010年10月</a><span>(7)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/09">2010年09月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/07">2010年07月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/06">2010年06月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/05">2010年05月</a><span>(1)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/03">2010年03月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/02">2010年02月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2010/01">2010年01月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/12">2009年12月</a><span>(18)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/11">2009年11月</a><span>(14)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/10">2009年10月</a><span>(25)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/09">2009年09月</a><span>(14)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/08">2009年08月</a><span>(3)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/06">2009年06月</a><span>(8)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/05">2009年05月</a><span>(2)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/04">2009年04月</a><span>(5)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/03">2009年03月</a><span>(9)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2009/02">2009年02月</a><span>(4)</span></li><li><a href="http://blog.csdn.net/alien75/article/month/2006/05">2006年05月</a><span>(1)</span></li></span><div id="archive_list_button" class="list_closed">展开</div></div>
+</ul>
+</div>
+<div id="hotarticls" class="panel tracking-ad" data-mod="popu_340">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/4622319" title="USB描述符详解" target="_blank">USB描述符详解</a><span>(18858)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/39290109" title="android的hwc浅析" target="_blank">android的hwc浅析</a><span>(14877)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/4256656" title="pacman常用命令汇总" target="_blank">pacman常用命令汇总</a><span>(11546)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/38921397" title="深究repo的所谓“续传”功能" target="_blank">深究repo的所谓“续传”功能</a><span>(11110)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/6023377" title="使用GetUpdateRect和GetClipBox的体会" target="_blank">使用GetUpdateRect和GetClipBox的体会</a><span>(9220)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/41078963" title="Android的surface的三种工作方式" target="_blank">Android的surface的三种工作方式</a><span>(8553)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/38399399" title="H264基础概念" target="_blank">H264基础概念</a><span>(7381)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/6972277" title="一些I2S的基础概念" target="_blank">一些I2S的基础概念</a><span>(7329)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/4585485" title="yuv,ycbcr,ypbpr,yiq itu-r bt.656 itu-r bt.601" target="_blank">yuv,ycbcr,ypbpr,yiq itu-r bt.656 itu-r bt.601</a><span>(7186)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/7377179" title="neon指令进行yuv420到rgb24转换效率" target="_blank">neon指令进行yuv420到rgb24转换效率</a><span>(7013)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel tracking-ad" data-mod="popu_341">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/8452513" title="移植opencv2.3.0到wince6" target="_blank">移植opencv2.3.0到wince6</a><span>(25)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/5971141" title="成功编译PPC2003下的浏览器IseeBrowser" target="_blank">成功编译PPC2003下的浏览器IseeBrowser</a><span>(16)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/7377179" title="neon指令进行yuv420到rgb24转换效率" target="_blank">neon指令进行yuv420到rgb24转换效率</a><span>(10)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/9128453" title="一个基于NEON指令的数学库" target="_blank">一个基于NEON指令的数学库</a><span>(9)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/3945729" title="计算机浮点数 float 表示" target="_blank">计算机浮点数 float 表示</a><span>(7)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/4622319" title="USB描述符详解" target="_blank">USB描述符详解</a><span>(7)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/5760991" title="DirectUI的初步分析" target="_blank">DirectUI的初步分析</a><span>(7)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/13625439" title="EAWebKit的WincePort" target="_blank">EAWebKit的WincePort</a><span>(6)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/6081315" title="DirectUI初步分析(三)" target="_blank">DirectUI初步分析(三)</a><span>(5)</span>
+</li>
+<li>
+<a href="http://blog.csdn.net/alien75/article/details/6998223" title="编译cegcc 0.59.1" target="_blank">编译cegcc 0.59.1</a><span>(5)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/76092129" target="_blank">* CSDN日报20170725——《新的开始，从研究生到入职亚马逊》</a></li>
+<li><a href="http://blog.csdn.net/javazejian/article/details/75043422" target="_blank">* 深入剖析基于并发AQS的重入锁(ReetrantLock)及其Condition实现原理</a></li>
+<li><a href="http://blog.csdn.net/jiangwei0910410003/article/details/75512732" target="_blank">* Android版本的"Wannacry"文件加密病毒样本分析(附带锁机)</a></li>
+<li><a href="http://blog.csdn.net/mindfloating/article/details/75948781" target="_blank">* 工作与生活真的可以平衡吗？</a></li>
+<li><a href="http://blog.csdn.net/poem_qianmo/article/details/75943714" target="_blank">* 《Real-Time Rendering 3rd》 提炼总结——高级着色：BRDF及相关技术</a></li>
+<li><a href="http://blog.csdn.net/dog250/article/details/75735806" target="_blank">* 《三体》读后思考-泰勒展开/维度打击/黑暗森林</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="http://blog.csdn.net/panda1234lee/article/details/52165527#comments">Shader特效——实现“放大镜/缩小镜”【GLSL】</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/alien75" class="user_name">alien75</a>:
+博主，最近在学习相关内容，看了你的系列很有启发。请教一问题，请问用glsl实现opencv的rema...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/leonwei/article/details/52387649#comments">OpenGLES编程思想</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/alien75" class="user_name">alien75</a>:
+请教一问题，对象关联的缓存(或内存)，比如纹理数据所使的的，一般是哪种呢?根据我在所知的，在移动平台...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/leonwei/article/details/52387649#comments">OpenGLES编程思想</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/alien75" class="user_name">alien75</a>:
+文章思路清晰、知识点的抽象精彩，赞一个。看了我的理解就是，资源和对象的使用就好比物理内存和虚拟内存之...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/alien75/article/details/50789168#comments">Android的Native方式广播intent</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/u010001503" class="user_name">sighn</a>:
+请问如果需要传多个extra值 应该如何操作呢？
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/alien75/article/details/9128453#comments">一个基于NEON指令的数学库</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/xsw_csdn" class="user_name">xsw_csdn</a>:
+@Songbai_Pu:我也使用arm-cortex A9（zedboard）我测试也是neon版本...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/alien75/article/details/9128453#comments">一个基于NEON指令的数学库</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/xsw_csdn" class="user_name">xsw_csdn</a>:
+@Songbai_Pu:您好，我测试结果也是neon比C版本耗时更长，请问您知道原因了么？谢谢
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/alien75/article/details/9128453#comments">Android的Native方式广播intent</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/SUPER10086" class="user_name">SUPER10086</a>:
+{ /* writeMapInternal */              data.writeIn...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/alien75/article/details/38399399#comments">H264基础概念</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/qq_34181827" class="user_name">qq_34181827</a>:
+您好，请教下博主，正常情况下，H.264编码产生bit流中的 I 帧数量会远大于P帧和B帧吗，还是说...
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/alien75/article/details/38399399#comments">一个基于NEON指令的数学库</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/alien75" class="user_name">alien75</a>:
+@QLINGWQ:不好意思哦，只是测试了一下基本的整型和浮点运算性能，没有研究fft，帮不上忙。
+    </p>
+    </li>
+    <li>
+   
+         <a href="http://blog.csdn.net/alien75/article/details/38399399#comments">一个基于NEON指令的数学库</a>
+    <p style="margin:0px;"><a href="http://blog.csdn.net/QLINGWQ" class="user_name">QLINGWQ</a>:
+楼主你好，我使用arm-linug-gnueabihf-4.9.2编译ne10库，在cortex-a...
+    </p>
+    </li>
+</ul>
+</div>
+
+
+<div id="custom_column_956159" class="panel">
+<ul class="panel_head"><span>友情链接</span></ul>
+<ul class="panel_body">
+<ul><li><a href="http://blog.csdn.net/absurd" target="_blank">linux moble development</a></li><li><a href="http://hi.baidu.com/aullik5/blog" target="_blank">大风起兮云飞扬的博客---系统安全</a></li><li><a href="http://developer.51cto.com/art/200709/56340.htm" target="_blank">专题：C++是垃圾语言？</a></li><li><a href="http://blog.csdn.net/gooogleman" target="_blank">有关wince开发的博客，还有很多相关链接</a></li><li><a href="http://blog.csdn.net/sodme" target="_blank">大宝(sodme)的博客---专注于高性能网络服务器技术及网游产品相关</a></li><li><a href="http://blogs.msdn.com/cenet/" target="_blank">Windows CE Networking Team WebLog</a></li><li><a href="http://geekswithblogs.net/BruceEitman/Default.aspx" target="_blank">WinCE 6.0 MVP Bruce </a></li></ul>
+</ul>
+</div>    </div>
+    <div class="clear">
+    </div>
+
+                   <!-- 广告位开始 -->                    <!-- 广告位结束 -->
+                   <div class="tracking-ad" data-view="true" data-mtp="63" data-order="40" data-con="ad_content_1260" style="width: 200px; height: 500px;">
+                         <div id="nav_show_top_stop" style="width: 200px; height: 500px; z-index: 1000; position: fixed; top: 2872px;"><div id="cpro_u2734128"><iframe id="iframeu2734128_0" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/nctm(2).html" width="200" height="200" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:200px;height:200px" allowtransparency="true"></iframe></div>
+                             <div id="cpro_u3031287"><iframe id="iframeu3031287_0" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/nctm(3).html" width="200" height="200" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:200px;height:200px" allowtransparency="true"></iframe></div></div>
+                   </div>
+    <script type="text/javascript">
+        setTimeout(function () {
+            var naviga_offsetTop = 0;
+            function naviga_stay_top() { var scrollTop = jQuery(document).scrollTop(); if (scrollTop > naviga_offsetTop) { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": "0px" }); } else { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": naviga_offsetTop - scrollTop + "px" }); } }
+            function onload_function() { naviga_offsetTop = jQuery("#nav_show_top_stop").position().top; jQuery(window).bind("scroll", naviga_stay_top); jQuery(window).bind("mousewheel", naviga_stay_top); jQuery(document).bind("scroll", naviga_stay_top); jQuery(document).bind("mousewheel", naviga_stay_top); } jQuery(document).ready(onload_function);
+
+        }, 200);
+    </script>
+<script type="text/javascript">(window.cproArray = window.cproArray || []).push({ id: "u2734128" });  </script> 
+                    <script src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/c.js.下载" type="text/javascript"></script> 
+                   <script type="text/javascript">
+                       /*PC端-博客内容页左侧Button2-200*200-2017/7/10*/
+                       (window.cproArray = window.cproArray || []).push({ id: "u3031287" });
+</script>
+<script type="text/javascript" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/c.js.下载"></script>
+
+           </div>   
+
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+      <!--new top-->
+    
+
+     
+
+   
+   
+     <!--new top-->
+   
+   
+
+    
+    
+    
+   
+
+   
+
+
+       <script type="text/javascript" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/MathJax.js.下载"></script>
+          <script type="text/javascript">
+              //$(function () {
+              //    setTimeout(function () {
+              //        var searchtitletags = articletitle + ',' + $("#tags").html();
+              //        searchService({
+              //            index: 'blog',
+              //            query: searchtitletags,
+              //            from: 5,
+              //            size: 5,
+              //            appendTo: '#res',
+              //            url: 'recommend',
+              //            his: 2,
+              //            client: "blog_cf_enhance",
+              //            tmpl: '<dd style="background:url(http://static.blog.csdn.net/skin/default/images/blog-dot-red3.gif) no-repeat 0 10px;"><a href="#{ url }" title="#{ title }" strategy="#{ strategy }">#{ title }</a></dd>'
+              //        });
+              //    }, 1000);
+              //});
+
+         </script>
+    
+    <script src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/csdn_blog_detail.min.js.下载" type="text/javascript"></script><link rel="stylesheet" type="text/css" href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/pub_footer_2014.css"><div class="pub_fo"><div id="pub_footerall" class="pub_footer_new"><dl><dt></dt> <dd class="foot_sub_menu"><a href="http://www.csdn.net/company/about.html" target="_blank">公司简介</a><span>|</span><a href="http://www.csdn.net/company/recruit.html" target="_blank">招贤纳士</a><span>|</span><a href="http://www.csdn.net/company/marketing.html" target="_blank">广告服务</a><span>|</span><a href="http://www.csdn.net/company/contact.html" target="_blank">联系方式</a><span>|</span><a href="http://www.csdn.net/company/statement.html" target="_blank">版权声明</a><span>|</span><a href="http://www.csdn.net/company/layer.html" target="_blank">法律顾问</a><span>|</span><a href="mailto:webmaster@csdn.net">问题报告</a><span>|</span><a target="_blank" href="http://www.csdn.net/friendlink.html">合作伙伴</a><span>|</span><a href="http://bbs.csdn.net/forums/Service" target="_blank">论坛反馈</a></dd><dd class="foot_contact"><a href="javascript:void(0);" target="_blank" class="qq">网站客服</a><a href="http://wpa.qq.com/msgrd?v=3&amp;uin=2251809102&amp;site=qq&amp;menu=yes" target="_blank" class="qq">杂志客服</a><a href="http://e.weibo.com/csdnsupport/profile" target="_blank" class="weibo">微博客服</a><a href="mailto:webmaster@csdn.net" class="email" title="联系邮箱">webmaster@csdn.net</a><span class="phone" title="服务热线">400-660-0108</span><span class="interval">|</span><span>北京创新乐知信息技术有限公司 版权所有</span><span class="interval">|</span><span>江苏知之为计算机有限公司</span><span class="interval">|</span><span>江苏乐知网络技术有限公司</span></dd><dd class="foot_copyright"><span>京&nbsp;ICP&nbsp;证&nbsp;09002463&nbsp;号</span><span class="interval">|</span><span>Copyright © 1999-2017, CSDN.NET, All Rights Reserved&nbsp;</span><a href="http://www.hd315.gov.cn/beian/view.asp?bianhao=010202001032100010" target="_blank"><img src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/gongshang_logos.gif" alt="GongshangLogo" title=""></a></dd></dl></div></div><div id="note1" class="csdn_note" style="display:none; position:absolute; z-index:9999; width:440px">  <span class="notice_top_arrow"><span class="inner"></span></span>  <div class="box"></div></div><div class="csdn_notice_tip" style="position: absolute; z-index: 9990; width: 170px; left: -72px; top: 318px; display: block;">  <iframe src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/saved_resource(2).html" frameborder="0" scrolling="no" style="z-index:-1;position:absolute;top:0;left:0;width:100%;height:100%;background:transparent"></iframe>  <div class="tip_text">您有<strong>12</strong>条新通知</div>  <a href="javascript:void 0" class="close2"></a></div><script id="noticeScript" type="text/javascript" btnid="header_notice_num" wrapid="note1" count="5" subcount="5" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/notify.js.下载"></script><input type="hidden" id="aa_g_data_ids">
+        
+    <script type="text/javascript" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/csdn_public_blog_detail.min.js.下载"></script>
+
+    <script type="text/javascript" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/showblogmedal.ashx"></script>
+
+     
+    
+
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334" src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/52b5334.js.下载"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+
+    
+    
+        
+     
+
+    
+          
+    <div class="pop_CA_cover" style="display:none"></div>
+    <div class="pop pop_CA" style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon" id="fapancle" onclick="$(&#39;.pop_CA&#39;).hide();$(&#39;.pop_CA_cover&#39;).hide();"></span>
+          </div>
+          <iframe src="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/saved_resource(3).html" id="fa" frameborder="0" width="100%" height="360" scrolling="no"></iframe>
+    </div>
+
+
+        <script type="text/javascript">
+
+            $(function () {
+                var fromjs = $("#fromjs");
+                if (fromjs.length > 0) {
+                    $("#fromjs .markdown_views pre").addClass("prettyprint");
+                    prettyPrint();
+
+                    $('pre.prettyprint code').each(function () {
+                        var lines = $(this).text().split('\n').length;
+                        var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                        $(this).addClass('has-numbering').parent().append($numbering);
+                        for (i = 1; i <= lines; i++) {
+                            $numbering.append($('<li/>').text(i));
+                        };
+                        $numbering.fadeIn(1700);
+                    });
+
+                    $('.pre-numbering li').css("color", "#999");
+                }
+            });
+
+            $(".markdown_views a[target!='_blank']").attr("target", "_blank");
+
+            //$(".toc a[target='_blank']").attr("target", "");
+
+            setTimeout(function () {
+                $(".toc a[target='_blank']").attr("target", "");
+            }, 500);
+
+        </script>
+    
+
+   
+<div id="tag-suggest-pop">
+  <div class="relative">
+    <div class="close"></div>
+    <div class="content"></div>
+  </div>
+</div><div id="mask_code"></div><div class="gist_edit"><div class="save_snippets clearfix"><div class="tit"><h3>保存代码片</h3><span>整理和分享保存的代码片，请访问<a href="https://code.csdn.net/snippets_manage" target="_blank">代码笔记</a></span></div><div class="con_form"><ul class="gist_edit_list clearfix"><li><span class="red">*</span><span class="txt">标题</span><input id="form_title" class="form-input" placeholder="android的hwc浅析" type="text"></li><li><span class="red">*</span><span class="txt">描述</span><textarea id="form-textarea" class="form-textarea" placeholder="android的hwc浅析： http://blog.csdn.net/alien75/article/details/39290109"></textarea></li><li><span class="red">&nbsp;</span><span class="txt">标签</span><div id="divSearchTags"><input id="insertTag" class="insertTag" placeholder="请输入标签，按Enter生成(最多5项)" type="text" value="" name="insertTag" maxlength="21" style="color: rgb(51, 51, 51);"><input id="OrganTag" class="OrganTag" type="hidden" name="OrganTag" value=""><input id="OldOrganTag" class="OldOrganTag" type="hidden" name="OldOrganTag" value=""><input type="hidden" name="txtSearchTags"></div></li></ul></div><div class="bottom-bar"><a href="javascript:;" class="btn-submit btn-cancel">取消</a><span class="tracking-ad" data-mod="popu_250"><a class="btn-submit btn-confirm" href="javascript:;" target="_blank">确定</a></span></div></div></div><link rel="stylesheet" type="text/css" media="screen" href="./android的hwc浅析 - alien75的专栏 - CSDN博客_files/ask_float_fonts_css-6b30a53970eb5c3a2a045e3df585b475.css"><div data-mod="popu_64" class="csdn-tracking-statistics" chg-blk="0"><a id="com-quick-QRcode" class="QRcodebg1" title="扫描二维码" style="top:281px"><span class="closeQR"></span></a><a id="com-quick-reply" title="快速回复" style="top:415px"></a><a id="com-quick-collect" title="我要收藏" style="top:453px"></a><a id="com-d-top-a" style="top: 491px; display: none;" title="返回顶部" onclick=""></a></div><div class="pop_edit ask_second comm_ask_second"><h3>提问</h3><span class="ask_float_span">您的问题将会被发布在“<a class="ask_float_channel" href="http://ask.csdn.net/" target="_blank" style="cursor:pointer">技术问答</a>”频道</span><a href="http://blog.csdn.net/alien75/article/details/39290109#" nodetype="close" class="close">×</a><div class="context"><div class="err_div"><span class="err_ico"></span><span class="err_txt">该问题已存在，请勿重复提问</span></div><div class="input_div"><input id="askInputSecond" type="text" style="font-size:14px;" placeholder="问题标题"></div><div class="cm_box"><div class="cm_dialog"></div> <div class="pop_cm cm_add_link"><input type="text" placeholder="链接内容" id="af_cm_link_txt"><input type="text" placeholder="链接地址" id="af_cm_link_url"><input type="text" placeholder="链接提示" id="af_cm_link_tit"><div class="text-right"><span class="btn btn-default btn-sm" id="add_link_btn">插入链接</span> </div> </div><div class="pop_cm cm_add_img"><div class="nav-tabs"><a class="img_tab active" href="http://blog.csdn.net/alien75/article/details/39290109#tab_upload">本地上传</a><a class="img_tab" href="http://blog.csdn.net/alien75/article/details/39290109#tab_weburl">网络图片</a></div><div class="tab_panel active" id="tab_upload"><div class="set_img"></div></div><div class="tab_panel" id="tab_weburl"><input type="text" placeholder="图片地址" id="af_cm_img_url"><input type="text" placeholder="图片说明" id="af_cm_img_alt"><div class="text-right"><span class="btn btn-default btn-sm" id="add_img_btn">插入图片</span> </div></div> </div></div> <textarea id="editor_all" rows="8" style="display: none;"></textarea><div class="editor-toolbar"><i class="separator">|</i><a class="icon-headline" title="标题一（Ctrl+Alt+1）"></a><a class="icon-heading" title="标题二（Ctrl+Alt+2）"></a><a class="icon-bold" title="粗体（Ctrl+B）"></a><a class="icon-italic" title="斜体（Ctrl+I）"></a><i class="separator">|</i><a class="icon-quote-left" title="引用（Ctrl+’）"></a><a class="icon-code" title="插入代码片（Ctrl+,）"></a><a class="icon-list-ul" title="无序列表（Ctrl+L）"></a><a class="icon-list-ol" title="有序列表（Ctrl+Alt+L）"></a><i class="separator">|</i><a class="icon-link" title="添加链接（Ctrl+K）"></a><a class="icon-picture" title="添加图片（Ctrl+Alt+I）"></a><i class="separator">|</i><a class="icon-reply" title="撤退（Ctrl+Z）"></a><a class="icon-share-alt" title="前进（Ctrl+Shift+Z）"></a><i class="separator">|</i><a class="icon-info" href="http://ask.csdn.net/pages/markdown" target="_blank" title="markdown语法参考"></a><a class="icon-preview" title="预览"></a><i class="separator">|</i></div><div class="CodeMirror cm-s-paper CodeMirror-focused"><div style="overflow: hidden; position: relative; width: 3px; height: 0px;"><textarea autocorrect="off" autocapitalize="off" spellcheck="false" style="position: absolute; padding: 0px; width: 1000px; height: 1em; outline: none; font-size: 4px;" tabindex="0"></textarea></div><div class="CodeMirror-hscrollbar"><div style="height: 1px;"></div></div><div class="CodeMirror-vscrollbar"><div style="width: 1px;"></div></div><div class="CodeMirror-scrollbar-filler"></div><div class="CodeMirror-gutter-filler"></div><div class="CodeMirror-scroll" tabindex="-1"><div class="CodeMirror-sizer" style="min-width: 33px;"><div style="position: relative;"><div class="CodeMirror-lines"><div style="position: relative; outline: none;"><div class="CodeMirror-measure"><pre>&nbsp;<span style="display: inline-block; width: 1px; margin-right: -1px;">&nbsp;</span></pre></div><div style="position: relative; z-index: 1;"></div><div class="CodeMirror-code"></div><div class="CodeMirror-cursor">&nbsp;</div><div class="CodeMirror-cursor CodeMirror-secondarycursor">&nbsp;</div></div></div></div></div><div style="position: absolute; height: 30px; width: 1px;"></div><div class="CodeMirror-gutters" style="display: none;"></div></div></div><div class="editor-statusbar"><span class="lines">0</span><span class="words">0</span><span class="cursor">0:0</span></div><div class="div_tags clearfix"><div id="divSearchTags" class="tags_con"><input type="text"></div><input type="hidden" name="txtSearchTags"></div><div id="ask2_tagRecomm_div" class="drt_tagRecomm tracking-ad" data-mod="popu_73"><span class="drt_tit">推荐标签：</span></div></div><div class="success"><div class="left_area"><input id="chk_cb" type="checkbox"><span class="wyxs">我要悬赏</span><input id="cb_num" class="cb_num" readonly="true"><span class="phib_rii"><span> 币</span></span></div><a href="http://blog.csdn.net/alien75/article/details/39290109#" nodetype="cancel" class="cancel">取消</a><a href="http://blog.csdn.net/alien75/article/details/39290109#" nodetype="ok" class="ok">发布</a></div></div><div id="common_ask_div_sc" class="searchContainer"><div class="sTitle">可能存在类似的问题：</div><div class="sFooter"><a class="sFirstNewAsk">我想提一个新问题</a></div></div><div style="position:fixed; top:0; left:0; overflow:hidden;"><input style="position:absolute; left:-300px;" type="text" value="" id="focus_retriever" readonly="true"></div></body></html>

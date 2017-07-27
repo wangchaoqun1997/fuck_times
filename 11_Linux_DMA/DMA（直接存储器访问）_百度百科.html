@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://baike.baidu.com/item/DMA/2385376 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script async="" src="./DMA（直接存储器访问）_百度百科_files/element.min.js.下载"></script><script async="" src="./DMA（直接存储器访问）_百度百科_files/monkey.min.js.下载"></script><script async="" src="./DMA（直接存储器访问）_百度百科_files/dp.min.js.下载"></script><script charset="utf-8" async="" src="./DMA（直接存储器访问）_百度百科_files/snippetcacher.php"></script><script type="text/javascript" async="" src="./DMA（直接存储器访问）_百度百科_files/ycvm"></script>
+
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="referrer" content="always">
+<meta name="description" content="DMA(Direct Memory Access，直接内存存取) 是所有现代电脑的重要特色，它允许不同速度的硬件装置来沟通，而不需要依赖于 CPU 的大量中断负载。否则，CPU 需要从来源把每一片段的资料复制到暂存器，然后把它们再次写回到新的地方。在这个时间中，CPU 对于其他的工作来说就无法使用。...">
+<title>DMA（直接存储器访问）_百度百科</title>
+<link rel="shortcut icon" href="http://baike.baidu.com/favicon.ico" type="image/x-icon">
+<link rel="icon" sizes="any" mask="" href="http://www.baidu.com/img/baidu.svg">
+
+<meta name="keywords" content="DMA DMADMA原理 DMADMA传送方式">
+<meta name="image" content="http://baike.bdimg.com/cms/static/baike.png">
+<script src="./DMA（直接存储器访问）_百度百科_files/hm.js.下载"></script><script async="" src="./DMA（直接存储器访问）_百度百科_files/alog.min.js.下载"></script><script type="text/javascript">
+  // 配置 PD 监控。
+  window.alogObjectConfig = {
+    product: '103',
+    page: '103_1',
+    speed: {
+      sample: '0.008'
+    },
+    monkey: {
+      sample: '1',
+      hid: '1533'
+    },
+    exception: { 
+      sample: '0.004'
+    },
+    feature: {
+      sample: '0.004'
+    },
+    csp: {
+      sample: '0.008',
+      'default-src': [
+        {match: '*.baidu.com,*.bdimg.com,localhost', target: 'Accept'},
+        {match: '*', target: 'Accept,Warn'}
+      ]
+    }
+  };
+
+  void function(a,b,c,d,e,f,g){a.alogObjectName=e,a[e]=a[e]||function(){(a[e].q=a[e].q||[]).push(arguments)},a[e].l=a[e].l||+new Date,d="https:"===a.location.protocol?"https://fex.bdstatic.com"+d:"http://fex.bdstatic.com"+d;var h=!0;if(a.alogObjectConfig&&a.alogObjectConfig.sample){var i=Math.random();a.alogObjectConfig.rand=i,i>a.alogObjectConfig.sample&&(h=!1)}h&&(f=b.createElement(c),f.async=!0,f.src=d+"?v="+~(new Date/864e5)+~(new Date/864e5),g=b.getElementsByTagName(c)[0],g.parentNode.insertBefore(f,g))}(window,document,"script","/hunter/alog/alog.min.js","alog"),void function(){function a(){}window.PDC={mark:function(a,b){alog("speed.set",a,b||+new Date),alog.fire&&alog.fire("mark")},init:function(a){alog("speed.set","options",a)},view_start:a,tti:a,page_ready:a}}();
+  void function(n){var o=!1;n.onerror=function(n,e,t,c){var i=!0;return!e&&/^script error/i.test(n)&&(o?i=!1:o=!0),i&&alog("exception.send","exception",{msg:n,js:e,ln:t,col:c}),!1},alog("exception.on","catch",function(n){alog("exception.send","exception",{msg:n.msg,js:n.path,ln:n.ln,method:n.method,flag:"catch"})})}(window);
+</script>
+<meta name="csrf-token" content="">
+
+<!--[if lte IE 9]>
+<script>
+    (function() {
+      var e = "abbr,article,aside,audio,canvas,datalist,details,dialog,eventsource,figure,footer,header,hgroup,mark,menu,meter,nav,output,progress,section,time,video".split(","),
+        i = e.length;
+      while (i--) {
+        document.createElement(e[i]);
+      }
+    })();
+  </script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/wiki-lemma_90d4da6.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/wiki-common-base_1f825d9.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/userbar_10e138c.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/userbar-n_bcd805f.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/headTabBar_c3a1b84.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/searchbar_5180520.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/wiki-lemma-module_f39de5a.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/navbar_0697c78.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/announcement_b0d7681.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/unameFiller_d631c34.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/label_a444f79.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/sideShare_2af1cbd.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/pageMask_ff9a193.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/userCard_2402f1f.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/mainContent_98e3702.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/lemmaRelation_9f629f5.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/zhixin_1c34583.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/footer_main_a1769ec.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/toolButtons-n_6e90fdd.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/userInfo-n_7e90184.css"><link rel="stylesheet" type="text/css" href="./DMA（直接存储器访问）_百度百科_files/searchHeader-n_071390b.css"><script type="text/javascript">
+    alog('speed.set', 'ht', +new Date);
+</script><script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?55b574651fcae74b0a9f1cf9c8d7c93a";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script><link rel="stylesheet" href="./DMA（直接存储器访问）_百度百科_files/share_style0_16.css"><script src="./DMA（直接存储器访问）_百度百科_files/qc.php" type="text/javascript" charset="utf-8"></script></head>
+
+
+
+
+<body class="wiki-lemma normal"><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./DMA（直接存储器访问）_百度百科_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div>
+
+
+<div class="header-wrapper pc-header-new">
+<div class="topbar cmn-clearfix">
+<ul class="wgt-userbar" id="j-wgt-userbar"><li>
+<a href="http://www.baidu.com/" nslog="normal" nslog-type="10080112">百度首页</a>
+</li>
+<li class="userbar_user" data-action="showUserMenu">
+<a href="javascript:;" nslog="normal" nslog-type="10080113"><span>wangcq327</span><i class="icon-triangle-down"></i></a>
+</li>
+<li class="userbar_message" data-action="showUserMsg">
+<a href="javascript:;" nslog="normal" nslog-type="10080115">消息<span class="userbar_message_new_num"></span><i class="icon-triangle-down"></i></a>
+</li>
+<li class="userbar_mall">
+<a href="http://baike.baidu.com/mall/" target="_blank" nslog="normal" nslog-type="10080114">商城</a>
+</li>
+</ul>
+<div class="separator"></div>
+<div class="wiki-common-headTabBar">
+<a href="https://www.baidu.com/" nslog="normal" nslog-type="10600112" data-href="https://www.baidu.com/s?ie=utf-8&amp;fr=bks0000&amp;wd=">网页</a>
+<a href="http://news.baidu.com/" nslog="normal" nslog-type="10600112" data-href="http://news.baidu.com/ns?tn=news&amp;cl=2&amp;rn=20&amp;ct=1&amp;fr=bks0000&amp;ie=utf-8&amp;word=">新闻</a>
+<a href="https://tieba.baidu.com/" nslog="normal" nslog-type="10600112" data-href="https://tieba.baidu.com/f?ie=utf-8&amp;fr=bks0000&amp;kw=">贴吧</a>
+<a href="https://zhidao.baidu.com/" nslog="normal" nslog-type="10600112" data-href="https://zhidao.baidu.com/search?pn=0&amp;&amp;rn=10&amp;lm=0&amp;fr=bks0000&amp;word=">知道</a>
+<a href="http://music.baidu.com/" nslog="normal" nslog-type="10600112" data-href="http://music.baidu.com/search?f=ms&amp;ct=134217728&amp;ie=utf-8&amp;rn=&amp;lm=-1&amp;pn=30&amp;fr=bks0000&amp;key=">音乐</a>
+<a href="http://image.baidu.com/" nslog="normal" nslog-type="10600112" data-href="http://image.baidu.com/search/index?tn=baiduimage&amp;ct=201326592&amp;lm=-1&amp;cl=2&amp;nc=1&amp;ie=utf-8&amp;word=">图片</a>
+<a href="http://v.baidu.com/" nslog="normal" nslog-type="10600112" data-href="http://v.baidu.com/v?ct=301989888&amp;rn=20&amp;pn=0&amp;db=0&amp;s=22&amp;ie=utf-8&amp;fr=bks0000&amp;word=">视频</a>
+<a href="http://map.baidu.com/" nslog="normal" nslog-type="10600112" data-href="http://map.baidu.com/m?ie=utf-8&amp;fr=bks0000&amp;word=">地图</a>
+<a href="https://wenku.baidu.com/" nslog="normal" nslog-type="10600112" data-href="https://wenku.baidu.com/search?lm=0&amp;od=0&amp;ie=utf-8&amp;fr=bks0000&amp;word=">文库</a>
+<b class="baike">百科</b>
+</div>
+</div>
+<div class="header">
+<div class="layout">
+<div class="wgt-searchbar wgt-searchbar-new wgt-searchbar-main cmn-clearfix wgt-searchbar-large">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="http://baike.baidu.com/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="form">
+<form id="searchForm" action="http://baike.baidu.com/search/word" method="GET" target="_self">
+<input id="query" nslog="normal" nslog-type="10080011" name="word" type="text" autocomplete="off" autocorrect="off" value="DMA"><button id="search" nslog="normal" nslog-type="10080008" type="button">进入词条</button><button id="searchLemma" nslog="normal" nslog-type="10080009" type="button">全站搜索</button><a class="help" href="http://baike.baidu.com/help" nslog="normal" nslog-type="10080010" target="_blank">帮助</a>
+</form>
+<form id="searchLemmaForm" action="http://baike.baidu.com/search" method="GET" target="_self">
+<input id="searchLemmaQuery" name="word" type="hidden">
+<input name="pn" type="hidden" value="0">
+<input name="rn" type="hidden" value="0">
+<input name="enc" type="hidden" value="utf8">
+</form>
+<ul id="suggestion" class="suggestion" style="display: none;">
+<div class="sug"></div>
+<li class="extra">
+<span id="close" nslog="normal" nslog-type="10080012">关闭</span>
+</li>
+</ul>
+</div></div>
+</div>
+<div class="declare-wrap" id="J-declare-wrap" style="display: block;">
+<div class="declare" id="J-declare">应《中华人民共和国网络安全法》要求，2017年6月1日起，使用互联网服务需要进行帐号实名认证。为保障百度帐号的正常使用，请您尽快完成手机号验证，感谢您的理解和支持。<div class="close-btn" id="J-declare-close">
+<em class="cmn-icon cmn-icons cmn-icons_close"></em>
+</div>
+</div>
+</div>
+<a target="_blank" class="topA" nslog-type="10002204" nslog-params="{&quot;adId&quot;:&quot;1991&quot;, &quot;adTitle&quot;: &quot;星途-DZW-12&quot;, &quot;adPos&quot;: 3}" href="http://baike.baidu.com/item/%E9%80%86%E8%A2%AD%E4%B9%8B%E6%98%9F%E9%80%94%E7%92%80%E7%92%A8" title="" style="background-image:url(http://d.hiphotos.baidu.com/baike/whfpf%3D200%2C100%2C50/sign=08dece46454a20a4314b6f87f66faa12/024f78f0f736afc332f9a931b919ebc4b64512e8.jpg);"></a></div>
+</div>
+</div>
+<div class="navbar-wrapper">
+<div class="wgt-navbar">
+<div class="navbar-bg">
+<div class="navbar-bg-top">
+<div class="navbar-content layout">
+<div class="navbar-content-box">
+<dl class="index ">
+<dt><a href="http://baike.baidu.com/">首页</a></dt>
+</dl>
+<dl class="cat ">
+<dt><a>分类</a></dt>
+<dd>
+<div><a href="http://baike.baidu.com/art" target="_blank" class="art">艺术</a></div>
+<div><a href="http://baike.baidu.com/science" target="_blank" class="technology">科学</a></div>
+<div><a href="http://baike.baidu.com/ziran" target="_blank">自然</a></div>
+<div><a href="http://baike.baidu.com/wenhua" target="_blank">文化</a></div>
+<div><a href="http://baike.baidu.com/dili" target="_blank">地理</a></div>
+<div><a href="http://baike.baidu.com/shenghuo" target="_blank">生活</a></div>
+<div><a href="http://baike.baidu.com/shehui" target="_blank">社会</a></div>
+<div><a href="http://baike.baidu.com/renwu" target="_blank">人物</a></div>
+<div><a href="http://baike.baidu.com/jingji" target="_blank">经济</a></div>
+<div><a href="http://baike.baidu.com/tiyu" target="_blank">体育</a></div>
+<div><a href="http://baike.baidu.com/lishi" target="_blank">历史</a></div>
+</dd>
+</dl>
+<dl class="special ">
+<dt><a>特色百科</a></dt>
+<dd>
+<div><a href="http://baike.baidu.com/calendar/" target="_blank">历史上的今天</a></div>
+<div><a href="http://baike.baidu.com/museum/" target="_blank">数字博物馆</a></div>
+<div><a href="http://baike.baidu.com/item/%E5%8F%B2%E8%AE%B0%C2%B72016?fr=navbar" target="_blank">史记·2016</a></div>
+<div><a href="http://baike.baidu.com/city/" target="_blank">城市百科</a></div>
+<div><a href="http://baike.baidu.com/operation/worldwar2" target="_blank">二战百科</a></div>
+<div><a href="http://baike.baidu.com/feiyi?fr=dhlfeiyi" target="_blank">非遗百科</a></div>
+</dd>
+</dl>
+<dl class="user">
+<dt><a>用户</a></dt>
+<dd>
+<div><a href="http://baike.baidu.com/kedou/" target="_blank">蝌蚪团</a></div>
+<div><a href="http://baike.baidu.com/event/ranmeng/" target="_blank">燃梦计划</a></div>
+<div><a href="http://baike.baidu.com/task/" target="_blank">百科任务</a></div>
+<div><a href="http://baike.baidu.com/mall/" target="_blank">百科商城</a></div>
+</dd>
+</dl>
+<dl class="cooperation">
+<dt><a>权威合作</a></dt>
+<dd>
+<div><a href="http://baike.baidu.com/operation/cooperation#joint" target="_blank">合作模式</a></div>
+<div><a href="http://baike.baidu.com/operation/cooperation#issue" target="_blank">常见问题</a></div>
+<div><a href="http://baike.baidu.com/operation/cooperation#connection" target="_blank">联系方式</a></div>
+</dd>
+</dl>
+<dl class="mobile">
+<dt><a>手机百科</a></dt>
+<dd>
+<div><a href="http://baike.baidu.com/m#wap" target="_blank">网页版</a></div>
+</dd>
+</dl>
+<div class="usercenter">
+<div><a href="http://baike.baidu.com/usercenter" target="_blank"><em class="cmn-icon cmn-icons cmn-icons_navbar-usercenter"></em>个人中心</a></div>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="body-wrapper">
+<div class="before-content">
+<div class="polysemant-list polysemant-list-normal">
+<div class="polysemantList-header">
+<div class="polysemantList-header-title">
+<b>DMA</b>是一个<a href="http://baike.baidu.com/view/10812277.htm" target="_blank">多义词</a>，请在下列<a href="http://baike.baidu.com/view/340519.htm" target="_blank">义项</a>上选择浏览（<a href="http://baike.baidu.com/item/DMA?force=1" target="_blank">共9个义项</a>）</div>
+<a class="polysemantList-addButton" target="_blank" href="http://baike.baidu.com/createsub/DMA">添加义项</a>
+</div>
+<ul class="polysemantList-wrapper cmn-clearfix">
+<li class="item">▪<span class="selected">直接存储器访问</span></li>
+<li class="item">▪<a title="平行线差指标" href="http://baike.baidu.com/subview/32471/6202611.htm#viewPageContent">平行线差指标</a></li>
+<li class="item">▪<a title="二甲胺" href="http://baike.baidu.com/subview/32471/5048466.htm#viewPageContent">二甲胺</a></li>
+<li class="item">▪<a title="动态热机械分析" href="http://baike.baidu.com/subview/32471/5048465.htm#viewPageContent">动态热机械分析</a></li>
+<li class="item">▪<a title="动态内存分配" href="http://baike.baidu.com/subview/32471/5596527.htm#viewPageContent">动态内存分配</a></li>
+<li class="item">▪<a title="District Metering Area（独立计量区域）" href="http://baike.baidu.com/subview/32471/9809440.htm#viewPageContent">District Metering Area（独立计量区域）</a></li>
+<li class="item">▪<a title="美国国防部制图局" href="http://baike.baidu.com/subview/32471/8665307.htm#viewPageContent">美国国防部制图局</a></li>
+<li class="item">▪<a title="DMA指标" href="http://baike.baidu.com/subview/32471/7969030.htm#viewPageContent">DMA指标</a></li>
+<li class="item">▪<a title="N,N-二甲基苯胺" href="http://baike.baidu.com/item/DMA/17534494#viewPageContent">N,N-二甲基苯胺</a></li>
+</ul>
+</div>
+</div>
+<div class="content-wrapper">
+<div class="content">
+<div class="personal-content">
+</div>
+<div class="main-content">
+<div class="top-tool">
+<a href="http://baike.baidu.com/divideload/DMA" title="拆分词条" target="_blank" class="split-icon" style="display:none;" nslog-type="50000104"></a>
+<div class="top-collect" nslog="area" nslog-type="50000102">
+<span class="collect-text">收藏</span>
+<div class="collect-tip">查看<a href="http://baike.baidu.com/uc/favolemma" target="_blank">我的收藏</a></div>
+</div>
+<a href="javascript:void(0);" id="j-top-vote" class="top-vote" nslog-type="10060801">
+<span class="vote-count">1141</span>
+<span class="vote-tip">有用+1</span>
+<span class="voted-tip">已投票</span>
+</a><div class="bksharebuttonbox top-share">
+<a class="top-share-icon" nslog-type="9067">
+<span class="share-count" id="j-topShareCount">27</span>
+</a>
+<div class="new-top-share" id="top-share">
+<ul class="top-share-list">
+<li class="top-share-item">
+<a class="share-link bds_qzone" href="javascript:void(0);" nslog-type="10060501">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qzone"></em>
+</a>
+</li>
+<li class="top-share-item">
+<a class="share-link bds_tsina" href="javascript:void(0);" nslog-type="10060701">
+<em class="cmn-icon cmn-icons cmn-icons_logo-sina-weibo"></em>
+</a>
+</li>
+<li class="top-share-item">
+<a class="bds_wechat" href="javascript:void(0);" nslog-type="10060401">
+<em class="cmn-icon cmn-icons cmn-icons_logo-wechat"></em>
+</a>
+</li>
+<li class="top-share-item">
+<a class="share-link bds_tqq" href="javascript:void(0);" nslog-type="10060601">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qq"></em>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div style="width:0;height:0;clear:both"></div><dl class="lemmaWgt-lemmaTitle lemmaWgt-lemmaTitle-">
+<dd class="lemmaWgt-lemmaTitle-title">
+<h1>DMA</h1>
+<h2>（直接存储器访问）</h2>
+<a href="javascript:;" class="edit-lemma cmn-btn-hover-blue cmn-btn-28 j-edit-link" style="display: inline-block;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+<a class="lock-lemma" target="_blank" href="http://baike.baidu.com/view/10812319.htm" title="锁定"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_lock-lemma"></em>锁定</a>
+</dd>
+</dl><div class="promotion-declaration">
+</div><div class="lemma-summary" label-module="lemmaSummary">
+<div class="para" label-module="para">DMA(Direct Memory Access，直接内存存取) 是所有现代电脑的重要特色，它允许不同速度的硬件装置来沟通，而不需要依赖于 CPU 的大量中断负载。否则，CPU 需要从来源把每一片段的资料复制到<a target="_blank" href="http://baike.baidu.com/item/%E6%9A%82%E5%AD%98%E5%99%A8">暂存器</a>，然后把它们再次写回到新的地方。在这个时间中，CPU 对于其他的工作来说就无法使用。</div>
+</div>
+<div class="configModuleBanner">
+</div><div class="basic-info cmn-clearfix">
+<dl class="basicInfo-block basicInfo-left">
+<dt class="basicInfo-item name">中文名</dt>
+<dd class="basicInfo-item value">
+直接存储器访问
+</dd>
+<dt class="basicInfo-item name">外文名</dt>
+<dd class="basicInfo-item value">
+Direct Memory Access
+</dd>
+</dl><dl class="basicInfo-block basicInfo-right">
+<dt class="basicInfo-item name">缩&nbsp;&nbsp;&nbsp;&nbsp;写</dt>
+<dd class="basicInfo-item value">
+DMA
+</dd>
+<dt class="basicInfo-item name">功&nbsp;&nbsp;&nbsp;&nbsp;能</dt>
+<dd class="basicInfo-item value">
+不同速度的硬件装置来沟通
+</dd>
+</dl></div>
+<div class="lemmaWgt-lemmaCatalog">
+<div class="lemma-catalog">
+<h2 class="block-title">目录</h2>
+<div class="catalog-list column-3">
+<ol>
+<li class="level1">
+<span class="index">1</span>
+<span class="text"><a href="http://baike.baidu.com/item/DMA/2385376#1">DMA原理</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="http://baike.baidu.com/item/DMA/2385376#1_1">DMA请求</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="http://baike.baidu.com/item/DMA/2385376#1_2">DMA响应</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="http://baike.baidu.com/item/DMA/2385376#1_3">DMA传输</a></span>
+</li>
+</ol><ol><li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="http://baike.baidu.com/item/DMA/2385376#1_4">DMA结束</a></span>
+</li>
+<li class="level1">
+<span class="index">2</span>
+<span class="text"><a href="http://baike.baidu.com/item/DMA/2385376#2">DMA传送方式</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="http://baike.baidu.com/item/DMA/2385376#2_1">停止CPU访问内存</a></span>
+</li>
+<li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="http://baike.baidu.com/item/DMA/2385376#2_2">周期挪用</a></span>
+</li>
+</ol><ol><li class="level2">
+<span class="index">▪</span>
+<span class="text"><a href="http://baike.baidu.com/item/DMA/2385376#2_3">DMA与CPU交替访问内存</a></span>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="anchor-list">
+<a name="1" class="lemma-anchor para-title"></a>
+<a name="sub5048463_1" class="lemma-anchor "></a>
+<a name="DMA原理" class="lemma-anchor "></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">DMA</span>DMA原理</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="1" href="javascript:;" style="display: block;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">DMA 传输将数据从一个地址空间复制到另外一个地址空间。当CPU 初始化这个传输动作，传输动作本身是由 DMA 控制器来实行和完成。典型的例子就是移动一个外部内存的区块到芯片内部更快的内存区。像是这样的操作并没有让<a target="_blank" href="http://baike.baidu.com/item/%E5%A4%84%E7%90%86%E5%99%A8">处理器</a>工作拖延，反而可以被重新排程去处理其他的工作。DMA 传输对于高效能 嵌入式系统算法和网络是很重要的。</div>
+<div class="para" label-module="para"><div class="lemma-picture text-pic layout-right" style="width:220px; float: right;">
+<a class="image-link" nslog-type="9317" href="http://baike.baidu.com/pic/DMA/2385376/0/207ea60ec278e5d037d12269?fr=lemma&amp;ct=single" target="_blank" title="DMA" style="width:220px;height:121px;">
+<img class="" src="./DMA（直接存储器访问）_百度百科_files/cb8065380cd791232e491073ad345982b2b78008.jpg" alt="DMA" style="width:220px;height:121px;">
+</a>
+<span class="description">
+DMA
+</span>
+</div>在实现DMA传输时，是由DMA控制器直接掌管总线，因此，存在着一个总线控制权转移问题。即DMA传输前，CPU要把总线控制权交给DMA控制器，而在结束DMA传输后，DMA控制器应立即把总线控制权再交回给CPU。一个完整的DMA传输过程必须经过DMA请求、DMA响应、DMA传输、DMA结束4个步骤。</div><div class="anchor-list">
+<a name="1_1" class="lemma-anchor para-title"></a>
+<a name="sub5048463_1_1" class="lemma-anchor "></a>
+<a name="DMA请求" class="lemma-anchor "></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">DMA</span>DMA请求</h3>
+</div>
+<div class="para" label-module="para">CPU对DMA控制器初始化，并向<a target="_blank" href="http://baike.baidu.com/item/I%2FO%E6%8E%A5%E5%8F%A3">I/O接口</a>发出操作命令，I/O接口提出DMA请求。</div><div class="anchor-list">
+<a name="1_2" class="lemma-anchor para-title"></a>
+<a name="sub5048463_1_2" class="lemma-anchor "></a>
+<a name="DMA响应" class="lemma-anchor "></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">DMA</span>DMA响应</h3>
+</div>
+<div class="para" label-module="para">DMA控制器对DMA请求判别优先级及屏蔽，向总线裁决逻辑提出总线请求。当CPU执行完当前总线周期即可释放总线控制权。此时，总线裁决逻辑输出总线应答，表示DMA已经响应，通过DMA控制器通知I/O接口开始DMA传输。</div><div class="anchor-list">
+<a name="1_3" class="lemma-anchor para-title"></a>
+<a name="sub5048463_1_3" class="lemma-anchor "></a>
+<a name="DMA传输" class="lemma-anchor "></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">DMA</span>DMA传输</h3>
+</div>
+<div class="para" label-module="para">DMA控制器获得总线控制权后，CPU即刻挂起或只执行内部操作，由DMA控制器输出读写命令，直接控制RAM与I/O接口进行DMA传输。</div>
+<div class="para" label-module="para">在DMA控制器的控制下，在存储器和外部设备之间直接进行数据传送，在传送过程中不需要中央处理器的参与。开始时需提供要传送的数据的起始位置和数据长度。</div><div class="anchor-list">
+<a name="1_4" class="lemma-anchor para-title"></a>
+<a name="sub5048463_1_4" class="lemma-anchor "></a>
+<a name="DMA结束" class="lemma-anchor "></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">DMA</span>DMA结束</h3>
+</div>
+<div class="para" label-module="para">当完成规定的成批数据传送后，DMA控制器即释放总线控制权，并向I/O接口发出结束信号。当I/O接口收到结束信号后，一方面停 止I/O设备的工作，另一方面向CPU提出中断请求，使CPU从不介入的状态解脱，并执行一段检查本次DMA传输操作正确性的代码。最后，带着本次操作结果及状态继续执行原来的程序。</div>
+<div class="para" label-module="para">由此可见，DMA传输方式无需CPU直接控制传输，也没有中断处理方式那样保留现场和恢复现场的过程，通过硬件为RAM与I/O设备开辟一条直接传送数据的通路，使CPU的效率大为提高。</div><div class="anchor-list">
+<a name="2" class="lemma-anchor para-title"></a>
+<a name="sub5048463_2" class="lemma-anchor "></a>
+<a name="DMA传送方式" class="lemma-anchor "></a>
+</div><div class="para-title level-2" label-module="para-title">
+<h2 class="title-text"><span class="title-prefix">DMA</span>DMA传送方式</h2>
+<a class="edit-icon j-edit-link" data-edit-dl="2" href="javascript:;" style="display: block;"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-lemma"></em>编辑</a>
+</div>
+<div class="para" label-module="para">DMA技术的出现，使得外围设备可以通过DMA控制器直接访问内存，与此同时，CPU可以继续执行程序．那么DMA控制器与CPU怎样分时使用内存呢?通常采用以下三种方法：(1)停止CPU访内存；(2)周期挪用；(3)DMA与CPU交替访问内存．</div><div class="anchor-list">
+<a name="2_1" class="lemma-anchor para-title"></a>
+<a name="sub5048463_2_1" class="lemma-anchor "></a>
+<a name="停止CPU访问内存" class="lemma-anchor "></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">DMA</span>停止CPU访问内存</h3>
+</div>
+<div class="para" label-module="para">当外围设备要求传送一批数据时，由DMA控制器发一个停止信号给CPU，要求CPU放弃对地址总线、数据总线和有关控制总线的使用权．DMA控制器获得总线控制权以后，开始进行数据传送．在一批数据传送完毕后，DMA控制器通知CPU可以使用内存，并把总线控制权交还给CPU．图(a)是这种传送方式的时间图．很显然，在这种DMA传送过程中，CPU基本处于不工作状态或者说保持状态．</div>
+<div class="para" label-module="para"><div class="lemma-picture text-pic layout-right" style="width:250px; float: right;">
+<a class="image-link" nslog-type="9317" href="http://baike.baidu.com/pic/DMA/2385376/0/373bc4b43c61aa1e8ad4b25f?fr=lemma&amp;ct=single" target="_blank" title="" style="width:250px;height:96px;">
+<img class="" src="./DMA（直接存储器访问）_百度百科_files/f636afc379310a55c5956fa9b74543a98226103d.jpg" alt="" style="width:250px;height:96px;">
+</a>
+</div>优点: 控制简单，它适用于数据传输率很高的设备进行成组传送。</div>
+<div class="para" label-module="para">缺点: 在DMA控制器访内阶段，内存的效能没有充分发挥，相当一部分内存工作周期是空闲的。这是因为，外围设备传送两个数据之间的间隔一般总是大于内存存储周期，即使高速I/O设备也是如此。例如，软盘读出一个8位二进制数大约需要32us，而半导体内存的存储周期小于0.5us，因此许多空闲的存储周期不能被CPU利用．</div><div class="anchor-list">
+<a name="2_2" class="lemma-anchor para-title"></a>
+<a name="sub5048463_2_2" class="lemma-anchor "></a>
+<a name="周期挪用" class="lemma-anchor "></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">DMA</span>周期挪用</h3>
+</div>
+<div class="para" label-module="para">当I/O设备没有DMA请求时，CPU按程序要求访问内存；一旦I/O设备有DMA请求，则由I/O设备挪用一个或几个内存周期。</div>
+<div class="para" label-module="para">这种传送方式的时间图如下图(b)：<div class="lemma-picture text-pic layout-right" style="width:250px; float: right;">
+<a class="image-link" nslog-type="9317" href="http://baike.baidu.com/pic/DMA/2385376/0/6398ecd3d9a295b2a8ec9a59?fr=lemma&amp;ct=single" target="_blank" title="" style="width:250px;height:72px;">
+<img class="" src="./DMA（直接存储器访问）_百度百科_files/4bed2e738bd4b31c098f25e687d6277f9e2ff838.jpg" alt="" style="width:250px;height:72px;">
+</a>
+</div></div>
+<div class="para" label-module="para">I/O设备要求DMA传送时可能遇到两种情况：</div>
+<div class="para" label-module="para">(1)此时CPU不需要访内，如CPU正在执行乘法指令。由于乘法指令执行时间较长，此时I/O访内与CPU访内没有冲突，即I/O设备挪用一二个内存周期对CPU执行程序没有任何影响。</div>
+<div class="para" label-module="para">(2)I/O设备要求访内时CPU也要求访内，这就产生了访内冲突，在这种情况下I/O设备访内优先，因为I/O访内有时间要求，前一个I/O数据必须在下一个访问请求到来之前存取完毕。显然，在这种情况下I/O 设备挪用一二个内存周期，意味着CPU延缓了对指令的执行，或者更明确地说，在CPU执行访内指令的过程中插入DMA请求，挪用了一二个内存周期。 与停止CPU访内的DMA方法比较，周期挪用的方法既实现了I/O传送，又较好地发挥了内存和CPU的效率，是一种广泛采用的方法。但是I/O设备每一次周期挪用都有申请总线控制权、建立线控制权和归还总线控制权的过程，所以传送一个字对内存来说要占用一个周期，但对DMA控制器来说一般要2—5个内存周期(视逻辑线路的延迟而定)。因此，周期挪用的方法适用于I/O设备读写周期大于内存存储周期的情况。</div><div class="anchor-list">
+<a name="2_3" class="lemma-anchor para-title"></a>
+<a name="sub5048463_2_3" class="lemma-anchor "></a>
+<a name="DMA与CPU交替访问内存" class="lemma-anchor "></a>
+</div><div class="para-title level-3" label-module="para-title">
+<h3 class="title-text"><span class="title-prefix">DMA</span>DMA与CPU交替访问内存</h3>
+</div>
+<div class="para" label-module="para">如果CPU的工作周期比内存存取周期长很多，此时采用交替访内的方法可以使DMA传送和CPU同时发挥最高的效率。</div>
+<div class="para" label-module="para">这种传送方式的时间图如下：</div>
+<div class="para" label-module="para"><div class="lemma-picture text-pic layout-right" style="width:250px; float: right;">
+<a class="image-link" nslog-type="9317" href="http://baike.baidu.com/pic/DMA/2385376/0/6dc09e0a0a7d3853b0351d37?fr=lemma&amp;ct=single" target="_blank" title="" style="width:250px;height:90px;">
+<img class="" src="./DMA（直接存储器访问）_百度百科_files/95eef01f3a292df5f35b1d48bc315c6035a873d6.jpg" alt="" style="width:250px;height:90px;">
+</a>
+</div>此图是DMA与CPU交替访内的详细时间图．假设CPU工作周期为1.2us，内存存取周期小于0.6us，那么一个CPU周期可分为C1和C2两个分周期，其中C1专供DMA控制器访内，C2专供CPU访内。</div>
+<div class="para" label-module="para">这种方式不需要总线使用权的申请、建立和归还过程，总线使用权是通过C1和C2分时制的。CPU和DMA控制器各自有自己的访内地址寄存器、数据寄存器和读/写信号等控制寄存器。在C1周期中，如果DMA控制器有访内请求，可将地址、数据等信号送到总线上。在C2周期中，如CPU有访内请求，同样传送地址、数据等信号。事实上，对于总线，这是用C1，C2控制的一个多路<a target="_blank" href="http://baike.baidu.com/item/%E8%BD%AC%E6%8D%A2%E5%99%A8">转换器</a>，这种总线控制权的转移几乎不需要什么时间，所以对DMA传送来讲效率是很高的。</div>
+<div class="para" label-module="para">这种传送方式又称为“透明的DMA”方式，其来由是这种DMA传送对CPU来说，如同透明的玻璃一般，没有任何感觉或影响。在透明的DMA方式下工作，CPU既不停止主程序的运行，也不进入等待状态，是一种高效率的工作方式。当然，相应的硬件逻辑也就更加复杂。</div>
+<div class="para" label-module="para"><div class="lemma-picture text-pic layout-right" style="width:173px; float: right;">
+<a class="image-link" nslog-type="9317" href="http://baike.baidu.com/pic/DMA/2385376/0/964b2e4e3bb911a7d0c86a30?fr=lemma&amp;ct=single" target="_blank" title="" style="width:173px;height:220px;">
+<img class="" src="./DMA（直接存储器访问）_百度百科_files/ca1349540923dd5448e81635d109b3de9d8248d7.jpg" alt="" style="width:173px;height:220px;">
+</a>
+</div></div>
+<div class="anchor-list">
+<a name="a" class="lemma-anchor a"></a>
+</div><div class="album-list">
+<div class="header">
+<span class="title">词条图册</span>
+<a class="more-link" href="http://baike.baidu.com/pic/DMA/2385376?fr=lemma" target="_blank" nslog-type="10000204">更多图册<em></em></a>
+</div>
+<div class="scroller">
+<div class="list" style="width: 312.364px;">
+<a class="lemma-album last" title="" href="http://baike.baidu.com/pic/DMA/2385376/0/e4dde71190ef76c678e867009e16fdfaaf5167e7?fr=lemma" target="_blank" style="width:220px;" nslog-type="1204" data-index="0"><div class="album-wrap" style="width:218px;height:155px;"><img class="picture" alt="词条图片" src="./DMA（直接存储器访问）_百度百科_files/e4dde71190ef76c678e867009e16fdfaaf5167e7.jpg" style="width:282.3643410852713px;height:155px;"></div><div class="description">词条图片<span class="number">(6)</span></div><div class="albumBg"><div class="albumBgFir" style="width:212px;"></div><div class="albumBgSec" style="width:206px;"></div></div></a></div>
+</div>
+<div class="footer">
+</div>
+</div>
+<div id="open-tag">
+<div class="open-tag-title">词条标签：</div>
+<dd id="open-tag-item">
+<span class="taglist">
+教育
+</span>
+</dd>
+<div class="open-tag-collapse" id="open-tag-collapse" style="display: none;"></div>
+</div>
+<div class="clear"></div>
+</div>
+<div class="side-content">
+<div class="summary-pic">
+<a href="http://baike.baidu.com/pic/DMA/2385376/0/e4dde71190ef76c678e867009e16fdfaaf5167e7?fr=lemma&amp;ct=single" target="_blank" nslog-type="10002401">
+<img src="./DMA（直接存储器访问）_百度百科_files/e4dde71190ef76c678e867009e16fdfaaf5167e7(1).jpg">
+<button class="picAlbumBtn"><em></em><span>图集</span></button>
+<div>DMA图册</div>
+</a>
+</div>
+<div id="promotion_xunke"></div>
+<div class="lemmaWgt-promotion-vbaike" style="display: block;">
+<div class="promotion_title">V百科<a href="http://baike.baidu.com/vbaike#gallary" target="_blank">往期回顾</a></div>
+<div class="promotion_viewport">
+<dl style="position: absolute; width: 536px; height: 152px; left: 0px;"><dd class="wgt_carousel_aniUnit" style="float: left;">
+<a href="http://click.hm.baidu.com/clk?c9b1a475a390cd6b9721bee7cb343345" target="_blank" title="" nslog-type="10002202" nslog-params="{&quot;adId&quot;:&quot;1988&quot;, &quot;adTitle&quot;:&quot;这些野鸡大学不能去&quot;, &quot;adPos&quot;: 1}">
+<img src="./DMA（直接存储器访问）_百度百科_files/c8177f3e6709c93deeaf2da1953df8dcd1005402.jpg">
+</a>
+</dd></dl>
+<div class="promotion_viewport_pager wgt_horPager">
+<span class="pTagBox">
+<a href="javascript:;" class="pTag prev" p-index="1"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_arrow-left"></em></a>
+<a href="javascript:;" class="pTag next" p-index="3"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_arrow-right"></em></a>
+</span>
+</div>
+</div>
+</div><div class="lemmaWgt-promotion-rightPreciseAd" data-lemmaid="2385376" data-lemmatitle="DMA"></div><div class="lemmaWgt-sideRecommend" style="display: block;">
+<a name="zhixinWrap" class="qnAnchor"></a>
+<div class="zhixin-box" id="zhixinWrap" data-source="aladdin" data-newlemmaid="2385376"><div class="zhixin-group js-group" data-datatype="async">
+<h6 class="js-cardTitle">
+<span>相关指标</span>
+</h6>
+<div class="zhixin-fixBtn js-fixBtn">
+<div class="openFix" title="若推荐内容有误，请点击纠错进行反馈">纠错</div>
+<div class="closeFix">关闭纠错</div>
+</div>
+<div class="zhixin-list">
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/ddx%E6%8C%87%E6%A0%87/2637056&quot;,&quot;targetId&quot;:&quot;2637056&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/ddx%E6%8C%87%E6%A0%87/2637056" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/a5c27d1ed21b0ef4565a2b91dcc451da80cb3e4a.jpg" alt="ddx指标">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/ddx%E6%8C%87%E6%A0%87/2637056" target="_blank" title="ddx指标">ddx指标</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="2637056">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/ASI%E6%8C%87%E6%A0%87/6341775&quot;,&quot;targetId&quot;:&quot;6341775&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/ASI%E6%8C%87%E6%A0%87/6341775" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/b3b7d0a20cf431ad5859ab114936acaf2edd980b.jpg" alt="asi指标">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/ASI%E6%8C%87%E6%A0%87/6341775" target="_blank" title="asi指标">asi指标</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="6341775">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/VR%E6%8C%87%E6%A0%87/4672285&quot;,&quot;targetId&quot;:&quot;4672285&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/VR%E6%8C%87%E6%A0%87/4672285" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/a686c9177f3e6709bebb4fe53cc79f3df8dc5574.jpg" alt="vr指标">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/VR%E6%8C%87%E6%A0%87/4672285" target="_blank" title="vr指标">vr指标</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="4672285">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/MACD%E6%8C%87%E6%A0%87/6271283&quot;,&quot;targetId&quot;:&quot;6271283&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/MACD%E6%8C%87%E6%A0%87/6271283" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/3b87e950352ac65c94f18ff5fbf2b21192138a44.jpg" alt="macd指标">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/MACD%E6%8C%87%E6%A0%87/6271283" target="_blank" title="macd指标">macd指标</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="6271283">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/SAR%E6%8C%87%E6%A0%87/6329095&quot;,&quot;targetId&quot;:&quot;6329095&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/SAR%E6%8C%87%E6%A0%87/6329095" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/0823dd54564e92587364b1189c82d158cdbf4ef7.jpg" alt="sar指标">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/SAR%E6%8C%87%E6%A0%87/6329095" target="_blank" title="sar指标">sar指标</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="6329095">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/wR%E6%8C%87%E6%A0%87/9464148&quot;,&quot;targetId&quot;:&quot;9464148&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/wR%E6%8C%87%E6%A0%87/9464148" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/b8389b504fc2d562840166c5e51190ef76c66c88.jpg" alt="wr指标">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/wR%E6%8C%87%E6%A0%87/9464148" target="_blank" title="wr指标">wr指标</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="9464148">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/%E9%87%8F%E6%AF%94/1847747&quot;,&quot;targetId&quot;:&quot;1847747&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/%E9%87%8F%E6%AF%94/1847747" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/3801213fb80e7bec7af067c22f2eb9389b506bee.jpg" alt="量比">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/%E9%87%8F%E6%AF%94/1847747" target="_blank" title="量比">量比</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="1847747">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/kdj/3423560&quot;,&quot;targetId&quot;:&quot;3423560&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/kdj/3423560" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/4b90f603738da977d5eda14eb951f8198718e391.jpg" alt="kdj">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/kdj/3423560" target="_blank" title="kdj">kdj</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="3423560">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/BRAR%E6%8C%87%E6%A0%87/6329407&quot;,&quot;targetId&quot;:&quot;6329407&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/BRAR%E6%8C%87%E6%A0%87/6329407" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/1ad5ad6eddc451dadb9941e9b0fd5266d0163240.jpg" alt="brar指标">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/BRAR%E6%8C%87%E6%A0%87/6329407" target="_blank" title="brar指标">brar指标</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="6329407">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+</div>
+</div>
+<div class="zhixin-group js-group" data-datatype="async">
+<h6 class="js-cardTitle">
+<span>相关术语</span>
+</h6>
+<div class="zhixin-fixBtn js-fixBtn">
+<div class="openFix" title="若推荐内容有误，请点击纠错进行反馈">纠错</div>
+<div class="closeFix">关闭纠错</div>
+</div>
+<div class="zhixin-list">
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/%E6%B3%A2%E7%89%B9%E7%8E%87/2153185&quot;,&quot;targetId&quot;:&quot;2153185&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/%E6%B3%A2%E7%89%B9%E7%8E%87/2153185" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/caef76094b36acafb78a78d97ed98d1001e99ca9.jpg" alt="波特率">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/%E6%B3%A2%E7%89%B9%E7%8E%87/2153185" target="_blank" title="波特率">波特率</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="2153185">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/%E6%8D%A2%E6%89%8B%E7%8E%87/631895&quot;,&quot;targetId&quot;:&quot;631895&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/%E6%8D%A2%E6%89%8B%E7%8E%87/631895" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/6609c93d70cf3bc77bb622c8d300baa1cd112a64.jpg" alt="换手率">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/%E6%8D%A2%E6%89%8B%E7%8E%87/631895" target="_blank" title="换手率">换手率</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="631895">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/%E4%B8%8A%E6%B5%B7%E8%AF%81%E5%88%B8%E7%BB%BC%E5%90%88%E6%8C%87%E6%95%B0/9556996&quot;,&quot;targetId&quot;:&quot;9556996&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/%E4%B8%8A%E6%B5%B7%E8%AF%81%E5%88%B8%E7%BB%BC%E5%90%88%E6%8C%87%E6%95%B0/9556996" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/5882b2b7d0a20cf44d6925c771094b36acaf9929.jpg" alt="上海证券综合指数">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/%E4%B8%8A%E6%B5%B7%E8%AF%81%E5%88%B8%E7%BB%BC%E5%90%88%E6%8C%87%E6%95%B0/9556996" target="_blank" title="上海证券综合指数">上海证券综合指数</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="9556996">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/%E5%BE%AE%E5%9E%8B%E8%AE%A1%E7%AE%97%E6%9C%BA/9287&quot;,&quot;targetId&quot;:&quot;9287&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/%E5%BE%AE%E5%9E%8B%E8%AE%A1%E7%AE%97%E6%9C%BA/9287" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/1ad5ad6eddc451dadd7e41c6b2fd5266d0163216.jpg" alt="微型计算机">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/%E5%BE%AE%E5%9E%8B%E8%AE%A1%E7%AE%97%E6%9C%BA/9287" target="_blank" title="微型计算机">微型计算机</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="9287">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/UART/4429746&quot;,&quot;targetId&quot;:&quot;4429746&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/UART/4429746" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/023b5bb5c9ea15ced8edbf07b6003af33a87b2b9.jpg" alt="uart">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/UART/4429746" target="_blank" title="uart">uart</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="4429746">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/%E5%9C%B0%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8/3219619&quot;,&quot;targetId&quot;:&quot;3219619&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/%E5%9C%B0%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8/3219619" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/d01373f082025aaff116d0c5fbedab64034f1a93.jpg" alt="地址寄存器">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/%E5%9C%B0%E5%9D%80%E5%AF%84%E5%AD%98%E5%99%A8/3219619" target="_blank" title="地址寄存器">地址寄存器</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="3219619">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+</div>
+</div>
+<div class="zhixin-group js-group" data-datatype="async">
+<h6 class="js-cardTitle">
+<span>经济学术语</span>
+</h6>
+<div class="zhixin-fixBtn js-fixBtn">
+<div class="openFix" title="若推荐内容有误，请点击纠错进行反馈">纠错</div>
+<div class="closeFix">关闭纠错</div>
+</div>
+<div class="zhixin-list">
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/%E9%87%91%E5%8F%89%E6%AD%BB%E5%8F%89%E5%9B%BE/5639131&quot;,&quot;targetId&quot;:&quot;5639131&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/%E9%87%91%E5%8F%89%E6%AD%BB%E5%8F%89%E5%9B%BE/5639131" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/03087bf40ad162d963cfc53513dfa9ec8a13cdf2.jpg" alt="金叉死叉图">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/%E9%87%91%E5%8F%89%E6%AD%BB%E5%8F%89%E5%9B%BE/5639131" target="_blank" title="金叉死叉图">金叉死叉图</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="5639131">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/K%E7%BA%BF%E5%9B%BE/85028&quot;,&quot;targetId&quot;:&quot;85028&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/K%E7%BA%BF%E5%9B%BE/85028" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/c2cec3fdfc039245fe66710f8794a4c27c1e25da.jpg" alt="k线图">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/K%E7%BA%BF%E5%9B%BE/85028" target="_blank" title="k线图">k线图</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="85028">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+<div class="zhixin-item" nslog="area" nslog-type="10000101" nslog-params="{&quot;source&quot;:&quot;aladdin&quot;,&quot;url&quot;:&quot;http://baike.baidu.com/item/%E9%A1%BA%E5%8A%BF%E6%8C%87%E6%A0%87/976711&quot;,&quot;targetId&quot;:&quot;976711&quot;}">
+<div class="portraitbox">
+<a href="http://baike.baidu.com/item/%E9%A1%BA%E5%8A%BF%E6%8C%87%E6%A0%87/976711" target="_blank">
+<img src="./DMA（直接存储器访问）_百度百科_files/8718367adab44aedb00ae1ddb41c8701a18bfb47.jpg" alt="cci">
+</a>
+</div>
+<p class="item-title js-name"><a href="http://baike.baidu.com/item/%E9%A1%BA%E5%8A%BF%E6%8C%87%E6%A0%87/976711" target="_blank" title="cci">cci</a></p>
+<div class="zhixinErrorBox js-fixBox hidden" data-lemma-id="976711">
+<a class="submit-trigger" href="javascript:;">有错误</a>
+<span class="js-text hidden">已反馈</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<form id="zhixinErrorForm" class="hidden" action="http://f3.baidu.com/index.php/feedback/zx/baikeJC" target="zhixinSubErr" method="post">
+<input class="js-url" name="fb_html_url" type="hidden">
+<input class="js-query" name="fb_query" type="hidden">
+<input class="js-title" name="fb_card_title" type="hidden">
+<input class="js-content" name="fb_content" type="hidden">
+<input class="js-souceId" name="fb_source_id" type="hidden">
+</form>
+<iframe id="zhixinSubErr" name="zhixinSubErr" style="display:none" frameborder="0" src="./DMA（直接存储器访问）_百度百科_files/saved_resource.html"></iframe>
+</div><div class="lemmaWgt-promotion-slide" style="display: block;">
+<div class="promotion_viewport">
+<dl style="position: absolute; width: 540px; height: 260px; left: 0px;"><dd class="wgt_carousel_aniUnit" style="float: left;">
+<a href="http://baike.baidu.com/article/121b5b2a7418075bb8eeb376.htm" target="_blank" title="" nslog-type="10002202" nslog-params="{&quot;adId&quot;:&quot;1980&quot;, &quot;adTitle&quot;:&quot;无人机拍摄-KS-12-14&quot;, &quot;adPos&quot;: 2}">
+<img src="./DMA（直接存储器访问）_百度百科_files/96dda144ad345982c9f739c306f431adcbef8466.jpg">
+</a>
+</dd></dl>
+<div class="promotion_viewport_pager wgt_horPager"><span class="pTagBox">
+<a href="javascript:;" class="pTag prev" p-index="1"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_arrow-left"></em></a><span><a href="javascript:;" class="dot pTag cur"><em class="cmn-icon cmn-icons cmn-icons_userbar-new"></em></a><a href="javascript:;" class="dot pTag" p-index="2"><em class="cmn-icon cmn-icons cmn-icons_userbar-new"></em></a></span><a href="javascript:;" class="pTag next" p-index="2"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_arrow-right"></em></a>
+</span></div>
+</div>
+</div><div class="lemmaWgt-promotion-rightBigAd">
+</div><dl class="side-box lemma-statistics">
+<dt class="title">词条统计</dt>
+<dd class="description">
+<ul>
+<li>浏览次数：<span id="j-lemmaStatistics-pv">619940</span>次</li>
+<li>编辑次数：34次<a href="http://baike.baidu.com/historylist/DMA/2385376" class="nslog:1021" target="_blank">历史版本</a></li>
+<li>最近更新：<span class="j-modified-time" style="">2017-01-27</span></li>
+<li>创建者：<a class="show-userCard" data-uid="4663155" title="查看此用户资料" target="_blank" href="http://www.baidu.com/p/nadir" nslog-type="1022">nadir</a></li>
+</ul>
+</dd>
+</dl>
+<div class="side-catalog" style="visibility: hidden; bottom: 10px;">
+<div class="side-bar">
+<em class="circle start"></em>
+<em class="circle end"></em>
+</div>
+<div class="catalog-scroller">
+<dl class="catalog-list">
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="http://baike.baidu.com/item/DMA/2385376#1" class="title-link">
+<span class="text">
+<span class="title-index">1</span>
+<span class="title-link" nslog-type="10002802">DMA原理</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="http://baike.baidu.com/item/DMA/2385376#1_1" class="title-link">
+<span class="text">
+<span class="title-index">1.1</span>
+<span class="title-link" nslog-type="10002802">DMA请求</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="http://baike.baidu.com/item/DMA/2385376#1_2" class="title-link">
+<span class="text">
+<span class="title-index">1.2</span>
+<span class="title-link" nslog-type="10002802">DMA响应</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="http://baike.baidu.com/item/DMA/2385376#1_3" class="title-link">
+<span class="text">
+<span class="title-index">1.3</span>
+<span class="title-link" nslog-type="10002802">DMA传输</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="http://baike.baidu.com/item/DMA/2385376#1_4" class="title-link">
+<span class="text">
+<span class="title-index">1.4</span>
+<span class="title-link" nslog-type="10002802">DMA结束</span>
+</span>
+</a>
+</dd>
+<dt class="catalog-title level1">
+<em class="pointer"></em>
+<a href="http://baike.baidu.com/item/DMA/2385376#2" class="title-link">
+<span class="text">
+<span class="title-index">2</span>
+<span class="title-link" nslog-type="10002802">DMA传送方式</span>
+</span>
+</a>
+</dt>
+<dd class="catalog-title level2">
+<a href="http://baike.baidu.com/item/DMA/2385376#2_1" class="title-link">
+<span class="text">
+<span class="title-index">2.1</span>
+<span class="title-link" nslog-type="10002802">停止CPU访问内存</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="http://baike.baidu.com/item/DMA/2385376#2_2" class="title-link">
+<span class="text">
+<span class="title-index">2.2</span>
+<span class="title-link" nslog-type="10002802">周期挪用</span>
+</span>
+</a>
+</dd>
+<dd class="catalog-title level2">
+<a href="http://baike.baidu.com/item/DMA/2385376#2_3" class="title-link">
+<span class="text">
+<span class="title-index">2.3</span>
+<span class="title-link" nslog-type="10002802">DMA与CPU交替访问内存</span>
+</span>
+</a>
+</dd>
+<a class="arrow" href="javascript:void(0);" style="top: 192px;"></a>
+</dl>
+</div>
+<div class="right-wrap" style="display: none;">
+<a class="go-up disable" href="javascript:void(0);"></a>
+<a class="go-down disable" href="javascript:void(0);"></a>
+</div>
+<div class="bottom-wrap">
+<a class="toggle-button" href="javascript:void(0);"></a>
+<a class="gotop-button" href="javascript:void(0);"></a>
+</div>
+</div>
+<div class="unionAd_fromPs side-box" id="unionAd_fromPs">
+<script type="BAIDU_HH" runed="true">
+        {
+            type : 'pageembed',
+            di   : 'u2140330',
+            rsi0 : 270,
+            rsi1 : 175
+        }
+        </script><iframe src="./DMA（直接存储器访问）_百度百科_files/home.html" style="width:270px;height:175px;background-color:transparent" align="center,center" marginwidth="0" marginheight="0" class="BAIDU_SS_HHIFRAME" scrolling="no" frameborder="0" allowtransparency="true"></iframe>
+</div>
+
+<div id="side_box_unionAd" class="unionAd side-box union" style="display: block;">
+<div class="union-content" id="cpro_u1997633"><iframe id="iframeu1997633_0" src="./DMA（直接存储器访问）_百度百科_files/ycvm.html" width="250" height="250" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:250px;height:250px" allowtransparency="true"></iframe></div>
+</div>
+</div>
+</div>
+</div>
+<div class="after-content">
+<div class="fc-guess-like new" id="fc_guess_like_new" style="display: block;">
+<span class="logo-du">
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+</span>
+<h6>猜你喜欢</h6>
+<ul class="cmn-clearfix"><li><a href="https://www.baidu.com/s?wd=%D1%C0%B8%F9%B5%C4%B6%CF%C1%CB%D4%F5%C3%B4%B0%EC&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">牙根的断了怎么办</a></li>
+<li><a href="https://www.baidu.com/s?wd=%D1%C0%B3%DD%B6%CF%C1%CB%BB%E1%B3%A4%B3%F6%C0%B4%C2%F0&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">牙齿断了会长出来吗</a></li>
+<li><a href="https://www.baidu.com/s?wd=android%D1%A7%B5%E3%CA%B2%C3%B4&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">android学点什么</a></li>
+<li><a href="https://www.baidu.com/s?wd=%D1%C0%B8%F9%B6%CF%C1%CB%D2%BB%D0%A1%BF%E9%D4%F5%C3%B4%B0%EC&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">牙根断了一小块怎么办</a></li>
+<li><a href="https://www.baidu.com/s?wd=%D1%C0%B6%CF%C1%CB%B1%D8%D0%EB%B8%F9%B9%DC%D6%CE%C1%C6%B0%A1&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">牙断了必须根管治疗啊</a></li>
+<li><a href="https://www.baidu.com/s?wd=%D1%C0%B3%DD%B6%CF%C1%CB%D2%BB%B0%EB%BB%E1%BB%B5%C2%F0&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">牙齿断了一半会坏吗</a></li>
+<li><a href="https://www.baidu.com/s?wd=%D1%C0%B3%DD%B6%CF%C1%CB%C4%DC%D4%D9%B3%A4%C2%F0&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">牙齿断了能再长吗</a></li>
+<li><a href="https://www.baidu.com/s?wd=%BF%C4%B6%CF%C1%CB%D1%C0%B3%DD+%D4%F5%C3%B4%B2%B9&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">磕断了牙齿 怎么补</a></li>
+<li><a href="https://www.baidu.com/s?wd=%BE%AB%C9%F1%D2%BD%D4%BA%B5%C8%BC%B6&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">精神医院等级</a></li>
+<li><a href="https://www.baidu.com/s?wd=%D1%C0%B6%CF%C1%CB%D2%BB%B0%EB%D4%F5%C3%B4%D6%CE&amp;tn=SE_baikepcxf02_fcetbk02&amp;lqsource=2&amp;dmaseid=dmaseid204&amp;qid=f53b74c034e72f86" target="_blank">牙断了一半怎么治</a></li>
+</ul>
+</div>
+<div class="bottom-promotion" id="bottom-promotion" style="display: block;">
+<div id="BOTTOM_PRO_AD"><iframe id="iframe1120393_0" onload="BAIDU_SSP_cacheRequest(&#39;caa4fefd93d5f2c4&#39;, this);" src="./DMA（直接存储器访问）_百度百科_files/ycvm(1).html" width="960" height="90" align="center,center" vspace="0" hspace="0" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" style="border:0;vertical-align:bottom;margin:0;width:960px;height:90px" allowtransparency="true"></iframe></div>
+</div>
+</div>
+</div>
+
+<div class="wgt-footer-main">
+<div class="content">
+<dl class="fresh">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-fresh"></em>新手上路</dt>
+<dd>
+<div><a target="_blank" href="http://baike.baidu.com/usercenter/tasks#guide">成长任务</a></div>
+<div><a target="_blank" href="http://baike.baidu.com/help#main01">编辑入门</a></div>
+<div><a target="_blank" href="http://baike.baidu.com/help#main06">编辑规则</a></div>
+<div><a target="_blank" href="http://baike.baidu.com/help#main05">百科术语</a></div>
+</dd>
+</dl>
+<dl class="question">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-question"></em>我有疑问</dt>
+<dd>
+<div><a target="_blank" href="http://baike.baidu.com/wikiui/doubt?lemmaId=2385376&amp;fr=lemma" nslog-type="10070001">我要质疑</a></div>
+<div><a target="_blank" href="http://ikefu.baidu.com/baidubaike/chat.html" nslog-type="10000003">我要提问</a></div>
+<div><a target="_blank" href="http://tieba.baidu.com/f?ie=utf-8&amp;fr=bks0000&amp;kw=%E7%99%BE%E5%BA%A6%E7%99%BE%E7%A7%91">参加讨论</a></div>
+<div><a target="_blank" href="http://baike.baidu.com/feedback">意见反馈</a></div>
+</dd>
+</dl>
+<dl class="suggestion">
+<dt><em class="cmn-icon cmn-icons cmn-icons_footer-suggestion"></em>投诉建议</dt>
+<dd>
+<div><a target="_blank" href="http://tousu.baidu.com/baike/add?word=DMA&amp;&amp;submit_link=http%3A%2F%2Fbaike.baidu.com%2Fitem%2FDMA%2F2385376#1">举报不良信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike/add?word=DMA&amp;&amp;submit_link=http%3A%2F%2Fbaike.baidu.com%2Fitem%2FDMA%2F2385376#2">未通过词条申诉</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike/add?word=DMA&amp;&amp;submit_link=http%3A%2F%2Fbaike.baidu.com%2Fitem%2FDMA%2F2385376#4">投诉侵权信息</a></div>
+<div><a target="_blank" href="http://tousu.baidu.com/baike/add?word=DMA&amp;&amp;submit_link=http%3A%2F%2Fbaike.baidu.com%2Fitem%2FDMA%2F2385376#3">封禁查询与解封</a></div>
+</dd>
+</dl>
+</div>
+<div class="copyright">©2017&nbsp;Baidu&nbsp;<a href="http://www.baidu.com/duty/" target="_blank">使用百度前必读</a>&nbsp;|&nbsp;<a href="http://help.baidu.com/question?prod_en=baike&amp;class=159&amp;id=1047" target="_blank">百科协议</a>&nbsp;|&nbsp;<a href="http://baike.baidu.com/operation/cooperation" target="_blank">百度百科合作平台</a>&nbsp;|&nbsp;<span>京ICP证030173号&nbsp;</span><img class="copyright-img" width="13" height="16" src="./DMA（直接存储器访问）_百度百科_files/copy_rignt_24.png"></div>
+<p class="recordcode"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11000002000001" target="_blank"><i class="icon-police"></i>京公网安备11000002000001号</a></p>
+</div>
+
+<div class="lemmaWgt-searchHeader" style="display: block; opacity: 1;">
+<div class="layout cmn-clearfix">
+<div class="wgt-searchbar wgt-searchbar-new wgt-searchbar-simple cmn-clearfix ">
+<div class="logo-container">
+<a class="logo cmn-inline-block" title="到百科首页" href="http://baike.baidu.com/">
+<span class="cmn-baike-logo">
+<em class="cmn-icon cmn-icons cmn-icons_logo-bai"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-du"></em>
+<em class="cmn-icon cmn-icons cmn-icons_logo-baike"></em>
+</span>
+</a>
+</div>
+<div class="search">
+<div class="form">
+<form id="searchForm" action="http://baike.baidu.com/search/word" method="GET" target="_self">
+<input id="query" nslog="normal" nslog-type="10080015" name="word" type="text" autocomplete="off" autocorrect="off" value="DMA"><button id="search" nslog="normal" nslog-type="10080013" type="button">进入词条</button>
+</form>
+<form id="searchLemmaForm" action="http://baike.baidu.com/search" method="GET" target="_self">
+<input id="searchLemmaQuery" name="word" type="hidden">
+<input name="pn" type="hidden" value="0">
+<input name="rn" type="hidden" value="0">
+<input name="enc" type="hidden" value="utf8">
+</form>
+<ul id="suggestion" class="suggestion" style="display: none;">
+<div class="sug"></div>
+<li class="extra">
+<span id="close" nslog="normal" nslog-type="10080016">关闭</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="tool-buttons">
+<a class="toolButtons-edit button j-edit-link" href="javascript:;" nslog-type="10010001"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_edit-hollow"></em>编辑</a>
+<a class="toolButtons-collect button" href="javascript:;" nslog-type="10010002"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_star-hollow"></em><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_star-solid"></em>收藏</a>
+<a class="toolButtons-vote button top-vote" href="javascript:;" nslog-type="10010003"><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_zan-hollow"></em><em class="cmn-icon wiki-lemma-icons wiki-lemma-icons_zan-solid"></em><span class="j-tool-btn-vote-num">赞</span></a>
+</div>
+<div class="user-info">
+<a class="user-link unlogin" href="http://baike.baidu.com/usercenter" nslog-type="10010008" target="_blank">wangcq327</a>
+</div>
+</div></div>
+<div class="new-bdsharebuttonbox new-side-share" id="side-share">
+<span class="title">分享</span>
+<div class="side-border">
+<div class="triangle"></div>
+<a class="share-link bds_qzone" href="javascript:void(0);" nslog-type="10060101">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qzone"></em>
+</a>
+<a class="share-link bds_tsina" href="javascript:void(0);" nslog-type="10060301">
+<em class="cmn-icon cmn-icons cmn-icons_logo-sina-weibo"></em>
+</a>
+<a class="bds_wechat" href="javascript:void(0);" nslog-type="10060001">
+<em class="cmn-icon cmn-icons cmn-icons_logo-wechat"></em>
+</a>
+<a class="share-link bds_tqq" href="javascript:void(0);" nslog-type="10060201">
+<em class="cmn-icon cmn-icons cmn-icons_logo-qq"></em>
+</a>
+</div>
+</div>
+<div class="qrcode-wrapper" id="layer" style="display: none">
+<div class="bd_weixin_popup_header">
+<em class="cmn-icon cmn-icons cmn-icons_close"></em>
+<span>分享到微信朋友圈</span>
+</div>
+<div id="wechat-qrcode-img"></div>
+<div class="bd_weixin_popup_footer">打开微信“扫一扫”即可将网页分享至朋友圈</div>
+</div>
+<div></div><div></div>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/wiki-common_sync_js_0_6be349d.js.下载"></script>
+<script type="text/javascript">require.resourceMap({"res":{"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/lemmaInsert.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/lemmaInsert_17d225d.js","pkg":"wiki-lemma:p5","deps":["wiki-common:widget/component/nslog/nslog.js"]},"wiki-lemma:widget/lemma_content/mainContent/lemmaRelation/tangram.js":{"url":"http://baike.bdimg.com/static/wiki-lemma/widget/lemma_content/mainContent/lemmaRelation/tangram_1e4b3aa.js","pkg":"wiki-lemma:p5"}},"pkg":{"wiki-lemma:p5":{"url":"http://baike.bdimg.com/static/wiki-lemma/pkg/wiki-lemma-module-lemmaRelation_782158b.js"}}});</script><script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/PHPJS_3347e0a.js.下载"></script>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/wiki-common_sync_js_1_1866d43.js.下载"></script>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/userbar-n_d15fcff.js.下载"></script>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/headTabBar_523bfd9.js.下载"></script>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/searchbar_ff0ea9e.js.下载"></script>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/wiki-common_sync_js_2_7a24e62.js.下载"></script>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/wiki-common_sync_js_5_62d9343.js.下载"></script>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/wiki-lemma_62aa905.js.下载"></script>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/zhixin_587af69.js.下载"></script>
+<script type="text/javascript">!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+    userbar = require('wiki-common:widget/component/userbar-n/userbar-n.js');
+    
+  userbar.buildUserbar($('#j-wgt-userbar'), null);
+}();
+!function(){  require('wiki-common:widget/component/headTabBar/headTabBar.js');
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar-n/searchbar.js');  
+    initSearchbar($('.wgt-searchbar-main'));
+  }();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var cookie = require('wiki-common:widget/util/cookie.js');
+    if (!cookie.get('baikedeclare')) {
+        $('#J-declare-wrap').css('display', 'block');
+    }
+    $('#J-declare-close').on('click', function () {
+        // 用户关闭后，不再显示，这里暂设过期时间为1年
+        cookie.set('baikedeclare', 'showed', {
+            expires: 365 * 60 * 60 * 24 * 1000
+        });
+        $('#J-declare-wrap').css('display', 'none');
+    });
+}();
+!function(){  var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+
+  var timer = '';
+
+  $('.wgt-navbar').on('mouseenter', 'dl', function() {
+  clearTimeout(timer);
+  timer = setTimeout(function() {
+  $('.wgt-navbar').addClass('wgt-navbar-hover');
+}, 300);
+}).on('mouseleave', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+}).on('click', 'a', function() {
+clearTimeout(timer);
+$('.wgt-navbar').removeClass('wgt-navbar-hover');
+});
+}();
+!function(){        require('wiki-lemma:widget/lemma_content/mainContent/polysemantList/polysemantList.js')();
+    }();
+!function(){        var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+        var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+        // 展现策略
+        rightCheck.editView('2385376', function(res) {
+            if (!res.errno) {
+                if (res.data.divide) {
+                    $('.top-tool .split-icon').css('display', 'block');
+                }
+            }
+        });
+    }();
+!function(){    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+	require.async("wiki-lemma:widget/basicElement/collect/collect.js",function(collect){
+		collect({
+            newLemmaId:"2385376",
+			lemmaId:"32471",
+			subLemmaId:"5048463"
+		});
+	});
+}();
+!function(){    require.async("wiki-lemma:widget/basicElement/topShare/topShare.js",function(topShare){
+        topShare({
+            newLemmaId: '2385376'
+        });
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        } else {
+            if ('1') {
+                $('.lemmaWgt-lemmaTitle .edit-lemma').css('display', 'inline-block');
+            } else {
+                $('.lemmaWgt-lemmaTitle .lock-lemma').show();
+            }
+        }
+    });
+}();
+!function(){	require('wiki-lemma:widget/lemma_content/mainContent/basicInfo/basicInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var nslog = require('wiki-common:widget/component/nslog/nslog.js');
+    nslog(10002701);
+    $('.lemmaWgt-lemmaCatalog a').on('click', function () {
+           nslog(10002702);
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+    // 展现策略
+    rightCheck.editView('2385376', function(res) {
+        if (!res.errno) {
+            if (res.data.edit) {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        } else {
+            if ('1') {
+                $('.para-title .edit-icon').css('display', 'block');
+            }
+        }
+    });
+}();
+!function(){	require.async(["wiki-common:widget/lib/jquery/jquery.js", "wiki-lemma:widget/lemma_content/mainContent/albumList/albumList.js", "wiki-common:widget/component/nslog/nslog.js"],function($,AlbumList,nslog){
+		var list=new AlbumList({
+			newLemmaId:"2385376",
+			lemmaTitle:"DMA",
+			lemmaId:"32471",
+			subLemmaId:"5048463",
+			data:[{"coverpic":"e4dde71190ef76c678e867009e16fdfaaf5167e7","width":477,"height":262,"desc":"\u8bcd\u6761\u56fe\u7247","total":6,"coverurl":"https:\/\/imgsa.baidu.com\/baike\/s%3D235\/sign=36579c31c55c1038207ec9c18711931c\/e4dde71190ef76c678e867009e16fdfaaf5167e7.jpg"}]
+		});
+		!!window.ScriptLazyLoad && window.ScriptLazyLoad.regist({
+			dom:$('.album-list'),
+			loadFunc:function(){
+				list.load();
+				nslog(1258);
+			},
+			distance:500
+		});
+	});
+}();
+!function(){        require.async("wiki-common:widget/lib/jquery/jquery.js",function($){
+            function openTagToggle(node) {
+                if ($(node).hasClass("collapse")) {
+                    $(node).removeClass("collapse");
+                    $("#open-tag").css("height", '22px');
+                } else {
+                    $(node).addClass("collapse");
+                    $("#open-tag").css("height", $("#open-tag-item").css("height"));
+                }
+            }
+            if (parseInt($("#open-tag-item").css("height")) <= 30) {
+                $('#open-tag-collapse').hide();
+            }
+            $("#open-tag-collapse").on("click", function () {
+                openTagToggle($("#open-tag")[0]);
+            });
+        });
+    }();
+!function(){        require.async('wiki-lemma:widget/promotion/xunke/xunke.js', function (app) {
+            app.init({
+                lemmaTitle: 'DMA',
+                adManager: null
+            });
+        });
+    }();
+!function(){        require('wiki-lemma:widget/lemma_content/configModule/zhixin/zhixin.js')(
+            2385376,
+            'DMA'
+        );
+    }();
+!function(){    require.async("wiki-lemma:widget/lemma_content/mainContent/lemmaStatistics/lemmaStatistics.js",function(init){
+        init({
+            newLemmaIdEnc:"472f163d86500f1af4e450c3"
+        });
+    });
+}();
+!function(){	require.async("wiki-lemma:widget/lemma_content/mainContent/sideCatalog/sideCatalog.js",function(SideCatalog){
+		new SideCatalog();
+	});
+}();
+!function(){            require.async(['wiki-lemma:widget/promotion/unionAdFromPs/unionAdFromPs.js'], function (init) {
+                init({
+                    adManager: null
+                });
+            });
+        }();
+!function(){        require.async(["wiki-lemma:widget/promotion/fengchao/fengchao.js", "wiki-lemma:widget/promotion/unionAd/unionAd.js"], function (init, unionAd) {
+            init({
+                newLemmaId: "2385376",
+                lemmaTitle: "DMA",
+                encodeLemmaTitle: "DMA",
+                adManager: null
+            }, {
+                errFn: unionAd,
+                dom: $('#side_box_unionAd')
+            });
+        });
+    }();
+!function(){        require.async('wiki-lemma:widget/promotion/guessLike/guessLike.js', function (app) {
+            app.init({
+                lemmaTitle: 'DMA',
+                adManager: null,
+                navigateNumber: 9,
+                lemmaDesc: '直接存储器访问'
+            });
+        });
+    }();
+!function(){            require.async('wiki-lemma:widget/promotion/bottomAd/bottomAd.js', function (init) {
+                init({
+                    sId: 'BOTTOM_PRO_AD',
+                    adManager: null
+                });
+            });
+        }();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var Dialog = require("wiki-common:widget/ui/dialog/dialog.js");
+    var userLogin = require('wiki-common:widget/component/userLogin/userLogin.js');
+    var unameFiller = require('wiki-common:widget/component/unameFiller/unameFiller.js');
+    var rightCheck = require('wiki-lemma:widget/tools/rightCheck/rightCheck.js');
+
+            var isEnterprise = false;
+        var enterpriseOwnerUserId = 0;
+    
+    var userId = 0;
+    var editUrl = '/edit/' + encodeURIComponent('DMA') + '/' + '2385376';
+    var pgcUrl = '/enterprise/editpgc?lemmaId=2385376';
+
+    userLogin.regist({
+        onLogin: function(user) {
+            userId = user ? user.uid : 0;
+        }
+    });
+
+    function gotoEdit(url, isMidNight) {
+        if (isMidNight) {
+            Dialog.alert({
+                title: '编辑提示',
+                subMsg: '晚23:00至次日8:00，因审核系统例行维护，您提交的版本可能需要较长时间才能通过，望您谅解。',
+                onConfirm: function() {
+                    window.location.href = url;
+                }
+            });
+        } else {
+            window.location.href = url;
+        }    
+    }
+
+    function showChoseEditDialog(pgcCallback, ugcCallback) {
+        new Dialog({
+            title: '编辑提示',
+            subMsg: '<p>您已开通企业百科服务，推荐您直接编辑“官方资料”，官方资料仅限企业百科绑定的百科账号修改，其他用户账号不可修改。</p><p>如果您想修改其他网友编辑的普通词条内容，请注意遵守百科百科编辑规则。<p>',
+            btns: [{
+            key: 'pgc',
+            text: '编辑官方资料'
+            }, {
+            style: 'white',
+            text: '修改普通词条',
+            key: 'ugc'
+            }],
+            onBtnClick: function(btnKey){
+                if (btnKey === 'pgc') {
+                    pgcCallback && pgcCallback();
+                } else if (btnKey === 'ugc') {
+                    ugcCallback && ugcCallback();
+                }
+            }
+        }).show();
+    }
+
+    function checkUserLegal(res) {
+        var legal = false;
+        switch (res.errno) {
+            case 100001:
+                userLogin.showLoginPop();
+                break;
+            case 100006:
+                unameFiller.show();
+                break;
+            default:
+                legal = true;
+        }
+        return true;
+    }
+
+    function checkUgc(res, url) {
+        if (res.errno) {
+            switch (res.errno) {
+                case 100005:
+                    alert('对不起，您目前被封禁');
+                    break;
+                case 110001:
+                    alert('对不起，该词条被锁定');
+                    break;
+                case 110007:
+                    alert('对不起，消歧页无法编辑');
+                    break;
+                case 110005:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>四级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://baike.bdimg.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 110008:
+                    Dialog.alert({
+                    title: '编辑提示',
+                    mainMsg: '对不起，您暂时没有权限编辑该词条。',
+                    subMsg: '<p>您好，该词条内容已较丰富，现仅对百科等级达到<b>六级</b>且通过率达到<b>85%</b>的科友开放编辑。</p><p>当您通过努力达到以上要求，就可以参与编辑该词条了。</p><p><img src="http://baike.bdimg.com/img/baike/usercenter/growuptask/star.gif" class="star" />参加<a target="_blank" href="/usercenter#guide">成长任务</a>，更快掌握百科编辑技巧，加速升级！</p>'
+                    });
+                    break;
+                case 470001:
+                    alert('系统错误，请刷新重试');
+                    break;
+            }
+        } else {
+            if (!res.data.right.noAudit) {
+                Dialog.alert({
+                    title: '编辑提示',
+                    subMsg: '很抱歉，该词条有其他用户编辑的版本正在提交，您暂时无法编辑。<br/>百科建议您晚些时候再编辑该词条，或者尝试编辑其他的词条。'
+                });
+                return;
+            }
+            gotoEdit(url, res.data.notice.isMidNight);
+        }
+    }
+
+    $(document.body).on('click', '.j-edit-link', function() {
+        var dl = $(this).attr('data-edit-dl');
+        if (dl) {
+            var url = editUrl + '?dl=' + dl;
+        } else {
+            var url = editUrl;
+        }
+
+        rightCheck.preeditCheck('2385376', 'DMA', '直接存储器访问', '116504544', function(res) {
+            if (!checkUserLegal(res)) {
+                return;
+            }
+            if (isEnterprise && enterpriseOwnerUserId === userId) {
+                showChoseEditDialog(function() {
+                    location.href = pgcUrl;
+                }, function() {
+                    checkUgc(res, url);
+                });
+            } else {
+                checkUgc(res, url);
+            }
+        });
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar-n/searchbar.js');  
+    initSearchbar($('.wgt-searchbar-simple'));
+  }();
+!function(){    require.async("wiki-lemma:widget/tools/searchHeader/toolButtons-n/toolButtons.js",function(init){
+        init({
+            lemmaId:"32471",
+            subLemmaId:"5048463",
+            newLemmaId:"2385376"
+        });
+    });
+}();
+!function(){    require('wiki-lemma:widget/tools/searchHeader/toolButtons-n/userInfo.js')();
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js'),
+      animation = require('wiki-common:widget/util/animation.js'),
+      nslog = require('wiki-common:widget/component/nslog/nslog.js'),
+      initSearchbar = require('wiki-common:widget/component/searchbar/searchbar.js');
+
+    var isFadeIn = false,
+        isFadeOut = false;
+
+    var fadeInAni, fadeOutAni;
+
+    $(window).on('scroll', function(e) {
+        var scrollTop = $(this).scrollTop();
+
+        if (scrollTop > 200 && !isFadeIn && $('.lemmaWgt-searchHeader').css('display') == 'none') {
+            fadeOutAni && fadeOutAni.stop();
+            fadeInAni = animation({
+                duration: 200,
+                easing: 'linear',
+                onStart: function() {
+                    isFadeOut = false;
+                    isFadeIn = true;
+                    $('.lemmaWgt-searchHeader').css('display', 'block');
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', progress)
+                },
+                onComplete: function(progress) {
+                    isFadeIn = false;
+                    nslog(10010007);
+                }
+            });
+        } else if (scrollTop <= 200 && !isFadeOut && $('.lemmaWgt-searchHeader').css('display') == 'block') {
+            fadeInAni && fadeInAni.stop();
+            fadeOutAni = animation({
+                duration: 300,
+                easing: 'linear',
+                onStart: function() {
+                    $('.lemmaWgt-searchHeader #suggestion').hide();
+                    isFadeIn = false;
+                    isFadeOut = true;
+                },
+                onStep: function(progress) {
+                    $('.lemmaWgt-searchHeader').css('opacity', 1 - progress);
+                },
+                onComplete: function(progress) {
+                    isFadeOut = false;
+                    $('.lemmaWgt-searchHeader').css('display', 'none');
+                }
+            });
+        }
+    });
+}();
+!function(){    require('wiki-lemma:widget/tools/newSideShare/qzopensl.js');
+    require.async("wiki-lemma:widget/tools/newSideShare/taskSideShare.js",function(taskShare){
+        taskShare.init({
+            title: 'DMA',
+            desc: "DMA(Direct Memory Access\uff0c\u76f4\u63a5\u5185\u5b58\u5b58\u53d6) \u662f\u6240\u6709\u73b0\u4ee3\u7535\u8111\u7684\u91cd\u8981\u7279\u8272\uff0c\u5b83\u5141\u8bb8\u4e0d\u540c\u901f\u5ea6\u7684\u786c\u4ef6\u88c5\u7f6e\u6765\u6c9f\u901a\uff0c\u800c\u4e0d\u9700\u8981\u4f9d\u8d56\u4e8e CPU \u7684\u5927\u91cf\u4e2d\u65ad\u8d1f\u8f7d\u3002\u5426\u5219\uff0cCPU \u9700\u8981\u4ece\u6765\u6e90\u628a\u6bcf\u4e00\u7247\u6bb5\u7684\u8d44\u6599\u590d\u5236\u5230\u6682\u5b58\u5668\uff0c\u7136\u540e\u628a\u5b83\u4eec\u518d\u6b21\u5199\u56de\u5230\u65b0\u7684\u5730\u65b9\u3002\u5728\u8fd9\u4e2a\u65f6\u95f4\u4e2d\uff0cCPU \u5bf9\u4e8e\u5176\u4ed6\u7684\u5de5\u4f5c\u6765\u8bf4\u5c31\u65e0\u6cd5\u4f7f\u7528\u3002",
+            pic: 'https:\/\/imgsa.baidu.com\/baike\/w%3D268\/sign=4c141965c98065387beaa315afdda115\/e4dde71190ef76c678e867009e16fdfaaf5167e7.jpg',
+            url: '',
+            qqPic: 'http:\/\/h.hiphotos.baidu.com\/baike\/whfpf%3D262%2C262%2C50\/sign=0b382e8fa7c27d1ea57368847de89f58\/e4dde71190ef76c678e867009e16fdfaaf5167e7.jpg'
+        });
+    });
+}();
+!function(){    var $ = require('wiki-common:widget/lib/jquery/jquery.js');
+    var nslog = require("wiki-common:widget/component/nslog/nslog.js");
+    var testElem = require('wiki-common:widget/component/testElem/testElem.js');
+    var cmsModuleLoader = require('wiki-common:widget/component/cmsModuleLoader/cmsModuleLoader.js');
+
+    function requireAsync() {
+        require.async('wiki-lemma:widget/tools/announcement/announcement.js');
+    }
+
+    cmsModuleLoader('/api/wikiui/getlemmaconfig', [{
+        name: 'announcement',
+        script: 'wiki-lemma:widget/tools/announcement/announcement.js'
+    }]);
+
+    require.async("wiki-lemma:widget/tools/lazyLoad/lazyLoad.js", function(LazyLoad) {
+        new LazyLoad();
+    });
+
+    require.async(['wiki-common:widget/component/nslog/nslog.js', 'wiki-common:widget/lib/jquery/jquery.js'], function(nslog, $) {
+        nslog().setGlobal({
+            lemmaId: "32471",
+            newLemmaId: "2385376",
+            subLemmaId: "5048463",
+            lemmaTitle: "DMA"
+        });
+
+        // 词条页 pv
+        nslog(9322);
+
+        // 新版头部pv（小流量）
+        if ($('.pc-header-new').length > 0) {
+            nslog(9069);
+        }
+
+        // 链接点击 pv
+        var lemmaPageRegExp = new RegExp(/\/subview\/\d+|\/view\/\d+|\/item\//i);
+        $('body').on('mousedown', 'a', function() {
+            var href = $(this).attr('href');
+            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0) {
+                // 链接点击 pv
+                nslog(10000001);
+                if (lemmaPageRegExp.test(href)) {
+                    // 词条页链接点击 pv
+                    nslog(10000002, window.location.href, {
+                        targetTitle: $(this).text()
+                    });
+                }
+            }
+        });
+
+        /****** 词条页站内流转需求统计 start ******/
+        (function () {
+            // 各种统计配置
+            var circulationLinkCfg = {
+                innerLink: [ // 内链
+                    '.para',
+                    '.lemmaWgt-baseInfo-simple-largeMovie',
+                    '.lemmaWgt-baseInfo-simple-largeStar',
+                    '.basic-info .basicInfo-block',
+                    '.lemma-summary',
+                    '.lemmaWgt-lemmaSummary',
+                    '.view-tip-panel',
+                    '.horizontal-module',
+                    '.lemmaWgt-roleIntroduction',
+                    '.dramaSeries .dramaSerialList',
+                    '.module-music',
+                    '.table-view',
+                    '[log-set-param="table_view"]',
+                    '.list-module',
+                    '.cell-module',
+                    '.baseBox .dl-baseinfo', // 配置后台字段
+                    '.pvBtn-box .leadPVBtnWrapper',
+                    '.drama-actor',
+                    '#staffList',
+                    '.starMovieAndTvplay',
+                    '.main_tab:not(.main_tab-defaultTab)' // 除去词条tab外的tab
+                ],
+                relationTable: '.rs-container-foot', // 关系表
+                peopleRelation: '.star-info-block.relations, .lemmaWgt-focusAndRelation', // 人物关系（明星+普通）
+                moduleActors: '.featureBaseInfo .actors, .lemmaWgt-majorActors', // 主要演员、嘉宾、主持人
+                moduleWorks: '.featureBaseInfo .works, .large-feature .works', // 代表作品
+                moduleQuarterly: '.featureBaseInfo .po_quarterly, .mian_quarterly', // 分季介绍
+                rankStar: '.rank-list.stars-rank', // 明星榜
+                rankDrama: '.drama-rank-list', // 电视剧榜
+                specialTopic: '.special-topic', // 专题模块
+                modDetailTable: '#modDetailTable', // 关系表出图
+                chuizhitu: '.chuizhitu', // 垂直化模块
+                polysemantList: '.polysemantList-wrapper' // 义项切换
+            };
+            /****** 连接统计 ******/
+            function clickNslogFn() {
+                for (var k in circulationLinkCfg) {
+                    if (k === 'innerLink') {
+                        // 词条内链到词条页
+                        var tempArr = circulationLinkCfg[k];
+                        for (var i = 0, l = tempArr.length; i < l; i++) {
+                            tempArr[i] += ' a';
+                        }
+                        var sSelector = tempArr.join(', ');
+
+                        $('body').on('mousedown', sSelector, {key: k},function(e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            var tar = $(this).attr('target') || '';
+                            if (href && href.indexOf('/') >= 0 && href.indexOf('#') !== 0
+                            && tar === '_blank' && lemmaPageRegExp.test(href)) {
+                                // 词条页普通内链点击 pv
+                                nslog(10000004, null ,{division: key});
+                            }
+                        });
+                    } else {
+                        // 模块到词条页链接
+                        $(circulationLinkCfg[k]).on('mousedown', 'a', {key: k}, function (e) {
+                            var key = e.data.key;
+                            var href = $(this).attr('href');
+                            if (href && href.indexOf('#') !== 0 && lemmaPageRegExp.test(href)) {
+                                // 词条页配置模块链接点击 pv
+                                nslog(10000004, null, {division: key});
+                            }
+                        });
+                    }
+                }
+            }
+            // 发起统计请求
+            clickNslogFn();
+
+            /****** 各模块展现量pv ******/
+            function checkModuleIsShow() {
+                var result = [];
+                for (var k in circulationLinkCfg) {
+                    if (k !== 'innerLink' && k !== 'relationTable') {
+                        !!$(circulationLinkCfg[k]).html() && result.push(k);
+                    }
+                }
+                if (result.length > 0) {
+                    nslog(10000005, null, {showModules: result.join(',')});
+                }
+            }
+            checkModuleIsShow();
+
+        })();
+        /****** 词条页站内流转需求统计 end ******/
+
+    });
+
+    // 广告接入 wikiad 统一加载
+    // log 词条页广告被拦截情况（此处 log 请求行为）
+    nslog(70000101, window.location.href, {
+        api: 'lemma-ad',
+        action: 'request'
+    });
+    $.ajax({
+        type: 'GET',
+        url: '/api/wikiad/getsquirrels',
+        data: {
+            lemmaId: 2385376
+        },
+        cache: false,
+        dataType: 'JSON',
+        success: function (res) {
+            // log 词条页广告被拦截情况（此处 log 请求成功）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'success'
+            });
+
+            if (!res.errno) {
+                if (res.data[5]) {
+                    require.async(['wiki-lemma:widget/promotion/rightPreciseAd/rightPreciseAd.js'], function(rightPreciseAd) {
+                        rightPreciseAd(res.data[5]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[5][0].adId,
+                            adTitle: res.data[5][0].name,
+                            adPos: 5
+                        });
+                    });
+                } else if (res.data[1]) {
+                                        require.async(['wiki-lemma:widget/promotion/vbaike/vbaike.js'], function(vbaike) {
+                        vbaike(res.data[1]);
+                        for(var i in res.data[1]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[1][i].adId,
+                                adTitle: res.data[1][i].name,
+                                adPos: 1
+                            });
+                        }
+                    });
+                                    }
+                if (res.data[9]) {
+                                        require.async(['wiki-lemma:widget/promotion/rightBigAd/rightBigAd.js'], function(rightBigAd) {
+                        rightBigAd(res.data[9]);
+                            nslog(10002201, location.href, {
+                                adId: res.data[9][0].adId,
+                                adTitle: res.data[9][0].name,
+                                adPos: 9
+                            });
+                    });
+                                    } else if(res.data[2]) {
+                    require.async(['wiki-lemma:widget/promotion/slide/slide.js'], function(slide) {
+                        slide(res.data[2]);
+                        for(var i in res.data[2]) {
+                            nslog(10002201, location.href, {
+                                adId: res.data[2][i].adId,
+                                adTitle: res.data[2][i].name,
+                                adPos: 2
+                            });
+                        }
+                    });
+                }
+                if (res.data[3]) {
+                                        require.async(['wiki-lemma:widget/promotion/topAd/topAd.js'], function(topAd) {
+                        topAd(res.data[3]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[3][0].adId,
+                            adTitle: res.data[3][0].name,
+                            adPos: 3
+                        });
+                    });
+                                    }
+                if (res.data[4]) {
+                                        require.async(['wiki-lemma:widget/promotion/rightAd/rightAd.js'], function(rightAd) {
+                        rightAd(res.data[4]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[4][0].adId,
+                            adTitle: res.data[4][0].name,
+                            adPos: 4
+                        });
+                    });
+                                    }
+                if (res.data[15]) {
+                    require.async(['wiki-lemma:widget/promotion/banner/banner.js'], function(banner) {
+                        banner(res.data[15]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[15][0].adId,
+                            adTitle: res.data[15][0].name,
+                            adPos: 15
+                        });
+                    });
+                }
+                if (res.data[16]) {
+                    require.async(['wiki-lemma:widget/promotion/declaration/declaration.js'], function(declaration) {
+                        declaration(res.data[16]);
+                        nslog(10002201, location.href, {
+                            adId: res.data[16][0].adId,
+                            adTitle: res.data[16][0].name,
+                            adPos: 16
+                        });
+                    })
+                }
+            } else {
+                return;
+            }
+
+            setTimeout(function () {
+                var elemArr = {};
+                res.data[1] && res.data[1].length > 0 && (elemArr['lemma-vbaike-ad'] = $('.lemmaWgt-promotion-vbaike .promotion_viewport a:eq(0) img').get(0));
+                res.data[2] && res.data[2].length > 0 && (elemArr['lemma-slide-ad'] = $('.lemmaWgt-promotion-slide .promotion_viewport a:eq(0) img').get(0));
+                res.data[3] && res.data[3].length > 0 && (elemArr['lemma-navbar-ad'] = {
+                    node: $('.header [nslog-type="10002202"]').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.header [nslog-type="10002202"]').css('background-image').indexOf(res.data[3][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[4] && res.data[4].length > 0 && (elemArr['lemma-side-ad'] = {
+                    node: $('.right-ad img').get(0),
+                    validations: {
+                        'noBackgroundImage': function() {
+                            return $('.right-ad img').attr('src').indexOf(res.data[4][0].picUrl) < 0
+                        }
+                    }
+                });
+                res.data[15] && res.data[15].length > 0 && (elemArr['lemma-configModule-banner'] = $('.configModuleBanner').get(0));
+                res.data[16] && res.data[16].length > 0 && (elemArr['lemma-configModule-declaration'] = $('.lemmaWgt-declaration').get(0));
+
+                testElem.log(elemArr, 70000102);
+            }, 1000);
+        },
+        error: function () {
+            // log 词条页广告被拦截情况（此处 log 请求失败）
+            nslog(70000101, window.location.href, {
+                api: 'lemma-ad',
+                action: 'error'
+            });
+        }
+    });
+
+    // 设置分享内容
+    window.BKShare.setCommon({
+        bdText: "\u3010DMA_\u767e\u5ea6\u767e\u79d1\u3011DMA(Direct Memory Access\uff0c\u76f4\u63a5\u5185\u5b58\u5b58\u53d6) \u662f\u6240\u6709\u73b0\u4ee3\u7535\u8111\u7684\u91cd\u8981\u7279\u8272\uff0c\u5b83\u5141\u8bb8\u4e0d\u540c\u901f\u5ea6\u7684\u786c\u4ef6\u88c5\u7f6e\u6765\u6c9f\u901a\uff0c\u800c\u4e0d\u9700\u8981\u4f9d\u8d56\u4e8e CPU \u7684\u5927\u91cf\u4e2d\u65ad\u8d1f\u8f7d\u3002\u5426\u5219\uff0cCPU \u9700\u8981\u4ece\u6765\u6e90\u628a\u6bcf\u4e00\u7247\u6bb5\u7684\u8d44\u6599\u590d\u5236\u5230\u6682\u5b58\u5668\uff0c\u7136\u540e\u628a\u5b83\u4eec\u518d\u6b21\u5199\u56de\u5230\u65b0\u7684\u5730\u65b9\u3002\u5728\u8fd9\u4e2a\u65f6\u95f4\u4e2d\uff0cCPU \u5bf9\u4e8e\u5176\u4ed6\u7684\u5de5\u4f5c\u6765\u8bf4\u5c31\u65e0\u6cd5\u4f7f\u7528\u3002.....\uff08\u5206\u4eab\u81ea@\u767e\u5ea6\u767e\u79d1\uff09",
+        bdDesc: '',
+        bdUrl: 'http:\/\/baike.baidu.com\/subview\/32471\/5048463.htm',
+        bdPic: '',
+        onBeforeClick: function (){
+            $('.bdshare_dialog_box').hide();
+        }
+    });
+
+    // 底部投诉带入当前页面 url
+    var map = [1, 2, 4, 3];
+    $('.wgt-footer-main .suggestion').find('a').each(function(i) {
+        $(this).attr('href', 'http://tousu.baidu.com/baike/add?word=DMA' + '&&submit_link=' + encodeURIComponent(window.location.href) + '#' + map[i]);
+    });
+
+    // 为超出预设内容的表格添加table-responsive控制
+    $('.main-content').find('table').each(function(index) {
+        var $that = $(this);
+        if ($that.width() > 790) {
+            $that.wrap('<div class="table-responsive"></div>');
+        }
+    });
+}();
+!function(){      require('wiki-common:widget/component/psLink/psLink.js');
+    }();</script><div class="wgt_overlay" style="opacity: 0; position: fixed;"></div>
+<script type="text/javascript">
+  var Hunter = window.Hunter || {};
+  Hunter.userConfig = Hunter.userConfig || [];
+  </script>
+<script type="text/javascript" src="./DMA（直接存储器访问）_百度百科_files/baike.js.下载" defer=""></script><script type="text/javascript">
+  // DOM Ready时，统计用户可操作时间。
+  alog('speed.set', 'drt', +new Date);
+
+  void function(a,b,c,d,e,f){function g(b){a.attachEvent?a.attachEvent("onload",b,!1):a.addEventListener&&a.addEventListener("load",b)}function h(a,c,d){d=d||15;var e=new Date;e.setTime((new Date).getTime()+1e3*d),b.cookie=a+"="+escape(c)+";path=/;expires="+e.toGMTString()}function i(a){var c=b.cookie.match(new RegExp("(^| )"+a+"=([^;]*)(;|$)"));return null!=c?unescape(c[2]):null}function j(){var a=i("PMS_JT");if(a){h("PMS_JT","",-1);try{a=a.match(/{["']s["']:(\d+),["']r["']:["']([\s\S]+)["']}/),a=a&&a[1]&&a[2]?{s:parseInt(a[1]),r:a[2]}:{}}catch(c){a={}}a.r&&b.referrer.replace(/#.*/,"")!=a.r||alog("speed.set","wt",a.s)}}if(a.alogObjectConfig){var k=a.alogObjectConfig.sample,l=a.alogObjectConfig.rand;d="https:"===a.location.protocol?"https://fex.bdstatic.com"+d:"http://fex.bdstatic.com"+d,k&&l&&l>k||(g(function(){alog("speed.set","lt",+new Date),e=b.createElement(c),e.async=!0,e.src=d+"?v="+~(new Date/864e5)+~(new Date/864e5),f=b.getElementsByTagName(c)[0],f.parentNode.insertBefore(e,f)}),j())}}(window,document,"script","/hunter/alog/dp.min.js");
+</script>
+
+<div class="wgt_bubble wgt-bubble-userMenu" style="display: none;"><ul>
+<li class="top"><a href="http://baike.baidu.com/usercenter" target="_blank">我的百科</a></li>
+<li><a href="http://baike.baidu.com/usercenter/tasks#mine" target="_blank">我的任务</a></li>
+<li><a href="http://baike.baidu.com/usercenter/lemmas" target="_blank">我的词条</a></li>
+<li><a href="https://passport.baidu.com/center" target="_blank">账号设置</a></li>
+<li class="bottom logout"><a data-action="logout" href="javascript:;">退出</a></li>
+</ul><em class="tail"></em></div><div class="right-ad"><a class="rightAd-link" nslog-type="10002202" nslog-params="{&quot;adId&quot;:&quot;1984&quot;, &quot;adTitle&quot;: &quot;非遗美食周-KS-6.10-14&quot;, &quot;adPos&quot;: 4}" title="" href="https://baike.baidu.com/feiyi" target="_blank"><img src="./DMA（直接存储器访问）_百度百科_files/5fdf8db1cb134954ef7a6d375c4e9258d1094a79.jpg" alt=""></a><a class="rightAd-close" href="javascript:;"></a></div><div class="wgt_bubble wgt-bubble-userMsg" style="display: none;"><ul>
+<li class="top"><a href="http://baike.baidu.com/messages" target="_blank"><span class="userMsgType">通知</span></a></li><li class="bottom"><a href="https://gsp0.baidu.com/8_UFsjip0QIZ8tyhnq/" target="_blank"><span class="userMsgType">私信</span></a></li>
+</ul><em class="tail"></em></div></body></html>

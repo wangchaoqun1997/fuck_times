@@ -1,0 +1,1 @@
+﻿document.writeln("<a rel=\"external nofollow\" href=\"http:\/\/www.yutianedu.com\/list.asp?unid=22475\" target=\"_blank\"><img src=\"http:\/\/www.yutianedu.com\/pic\/linux95070.gif\" alt=\"\" width=\"970\" height=\"60\" \/><\/a>")

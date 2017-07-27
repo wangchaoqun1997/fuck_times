@@ -1,0 +1,1 @@
+define("wiki-common:widget/component/headTabBar/headTabBar.js",function(e){var a=e("wiki-common:widget/lib/jquery/jquery.js");a(".wiki-common-headTabBar a").not(".gmore").on("click",function(e){e.preventDefault();var o=a.trim(a(".wgt-searchbar #query").val());window.location.href=o?a(this).attr("data-href")+encodeURIComponent(o):a(this).attr("href")})});

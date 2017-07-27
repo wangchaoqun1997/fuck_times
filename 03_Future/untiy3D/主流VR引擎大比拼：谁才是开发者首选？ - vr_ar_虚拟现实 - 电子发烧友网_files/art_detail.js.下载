@@ -1,0 +1,1670 @@
+$(function(){//document.ready
+	$.getUrlParam = function(name) {
+		var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		var r = window.location.search.substr(1).match(reg);
+		if (r!=null) return unescape(r[2]);
+		return null;
+	}
+	function getParam(name,str) {
+		var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+		var r = str.substr(1).match(reg);
+		if (r!=null) return unescape(r[2]);
+		return null;
+	}
+
+	//文章标题上面加广告 2014年7月22日 by 刘平
+	var bottom_ad = '<div id="AdArticleDetailTitle" class="AdArticleDetailTitle mt5"></div>';
+	$('#content .mt5').after(bottom_ad);
+	function openX_ad(posterid,htmlid,width,height){
+		if($(htmlid).length > 0){
+			var randomnumber = Math.random();
+			var ga = document.createElement('iframe');
+			ga.src = 'http://www1.elecfans.com/www/delivery/myafr.php?target=_blank&cb='+randomnumber+'&zoneid='+posterid;
+			ga.width = width;
+			ga.height = height;
+			ga.frameBorder = 0;
+			ga.scrolling = 'no';
+			var s = $(htmlid).append(ga);
+		}
+	}
+	openX_ad(287,'#AdArticleDetailTitle',660,70);
+
+
+	//提示用户登录  2014年9月12日 by 陈巧敏
+	//需要提示登录时吧log-tip1改回log-tip
+	/*var loginTip ='<div class="w100" id="log-tip1">'+
+						'<div class="footer-tip clearfix">'+
+							'<a href="http://t.elecfans.com/live/232.html?from=HomepageBottomBanner"  target="_blank"><img style="height: 194px;margin-top: -47px;" src="/skin-2012/images/extend.png" /></a>'+
+						'</div>'+
+					'<div class="close" id="close"></div>'+
+		'</div>';
+    $("body").append(loginTip);
+	$("#log-tip1").css({'padding':'0px','height':'148px','z-index':'10'});*/
+    var isclose_login = false;
+    var flagDetailLogin = null;
+    $.get(ElecfansApi_checklogin, {act:'article'},function(data,textStatus){
+       if( data != "" ){
+	   	    var info = $.parseJSON(data);
+	   	    if(info.user_totalnum>0){
+				$('#user_totalnum').html(info.user_totalnum);
+				flagDetailLogin = false;
+				// $("#log-tip").show();
+			} else {
+       	    	flagDetailLogin = true;
+				CheckEmailInfo(data);
+    		}
+       }
+	})
+	$(window).scroll(function(){
+	    if(isclose_login === false && flagDetailLogin === false && getcookieEx('bottomloginbox') != 1){
+			$("#log-tip").show();
+		}
+	});
+
+	/*  $('#close').click(function(){
+		//需要提示登录时把注释打开
+    	isclose_login = true;
+    	setcookieEx('bottomloginbox', 1, null, '/');
+		$("#log-tip1").hide();
+	});*/
+	$('.login-tip').click(
+        function(){
+        	/*var dialog = new Dialog({
+					title : '登录'
+				})
+				dialog.pop();
+				dialog.showLogin();
+				return false;
+
+				*/
+				$.ssoDialogLogin();//单点登录
+				return false;
+        }
+	);
+
+	$("#log-tip").show();
+	////add by liuping 阅读权限需要判断   20114年9月12日 页面布局修改 by 陈巧敏
+	function handlePermission(article) {
+
+		if (article.arcrank == 10 && !article.uid) {
+			if (!isFromOtherSite()) {
+
+				//调用单点登录
+				var setIframe=$(
+					'<div class="act-login">'+
+						'<h2 class="act-login-hd">阅读全文，请先登录</h2>'+
+						'<div class="clearfix mt10">'+
+						'<iframe name="sso-LoginIframe" frameborder="0" scrolling="no" style="display:block;margin:0 auto;"></iframe>'+
+						'</div>'+
+					'</div>'
+				);
+				$('.article-content').html(setIframe);
+				$.ssoPageLogin();
+				/*
+				var loginHtml = [
+								'<div class="act-login">',
+									'<h2 class="act-login-hd">阅读全文，请先登录</h2>',
+									'<div class="clearfix mt10">',
+									    '<div class="act-login-left">',
+											'<form method="post" name="login" id="article-detail-login" action="'+ElecfansApi_login+'" autocomplete="off">',
+												'<input type="hidden" name="fmdo" value="login" />',
+												'<input type="hidden" name="dopost" value="login" />',
+											    '<ul class="act-login-area mt10">',
+												    '<li class="error" id="login-error" style="display:none;"></li>',
+													'<li>',
+														'<input class="login-input login-input-username" type="text" id="article-detail-username" placeholder="请输入邮箱或用户名" name="userid">',
+													'</li>',
+													'<li>',
+														'<input class="login-input login-input-passsword" type="password" id="article-detail-password" placeholder="请输入密码" name="pwd" maxlength="100">',
+													'</li>',
+	                                                '<li class="clearfix rem-for">',
+	                                                    '<input class="rem" type="checkbox" id="remenber" name="remenber" value=""/><label class="rem-font" for="remember">记住我</label>',
+	                                                    '<a class="forget" target="_blank" href="http://bbs.elecfans.com/member.php?mod=logging&action=login&referer=">忘记密码？</a>',
+													'</li>',
+													'<li>',
+														'<button type="submit" id="article-detail-submit" style="cursor:pointer;" class="ui-btn-red">登 录</button>',
+													'</li>',
+											    '</ul>',
+											'</form>',
+										'</div>',
+										'<div class="act-login-right">',
+											'<p class="font-p">还没有电子发烧友账号</p>' ,
+											'<p><a class="reg" target="_blank" href="'+ELECFANS_BBS+'/member.php?mod=reg">立即注册 >> </a></p>',
+											'<p class="font-p">使用以下账号快速登录</p>' ,
+											'<p class="clearfix"><a class="icon1" href="/thirdparty/qq/login.php" target="_blank"></a><a class="icon2" href="/thirdparty/weibo/index.php" target="_blank"></a></p>',
+										'</div>',
+									'</div>',
+								'</div>'
+								].join('');
+				$('.rem').click(
+					function(){
+						css( {"width": "14px" , "height": "14px" , "border": "0px" , "backgroundColor": "#c80d00","color":"#fff"});
+					}
+				);
+				$('.tag').html('');
+				$('.article-content').html(loginHtml);
+				var username = $('#article-detail-username');
+				var password = $('#article-detail-password');
+				var username_empty = '请输入账号';
+				var username_err = '账号不存在';
+				var password_err = '密码错误,请重新输入';
+				var password_lenErr =  '×密码不符合要求：<span class="grey9">6-16位,英文或数字</span>';
+				var password_empty = '请输入登录密码：<span class="grey9">6-16位,英文或数字</span>';
+				//登录错误提示
+				function tipErr(obj,text,display){
+					var display = display ? display : "block";
+					$('#login-error').html(text).css({"display":display,"color": "#c00" });
+				}
+				// function tipErr1(obj,text,display){
+				// 	var display = display ? display : "block";
+				// 	$('#login-error1').html(text).css({"display":"block","color": "#c00" });
+				// }
+				//登录前验证用户名密码
+				function loginRequest(formData, jqForm, options) {
+					var usernameVal = username.val();
+					if(  usernameVal.length > 0 ){
+						tipErr( username , "" , "none" );
+					}else{
+						tipErr( username , username_empty );
+						username.focus().addClass('red-input');
+						return false;
+					}
+					//密码
+					var len = password.val().length;//获取密码长度
+					if( len > 0 ){
+						if( len < 3 || len > 16 ){//密码长度不能小于6，大于16
+							tipErr( password, password_lenErr );
+							password.focus().addClass('red-input');
+							return false;
+						}else{
+							tipErr( password,"","none");
+						}
+					}else{
+						tipErr( password, password_empty );
+						password.focus().addClass('red-input');
+						return false;
+					}
+
+					$('#article-detail-submit').html('登录中...').attr('disabled', 'disabled');
+					var queryString = $.param(formData);
+					username.removeClass('red-input');
+					password.removeClass('red-input');
+					return true;
+				}
+				//ajax登录
+				$("#article-detail-login").ajaxForm({
+					beforeSubmit:loginRequest,
+					success:function(responseText,statusText){
+						$('#article-detail-submit').html('登 录').removeAttr('disabled');
+						if( responseText == "用户名不存在"){
+							tipErr( username , username_err );
+							username.focus().addClass('red-input');
+							return false;
+						}
+						if( responseText == "密码错误"){
+							tipErr( password , password_err );
+							password.focus().addClass('red-input');
+							return false;
+						}
+						//执行同步登录
+						eval("urlarr = " + responseText);
+						for(var i=0;i<urlarr.length;i++){
+							$.getScript(urlarr[i]);
+						}
+
+						//执行登录检查
+						setTimeout(function(){
+							window.location.reload();
+						}, 2000);
+					}//end success:function
+				});//end ajaxForm
+
+				*/
+
+			}
+		}
+	}
+
+
+	function isFromOtherSite() {
+		var ref = document.referrer;
+		if (ref == '' || ref.indexOf('.elecfans.com') || ref.indexOf('.elecfans.net') != -1) {
+			return false;
+		}
+		return true;
+	}
+	////add by liuping 邮件订阅需要判断是否登录跳转到不同的页面
+	if (!$('#email-subscribe').length > 0) {
+		$('.article > div.titBar > div.do').append('<a href="javascript:;" class="email-subscribe" target="_blank" id="email-subscribe">订阅</a>');
+	}
+	$('#email-subscribe').click(function(){
+		var curObj = $(this);
+		if ($('.u-name').length>0) {
+			curObj.attr('href', 'http://home.elecfans.com/infocenter.php?mod=spacecp&ac=email&op=work');
+		} else {
+			curObj.attr('href', 'http://www.elecfans.com/subscribe/index.html');
+		}
+	});
+	if (!$('#email-subscribe-len').length > 0) {
+		$('.share-wrap').after('<div class="email-subscribe-box"><a href="javascript:;" class="email-subscribe-len" target="_blank" id="email-subscribe-len"><span class="">免费订阅</span> ElecFans 信息速递，掌握即时科技产业动态与最新技术方案</a></div>');
+	}
+	$('#email-subscribe-len').click(function(){
+		var curObj = $(this);
+		if ($('.u-name').length>0) {
+			curObj.attr('href', 'http://home.elecfans.com/infocenter.php?mod=spacecp&ac=email&op=work');
+		} else {
+			curObj.attr('href', 'http://www.elecfans.com/subscribe/index.html');
+		}
+	});
+
+	var bd_time;
+	$('.detail-share').hover(function() {
+		var $this = $(this) ;
+			clearTimeout(bd_time)
+			time = setTimeout( function(){
+
+				$this.addClass('hover')
+				$('.slide-share').show();
+
+			}, 200 )
+
+	}, function() {
+		var $this = $(this)
+		setTimeout (function(){
+			$this.removeClass('hover')
+			$('.slide-share').hide();
+		},500)
+
+	});
+ELECFANS.UI.tab_switch = (function( tab_list, parents, tab_bd, curr_tab ) {
+
+		var $tab = $(tab_list)
+			,len = $tab.length
+			,delayTime;
+
+			for (var i = 0; i < len; i++) {
+
+				var $tab_item = $tab.eq(i).find('li');
+				$tab_item.hover(function() {
+
+					tab_hover( $(this) );
+
+				}, function() {
+
+					clearTimeout( delayTime )
+
+				})
+
+			}
+		function tab_hover( obj ) {
+
+			var $parent = obj.parents(parents)
+				,$tab_bd = $parent.find(tab_bd)
+				,index = obj.index();
+				if( obj.is('.'+curr_tab) ) {
+					return false;
+				}else {
+
+					delayTime = setTimeout( function(){
+						obj.siblings('li').removeClass(curr_tab);
+						obj.siblings('li').find('i').remove();
+						obj.append('<i class="icons"></i>');
+						obj.addClass(curr_tab);
+						$tab_bd.hide();
+						$tab_bd.eq(index).show();
+
+					}, 200 );
+				}
+
+		}
+
+	})( '.tab-list', '.tab-switch', '.tab-bd', 'curr' )
+	ELECFANS.UI.sayToYou = (function(){
+		if( $('.saytoyou').length > 0 ) {
+			$('.saytoyou').on('click', function() {
+				var dialog = new Dialog({
+									title : 'cherry有话对你说',
+									width : 640,
+									height : 515,
+									top    :  '15%'
+								})
+								dialog.pop();
+				var sayContent = $('.say-content').html();
+					$('#J_DialogContent').html(sayContent)
+			} )
+		}
+
+
+	})()
+
+	//百度分享
+	//2015-1-19改为2.0版本url
+	var getBdPic=$(".article-content img:eq(0)").attr("src");
+	if(!/(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?/.test(getBdPic)){
+		getBdPic="http://"+location.host+getBdPic;
+	}
+	window._bd_share_config = {
+		"common" : {
+
+			"bdPic" : !!getBdPic?getBdPic:''
+		},
+		"share" : {
+			"tag" : "share_1"
+		}
+	}
+	//zhcyy
+	with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+	//百度分享参数设置
+
+	//修改原页面百度分享处html代码结构
+	if($("#bdshare").length > 0){
+		// 检查新老页面，旧页面有此id
+		//修改标题行下方百度分享html代码
+		$(".slide-share").empty().html('<div class="bdsharebuttonbox" data-tag="share_1"><a class="bds_weixin" data-cmd="weixin" href="#">微信</a><a class="bds_qzone" data-cmd="qzone" href="#">QQ空间</a><a class="bds_tsina" data-cmd="tsina">新浪微博</a><a class="bds_tqq" data-cmd="tqq">腾讯微博</a><a class="bds_renren" data-cmd="renren">人人网</a></div>');
+
+		//修改评论区域上方百度分享html代码
+		$(".baidu-share").empty().html('<div class="bdsharebuttonbox" data-tag="share_1"><a class="bds_more" data-cmd="more">分享到：</a><a class="bds_weixin" data-cmd="weixin" href="#">微信</a><a class="bds_qzone" data-cmd="qzone" href="#">QQ空间</a><a class="bds_tsina" data-cmd="tsina">新浪微博</a><a class="bds_tqq" data-cmd="tqq">腾讯微博</a></div>');
+	}
+
+
+		var webid = $("#webID").val();
+
+		//新版评论使用不同的html结构
+		if ($('#share-weibo').length == 0) {
+			var newCommentHtml = ['<div class="commentForm-area" id="comment-noneedlogin">'
+								,'	<div id="commentForm-wrap">'
+								,'		<form action="'+ElecfansApi_arccomment+'" method="POST" name="feedback" id="commentForm">'
+								,'			<fieldset>'
+								,'				<legend>发表评论</legend>'
+								,'				<input type="hidden" name="dopost" value="apiPubComment" />'
+								,'				<input type="hidden" name="aid" id="webID" value="'+webid+'" />'
+								,'				<div class="clearfix">'
+								,'					<div class="wbavatar">'
+                                ,'            			<p class="login_pic"><img width="60" height="60" id="comment-c-avatar" src="/skin-2014/images/e-Avatar.png" alt="" title=""></p>'
+                                ,'            			<p id="comment-c-username">elecfans网友</p>'
+	                            ,'                    </div>'
+								,'					<div class="textarea">'
+								,'						<textarea name="content" class="comment-msg" id="cmtMsg" placeholder="我来评论..."></textarea>'
+								,'					</div>'
+								,'				</div>'
+								,'				<div class="btn-area comment-btn-area group">'
+								,'					<div class="btn-hasLoading-wrap">'
+								,'						<span class="loading">'
+								,'							<img src="http://skin.elecfans.com/images/loading.gif" />'
+								,'						</span>'
+								,'						<button type="submit" class="login-submit">发表</button>'
+								,'					</div>'
+								,'					<div class="weibo-area">'
+								,'						分享到：'
+								,'						<label class="check-sina"><input autocomplete="off" id="share-weibo" type="checkbox" name="" value="新浪微博"></label>'
+								,'						<label class="check-tencent"><input autocomplete="off" id="share-qq" type="checkbox" name="" value="腾讯微博"></label><span id="share-qq-btn"></span>'
+								,'					</div>'
+								,'					<!-- <div class="cmt-tip" id="J_CmtTip">'
+								,'						<span class="black">技术交流、积极发言！</span> 发表评请遵守相关规定。'
+								,'				</div> -->'
+								,'				</div>'
+								,'			</fieldset>'
+								,'		</form>'
+								,'	</div>'
+								,'</div>'
+								,'<div class="comment-hd clearfix">'
+								,'	<h2 class="comment-title">用户评论（<span id="J_CmtNum2">0</span>）</h2>'
+								,'	<div class="comment-nav">'
+								,'		<ul>'
+
+								,'			<li class="cur comment-order-nav">'
+								,'				<a id="cnews" href="javascript:;" class="comment-order" data-url="'+ElecfansApi_arcinfo+'?dopost=apiGetComment&amp;order=new">最新</a>'
+								,'			</li>'
+								,'			<li class="comment-order-nav">'
+								,'				<a id="cold" status href="javascript:;" class="comment-order" data-url="'+ElecfansApi_arcinfo+'?dopost=apiGetComment&amp;order=old">最早</a>'
+								,'			</li>'
+								,'			<li class="comment-order-nav">'
+								,'				<a id="chot" href="javascript:;" class="comment-order" data-url="'+ElecfansApi_arcinfo+'?dopost=apiGetComment&amp;order=hot">最热</a>'
+								,'			</li>'
+
+								,'		</ul>'
+								,'	</div>'
+								,'</div>'
+								,'<div>'
+								,'	<!-- 评论列表 -->'
+								,'	<ul id="comment-list">'
+								,'	</ul>'
+								,'</div>'].join('');
+			$("#comment").html(newCommentHtml);
+		}
+
+		//获取收藏数，评论数，下载次数-----------------------------------------------------------
+		function GetNum(){
+				$.get(''+ElecfansApi_arcinfo+'?dopost=arcinfo&aid='+webid,function(data){
+						var num = $.parseJSON( data );
+						////add by liuping 文章浏览登录权限判断
+						handlePermission(num);
+
+						if(num.uid){
+							//显示登录信息
+							EchoLoginInfo(data);
+
+						} else {
+							$('#login-info').show();
+						}
+						//$("#J_Download-times").html( num.downnum );//下载次数
+						$("#iLike-count").html( num.goodpost );//喜欢数
+						$("#J_StowNum").html( num.stownum );//收藏数
+						$("#J_CmtNum,#J_CmtNum2,#J_CmtNum3").html( num.replynum );//评论数量
+						$("#J_ClickNum").html( num.clicknum );//评论数量
+						if( num.replynum == 0 ){
+								$("#J_TotalComment").html('暂无评论, <a href="#comment" class="unl grey" id="J_Go-comment">赶快抢沙发</a>');
+								$("#J_TotalComment2").hide();
+						}
+						if( num.replynum > 6 ){
+							$("#Flink1,#Flink2").attr('href' , 'http://www.elecfans.com/plus/feedback.php?aid='+webid);
+							$("#Flink1").html($("#Flink1").html() + '，查看全部>>');
+							$("#Flink2").html($("#Flink2").html() + '，点击查看>>');
+						}
+				});
+		}
+		GetNum();
+		//滚动到用户评论---------------
+		windowScroll("#go-cmt","#comment");
+
+//如果是文章页-----------------------------------------------------------------------------------------------------
+var isArticlePage = $("body").is(".article-page");
+if( isArticlePage ){
+		//定义发送投票
+		function sendVote(type){
+				$.post("/plus/ilike.php?action="+type+"&id="+webid+"", function(data) {
+						$("#iLike-count").html(data);
+				});
+		};
+		//发送投票
+		$("#iLike").click(function(){
+				sendVote("good");
+		});
+		//投票鼠标悬停样式
+		$("#iLike").hover(function(){
+		   $(this).addClass("hover");
+		},function(){
+		   $(this).removeClass("hover");
+		});
+		//评论网名
+		inputDefault("#username");
+
+}
+
+//收藏-----------------------------------------------------------------------------------
+		var $stow = $("#J_StowData,#J_Stow");
+		var $stow_num = $("#J_StowNum");
+		var stow_center = '/member/datastow.php';
+		if( isArticlePage ){
+				var stow_center = 'http://home.elecfans.com/space-coll.html';
+		}
+		$stow.on('click',function(){
+				var url = ''+ElecfansApi_arcinfo+'?dopost=joinstow&aid='+webid;
+				var dialog = new Dialog({
+						title : '收藏资料'
+				})
+				dialog.pop();
+				//请求
+				$.get(url,function(data){
+						if( data == "logout" ){//未登录
+								//弹出登录框
+								var loginTitle = '收藏请先登录 <span>(<a href="'+regUrl+'" class="grey9">还没有注册？</a>)</span>';
+								dialog.showLogin(loginTitle,"请再次点击收藏按钮");
+								return false;
+						}
+						if( data == "already" ){//已经收藏
+								//提示已经收藏
+								var content = '';
+									content += '<div class="already-stow pt20 tc">';
+									content += '		<p class="f26 fb pb10">您已收藏过该资料</p>';
+									content += '		<p><a id="J_CloseStowDialog" href="'+stow_center+'" target="_blank" class="grey">查看我的收藏夹>></a></p>';
+									content += '</div>';
+								dialog.showCustom("您已收藏",content,350,160);
+
+						}
+						if( data == "success" ){//收藏成功
+								//提示收藏成功 --------------------
+								var loginSuccessTip = new SubmitSuccessTip({
+										title : "收藏成功",
+										content : '<a id="J_CloseStowDialog" href="'+stow_center+'" target="_blank" class="grey9">查看我的收藏夹>></a>',
+										height : 220,
+										timeOut : "no"
+								})
+								loginSuccessTip.show();
+
+								//更新收藏数
+								var num = $stow_num.html();
+								var eNum = parseInt( num ) + 1;
+								$stow_num.html( eNum );
+						}
+						if( data == "err" ){//收藏错误
+								dialog.showCustom("系统错误","暂时无法收藏",350,120);
+						}
+						//点击按钮关闭对话框
+						$("#J_DialogContent").on('click',"#J_CloseStowDialog",function(){
+								$(".close-dialog").click();
+						});
+				});
+
+				return false;
+		});
+//打印
+	var $print=$('#J_print');
+	if($print.length<1){
+		$('.share-action').append('<a href="javascript:void(0)" onclick="window.print()" class="sa-item" id="J_print">打印</a>');
+	}
+//评论-----------------------------------------------------------------------------------------------------
+		var $comment = $("#comment");
+		var $commentList = $("#comment-list");
+		var comment_url = ''+ElecfansApi_arcinfo+'';
+		var isscroll= true;
+		if( isArticlePage ){
+				var comment_url = ElecfansApi_arccomment;
+		}
+		//加载评论--------------------------
+		var $window = $(window);
+		$window.on('scroll',function(){
+				var fold = $window.height() + $window.scrollTop() + 500;
+
+				if( fold > $comment.offset().top  && isscroll){
+						//加载评论
+						// $.get(''+ElecfansApi_arcinfo+'',{ dopost:"getcomment",aid: webid},function(data){
+						$.get(''+ElecfansApi_arcinfo+'',{ dopost:"apiGetComment",aid: webid},function(data){
+								if( data != "" ){
+										$commentList.hide().html(data).slideDown(600);
+								}
+						});
+						isscroll = false;
+					//	$window.off('scroll');//移除窗口滚动事件
+				}
+		});
+		//评论：回复 --------------------------
+		$commentList.on('click','a.c-reply',function(){
+				var $this = $(this);
+				var tid = $this.attr("data-id");
+				//获取用户名
+				if( isArticlePage ){
+						var reply_username = '<input type="hidden" name="username" value="'+$("#username").val()+'" />';
+				}else{
+						var reply_username = '';
+				}
+				var sWeiboChecked = flagBindingWeibo ? 'checked="checked"' : '';
+				var sQQChecked = flagBindingQQ ? 'checked="checked"' : '';
+				var form = '';
+					form += '<div class="replyForm-wrap none" id="replyFormWrap"><form action="'+comment_url+'" method="POST" id="replyForm">';
+					form += '	<fieldset><legend>回复评论</legend>';
+					form += '	<input type="hidden" name="dopost" value="apiPubComment" />';
+					form += '	<input type="hidden" name="aid" value="'+webid+'" />';
+					form += ' '+reply_username +' ';
+					form += '	<div class="textarea"><textarea id="re-comment-msg" name="content" class="comment-msg reply-msg"></textarea></div>';
+					form += '	<input type="hidden" name="tid" value="'+tid+'" />';
+					form += '	<div class="btn-area comment-btn-area group">';
+					form += '		<div class="btn-hasLoading-wrap">';
+					form += '			<span class="loading"><img src="/skin-2012/images/loading.gif" /></span><button type="submit" id="J_replySubmit" class="btn reply-submit">回复</button>';
+					form += '		</div>';
+					form += '		<div class="weibo-area">';
+					form += '			分享到：';
+					form += '			<span class="check-sina"><input type="checkbox" value="1" name="sinaweibo" '+sWeiboChecked+' id="re-share-weibo"></span>';
+					form += '			<span class="check-tencent"><input type="checkbox" value="1" name="qqweibo" '+sQQChecked+' id="re-share-qq"></span>';
+					form += '		</div>';
+					form += '		<div class="cmt-tip" id="J_cmtTip"></div>';
+					form += '	</div>';
+					form += '	</fieldset> ';
+					form += '</form></div>';
+
+				//移除评论表单
+				$("#replyFormWrap").remove();
+				//在当前回复按钮所在位置显示评论表单
+				$this.parent("div").after( form );
+				$("#replyFormWrap").slideDown(400);
+				//验证，如果未登录，提示登录
+				$.get(comment_url,function(data){
+						if( data == "logout" ){
+								//评论提示
+								var dialog = new Dialog({
+										title : '评论'
+								})
+								dialog.pop();
+								//弹出登录框
+								var loginTitle = '回复评论请先登录';
+								dialog.showLogin(loginTitle);
+								return false;
+						}
+
+				});
+				//提交回复 ---------------------
+				$("#replyForm").ajaxForm( {
+						beforeSubmit:replyRequest,
+						success:function(responseText,statusText){
+								//如果未登录
+								var responseText = $.parseJSON(responseText);
+								if( responseText.status =='failed' && responseText.msg == "logout" ){
+										//评论提示
+										var dialog = new Dialog({
+												title : '评论'
+										})
+										dialog.pop();
+										//弹出登录框
+										var loginTitle = '回复评论请先登录';
+										dialog.showLogin(loginTitle);
+										return false;
+								}
+								if (responseText.status == 'successed') {
+									var curObj = $(this);
+									var sPostQuery = curObj[0]['data'];
+									sPostQuery = decodeURI(sPostQuery);
+									var content = getParam('content',sPostQuery);
+									var tid = getParam('tid',sPostQuery);
+									var reShareQQ = getParam('qqweibo',sPostQuery);
+									var reShareWeibo = getParam('sinaweibo', sPostQuery);
+									if (reShareQQ == '1') {
+										$.ajax({
+											type:'POST'
+											,url:''+ElecfansApi_arcinfo+'?dopost=shareCommentQQ'
+											,data:{aid:webid,content:content,tid:tid}
+											,dataType:'json'
+											,success:function(response) {
+												//nothing
+											}
+										});
+									}
+									if (reShareWeibo == '1') {
+										$.ajax({
+											type:'POST'
+											,url:''+ElecfansApi_arcinfo+'?dopost=shareCommentWeibo'
+											,data:{aid:webid,content:content,tid:tid}
+											,dataType:'json'
+											,success:function(response) {
+												//nothing
+											}
+										});
+									}
+									//移除评论表单
+									$("#replyFormWrap").remove();
+									//构建临时评论并显示
+									// var comment_content = $this.parent("div").parent("div").siblings("ul.children");
+									// var comment_content = $('#comment-'+tid+' ul.children');
+									var comment_content = $('#comment-'+responseText.topid+' ul.children');
+									comment_content.append( responseText.comment );
+								} else {
+									$("#replyFormWrap").remove();
+									var dialog = new Dialog({motai:'no'});
+									dialog.tipSuccessed('转发成功','<div style="width:300px;text-align:center;font-size:18px;padding:20px 0;">'+responseText.msg+'</div>', 2000, 320, 160);
+								}
+
+								// comment_content.next(".temp-comment").fadeIn(300);
+						}//end success:function
+				});//end ajaxForm
+				return false;
+		});
+		//评论：赞 --------------------------
+		var flagPraiseBtn = true;
+		$commentList.on('click','a.adjust',function(){
+			if (!flagPraiseBtn) return;
+			flagPraiseBtn = false;
+		        var $target = $(this).find("span");
+		        var curObj = $(this);
+				var tid = $(this).attr("data-id");
+				var num = $target.html();
+				$.get(''+ElecfansApi_arcinfo+'?dopost=goodcomment&commentid='+tid, {}, function(responseJson){
+						flagPraiseBtn = true;
+						if (responseJson.status == 'successed') {
+							if (responseJson.type == 'inc') {
+								var eNum = parseInt( num ) + 1;
+								curObj.addClass('adjust-yes');
+							} else {
+								var eNum = parseInt( num ) -1;
+								curObj.removeClass('adjust-yes');
+							}
+							$target.html( eNum );
+						} else {
+							if (responseJson.msg == 'logout') {
+								var dialog = new Dialog({
+									title : '评论'
+								});
+								dialog.pop();
+								//弹出登录框
+								var loginTitle = '点赞请先登录';
+								dialog.showLogin(loginTitle);
+								return false;
+							} else {
+								var dialog = new Dialog({motai:'no'});
+								dialog.tipSuccessed('转发成功','<div style="width:300px;text-align:center;font-size:18px;padding:20px 0;">'+responseJson.msg+'</div>', 2000, 320, 160);
+							}
+						}
+				},'json');
+				return false;
+		});
+
+		//回复提交前验证
+		function replyRequest(formData, jqForm, options) {
+				//验证
+				var form = jqForm[0];
+				if ( form.content.value == '' ) {
+					$("#J_ReplyTip").html("评论内容不能少于2个汉字").css("color","#c00");
+					return false;
+				};
+				if ( form.content.value.length > 200 ) {
+					$("#J_ReplyTip").html("您输入的评论过长，最多200个汉字").css("color","#c00");
+					return false;
+				};
+				//显示loading
+				$("#replyFormWrap").html('<li class="comment tc"><img src="/skin-2012/images/loading.gif" class="i-block vm" alt="" /> 提交中...</li>');
+
+				var queryString = $.param(formData);
+				return true;
+		}
+	if($("#new-adsm-berry").length>0){
+
+		$.ajax({
+			type:'POST'
+			,url:'/webapi/live/getRecommend'
+			,dataType:'json'
+			,success:function(data) {
+				var $data = data.list.list;
+					var dataText = ''
+					for(var i =0 ;i<$data.length;i++){
+						var $avatr = $data[i].lecturer_pic,
+						$count = $data[i].people_count,
+						$name = $data[i].course_name;
+						$url  = $data[i].course_url;
+						dataText += '<a href="'+$url+'?youlan" target="_blank" >'+
+							'<li class="clearfix">'+
+								'<div class="fl live-left">'+
+									'<img src="'+$avatr+'" >'+
+								'</div>'+
+								'<div class="fl live-right">'+
+									'<p>'+$name+'</p>'+
+									'<span>'+$count+'人已报名</span>'+
+								'</div>'+
+							'</li>'+
+						'</a>'
+					}
+				$("#new-adsm-berry").append('<div class="sub-live" style="margin-top: 10px;"><h3>精品课程</h3><a target="_blank" class="sub-link-more" href="http://t.elecfans.com/?youlan">查看更多 >></a><ul>'+dataText+'</ul></div>').css('height','auto');
+			}
+		});
+	}
+	if($("#AdHtmlRight").length>0){
+		function getLocalTime(nS) {
+			return new Date(parseInt(nS) * 1000).toLocaleString().replace(/:\d{1,2}$/,' ');
+		}
+		$.ajax({
+			type:'POST'
+			,url:'/webapi/live/getLive'
+			,dataType:'json'
+			,success:function(data) {
+				var $data = data.list.list;
+				var dataText = ''
+				for(var i =0 ;i<$data.length;i++){
+					var $avatr = $data[i].lecturer_pic,
+						$count = $data[i].people_count,
+						$name = $data[i].course_name,
+						$url  = $data[i].course_url,
+						$play =  $data[i].play_status;
+
+
+					var statusText=''
+						if($play=='playing'){
+							statusText='<span>直播中</span>';
+						}else if($play=='notStarted'){
+							var liveTime=getLocalTime( $data[i].start_time);
+							statusText='<span>'+liveTime+'报名中</span>';
+						}else{
+							statusText='<span>'+$count+'人 已报名</span>';
+						}
+						dataText += '<a href="'+$url+'?youlan" target="_blank" >'+
+						'<li class="clearfix">'+
+						'<div class="fl live-left">'+
+						'<img src="'+$avatr+'" >'+
+						'</div>'+
+						'<div class="fl live-right">'+
+						'<p>'+$name+'</p>'+
+						statusText+
+						'</div>'+
+						'</li>'+
+						'</a>'
+				}
+				$("#AdHtmlRight").append('<div class="sub-live"><h3>直播</h3><a class="sub-link-more" target="_blank" href="http://t.elecfans.com/live?youlan">查看更多 >></a><ul>'+dataText+'</ul></div>').css('height','auto');
+			}
+		});
+	}
+
+		//发表评论-----------------------------
+		var $cmtLoading = $("#commentForm").find("span.loading");
+		$("#commentForm").ajaxForm({
+				beforeSubmit:commentRequest,
+				success:function(responseText,statusText){
+						//隐藏loading
+						$cmtLoading.hide();
+						var responseText = $.parseJSON(responseText);
+						//如果未登录
+						if( responseText.status == 'failed' && responseText.msg == "logout" ){
+								//评论提示
+								var dialog = new Dialog({
+										title : '评论'
+								})
+								dialog.pop();
+								//弹出登录框
+								var loginTitle = '发表评论请先登录';
+								dialog.showLogin(loginTitle);
+								return false;
+						}
+						if ( responseText.status == 'successed' ) {
+							//插入临时评论并显示
+							$commentList.prepend( responseText.comment );
+							$("#J_TempComment").fadeIn(300);
+							//隐藏评论提示
+							$("#J_CmtTip").html('<span class="green">评论成功</span>');
+
+							var aid = $('#webID').val();
+							var content = $('#cmtMsg').val();
+							//清空内容
+							$("#cmtMsg").focus().val("");
+							//勾选分享到腾讯微博
+							if ($('#share-qq').prop('checked')) {
+								$.ajax({
+									type:'POST'
+									,url:''+ElecfansApi_arcinfo+'?dopost=shareCommentQQ'
+									,data:{aid:aid,content:content}
+									,dataType:'json'
+									,success:function(response) {
+										//nothing
+									}
+								});
+							}
+							//勾选分享到新浪微博
+							if ($('#share-weibo').prop('checked')) {
+								$.ajax({
+									type:'POST'
+									,url:''+ElecfansApi_arcinfo+'?dopost=shareCommentWeibo'
+									,data:{aid:aid,content:content}
+									,dataType:'json'
+									,success:function(response) {
+										//nothing
+									}
+								});
+							}
+						} else {
+							var dialog = new Dialog({motai:'no'});
+							dialog.tipSuccessed('转发成功','<div style="width:300px;text-align:center;font-size:18px;padding:20px 0;">'+responseText.msg+'</div>', 2000, 320, 160);
+						}
+
+				}//end success:function
+		});//end ajaxForm
+		//评论提交前验证
+		function commentRequest(formData, jqForm, options) {
+				//验证
+				var form = jqForm[0];
+				if ( form.content.value == '' ) {
+					$("#J_CmtTip").html("评论内容不能少于2个汉字").css("color","#c00");
+					return false;
+				};
+				if ( form.content.value.length > 200 ) {
+					$("#J_CmtTip").html("您输入的评论过长，最多200个汉字").css("color","#c00");
+					return false;
+				};
+				//显示loading
+				$cmtLoading.show();
+
+				var queryString = $.param(formData);
+				return true;
+		}
+		//引入新浪微博 JSSDK
+		$.getScript('http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=120432533');
+		//引入腾讯微博 JSSDK
+		var s = document.createElement("script");
+		s.type = "text/javascript";
+		s.src = 'http://qzonestyle.gtimg.cn/qzone/openapi/qc-1.0.1.js';
+		s.setAttribute('data-appid','101062524');
+		var h = document.getElementsByTagName("head");
+		if (h && h[0]) {
+			h[0].appendChild(s);
+		}
+		//引入绑定第三方登录操作的JS
+		$.getScript('/skin-2012/js/elecfans/newlogincomment.js');
+
+		// 正文图片放大
+		$.getScript('http://skin.elecfans.com/js/plugins/jquery.lightbox.min-0.5.js', function() {
+			$('head').append('<link rel="stylesheet" href="http://skin.elecfans.com/js/plugins/jquery.lightbox-0.5.css"></link>')
+	        $('.article-content img').each(function(){
+	            var $t = $(this);
+	            // 过滤掉有超链的图片
+	            if ( !$t.parent().is('a') ){
+	            	$t.wrap('<a href="' + $t.attr('src') + '" rel="lightbox-img"></a>');
+	            }
+	        })
+			$('.article-content [rel="lightbox-img"]').lightBox({});
+		});
+});// End document.ready
+
+
+
+//定义Dialog弹出框对象 2011.09.22 by linan
+function Dialog(options) {
+		this.title   = options.title || "提示";
+		this.content = options.content || "";
+		this.top 	 = options.top || "12%";
+		this.width   = options.width || 350;
+		this.height  = options.height || 410;
+		this.timeOut = options.timeOut || null;//定义对话框从出现到消失的时间
+		this.motai   = options.motai || "no";
+}
+Dialog.prototype = {
+		//弹出对话框，加载中状态...
+		pop : function(){
+				var html = '';
+					html += '<div class="dialog">';
+					html += '		<div class="dialog-hd" id="J_DialogTitle">'+this.title+'</div>';
+					html += '		<div class="dialog-bd" id="J_DialogContent">';
+					html += '				<div class="dialog-loading"><img src="http://skin.elecfans.com/images/loading.gif" width="16" height="16" />正在加载,请稍后...</div>';
+					html += '		</div>';
+					html += '		<div class="close-dialog">X</div>';
+					html += '</div>';
+				var motai = this.motai;
+				//blockUI
+				$.blockUI({
+						message : html,//对话框DOM
+						css : {
+								top: this.top,
+								width: this.width + "px",
+								height: this.height + "px",
+								marginLeft: "-"+this.width/2+"px",
+								left: "50%",
+								color: "#000",
+								border:	"8px solid #d8d8d8",
+								background: "#fff",
+								borderRadius: "3px"
+						},
+						timeout : this.timeOut,
+						overlayCSS : {
+								cursor: "pointer",
+								backgroundColor: '#111',
+								opacity:         0.3
+						},
+						showOverlay: true,
+						fadeIn: 200,
+						fadeOut: 400,
+						onBlock: function() {
+								if( motai == "no" ){
+									//延时400给遮罩层、关闭按钮添加title属性，以及click关闭对话框事件。
+									setTimeout(function(){
+											$(".blockOverlay,.close-dialog").attr('title','点击关闭').on('click',$.unblockUI);
+									},400);
+								}else{
+									$(".close-dialog").hide();
+								}
+						}
+				});
+		},
+
+		//显示登录框 -----------------
+		showLogin : function(title,tipContent){
+				var title = title ? title : this.title;
+				var content = tipContent ? tipContent : "";
+				//改变标题
+				$("#J_DialogTitle").html(title);
+				//登录表单DOM
+				var loginForm_dom = cqm_login;
+
+				//对话框展开，显示登录表单 ------------------------------------------------------------
+				$(".blockPage").animate({ "height": "410px" },200,function(){
+
+						$("#J_DialogContent").html(loginForm_dom);
+
+						//表单验证 -------------------------------------------------
+						var $username = $("#username");
+						var $password = $("#password");
+						var $loading = $("span.loading");
+						//提示文本
+						var username_empty = '请输入账号';
+						var username_err = '账号不存在';
+						var password_err = '密码错误,请重新输入';
+						var password_lenErr =  '×密码不符合要求：<span class="grey9">6-16位,英文或数字</span>';
+						var password_empty = '请输入登录密码：<span class="grey9">6-16位,英文或数字</span>';
+						//验证账号
+						$username.blur(function(){
+								var thisVal = $(this).val();
+								if( thisVal.length > 0 ){
+										tipErr( $(this) , "" , "none" );
+								}else{
+										tipErr( $(this) , username_empty );
+								}
+						});
+						//密码提示
+						$password.focus(function(){
+								$(this).parent("div").next("div.login-form-tip").css("display","block");
+						});
+						//密码验证
+						$password.blur(function(){
+								var len = $(this).val().length;//获取密码长度
+								if( len > 0 ){
+										if( len < 3 || len > 16 ){//密码长度不能小于6，大于16
+												tipErr( $(this), password_lenErr );
+										}else{
+												tipErr( $(this),"","none");
+										}
+								}else{
+										tipErr( $(this), password_empty );
+								}
+						})//end 密码检测
+						//表单验证 End -------------------------------------------------
+
+						//登录错误提示
+						function tipErr(obj,text,display){
+							var display = display ? display : "block";
+			                $("div.login-form-tip").html(text).css({"display":display,"color": "#c00" });
+
+						}
+
+						//表单提交 -----------------------------------------------------
+						var successTip = this.successTip;
+						var tipContent = this.tipContent;
+
+						/*ajax登录*/
+						$("#J_LoginForm").ajaxForm({
+								beforeSubmit:loginRequest,
+								success:function(responseText,statusText){
+										//隐藏loading
+										$loading.hide();
+										if( responseText == "用户名不存在"){
+												tipErr( $username , username_err );
+												$username.focus().select();
+												return false;
+										}
+										if( responseText == "密码错误"){
+												tipErr( $password , password_err );
+												$password.focus().select();
+												return false;
+										}
+										//执行登录检查
+										CheckLogin();
+
+										//提示登录成功 --------------------
+										var loginSuccessTip = new SubmitSuccessTip({
+												title : "登录成功",
+												content : content
+										})
+										loginSuccessTip.show();
+
+										eval("urlarr = " + responseText);
+										for(var i=0;i<urlarr.length;i++){
+											$.getScript(urlarr[i]);
+										}
+
+								}//end success:function
+						});//end ajaxForm
+						//提交前验证
+						function loginRequest(formData, jqForm, options) {
+								//账号
+								var usernameVal = $username.val();
+								if(  usernameVal.length > 0 ){
+										tipErr( $(this) , "" , "none" );
+								}else{
+										tipErr( $username , username_empty );
+										$username.focus().select();
+										return false;
+								}
+								//密码
+								var len = $password.val().length;//获取密码长度
+								if( len > 0 ){
+										if( len < 3 || len > 16 ){//密码长度不能小于6，大于16
+												tipErr( $password, password_lenErr );
+												$password.focus().select();
+												return false;
+										}else{
+												tipErr( $password,"","none");
+										}
+								}else{
+										tipErr( $password, password_empty );
+										$password.focus().select();
+										return false;
+								}
+								//显示loading
+								$loading.show();
+
+								var queryString = $.param(formData);
+								return true;
+						}
+						$(".forgetPw").click(function(){
+							$(".blockPage").animate({ "height": "300px" },200,function(){
+								var forgot_password = '';
+									forgot_password += '<form method="post" autocomplete="off" id="lostpwform_LogH3" class="cl" onsubmit="" action="http://bbs.elecfans.com/member.php?mod=sendmailapi&apiname=getpassword&format=jsonp">';
+									forgot_password += '	<div class="lostpw-form">';
+									forgot_password += '		<div class="login-form-item">请输入您注册时填写的邮箱地址，我们会发送密码重置邮件给您：</div>';
+									forgot_password += '		<div class="login-form-item">';
+									forgot_password += '			<input type="text" name="email" id="lostpw_email" size="30" value="" tabindex="1" class="login-input login-input-email">';
+									forgot_password += '		</div>';
+									forgot_password += '		<div class="login-form-item" id="lostpwd-username-box" style="display:none;">';
+									forgot_password += '			<input type="text" name="username" id="lostpw_username" size="30" value="" tabindex="1" class="login-input login-input-username">';
+									forgot_password += '		</div>';
+									forgot_password += '		<div class="login-form-item">';
+									forgot_password += '			<button class="btn lostpw-submit" type="submit" id="lostpwsubmit" name="lostpwsubmit" value="true">提交</button> <a class="ml20" id="back-login-link" href="javascript:;" target="_self">想起密码了</a>';
+									forgot_password += '		</div>';
+									forgot_password += '	</div>';
+									forgot_password += '</form>';
+								//改变对话框标题
+								$("#J_DialogTitle").html('重置登录密码');
+								//改变对话框内容
+								$("#J_DialogContent").html(forgot_password);
+
+								$("#back-login-link").click(function() {
+									$(".blockPage").animate({ "height": "410px" },200,function(){
+//										var dialog = new LoginDialog({});
+//										dialog.show();
+$.ssoDialogLogin();//单点登录
+										return false;
+									})
+								})
+
+								function getpwdrequest(formData, jqForm, options) {
+									lostpwsubmit.disabled = true;
+									return true;
+								}
+
+								$("#lostpwform_LogH3").ajaxForm({
+									beforeSubmit:getpwdrequest
+									,dataType:'jsonp'
+									,success:function(responseText,statusText) {
+										lostpwsubmit.disabled = false;
+										if (responseText.status == 'successed') {
+											$("#J_DialogContent").html("找回密码的邮件发送成功");
+											setTimeout($.unblockUI,2000);
+										} else {
+											if (responseText.needusername == '1') {
+												alert('该邮箱需要填写用户名');
+												$('#lostpwd-username-box').show();
+											} else {
+												alert(responseText.msg);
+											}
+										}
+									}
+								});
+							});
+						});
+				});//End $(".blockPage").animate()
+		},
+		//显示自定义内容 --------------
+		showCustom : function(title,content,width,height,top){
+				var title  = title ? title : this.title;
+				var content  = content ? content : this.content;
+				var width  = width ? width : this.width;
+				var height = height ? height : this.height;
+				var top = top ? top : this.top;
+				//改变标题
+				$("#J_DialogTitle").html(title);
+				//改变内容
+				$(".blockPage").animate({ "height": height+"px","width": width + "px" },300).animate({"top":top},400);
+				$("#J_DialogContent").html( content );
+		}
+
+		//转发成功显示的内容
+		,tipSuccessed : function(title,content,timeOut,w,h) {
+			this.width = w ? w : this.width;
+			this.height = h ? h : this.height;
+			var title = title ? title : this.title;
+			var content = content ? content : this.content;
+			var html = '';
+				html += '<div class="dialog">';
+				html += '		<div class="dialog-hd" id="J_DialogTitle">'+title+'</div>';
+				html += '		<div class="dialog-bd" id="J_DialogContent">';
+				html += '				<div>'+content+'</div>';
+				html += '		</div>';
+				html += '		<div class="close-dialog">X</div>';
+				html += '</div>';
+			var motai = this.motai;
+			//blockUI
+			$.blockUI({
+				message : html,//对话框DOM
+				css : {
+						top: this.top,
+						width: this.width + "px",
+						height: this.height + "px",
+						marginLeft: "-"+this.width/2+"px",
+						left: "50%",
+						color: "#000",
+						border:	"8px solid #d8d8d8",
+						background: "#fff",
+						borderRadius: "3px"
+				},
+				timeout : this.timeOut,
+				overlayCSS : {
+						cursor: "pointer",
+						backgroundColor: '#111',
+						opacity:         0.3
+				},
+				showOverlay: true,
+				onBlock: function() {
+					if( motai == "no" ){
+						//延时400给遮罩层、关闭按钮添加title属性，以及click关闭对话框事件。
+						setTimeout(function(){
+								$(".blockOverlay,.close-dialog").attr('title','点击关闭').on('click',$.unblockUI);
+						},400);
+					}else{
+						$(".close-dialog").hide();
+					}
+				}
+			});
+			if (timeOut) {
+				setTimeout($.unblockUI, timeOut);
+			}
+		}
+}
+
+//定义表单提交成功后执行的操作
+function SubmitSuccessTip( options ){
+		this.title = options.title;
+		this.content = options.content || "";
+		this.height = options.height || 190;
+		this.timeOut = options.timeOut || 1600;
+}
+SubmitSuccessTip.prototype = {
+		show : function(){
+				var successTip_dom = '';
+					successTip_dom += '<div class="success-tip">';
+					successTip_dom += '		<h3 class="tip-title">'+ this.title +'</h3>';
+					successTip_dom += '		<div class="tip-content">'+ this.content +'</div>';
+					successTip_dom += '</div>';
+
+				var timeOut = this.timeOut;
+				var $dialogContent = $("#J_DialogContent");
+					$dialogContent.hide();//隐藏原有元素
+				$(".blockPage").animate({ "height": this.height + "px" },200,function(){
+						//提示报名成功 ---------------
+						$dialogContent.html( successTip_dom ).show();
+						//移除对话框 ----------------
+						if( !(timeOut == "no") ){
+							setTimeout(function(){ $.unblockUI(); },timeOut);
+						}
+				});
+		}
+}
+
+//FormTip，显示时4种状态，值为空：empty，错误：err，正确：ok，正常：normal(显示默认的提示)
+function FormTip(obj,text){
+		this.obj = obj;
+		this.target = this.obj.parent("div").next("div");
+		this.text = text || this.target.html() ;
+}
+FormTip.prototype = {
+		constructor : FormTip,
+		show : function(state){
+				switch (state) {
+						case "empty" :
+							var tipColor = "#c00";
+							var label_text = this.obj.siblings("label").text(); //获取label值
+								this.text = "请输入"+label_text.slice(0,label_text.length-1);//提示文本，去掉label最后的":"
+						case "err" :
+								var tipColor = "#c00";
+								break;
+						case "ok" :
+								var tipColor = "#090";
+								break;
+						case "normal" :
+								var tipColor = "#999";
+								break;
+				}
+				this.target.html( this.text ).css({"display":"block","color": tipColor });
+		},
+		hide : function(){
+				this.target.css("display","none");
+		}
+}
+
+function article_detail_avatar(uid,size,type) {
+	var size = size ? size : 'small';
+	var uid = sprintf("%09d", parseInt(uid));
+    var dir1 = uid.substr(0, 3);
+    var dir2 = uid.substr(3, 2);
+    var dir3 = uid.substr(5, 2);
+    var sHomeDir = dir1+'/'+dir2+'/'+dir3;
+    var typeadd = type == 'real' ? '_real' : '';
+    var url = 'http://bbs.elecfans.com/uc_server/data/avatar/'+sHomeDir+'/'+uid.substr(-2)+typeadd+"_avatar_"+size+".jpg";
+	// http://bbs.elecfans.com/uc_server/avatar.php?uid=936198&size=middle
+	// return 'http://bbs.elecfnas.com/uc_server/avatar.php?size=middle&uid='+uid;
+    return url;
+}
+
+function str_repeat(i, m) {
+    for (var o = []; m > 0; o[--m] = i);
+    return o.join('');
+}
+
+function sprintf() {
+    var i = 0, a, f = arguments[i++], o = [], m, p, c, x, s = '';
+    while (f) {
+        if (m = /^[^\x25]+/.exec(f)) {
+            o.push(m[0]);
+        } else if (m = /^\x25{2}/.exec(f)) {
+            o.push('%');
+        } else if (m = /^\x25(?:(\d+)\$)?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-fosuxX])/.exec(f)) {
+            if (((a = arguments[m[1] || i++]) == null) || (typeof a == 'undefined')) {
+                throw('Too few arguments.');
+            }
+            if (/[^s]/.test(m[7]) && (typeof(a) != 'number')) {
+                throw('Expecting number but found ' + typeof(a));
+            }
+            switch (m[7]) {
+                case 'b': a = a.toString(2); break;
+                case 'c': a = String.fromCharCode(a); break;
+                case 'd': a = parseInt(a); break;
+                case 'e': a = m[6] ? a.toExponential(m[6]) : a.toExponential(); break;
+                case 'f': a = m[6] ? parseFloat(a).toFixed(m[6]) : parseFloat(a); break;
+                case 'o': a = a.toString(8); break;
+                case 's': a = ((a = String(a)) && m[6] ? a.substring(0, m[6]) : a); break;
+                case 'u': a = Math.abs(a); break;
+                case 'x': a = a.toString(16); break;
+                case 'X': a = a.toString(16).toUpperCase(); break;
+            }
+            a = (/[def]/.test(m[7]) && m[2] && a >= 0 ? '+'+ a : a);
+            c = m[3] ? m[3] == '0' ? '0' : m[3].charAt(1) : ' ';
+            x = m[5] - String(a).length - s.length;
+            p = m[5] ? str_repeat(c, x) : '';
+            o.push(s + (m[4] ? a + p : p + a));
+        } else {
+            throw('Huh ?!');
+        }
+        f = f.substring(m[0].length);
+    }
+    return o.join('');
+}
+
+function setcookieEx(name, value, expires, path, domain, secure) {
+
+  if (typeof expires === 'string' && (/^\d+$/)
+    .test(expires)) {
+    expires = parseInt(expires, 10);
+  }
+
+  if (expires instanceof Date) {
+    expires = expires.toGMTString();
+  } else if (typeof expires === 'number') {
+    expires = (new Date(expires * 1e3))
+      .toGMTString();
+  }
+
+  var r = [name + '=' + encodeURIComponent(value)],
+    s = {},
+    i = '';
+  s = {
+    expires: expires,
+    path: path,
+    domain: domain
+  };
+  for (i in s) {
+    if (s.hasOwnProperty(i)) {
+      s[i] && r.push(i + '=' + s[i]);
+    }
+  }
+
+  return secure && r.push('secure'), window.document.cookie = r.join(';'), true;
+}
+
+function getcookieEx(name) {
+  if (document.cookie.length > 0) {
+    start = document.cookie.indexOf(name + "=");
+    if (start != -1) {
+      start = start + name.length+1;
+      end = document.cookie.indexOf(";",start);
+      if(end == -1) end = document.cookie.length;
+        return decodeURIComponent(document.cookie.substring(start, end));
+    }
+  }
+  return ""
+}
+
+
+
+
+
+/**********************************************************
+ * 添加IC广告 每个页面对应的插入位置不一样，innerToBody函数针对每个页面ID而生
+ * addTime:20161209 by lichen -- endTime:不详
+ */
+;(function($){
+	var getWebId=$("#webID").val();
+
+	//置入的地方
+	function innerToBody(html){
+		if($(".article .email-subscribe-box").length>0){
+			$(".article .email-subscribe-box").before(html);
+		}
+		else{
+			$(".article").append(html);
+		}
+		//控制图片自适应高度
+		if(html.attr("id")=="ic-ads-switch"){
+			html.find("img").eq(0).load(function(){
+				var getHeight=$(this).height();
+				$("#ic-ads-switch").css("height",getHeight+"px");
+			});
+		}
+	}
+
+
+	if(!!getWebId){
+		$("head").append('<link rel="stylesheet" href="/skin-2012/css/ajax_ads_style.css">');
+		$.post("/webapi/index.php?m=home&c=icad&a=ad&",{"aid":getWebId},function(res){
+
+			if(res["status"]=="successed"){
+				var getData=res["data"];
+				switch (res["type"]){
+					//图片广告
+					case "img":
+
+						var setHTML='<div id="ic-ads-switch">';
+						for(var i=0;i<getData.length;i++){
+							var getOneData=getData[i];
+							var getHref=getOneData[0],
+								getImg=getOneData[1];
+							setHTML+='<a href="'+getHref+'" target="_blank"><img src="'+getImg+'"/></a>';
+						}
+						setHTML+='</div>';
+
+
+						//置入
+						innerToBody($(setHTML));
+
+						// banner切换初始化
+						var aoutPlayTime = 5000;
+						var html = '';
+						var length = $('#ic-ads-switch a').length;
+						if(length<=1){
+							return false;
+						}
+						html += '<p><span class="now"></span>';
+						for(var i = 1; i < length; i++) {
+							html += '<span></span>';
+						}
+						html += '</p>';
+						$('#ic-ads-switch').append(html).find('a').eq(0).addClass('nowImg').css('z-index', '2');
+						// 自动滚动
+						var timer = setTimeout(slideBanner, aoutPlayTime);
+						// 鼠标切换滚动
+						$('#ic-ads-switch').on('mouseover', 'span', function() {
+							var self = $(this);
+							var index = self.index();
+							var parent = self.parent();
+							var length = self.siblings().length;
+							index = (index - 1) < 0 ? length : (index - 1);
+							parent.find('span').removeClass('now').eq(index).addClass('now');
+							slideBanner();
+
+						});
+						// hover 停止继续滚动
+						$('#ic-ads-switch').hover(function() {
+							clearTimeout(timer);
+						}, function() {
+							timer = setTimeout(slideBanner, aoutPlayTime);
+						});
+
+						// banner切换函数
+						function slideBanner() {
+							clearTimeout(timer);
+							var span = $('#ic-ads-switch span');
+							var li = $('#ic-ads-switch a');
+							var index = $('#ic-ads-switch .now').index();
+							var next = (index + 1) >= li.length ? 0 : index + 1;
+							var nowli = $('#ic-ads-switch .nowImg');
+							span.removeClass('now').eq(next).addClass('now');
+							if(next === nowli.index()) {
+								return false;
+							}
+							li.css('z-index', 0);
+							nowli.css('z-index', 2);
+							li.eq(next).css('z-index', 1);
+							nowli.stop(true, false).animate({
+								'opacity': 0
+							}, 500, function() {
+								nowli.css({
+									'z-index': 0,
+									'opacity': 1
+								});
+								li.removeClass('nowImg').eq(next).addClass('nowImg');
+							});
+							timer = setTimeout(slideBanner, aoutPlayTime);
+						}
+
+
+
+					break;
+					//表单广告
+					case "tab":
+
+						var getTitle=getData["title"];
+						var getProducts=getData["products"];
+						if(getProducts.length==0){
+							return;
+						}
+						var setTr="";
+						for(var i=0;i<getProducts.length;i++){
+							var getOneData=getProducts[i];
+
+							var getUrl=getOneData["url"],
+								getMod=getOneData["model"],
+								getPic=getOneData["pic"],
+								getFac=getOneData["manufacturer"],
+								getDes=getOneData["description"],
+								getPri=getOneData["price"];
+							setTr+=
+								'<tr>'+
+									'<td><img src="'+getPic+'"/></td>'+
+									'<td align="center">'+getMod+'</td>'+
+									'<td align="center">'+getFac+'</td>'+
+									'<td>'+getDes+'</td>'+
+									'<td class="color_red">￥'+getPri+'</td>'+
+									'<td  align="center">'+
+										'<a href="'+getUrl+'" target="_blank" class="btn">详情</a>'+
+									'</td>'+
+								'</tr>';
+						}
+
+
+						var setHTML=
+						'<table id="ic-ads-tab">'+
+							'<caption>'+getTitle+'</caption>'+
+							'<thead>'+
+								'<th>图片</th><th>型号</th><th>制造商</th><th>描述</th><th>单价</th><th>操作</th>'+
+							'</thead>'+
+							setTr+
+						'</table>';
+
+
+						//置入
+						innerToBody($(setHTML));
+
+					break;
+				}
+
+			}
+		});
+	}
+
+	/*
+	* 文章右侧滚动悬浮
+	* */
+	var adbtRight;
+	$(window).on('resize',function(){
+		adbtRight = ($(window).width()-1000)/2;
+		$(".sub-adbt").css({'right':adbtRight+'px'})
+	});
+	$(window).on('load',function(){
+		adbtRight = ($(window).width()-1000)/2;
+		var adbtTop = $(".sub-adbt").offset().top;
+		$(window).scroll(function(){
+			if($(".first-wrap").parent().height()>($("#new-adsm-berry").parent().height()+$(".sub-adbt").height())){
+				if($(window).scrollTop()>adbtTop){
+					$(".sub-adbt").css({'position':'fixed','top':'0px','right':adbtRight+'px','width':'300px'})
+				}else{
+					$(".sub-adbt").css({'position':'static'});
+				}
+			}
+
+		})
+	})
+
+})(jQuery);
+
+/**添加IC广告 end***************************************/
+//马甲的动态插入
+waistcoat('comment');
+function waistcoat(id){
+    $.ajax({
+        type:"post",
+        url:"http://www.elecfans.com/plus/arcComment.php?dopost=getmember",
+        success:function(data){
+            if(data.error_code==0){
+                data = data.list;
+                var content = '';
+                for(i in data){
+                    content+='<a data-id="'+i+'"><dl title="UID:'+i+'"><img src="'+data[i]['pic']+'" onerror=""><dd style="color:#000">'+data[i]['username']+'</dd><dd><em>'+data[i]['regdate']+'</em></dd></dl></a>';
+
+                }
+                var waistcoat_htm = '<div class="waistcoat" style="position: relative;margin-left: 119px;">'+
+                                '<a class="waistcoat_nav"><dl title="UID:1"><dd style="color:#000">&nbsp;默认自己</dd><dd><em>&nbsp;请选择马甲</em></dd></dl></a>'+
+                                '<div class="waistcoat_list">'+
+                                    '<strong>共<span style="color:red">9</span>个可用虚拟马甲(请点击下面会员即可选为马甲用户发表)</strong>'+
+                                    '<div class="waistcoat_list_box">'+
+                                        '<div class="cl">'+
+                                            '<a style="background: #FFFFE8"><dl title="UID:1"><dd style="color:#000">&nbsp;默认自己</dd><dd><em>&nbsp;请选择马甲</em></dd></dl></a>'+
+                                                content+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<p><span style="font-size: 12px;" class="fr">Plugin by www.kl3w.com(你可免费使用，但请保留版权)</span></p>'+
+                                '</div>'+
+                            '</div>'
+                    document.querySelector("#"+id).insertAdjacentHTML("afterBegin",waistcoat_htm);
+                                //显示和隐藏马甲的各种状态
+                    $(".waistcoat_nav").mouseover(function(){
+                        $(".waistcoat_list").show();
+                    });
+                    $(".waistcoat_nav").mouseout(function(){
+                        $(".waistcoat_list").mouseover(function(){
+                            $(".waistcoat_list").show();
+                        });
+                        $(".waistcoat_list").hide();
+                    });
+                    $(".waistcoat_list").mouseout(function(){
+                            $(".waistcoat_list").hide();
+                    });
+                    //点击所选马甲 显示选择的马甲
+                    $(".cl a").each(function(index){
+                        $(this).click(function(){
+                            if($('#guisepostuserid').length>0){
+                                $('#guisepostuserid').remove();
+                            }
+                            $(".waistcoat_nav").html(this.innerHTML);
+                            var data_id = $(this).attr('data-id');
+                            var input_content = '<input type="hidden" name="guisepostuserid" value="'+data_id+'" id="guisepostuserid"/>';
+                            $('#commentForm').append(input_content);
+                        })
+                    })
+                }
+        }
+    });
+
+}
+
+//把分享区域隐藏
+$('.check-tencent').hide();
+
+

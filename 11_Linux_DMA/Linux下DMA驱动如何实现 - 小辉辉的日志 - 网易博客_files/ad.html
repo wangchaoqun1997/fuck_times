@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- saved from url=(0172)http://iad.g.163.com/wa/ad?site=netease&affiliate=blog&cat=notifier&type=text32&location=10001&nomark&url=http%3a%2f%2fblog.163.com%2f&uuid=e88ecefd58ce44999cbf04c6877d06e8 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>网易个性化广告投放系统</title>
+<script type="text/javascript" src="./jquery-1.4.2.js.下载"></script>
+		    <style>
+	        body {
+	            height:32px;line-height:32px;text-align:center;
+	        }
+	        #adrecContent a {
+	            color: #333;
+	            font-size: 12px;
+	            text-decoration: none;
+	        }
+	    </style>
+	    <script type="text/javascript">
+    function sendHover(uuid, flight_id, ad_id) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://iad.g.163.com/wa/s',
+            data: {
+                'uuid': uuid,
+                'flight_id': flight_id,
+                'ad_id': ad_id
+            },
+            dataType: 'json',
+            success: function(info) {
+            }
+        });
+    }
+    
+    function sendClick(uuid, flight_id, ad_id) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://iad.g.163.com/wa/c',
+            data: {
+                'uuid': uuid,
+                'flight_id': flight_id,
+                'ad_id': ad_id
+            },
+            dataType: 'json',
+            success: function(info) {
+            }
+        });
+    }
+    
+    var count = 0;
+    $(document).ready(function() {
+        $('body').click(function() {
+            var uuid = $('body').attr('data-uuid');
+            var flight_id = $('body').attr('data-flight_id');
+            var ad_id = $('body').attr('data-ad_id');
+            sendClick(uuid, flight_id, ad_id);
+        });
+        
+        $('body').hover(function() {
+            if(count == 0) {
+                var uuid = $('body').attr('data-uuid');
+                var flight_id = $('body').attr('data-flight_id');
+                var ad_id = $('body').attr('data-ad_id');
+                sendHover(uuid, flight_id, ad_id);
+            }
+            count++;
+        });
+    });
+</script>
+</head>
+<body class="adrec" marginwidth="0" marginheight="0" data-uuid="e40d31fc-18fc-4c0a-b836-01fec109eba9" data-flight_id="80000001" data-ad_id="mat_5051">
+<div id="adrecContent">
+<a target="_blank" href="http://cps.kaola.com/cps/login?unionId=425134127131&amp;uid=&amp;trackingCode=&amp;targetUrl=http://www.kaola.com/activity/flashSaleIndex/show.html?ri=home&amp;zid=2017060821FlashSale33075703&amp;zp=limitBuy-right-1&amp;zn=limitBuy">看看有什么好货正在秒杀，抢到就是赚到  &gt;&gt;&gt;</a>
+</div>
+
+
+</body></html>

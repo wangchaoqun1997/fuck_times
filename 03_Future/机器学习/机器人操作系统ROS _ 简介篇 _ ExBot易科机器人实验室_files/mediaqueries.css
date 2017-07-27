@@ -1,0 +1,229 @@
+/*
+Media Queries Version: 1.0
+*/
+
+/** 等于或大于900px **/
+@media screen and (min-width: 900px) {
+	#simple-top {
+		display: none;
+	}
+}
+/** 等于或小于1080px **/
+@media screen and (max-width: 1080px) {
+	#top-nav {
+		width: 100%;
+	}
+	#header, #main {
+		width: 98%;
+	}
+	#primary {
+		width: 68%;
+	}
+	#sidebar {
+		width: 31%;
+	}
+	.sidebar-roll {
+		width: 321px;
+	}
+}
+/** 等于或小于1024px **/
+@media screen and (max-width: 1024px) {
+	#primary {
+		width: 67%;
+	}
+	.entry-site {
+		height: 110px;
+		overflow: hidden;
+	}
+	.sticky-box, .sticky-box-m {
+		_width: 49.7%;
+	}
+	#sidebar {
+		width: 32%;
+	}
+	.sidebar-roll {
+		display: none;
+	}
+}
+/** 等于或小于1005px **/
+@media screen and (max-width: 1005px) {
+	#sidebar {
+		width: 32%;
+		overflow: hidden;
+	}
+}
+/** 等于或小于900px **/
+@media screen and (max-width: 900px) {
+	#sidebar, #header-top {
+		display: none;
+	}
+	#set-top {
+		background: #fff;
+		float: right;
+		width: 80px;
+		height: 30px;
+		margin: 7px 0 0 0;
+	}
+	#set-top a {
+		float: left;
+		background: #fff;
+		cursor: pointer;
+		margin: 0 5px 0 0;
+		padding: 4px 5px;
+	}
+	#set-top a:hover {
+		background: #04a4cc;
+		color: #fff;
+	}
+	.logo-simple {
+		float: left;
+		width: 40%;
+		font-size: 17px;
+	}
+	.logo-x {
+		background: url(../img/logo-x.png) no-repeat 0 9px;
+		padding: 0 0 0 28px;
+	}
+	.logo-title {
+		padding: 0 0 0 10px;
+	}
+	#set-main {
+		margin: 0;
+	}
+	#primary {
+		width: 100%;
+	}
+	.single-header h1 {
+	    font-size: 18px;
+	}
+	.single-content p {
+		font-size: 16px;
+		line-height:160%;
+	}
+	.single-content h3, .single-content h2{
+		font-size: 16px;
+	}
+	.single-content ul li,
+	.single-content ol li {
+		font-size: 16px;;
+	}
+	.thumbnail img {
+		width: 106px;
+		height: 76px;
+	}
+	#sidebar {
+		float: left;
+		width: 100%;
+	}
+	#header, .entry-meta .edit, #site-nav,.main-header #set-main, #top-nav, #links, .info-add, .fontsize {
+		display: none;
+	}
+	.header-clear {
+		height: 10px;
+	}
+	.widget_categories li,.widget_archive li, .widget_links li {
+		width: 24%;
+	}
+}
+
+/** 等于或小于650px **/
+@media screen and (max-width: 650px) {
+	#bulletin_div, .authorbio {
+		display: none;
+	}
+	#single-widget .widget {
+		width: 99.6%;
+	}
+	.crumbs {
+		width: 90%;
+	}
+	.social-main {
+		margin: 0;
+	}
+	.social-main span {
+		width: 29%;
+		margin: 5px;
+	}
+	.entry-meta .cat{
+		display: none;
+	}
+}
+/** 等于或大于550px **/
+@media screen and (min-width: 550px) {
+	.sticky-header .title-heavy  {
+		display: none;
+	}
+}
+/** 等于或小于550px **/
+@media screen and (max-width: 550px) {
+	.entry-content {
+		height: 90px;
+		overflow: hidden;
+	}
+	.thumbnail {
+		width: 106px;
+		height: 76px;
+		margin: 9px 8px 0 0;
+	    overflow: hidden;;
+	}
+	.thumbnail a img {
+		width: 106px;
+		height: 76px;
+	}
+	.entry-more, .comment-aux {
+		display: none;
+	}
+	#sticky, #sticky-cat {
+		margin-bottom: 0;
+	}
+	.sticky-box, .sticky-box-m {
+		width: 99.6%;
+		margin-bottom: 10px;
+	}
+	.sticky-box-m {
+		border: 1px solid #04a4cc;
+		transition: all 0.5s ease-in 0s;
+	}
+	.sticky-entry {
+		height: 89px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	.sticky-thumbnail {
+		width: 106px;
+		height: 76px;
+		margin: 9px 8px 0 0;
+	    overflow: hidden;;
+	}
+	.sticky-thumbnail img {
+		width: 106px;
+		height: 76px;
+	}
+	.sticky-header h1 {
+		margin: 0 -10px 5px -11px;
+		padding: 0 0 0 13px;
+		border-left: 5px solid #04a4cc;
+	}
+	.widget_categories li, .widget_archive li, .widget_links li {
+		width: 50%;
+	}
+}
+/** 等于或小于480px **/
+@media screen and (max-width: 480px) {
+	.entry-meta, .cat, .views, .edit {
+		display: none;
+	}
+}
+/*
+Retina Ready
+*/
+@media all and (-webkit-min-device-pixel-ratio: 1.5) {
+	.logo {
+		background: url(../img/2x/logo@2x.png) no-repeat 0 center;
+		background-size: 220px 53px;
+	}
+	.logo-x {
+		background: url(../img/2x/logo-x@2x.png) no-repeat 0 center;
+		background-size: 25px 23px;
+	}
+}

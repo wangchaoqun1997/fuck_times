@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<!-- saved from url=(0069)http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><link type="text/css" rel="stylesheet" href="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/comments.min.css">
+	
+	<meta http-equiv="Content-Language" content="zh-cn">
+	<meta content="always" name="referrer">
+						<meta name="keywords" content="偏微分方程 ,TensorFlow 官方文档中文版,深度学习教程">
+			
+						<meta name="description" content="TensorFlow不仅仅是用来机器学习，它更可以用来模拟仿真。在这里，我们将通过模拟仿真几滴落入一块方形水池的雨点的例...">
+			
+			<title>偏微分方程  - TensorFlow 官方文档中文版 - 极客学院Wiki</title>
+	
+	<link rel="stylesheet" type="text/css" href="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/register.css">
+	<link rel="shortcut icon" href="http://wiki.jikexueyuan.com/assets/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/detail.min.css">
+	<link rel="stylesheet" type="text/css" href="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/markdownbody.min.css">
+<script async="" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/analytics.js.下载"></script><script type="text/javascript" async="" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/vds.js.下载"></script><script src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/share.js.下载"></script><style type="text/css">@charset "utf-8";
+.nc-container .imgCaptcha .imgCaptcha_text {
+  width: 110px;
+}
+.nc-container .imgCaptcha .imgCaptcha_text input {
+  border: 1px solid #ccc;
+}
+#regVerifyId {
+  box-sizing: content-box;
+  width: 260px;
+  float: left;
+}
+#regVerifyText {
+  box-sizing: content-box;
+  width: 100px;
+  float: right;
+  height: 34px;
+  text-align: center;
+  line-height: 34px;
+  color: #999;
+}
+.nc-container .nc_scale .clickCaptcha .clickCaptcha_text {
+  float: right;
+  height: 0;
+  line-height: 0;
+}
+.nc_iconfont.nc_btn_2 {
+  top: 15px;
+  right: -11px;
+}
+.nc-container .nc_scale .clickCaptcha {
+  transform: scale(0.8);
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  top: 10px;
+  height: 250px;
+}
+#regVerifyId .nc_scale {
+  width: auto;
+}
+.nc-container .imgCaptcha .imgCaptcha_text {
+  position: absolute;
+  background: transparent!important;
+}
+.nc-container .nc_scale .clickCaptcha {
+  top: 10px!important;
+}
+.LoginAndRegister-Mask {
+  min-width: 775px;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+}
+#register-popup,
+#login-popup {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 9999;
+}
+#register-popup {
+  width: 755px;
+  height: 443px;
+  margin-left: -377px;
+  margin-top: -221px;
+}
+#login-popup {
+  width: 450px;
+  height: 580px;
+  margin-left: -225px;
+  margin-top: -290px;
+}
+.user-select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.clear {
+  clear: both !important;
+}
+.float-left {
+  float: left !important;
+}
+.float-right {
+  float: right !important;
+}
+.disabled:hover,
+.disabled:hover a {
+  cursor: default !important;
+  cursor: not-allowed !important;
+}
+/* color */
+.passport-light-color {
+  /* 浅色 */
+  color: #999999 !important;
+}
+.passport-tip-color {
+  /* 提示色 */
+  color: #fd6505 !important;
+}
+.passport-warn-color {
+  /* 警告色 */
+  color: #ff0000 !important;
+}
+.passport-success-color {
+  /* 成功色 */
+  color: #339734 !important;
+}
+/* mask */
+.passport-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 900;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  opacity: 0.4;
+}
+/* control base */
+.passport-placeholder {
+  color: #999999 !important;
+}
+.passport-empty-input,
+.passport-empty-input:focus,
+.passport-empty-input:hover {
+  background: #ffffff !important;
+  border: 1px solid #ff6711 !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.passport-error-input,
+.passport-error-input:focus,
+.passport-error-input:hover {
+  background: #ffffff !important;
+  border: 1px solid #ff6711 !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.passport-empty-txt {
+  color: #ff0000 !important;
+}
+.passport-error-txt {
+  color: #ff0000 !important;
+}
+.passport-success-txt {
+  color: #35b558 !important;
+}
+/* note */
+.passport-note {
+  color: #666666;
+  vertical-align: middle;
+}
+span.passport-note {
+  padding-left: 5px;
+}
+div.passport-note {
+  padding: 5px 0 0;
+  line-height: 1.8;
+}
+.passport-note strong {
+  padding: 0 5px;
+  color: #ff0000;
+}
+.passport-note b {
+  padding: 0 5px;
+  color: #333333;
+}
+/* button */
+.passport-btn {
+  height: 26px;
+  padding: 0 15px;
+  font-size: 12px;
+  border: 1px solid #eaeaea;
+  -webkit-transition: background-color 0.8s, border-color 0.8s;
+  -moz-transition: background-color 0.8s, border-color 0.8s;
+  transition: background-color 0.8s, border-color 0.8s;
+  background: #eaeaea;
+  border-color: #eaeaea;
+  color: #666666 !important;
+  /* 以下样式针对非 input、button 的其他标签 */
+  display: inline-block;
+  line-height: 24px;
+  text-align: center;
+  text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.passport-btn .icon {
+  margin-right: 5px;
+}
+.passport-btn:hover {
+  background: #eeeeee;
+  color: #999999 !important;
+}
+.passport-btn:active {
+  background: #eeeeee;
+  color: #999999 !important;
+}
+.passport-btn:hover {
+  text-decoration: none;
+}
+.passport-btn:not(button) .icon {
+  position: relative;
+  top: -1px;
+}
+.passport-btn.disabled,
+.passport-btn[disabled],
+.passport-btn.disabled:hover,
+.passport-btn[disabled]:hover,
+.passport-btn.disabled:focus,
+.passport-btn[disabled]:focus,
+.passport-btn.disabled:active,
+.passport-btn[disabled]:active {
+  -webkit-transition: none;
+  -moz-transition: none;
+  transition: none;
+  background: #eeeeee !important;
+  border: 1px solid #e7e7e7 !important;
+  color: #999999 !important;
+  cursor: default !important;
+  cursor: not-allowed !important;
+}
+/* button theme */
+.passport-btn-def {
+  background: #35b558;
+  border-color: #35b558;
+  color: #ffffff !important;
+}
+.passport-btn-def:hover {
+  background: #51cc73;
+  border-color: #51cc73;
+  color: #ffffff !important;
+}
+.passport-btn-def:active {
+  background: #51cc73;
+  border-color: #51cc73;
+  color: #ffffff !important;
+}
+.passport-btn-primary {
+  background: #2d85ca;
+  border-color: #2d85ca;
+  color: #ffffff !important;
+}
+.passport-btn-primary:hover {
+  background: #529dd8;
+  border-color: #529dd8;
+  color: #ffffff !important;
+}
+.passport-btn-primary:active {
+  background: #529dd8;
+  border-color: #529dd8;
+  color: #ffffff !important;
+}
+/* button height */
+.passport-btn.xl {
+  /* extra large */
+  height: 40px;
+  padding: 0 30px;
+  font-size: 18px;
+  line-height: 38px;
+}
+/* button width */
+.passport-btn.w-full {
+  width: 100%;
+  padding: 0 !important;
+}
+/* button padding */
+/* button file */
+.passport-txt[disabled],
+.passport-txt[disabled]:hover,
+.passport-txt[disabled]:focus,
+.passport-txt[disabled]:active {
+  background: #f8f8f8 !important;
+  border-color: #f1f1f1 !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  cursor: default !important;
+  cursor: not-allowed !important;
+}
+/* input text */
+.passport-txt {
+  width: 100px;
+  height: 26px;
+  padding: 5px 5px;
+  font-size: 12px;
+  line-height: 16px;
+  border: 1px solid #e4e4e4;
+  border-color: #e4e4e4;
+  -webkit-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  -moz-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.passport-txt[readonly="readonly"],
+.passport-txt[readonly="readonly"]:hover,
+.passport-txt[readonly="readonly"]:focus {
+  border-color: #e4e4e4 !important;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.passport-txt:hover {
+  border-color: #cccccc;
+  -webkit-box-shadow: 0 0 5px #ffffff;
+  box-shadow: 0 0 5px #ffffff;
+}
+.passport-txt:focus {
+  border-color: #35b558;
+  -webkit-box-shadow: 0 0 5px #51cc73;
+  box-shadow: 0 0 5px #51cc73;
+}
+/* text radius */
+.passport-txt.txt-radius {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+/* text height */
+.passport-txt.xl {
+  height: 40px;
+  padding: 11px 11px;
+  font-size: 14px;
+  line-height: 18px;
+}
+/* text width */
+.passport-txt.w-lg {
+  width: 100%;
+}
+.passport-txt.w-full {
+  width: 100%;
+}
+/* tel text */
+/* tel height*/
+/* txt section */
+/* file */
+/* select */
+/* select height */
+/* select width */
+/* textarea */
+/* icon */
+.passport-icon {
+  display: inline-block;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+}
+.passport-tab > .tabs ul:after {
+  display: table;
+  clear: both;
+  content: " ";
+}
+.passport-tab > .tabs li {
+  float: left;
+  cursor: pointer;
+}
+.passport-tab > .tabbed > .tab-group {
+  display: none;
+}
+.passport-popup {
+  -webkit-text-size-adjust: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  /* checkbox & radio */
+  /* 18x18 */
+  /* 32x32 */
+  /* 38x38 */
+  /* 48x48 */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 990;
+  padding: 40px;
+  background: #fff;
+  color: #999999;
+  font: normal 12px/1.4 Verdana, "Lantinghei SC", "Hiragino Sans GB", 'Microsoft YaHei', Helvetica, arial, simsun, sans-serif;
+  line-height: 1.4;
+}
+.passport-popup *,
+.passport-popup *:after,
+.passport-popup *:before {
+  -webkit-box-sizing: inherit;
+  -moz-box-sizing: inherit;
+  box-sizing: inherit;
+}
+.passport-popup button,
+.passport-popup input,
+.passport-popup select,
+.passport-popup textarea {
+  color: inherit;
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+}
+.passport-popup label {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+.passport-popup h2,
+.passport-popup h3 {
+  font-size: 100%;
+}
+.passport-popup ul {
+  list-style: none;
+  padding-left: 0px;
+}
+.passport-popup img {
+  vertical-align: middle;
+  border: 0;
+}
+.passport-popup input,
+.passport-popup button {
+  outline: 0;
+}
+.passport-popup a {
+  color: #35b558;
+  text-decoration: none;
+}
+.passport-popup a:hover {
+  color: #51cc73;
+  text-decoration: none;
+}
+.passport-popup input,
+.passport-popup button,
+.passport-popup .passport-btn,
+.passport-popup select,
+.passport-popup textarea {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.passport-popup input,
+.passport-popup button,
+.passport-popup .passport-btn,
+.passport-popup select,
+.passport-popup label {
+  vertical-align: middle;
+}
+.passport-popup button,
+.passport-popup input[type="button"],
+.passport-popup input[type="submit"],
+.passport-popup input[type="reset"] {
+  line-height: normal !important;
+  cursor: pointer;
+}
+.passport-popup input[type="checkbox"],
+.passport-popup input[type="radio"] {
+  width: 13px;
+  height: 13px;
+  margin: 0 5px 0 2px;
+  cursor: pointer;
+}
+.passport-popup input[type="checkbox"][disabled],
+.passport-popup input[type="radio"][disabled],
+.passport-popup input[type="checkbox"][disabled]:hover,
+.passport-popup input[type="radio"][disabled]:hover,
+.passport-popup input[type="checkbox"][disabled]:focus,
+.passport-popup input[type="radio"][disabled]:focus,
+.passport-popup input[type="checkbox"][disabled]:active,
+.passport-popup input[type="radio"][disabled]:active {
+  cursor: default !important;
+  cursor: not-allowed !important;
+}
+.passport-popup .icon-refresh {
+  width: 18px;
+  height: 18px;
+  background-position: 0 -38px;
+}
+.passport-popup .icon-phone,
+.passport-popup .icon-letter {
+  width: 32px;
+  height: 32px;
+  background-position: -49px -58px;
+}
+.passport-popup .icon-letter {
+  background-position: -83px -58px;
+}
+.passport-popup .icon-tencent,
+.passport-popup .icon-weibo,
+.passport-popup .icon-weixin,
+.passport-popup .icon-eoe {
+  width: 55px;
+  height: 55px;
+  background-position: 0 -65px;
+}
+.passport-popup a:hover .icon-tencent {
+  background-position: 0 -1px;
+}
+.passport-popup .icon-weibo {
+  background-position: -81px -65px;
+}
+.passport-popup a:hover .icon-weibo {
+  background-position: -81px -1px;
+}
+.passport-popup .icon-weixin {
+  background-position: -162px -65px;
+}
+.passport-popup a:hover .icon-weixin {
+  background-position: -162px -1px;
+}
+.passport-popup .icon-eoe {
+  background-position: -243px -65px;
+}
+.passport-popup a:hover .icon-eoe {
+  background-position: -243px -1px;
+}
+.passport-popup .icon-success {
+  width: 48px;
+  height: 48px;
+  background-position: 0 -58px;
+}
+.passport-popup:after {
+  display: table;
+  clear: both;
+  content: " ";
+}
+.passport-popup .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: url("//sp1.jikexueyuan.com/static/images/popup_def_close.png") no-repeat center center / 14px 14px;
+}
+.passport-popup > .layout-inner {
+  position: relative;
+  float: left;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+.passport-popup > .layout-inner > .hd {
+  height: 40px;
+  padding: 0 30px 0 8px;
+  line-height: 40px;
+  cursor: default ;
+}
+.passport-popup > .layout-inner > .hd h2 {
+  color: #000;
+  width: 300px;
+  float: left;
+  margin: 0px;
+  display: inline-block;
+  font-size: 18px;
+  font-weight: normal;
+}
+.passport-popup > .layout-inner > .hd p {
+  font-size: 12px;
+  color: #999;
+  margin-top: 10px;
+}
+#warning {
+  position: fixed;
+  top: -40px;
+  left: 50%;
+  z-index: 60000;
+  opacity: 0;
+  padding: 4px 20px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  text-align: center;
+}
+.waring-success {
+  background: #35b558;
+}
+.waring-failure {
+  background: #ff5c00;
+}
+.waring-sub {
+  background: #2d85ca;
+}
+.passport-step {
+  padding: 8px 6px;
+}
+.passport-step li {
+  position: relative;
+  top: 0;
+  left: 0;
+  float: left;
+  width: 100px;
+  margin-left: 90px;
+  padding-top: 35px;
+  text-align: center;
+}
+.passport-step li.first {
+  margin-left: 0;
+}
+.passport-step li .disc {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 20;
+  display: block;
+  width: 30px;
+  height: 30px;
+  margin-left: -15px;
+  background-color: #b9b9b9;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  color: #fff;
+  font: 16px/30px arial;
+  cursor: default;
+}
+.passport-step li .strip {
+  position: absolute;
+  top: 13px;
+  left: -120px;
+  z-index: 10;
+  display: block;
+  width: 150px;
+  height: 3px;
+  background-color: #b9b9b9;
+}
+.passport-step p {
+  color: #666;
+  font-size: 14px;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+}
+.passport-step .now .disc,
+.passport-step .now .strip,
+.passport-step .past .disc,
+.passport-step .past .strip {
+  background-color: #35b558;
+}
+.passport-safely {
+  margin-top: 10px;
+}
+.passport-safely li {
+  float: left;
+  width: 60px;
+  height: 14px;
+  margin-right: 4px;
+  background-color: #ddd;
+  color: #fff;
+  font-size: 12px;
+  line-height: 14px;
+  text-align: center;
+  cursor: default;
+}
+.passport-safely.safely-danger .danger {
+  background-color: #da4619;
+}
+.passport-safely.safely-general .danger,
+.passport-safely.safely-general .general {
+  background-color: #ff5c00;
+}
+.passport-safely.safely-safe li {
+  background-color: #35b558;
+}
+.clearfix:after,
+.passport-step:after,
+.passport-safely:after,
+.passport-sign:after,
+.passport-form .form-imgcode .form-cont:after {
+  display: table;
+  clear: both;
+  content: " ";
+}
+.passport-icon {
+  background-image: url("//sp1.jikexueyuan.com/static/images/fouricon.png");
+  background-size: 298px 120px;
+}
+.passport-icon2 {
+  background-image: url("//sp1.jikexueyuan.com/static/images/passport.png");
+  background-size: 155px 106px;
+}
+.passport-sign {
+  /*  height: 400px;*/
+  /*padding: 25px 0 0 0;*/
+  background-color: #fff;
+}
+.passport-sign .main-form,
+.passport-sign .aside {
+  float: left;
+  /*  padding: 0 25px;*/
+}
+#register-popup .main-form {
+  width: 385px;
+  border-right: 2px solid #fafafa;
+  padding-right: 20px;
+}
+#login-popup .main-form {
+  width: 370px;
+}
+.passport-sign .main-form h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 20px;
+}
+/*.passport-sign .main-form.main-form-sign {
+  min-height: 350px;
+}*/
+.passport-sign .aside {
+  width: 290px;
+}
+.LoginAndRegister-Mask .passport-sign .passport-goto {
+  margin-bottom: 80px;
+  padding-top: 10px;
+  padding-left: 20px;
+  color: #999;
+  font-size: 16px;
+}
+.passport-sign .passport-third .hd {
+  height: 16px;
+  font-size: 12px;
+  text-align: center;
+  width: 240px;
+  margin: 0 auto;
+}
+.passport-sign .passport-third .hd .layout-inner {
+  margin-bottom: 7px;
+  border-bottom: 2px solid #f2f2f2;
+}
+.layout-inner .quikely {
+  border-bottom: 1px solid #e4e4e4;
+  text-align: center;
+  height: 10px;
+  margin: 15px 0 10px 0;
+}
+.layout-inner .quikely span {
+  padding: 5px;
+  background: #fff;
+}
+/*.passport-sign .passport-third .hd .layout-inner h3 {
+  font-size: 18px;
+  width: 300px;
+  float: left;
+}*/
+.passport-sign .passport-third .hd h3 {
+  width: 106px;
+  margin: 0 auto -8px;
+  background-color: #fff;
+  font-weight: 400;
+  line-height: 16px;
+}
+.passport-popup .links {
+  margin: 0 auto;
+  padding-top: 20px;
+  text-align: center;
+}
+.passport-popup .links a {
+  display: inline-block;
+  margin: 0 8px;
+}
+.passport-popup .links a:last-child {
+  margin-right: 0;
+}
+/*.passport-sign .passport-ad {
+  width: 240px;
+  height: 60px;
+  margin-top: 80px;
+}*/
+.passport-sign .passport-tab .tabs {
+  margin-bottom: 15px;
+}
+.passport-sign .passport-tab .tabs ul {
+  border-bottom: 2px solid #e4e4e4;
+}
+.passport-sign .passport-tab .tabs li {
+  float: left;
+  width: 50%;
+  height: 32px;
+  margin-bottom: -2px;
+  text-align: center;
+  font-size: 16px;
+}
+.passport-sign .passport-tab .tabs li.active {
+  color: #35b558;
+  border-bottom: 2px solid #35b558;
+}
+.passport-form .form-item {
+  margin-bottom: 12px;
+}
+.passport-form .form-cont {
+  position: relative;
+  line-height: 26px;
+}
+.passport-form .js-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 40px;
+  padding: 11px;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: left;
+}
+.passport-form .passport-txt {
+  position: relative;
+  z-index: 10;
+  color: #666;
+  font-size: 12px;
+}
+.passport-form .passport-txt.placeholder {
+  background-color: rgba(0, 0, 0, 0);
+}
+.passport-form .passport-note {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 40px;
+  z-index: 20;
+  padding: 0;
+  background-color: rgba(0, 0, 0, 0);
+  color: #fff;
+  line-height: 26px;
+}
+.passport-form .passport-note span {
+  display: block;
+  height: 26px;
+  margin: 7px 7px 0 0;
+  padding: 0 5px;
+  background-color: #ff5c00;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+.passport-form .form-imgcode .layout-inner3 {
+  position: relative;
+  float: left;
+  width: 100%;
+}
+.passport-form .form-imgcode .layout-inner {
+  position: relative;
+  float: left;
+  width: 240px;
+}
+.passport-form .form-imgcode .imgcode {
+  float: right;
+}
+.passport-form .form-imgcode .imgcode img {
+  width: 100px;
+  height: 40px;
+  cursor: pointer;
+}
+.passport-form .form-imgcode .imgcode .passport-icon {
+  cursor: pointer;
+}
+.passport-form .form-mcode .btn-getcode {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+}
+.passport-form .form-mcode .btn-getcode .passport-btn {
+  text-overflow: initial;
+  width: 90px;
+  height: 26px;
+  margin: 7px 7px 0 0;
+  padding: 0;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+}
+.passport-form .form-mcode .passport-note {
+  right: 97px;
+}
+.passport-form .passport-sms {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+.passport-form .passport-sms a {
+  color: #2d85ca;
+}
+.passport-form .passport-sms a:hover {
+  color: #529dd8;
+}
+.passport-form .passport-sms a.disabled,
+.passport-form .passport-sms a.disabled:hover {
+  color: #999;
+}
+.passport-form-sign .form-treaty .passport-note span {
+  margin: 0;
+}
+.passport-form-sign .form-treaty .form-cont {
+  line-height: 20px;
+}
+.passport-form-sign .treaty {
+  color: #999;
+}
+.passport-form-sign .treaty:hover {
+  color: #35b558;
+}
+.passport-form-sign .form-sevenday label {
+  float: left;
+}
+.passport-form-sign .form-sevenday .forget-link {
+  float: right;
+  color: #999;
+}
+.passport-form-sign .form-sevenday .forget-link:hover {
+  color: #35b558;
+}
+.passport-forget {
+  padding: 25px 0;
+  background-color: #fff;
+  min-height: 400px;
+}
+.passport-forget .passport-into {
+  padding-top: 95px;
+}
+.passport-forget .passport-into .passport-btn {
+  display: block;
+  width: 250px;
+  height: 54px;
+  margin: 0 auto 50px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  font-size: 16px;
+  text-align: left;
+  line-height: 52px;
+}
+.passport-forget .passport-into .passport-btn .passport-icon {
+  margin-right: 25px;
+}
+.passport-forget .passport-step {
+  margin: 40px auto 20px;
+  width: 492px;
+}
+.passport-forget .passport-form {
+  width: 300px;
+  margin-right: auto;
+  margin-left: auto;
+}
+.passport-forget .passport-form .form-submit {
+  margin-top: 30px;
+}
+.passport-forget .passport-form .form-item {
+  margin-bottom: 18px;
+}
+.passport-form-email .form-text,
+.passport-form-phone .form-text,
+.passport-form-email .form-code-text,
+.passport-form-phone .form-code-text {
+  width: 500px;
+  margin: 0 -100px;
+  text-align: center;
+}
+.passport-form-email .form-text p,
+.passport-form-phone .form-text p,
+.passport-form-email .form-code-text p,
+.passport-form-phone .form-code-text p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 20px;
+}
+.passport-form-email .form-text big,
+.passport-form-phone .form-text big,
+.passport-form-email .form-code-text big,
+.passport-form-phone .form-code-text big {
+  font-size: 14px;
+}
+.passport-form-email .form-email,
+.passport-form-phone .form-email {
+  font-size: 14px;
+}
+.passport-form-email .form-email p,
+.passport-form-phone .form-email p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.passport-form-email .form-email em,
+.passport-form-phone .form-email em {
+  color: #35b558;
+}
+.passport-form-phone .form-code-text {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  text-align: left;
+}
+.passport-form-phone .form-code-text .passport-icon {
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin-left: -60px;
+}
+.passport-form-phone .passport-voice {
+  color: #2d85ca;
+}
+.passport-form-phone .passport-voice:hover {
+  color: #529dd8;
+}
+.mb-25 {
+  margin-bottom: 25px !important;
+}
+.passport-popup .close-event {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  background: url("//sp1.jikexueyuan.com/static/images/popup_def_close.png") no-repeat center center / 14px 14px;
+}
+.hide {
+  display: none;
+}
+.passport-popup .regphone {
+  font-size: 16px;
+  text-align: center;
+  color: #000;
+  margin-top: 30px;
+}
+.passport-popup .regphone a:hover {
+  text-decoration: underline;
+}
+.passport-popup .getfreevideo {
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+  color: #000;
+}
+#register-registe-bindPhone {
+  border-top: 5px solid #35B558;
+}
+#registe-bindPhone .instructions {
+  display: block;
+  margin: 20px 0 20px 0;
+  padding: 10px 0;
+  color: #000;
+  border-top: 1px solid #35B558;
+  border-bottom: 1px solid #35B558;
+  font-size: 14px;
+  line-height: 22px;
+}
+.passport-popup .phonedtm {
+  display: block;
+  text-align: right;
+  margin: 30px 0px 10px 0px;
+  color: #999;
+}
+.passport-popup .phonedtm i {
+  float: right;
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  overflow: hidden;
+  background: url("//sp1.jikexueyuan.com/static/images/feg-icon.png");
+  background-position: -15px 0px;
+  background-size: 30px 30px;
+}
+.passport-popup .phonedtm:hover i {
+  background-position: -15px -15px;
+}
+#verifyId {
+  box-sizing: content-box;
+}
+.nc-error-txt {
+  color: #ff5c00;
+  text-align: right;
+  line-height: 34px;
+}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style>@charset "utf-8";
+@font-face{font-family:'nc_iconfont';src:url("//at.alicdn.com/t/font_1465353706_4784257.eot");src:url("//at.alicdn.com/t/font_1465353706_4784257.eot?#iefix") format('embedded-opentype'),url("//at.alicdn.com/t/font_1465353706_4784257.woff") format('woff'),url("//at.alicdn.com/t/font_1465353706_4784257.ttf") format('truetype'),url("//at.alicdn.com/t/font_1465353706_4784257.svg#iconfont") format('svg')}.nc-container div#nc-loading-circle{background:transparent;width:20px;height:20px;display:inline-block;position:relative;vertical-align:middle}.nc-container div#nc-loading-circle .sk-circle{background:transparent;width:100%;height:100%;position:absolute;left:0;top:0}.nc-container #nc-loading-circle .sk-circle:before{content:'';display:block;margin:0 auto;width:15%;height:15%;background-color:#818181;border-radius:100%;-webkit-animation:sk-circleFadeDelay 1.2s infinite ease-in-out both;animation:sk-circleFadeDelay 1.2s infinite ease-in-out both}.nc-container #nc-loading-circle .sk-circle2{-webkit-transform:rotate(30deg);-ms-transform:rotate(30deg);transform:rotate(30deg)}.nc-container #nc-loading-circle .sk-circle3{-webkit-transform:rotate(60deg);-ms-transform:rotate(60deg);transform:rotate(60deg)}.nc-container #nc-loading-circle .sk-circle4{-webkit-transform:rotate(90deg);-ms-transform:rotate(90deg);transform:rotate(90deg)}.nc-container #nc-loading-circle .sk-circle5{-webkit-transform:rotate(120deg);-ms-transform:rotate(120deg);transform:rotate(120deg)}.nc-container #nc-loading-circle .sk-circle6{-webkit-transform:rotate(150deg);-ms-transform:rotate(150deg);transform:rotate(150deg)}.nc-container #nc-loading-circle .sk-circle7{-webkit-transform:rotate(180deg);-ms-transform:rotate(180deg);transform:rotate(180deg)}.nc-container #nc-loading-circle .sk-circle8{-webkit-transform:rotate(210deg);-ms-transform:rotate(210deg);transform:rotate(210deg)}.nc-container #nc-loading-circle .sk-circle9{-webkit-transform:rotate(240deg);-ms-transform:rotate(240deg);transform:rotate(240deg)}.nc-container #nc-loading-circle .sk-circle10{-webkit-transform:rotate(270deg);-ms-transform:rotate(270deg);transform:rotate(270deg)}.nc-container #nc-loading-circle .sk-circle11{-webkit-transform:rotate(300deg);-ms-transform:rotate(300deg);transform:rotate(300deg)}.nc-container #nc-loading-circle .sk-circle12{-webkit-transform:rotate(330deg);-ms-transform:rotate(330deg);transform:rotate(330deg)}.nc-container #nc-loading-circle .sk-circle2:before{-webkit-animation-delay:-1.1s;animation-delay:-1.1s}.nc-container #nc-loading-circle .sk-circle3:before{-webkit-animation-delay:-1s;animation-delay:-1s}.nc-container #nc-loading-circle .sk-circle4:before{-webkit-animation-delay:-.9s;animation-delay:-.9s}.nc-container #nc-loading-circle .sk-circle5:before{-webkit-animation-delay:-.8s;animation-delay:-.8s}.nc-container #nc-loading-circle .sk-circle6:before{-webkit-animation-delay:-.7s;animation-delay:-.7s}.nc-container #nc-loading-circle .sk-circle7:before{-webkit-animation-delay:-.6s;animation-delay:-.6s}.nc-container #nc-loading-circle .sk-circle8:before{-webkit-animation-delay:-.5s;animation-delay:-.5s}.nc-container #nc-loading-circle .sk-circle9:before{-webkit-animation-delay:-.4s;animation-delay:-.4s}.nc-container #nc-loading-circle .sk-circle10:before{-webkit-animation-delay:-.3s;animation-delay:-.3s}.nc-container #nc-loading-circle .sk-circle11:before{-webkit-animation-delay:-.2s;animation-delay:-.2s}.nc-container #nc-loading-circle .sk-circle12:before{-webkit-animation-delay:-.1s;animation-delay:-.1s}@-webkit-keyframes sk-circleFadeDelay{0%,39%,100%{opacity:0}40%{opacity:1}}@-webkit-keyframes sk-circleFadeDelay{0%,39%,100%{opacity:0}40%{opacity:1}}@keyframes sk-circleFadeDelay{0%,39%,100%{opacity:0}40%{opacity:1}}.nc-container .scale_text2 #nc-loading-circle .sk-circle:before{background-color:#fff}.nc_iconfont{font-family:"nc_iconfont";color:#ff3f08;font-size:16px;font-style:normal}.captcha-error .icon_ban{float:left;font-size:16px;padding-right:5px;line-height:14px}.clickCaptcha_text .btn_refresh{font-style:normal;cursor:pointer;background:#fff;color:#737383}.imgCaptcha .btn_refresh{font-size:20px;cursor:pointer;background:#fff;color:#737383}.nc_voice{display:none;position:relative;margin-top:-34px;z-index:99;width:auto;height:34px;background:#fff}.omeo-code-img,.omeo-code-audio{font-size:0;text-align:left}.omeo-code-audiobox,.omeo-code-img a,.omeo-code-audio a,.omeo-code-state{display:inline-block;*display:inline;zoom:1;height:32px;vertical-align:top;font-size:12px}.omeo-code .omeo-code-refresh{background:transparent;width:32px;height:32px;font-size:20px;color:#888;text-align:center;text-decoration:none;padding-left:4px;line-height:32px}.omeo-code .omeo-switch{display:none;width:32px;height:32px;border-left:1px solid #e1e1e1;background-image:url("//g.alicdn.com/sd/ncpc/images/checkcode.png");background-repeat:no-repeat}.omeo-img-active .omeo-code-img{display:block}.omeo-img-active .omeo-code-audio{display:none}.omeo-code-img img{border:1px solid #cdcdcd;cursor:pointer}.omeo-code-img .omeo-switch{background-position:9px -41px}.omeo-audio-active .omeo-code-audio{display:block}.omeo-audio-active .omeo-code-img{display:none}.omeo-code-refresh{position:relative;left:95px}.omeo-code-audiobox{position:relative;height:30px;line-height:32px;border:1px solid #e1e1e1;text-align:center;overflow:hidden;left:100px;top:1px;width:45%;min-width:80px;background-color:#eee}.omeo-code-audiobox a{display:block;text-decoration:none;color:#06c}.omeo-code-audiobox-playing a{visibility:hidden}.omeo-code-audiobox span,.omeo-code-audiobox b{visibility:hidden;position:absolute;top:0;left:0;height:30px;font-weight:100;overflow:hidden}.omeo-code-audiobox-playing span,.omeo-code-audiobox-playing b{visibility:visible}.omeo-code-audiobox span{z-index:0;width:0;background:#186bca}.omeo-code-audiobox b{width:100%;z-index:1;text-align:left;text-indent:30px;color:#999;background:url("//g.alicdn.com/sd/ncpc/images/checkcode.png") no-repeat 14px -89px}.omeo-code-audio .omeo-switch{background-position:5px 10px}input[type=text]::-ms-clear{display:none}.omeo-box{position:relative;background-color:#fff}.omeo-code-echo{position:absolute;top:2px;left:2px}.omeo-code-echo input{padding:5px;height:18px;line-height:18px;border:1px solid #ddd;width:80px;outline:0}.omeo-code-state{height:30px;line-height:30px;text-indent:25px;white-space:nowrap;background-image:url("//g.alicdn.com/sd/ncpc/images/checkcode.png");background-repeat:no-repeat;background-position:100px 100px}.omeo-code-echo .omeo-code-state-error{width:auto;background-position:7px -193px}.omeo-code-echo .omeo-code-state-success{position:absolute;width:30px;background-position:7px -243px}.omeo-code-state{position:absolute;left:0;top:28px}.nc_voice_close{display:inline-block;position:relative;cursor:pointer;left:95px;top:0;border-left:#ddd 2px solid;padding:0 0 0 7px;background-color:#fff;font-size:20px;color:#888;line-height:32px}.nc_help{position:absolute;width:100%;height:100%;left:0;top:0;z-index:99999}.nc_help .mask{background-color:#000;opacity:.5;filter:alpha(opacity=50);width:100%;height:100%;top:0;left:0}.nc_btn_close{position:absolute;height:20px;left:500px;border-radius:20px;padding:10px 30px;background-color:#aaa;color:#fff;cursor:pointer;z-index:10}.nc_btn_close:hover{background-color:#afafaf}.nc_hand{position:absolute;width:68px;height:53px;background-image:url("//g.alicdn.com/sd/ncpc/images/hand.png");z-index:3}.nc_slide_bg{z-index:3;font-size:12px;text-align:center;color:#fff;line-height:34px}.nc_voicebtn{position:absolute;padding:0;right:-25px;font-size:23px;color:#888;cursor:pointer;line-height:34px}.nc_helpbtn{position:absolute;cursor:pointer;right:-95px;top:4px;font-size:12px;background-color:#ffb668;color:#fff;padding:4px;border-radius:2px;line-height:18px;display:none}.nc_helpbtn:before{width:0;height:0;content:"";position:absolute;left:-2px;top:6px;border-top:4px solid transparent;border-bottom:4px solid transparent;border-right:4px solid #ffb668}.nc-container .errloading{border:#faf1d5 1px solid;text-indent:3px;background-image:none;font-size:12px;width:290px;line-height:20px;padding:7px 5px 8px 5px;color:#ef9f06;}.nc-container .errloading a{color:#30a7fc}.nc_captcha_text .nc_err{float:left;text-indent:0}.button_move{transition:left .5s;-moz-transition:left .5s;-webkit-transition:left .5s;-o-transition:left .5s}.bg_move{transition:width .5s;-moz-transition:width .5s;-webkit-transition:width .5s;-o-transition:width .5s}.nc_slide_box{position:absolute}.nc_captcha_text{height:auto;line-height:20px;visibility:hidden;font-size:12px;color:#999;font-weight:normal}.nc-container .nc_captcha_img_text{width:auto;height:auto;line-height:20px;visibility:hidden;font-size:12px;color:#999;font-weight:normal;display:none;padding:0 0 10px 0;background-position:0 0;}.nc-container .nc_captcha_img_text span.nc-lang-cnt{line-height:inherit}.nc-container .imgCaptcha .nc_captcha_img_text{width:auto}.nc_captcha_img_text{height:auto;line-height:20px;visibility:hidden;font-size:12px;color:#999;font-weight:normal;display:none;padding:0 0 10px 3px;background-position:0 0}.nc-container .nc_wrapper{width:auto}.nc_scale{width:auto;height:34px;background:#e8e8e8;position:relative;margin:0;padding:0}.nc_scale.is_audio{margin-right:25px}.nc-container .nc_scale div{height:auto}.nc-container .nc_scale ul{list-style:none}.nc-container .nc_scale .btn_slide{color:#737383;background-image:none;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.nc-container .nc_scale span{text-align:center;width:40px;height:32px;line-height:32px;border:1px solid #ccc;position:absolute;left:0;cursor:move;background:#fff;z-index:2}.nc-container .nc_scale span.nc-lang-cnt{*line-height:34px;float:none;width:auto;height:auto;*height:34px;border:none;position:static;cursor:inherit;background:none;z-index:0;display:inline}.nc_slide_button{width:40px;height:32px;border:1px solid #ccc;position:absolute;left:0;cursor:move;background:#fff url("//g.alicdn.com/sd/ncpc/images/rt.png") no-repeat center;z-index:2}@media screen and (-ms-high-contrast:active),(-ms-high-contrast:none){.nc_scale span{height:32px}}.nc-container .nc_scale .btnok{cursor:default;background:#fff url("//g.alicdn.com/sd/ncpc/images/yes.png") no-repeat center;z-index:3}.nc-container .nc_scale .btnok2{cursor:default;font-size:20px;background:#fff url("//g.alicdn.com/sd/ncpc/images/no.png") no-repeat center;z-index:3}.nc-container .nc_scale .btn_warn{cursor:default;color:#ff3f08;line-height:34px;text-align:center;font-size:20px;background:#fff;z-index:3}.nc-container .clickCaptcha_text .btn_refresh{font-size:20px}.nc-container .clickCaptcha_text .icon_close{line-height:30px;margin-left:8px;cursor:default;color:#ff3f08;font-size:16px;float:left;margin-right:2px;background:transparent;z-index:3}.nc-container .nc_captcha_img_text .icon_close{cursor:default;color:#ff3f08;font-size:16px;float:left;margin-right:4px;background:transparent;z-index:3;line-height:18px}.nc-container .errloading .icon_warn{cursor:default;color:#ff3f08;font-size:18px;float:left;background:transparent;z-index:3}.nc-container .nc_scale .btn_ok{cursor:default;line-height:34px;text-align:center;font-size:20px;background:#fff;z-index:3;color:#76c61d}.nc-container .nc_scale .nc_ok,.nc-container .nc_scale .nc_bg{background:#7ac23c}.nc-container .nc_scale .nc_bg{position:absolute;height:100%;_height:34px;left:0;width:10px}.nc-container .nc_scale div.redbar{background:#fc461e;opacity:.5;filter:alpha(opacity=50)}.nc-container .nc_scale div.orange{background:#f00}.nc-container .nc_scale .scale_text{width:100%;height:100%;text-align:center;position:absolute;z-index:1;background:transparent;color:#9c9c9c;line-height:34px;font-size:12px;cursor:pointer}.nc-container .nc_scale .scale_text2{text-align:left;color:#fff;font-size:12px;text-indent:10px}.nc-container .nc_scale .scale_text2 b{padding-left:0;font-weight:normal}.nc-container .nc_scale .scale_text.scale_loading_text{text-align:center}.nc-container .nc_scale .imgCaptcha,.nc-container .nc_scale .clickCaptcha{display:none;overflow:hidden;border:1px solid #ccc;background:#fff;z-index:20000;}.nc-container .nc_scale .imgCaptcha p.error span,.nc-container .nc_scale .clickCaptcha p.error span{line-height:normal}.nc-container .nc_scale .imgCaptcha{height:auto}.nc-container .nc_scale .clickCaptcha{position:absolute;left:0;top:35px;height:270px;background:#fff;display:none;}.nc-container .nc_scale .clickCaptcha p.error i{color:#ff3f08;font-style:normal}.nc-container .nc_scale .clickCaptcha div{position:static;clear:both;width:100%;background:#fff;height:auto}.nc-container .nc_scale .clickCaptcha .clickCaptcha_text{height:30px;line-height:30px;font-size:12px;color:#999;}.nc-container .nc_scale .clickCaptcha .clickCaptcha_text b{font-weight:normal}.nc_btn_2{position:absolute;right:0;top:0;cursor:pointer;margin:2px 9px 0 0}.nc_iconfont.nc_btn_2{position:absolute;right:0;top:0;cursor:pointer}.nc_iconfont.nc_btn_1{position:absolute;top:10px;right:5px}.nc_btn_1{top:10px;right:10px}.scale_text i{font-style:normal;border:none;position:static;cursor:default;color:#fffc00;background:none;display:inline;width:100%}.nc-container .clickCaptcha .clickCaptcha_img{margin:0 auto;clear:both;position:relative;}.nc-container .clickCaptcha .clickCaptcha_img img{width:230px;height:230px;margin-left:10px;margin-top:5px}.nc-container .clickCaptcha .clickCaptcha_btn{margin:10px 0 0 15px;position:relative;text-align:left;}.nc-container .clickCaptcha .clickCaptcha_btn img{cursor:pointer}.nc-container .imgCaptcha{position:absolute;left:0;top:35px;height:auto;padding-bottom:15px;border:1px solid #ccc;background:#fff;}.nc-container .imgCaptcha div{position:static;width:90%;background-color:#fff}.nc-container .imgCaptcha,.nc-container .clickCaptcha{text-align:left;}.nc-container .imgCaptcha a,.nc-container .clickCaptcha a{color:#ff3f08}.nc-container .imgCaptcha .imgCaptcha_text{height:42px;line-height:42px;width:120px;background:#fff;font-size:14px;text-align:left;color:#747474;float:left;margin-left:10px;}.nc-container .imgCaptcha .imgCaptcha_text input{margin-top:5px;height:30px;line-height:30px;font-size:14px;width:90px;background:#fff}.nc-container .imgCaptcha .imgCaptcha_text input:focus{outline:none;color:#bbb}.nc-container .imgCaptcha .imgCaptcha_btn{margin:0 0 0 12px;*margin-left:0;clear:both;padding-top:5px;width:90%;}.nc-container .imgCaptcha .imgCaptcha_btn img{cursor:pointer}.nc-container .imgCaptcha .nc_scale_submit{margin:0 auto;cursor:pointer;background-color:#fc461e;width:120px;height:32px;line-height:32px;color:#fff;text-align:center}.nc-container .imgCaptcha .imgCaptcha_img{margin:4px 0 0 100px;height:40px;width:130px;overflow:hidden;cursor:pointer;}.nc-container .imgCaptcha .imgCaptcha_img img{width:130px}.nc-container .imgCaptcha .imgCaptcha_img input{border:solid 1px #ccc}.nc-lang-ar_MA,.nc-lang-ar_SA,.nc-lang-iw_HE,.nc-lang-iw_IL{text-align:right;*text-align:left;}.nc-lang-ar_MA .nc_scale .scale_text2,.nc-lang-ar_SA .nc_scale .scale_text2,.nc-lang-iw_HE .nc_scale .scale_text2,.nc-lang-iw_IL .nc_scale .scale_text2{text-align:right;}.nc-lang-ar_MA .nc_scale .scale_text2 span,.nc-lang-ar_SA .nc_scale .scale_text2 span,.nc-lang-iw_HE .nc_scale .scale_text2 span,.nc-lang-iw_IL .nc_scale .scale_text2 span{*display:inline-block;padding:0 56px 0 0}.nc-lang-ar_MA .nc_captcha_img_text,.nc-lang-ar_SA .nc_captcha_img_text,.nc-lang-iw_HE .nc_captcha_img_text,.nc-lang-iw_IL .nc_captcha_img_text{*text-align:right}.nc-lang-ar_MA span.nc-lang-cnt,.nc-lang-ar_SA span.nc-lang-cnt,.nc-lang-iw_HE span.nc-lang-cnt,.nc-lang-iw_IL span.nc-lang-cnt{text-align:right;direction:rtl}.nocaptcha span.nc-lang-cnt{float:none;height:auto;line-height:30px}.nc-container{font-size:12px;-ms-touch-action:none;touch-action:none;}.nc-container p{margin:0;padding:0;display:inline}.nc-container .scale_text.scale_text span[data-nc-lang="_startTEXT"]{display:inline-block;width:100%}.nc-container .scale_text.scale_text.slidetounlock span[data-nc-lang="_startTEXT"]{background:-webkit-gradient(linear,left top,right top,color-stop(0,#4d4d4d),color-stop(.4,#4d4d4d),color-stop(.5,#fff),color-stop(.6,#4d4d4d),color-stop(1,#4d4d4d));-webkit-background-clip:text;-webkit-text-fill-color:transparent;-webkit-animation:slidetounlock 3s infinite;-webkit-text-size-adjust:none}.nc-container .nc_scale .nc-align-center.scale_text2{text-align:center;text-indent:-42px}@-webkit-keyframes slidetounlock{0%{background-position:-200px 0}100%{background-position:200px 0}}.nc-container.tb-login .clickCaptcha_text .icon_close{line-height:30px;margin-left:0;cursor:default;color:#ff3f08;font-size:16px;float:left;margin-right:0;background:transparent;z-index:3}.nc-container.tb-login{position:relative;margin-top:20px;display:none;}.nc-container.tb-login .nc_scale{width:auto;}.nc-container.tb-login .nc_scale .scale_text2{text-indent:-42px;text-align:center;}.nc-container.tb-login .nc_scale .scale_text2 b{padding:0}.nc-container.tb-login .nc_scale.nc_err div.scale_text{background:#f79977}.nc-container.tb-login .errloading{width:auto}.nc-container.tb-login .imgCaptcha,.nc-container.tb-login .clickCaptcha{width:252px;*width:256px;border:0;*height:300px;min-height:300px;max-height:inherit !important;}.nc-container.tb-login .imgCaptcha div.login-msg.error,.nc-container.tb-login .clickCaptcha div.login-msg.error{background:#fff2f2}.nc-container.tb-login .imgCaptcha .captcha-error,.nc-container.tb-login .clickCaptcha .captcha-error{position:absolute;top:0;width:244px;height:auto;margin-bottom:15px;padding:3px;border:solid 1px #ff8e8e;line-height:18px}.nc-container.tb-login .imgCaptcha .captcha-inform,.nc-container.tb-login .clickCaptcha .captcha-inform{font-size:110%;margin-left:20px}.nc-container.tb-login .imgCaptcha{padding-top:66px;}.nc-container.tb-login .imgCaptcha .imgCaptcha_text{width:100px;margin-left:0;}.nc-container.tb-login .imgCaptcha .imgCaptcha_text input:focus{color:#000}.nc-container.tb-login .imgCaptcha .imgCaptcha_img{width:120px;_width:100px}.nc-container.tb-login .imgCaptcha .imgCaptcha_btn{width:100%;margin-left:0}.nc-container.tb-login .imgCaptcha .nc_scale_submit{width:100%;height:36px;line-height:36px;margin-top:20px;margin-left:0;border-radius:3px;font-size:16px;font-family:Tahoma,Helvetica,Arial,sans-serif;background:#ff3f08}.nc-container.tb-login .clickCaptcha{padding-top:40px;}.nc-container.tb-login .clickCaptcha .clickCaptcha_text{text-indent:4px}.nc-container.tb-login .clickCaptcha .clickCaptcha_img img{margin-left:10px}.nc-container.tb-login .nc_btn_1{top:77px;_top:57px}.nc-container.tb-login .nc_btn_2{top:36px}.login .nc-container.tb-login .login-msg p,.login-box .nc-container.tb-login .login-msg p{width:auto;float:left}.nc-container.tb-login.nc-old-login{margin:20px 0 10px 0;width:250px;}.nc-container.tb-login.nc-old-login .nc_wrapper{width:250px}.nc-container.tb-login.nc-old-login .imgCaptcha,.nc-container.tb-login.nc-old-login .clickCaptcha{width:250px;min-height:auto;}.nc-container.tb-login.nc-old-login .imgCaptcha .captcha-error,.nc-container.tb-login.nc-old-login .clickCaptcha .captcha-error{line-height:16px}.nc-container.tb-login.nc-old-login .clickCaptcha{padding-top:28px;}.nc-container.tb-login.nc-old-login .clickCaptcha .clickCaptcha_img img{width:200px;height:200px}.nc-container.nc-old-login.show-click-captcha{padding-bottom:60px}.nc-container.nc-old-login.show-click-captcha.nc-tm-min-fix{padding-bottom:40px}.nc-container.tb-login.nc-tm-min-fix .clickCaptcha{max-height:340px !important}#content .login-box .bd .nc-container.tb-login .login-msg{margin:10px auto 15px auto}#content .login-box .bd .nc-container.tb-login.nc-old-login.show-click-captcha .login-msg{margin:2px 0 0 0}.nc-container .nc_scale .nc-cc{display:none;position:absolute;left:0;top:35px;z-index:20000;width:360px;height:570px;border:1px solid #5eaef1;border-radius:4px;background:#fff;font-size:14px;line-height:18px;color:#333;}.nc-container .nc_scale .nc-cc.nc-cc-status-loading .nc-cc-btn,.nc-container .nc_scale .nc-cc.nc-cc-status-verifing .nc-cc-btn{background-color:#90c1eb}.nc-container .nc_scale .nc-cc.nc-cc-status-loading .nc-cc-btn,.nc-container .nc_scale .nc-cc.nc-cc-status-verifing .nc-cc-btn,.nc-container .nc_scale .nc-cc.nc-cc-status-loading .nc-cc-refresh,.nc-container .nc_scale .nc-cc.nc-cc-status-verifing .nc-cc-refresh{cursor:default}.nc-container .nc_scale .nc-cc.nc-cc-status-loading .nc-cc-refresh,.nc-container .nc_scale .nc-cc.nc-cc-status-verifing .nc-cc-refresh{color:#999}.nc-container .nc_scale .nc-cc a{color:#3199f4;text-decoration:none}.nc-container .nc_scale .nc-cc .nc_iconfont{vertical-align:top;margin-right:8px}.nc-container .nc_scale .nc-cc-btn{display:inline-block;*display:inline;*zoom:1;vertical-align:top;letter-spacing:normal;word-spacing:normal;width:100px;line-height:30px;text-align:center;background-color:#3199f4;color:#fff;border-radius:4px;cursor:pointer;}.nc-container .nc_scale .nc-cc-btn.nc-cc-disabled{background-color:#90c1eb;cursor:default}.nc-container .nc_scale .nc-cc-btn .nc-lang-cnt{line-height:18px}.nc-container .nc_scale .nc-cc-header{padding:20px 20px 19px 20px;height:100px;background:#f4f8fa;border-bottom:1px solid #ccc}.nc-container .nc_scale .nc-cc-img1-box{float:left;width:100px;height:100px;margin-right:16px}.nc-container .nc_scale .nc-cc-txt{overflow:hidden;*zoom:1;line-height:30px;padding-top:11px}.nc-container .nc_scale .nc-cc-img2-box{position:relative;padding:0 20px;margin-top:20px}.nc-container .nc_scale .nc-cc-items{position:absolute;left:20px;_left:0;top:0;width:320px;overflow:hidden}.nc-container .nc_scale .nc-cc-items-inner{margin-right:-20px}.nc-container .nc_scale .nc-cc-item{position:relative;display:inline-block;*display:inline;*zoom:1;vertical-align:top;letter-spacing:normal;word-spacing:normal;margin-right:10px;margin-bottom:10px;border:1px solid #ccc;width:98px;height:98px;background:url("//gtms02.alicdn.com/tps/i2/T1ty2QFNNXXXc6Yc2r-1-1.gif");}.nc-container .nc_scale .nc-cc-item:hover{border-color:#3199f4}.nc-container .nc_scale .nc-cc-item .nc_iconfont{display:none;position:absolute;right:0;bottom:0;color:#3199f4;font-size:22px;margin-right:0}.nc-container .nc_scale .nc-cc-item.nc-cc-selected .nc_iconfont{display:block}.nc-container .nc_scale .nc-cc-tip{display:none;position:absolute;left:0;bottom:60px;width:360px;line-height:18px;text-align:center;color:#eb4f38;}.nc-container .nc_scale .nc-cc-tip span{line-height:normal}.nc-container .nc_scale .nc-cc-footer{position:absolute;left:0;bottom:20px;width:360px;height:30px;line-height:30px;text-align:center;}.nc-container .nc_scale .nc-cc-footer .nc_iconfont{color:#c4cbd0}.nc-container .nc_scale .nc-cc-refresh,.nc-container .nc_scale .nc-cc-wait{position:absolute;left:20px;top:0;color:#3199f4;cursor:pointer}.nc-container .nc_scale .nc-cc-wait{display:none}.nc-container .nc_scale .nc-cc-cancel{position:absolute;right:20px;top:0;color:#3199f4;cursor:pointer;}.nc-container .nc_scale .nc-cc-cancel .nc_iconfont{position:relative;top:-1px}.nc-container .nc_scale .nc-cc-loading{margin-top:247px;text-align:center;line-height:14px}.nc-container .nc_scale .nc-cc-loading-img{display:inline-block;*display:inline;*zoom:1;vertical-align:top;letter-spacing:normal;word-spacing:normal;vertical-align:middle;background:url("//img.alicdn.com/tps/TB1OdxsKpXXXXcgXFXXXXXXXXXX-14-14.gif") no-repeat;width:14px;height:14px;position:relative;top:-1px;margin-right:9px}.nc-container .nc_scale .nc-cc-fail{position:absolute;left:50%;top:50%;width:320px;height:180px;margin-left:-160px;margin-top:-90px;background:#fff;border-radius:4px}.nc-container .nc_scale .nc-cc-fail-inner{text-align:center;padding:55px 10px 10px}.nc-container .nc_scale .nc-cc-fail-action{margin:28px 0 18px;}.nc-container .nc_scale .nc-cc-fail-action a{display:inline-block;*display:inline;*zoom:1;vertical-align:top;letter-spacing:normal;word-spacing:normal;line-height:30px;margin-left:16px}.nc-container .nc_scale .nc-cc-contact{text-align:right;color:#666;padding-right:9px}.nc-container .nc_scale .nc-cc-mask{display:none;position:absolute;left:0;top:0;width:360px;height:570px;background:rgba(0,0,0,0.3);filter:progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#4C000000', endColorstr='#4C000000');}:root .nc-container .nc_scale .nc-cc-mask{-webkit-filter:none;filter:none}.nc-container .nc_scale .nc-cc-arrow-1,.nc-container .nc_scale .nc-cc-arrow-2{display:none;position:absolute;top:340px;border:solid transparent;height:0;width:0}.nc-container .nc_scale .nc-cc-arrow-1{border-width:16px;margin-top:-1px}.nc-container .nc_scale .nc-cc-arrow-2{border-width:15px}.nc-container .nc_scale .nc-cc-right .nc-cc-arrow-1,.nc-container .nc_scale .nc-cc-left .nc-cc-arrow-1,.nc-container .nc_scale .nc-cc-right .nc-cc-arrow-2,.nc-container .nc_scale .nc-cc-left .nc-cc-arrow-2{display:block;_display:none}.nc-container .nc_scale .nc-cc-right{left:180px;top:-339px;}.nc-container .nc_scale .nc-cc-right .nc-cc-arrow-1{border-right-color:#5eaef1;left:-32px}.nc-container .nc_scale .nc-cc-right .nc-cc-arrow-2{border-right-color:#fff;left:-30px}.nc-container .nc_scale .nc-cc-left{left:-335px;top:-339px;}.nc-container .nc_scale .nc-cc-left .nc-cc-arrow-1{border-left-color:#5eaef1;right:-32px}.nc-container .nc_scale .nc-cc-left .nc-cc-arrow-2{border-left-color:#fff;right:-30px}</style><link rel="stylesheet" href="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/share_style0_16.css"><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style></head>
+
+<body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;"><iframe id="BAIDU_DUP_fp_iframe" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/o.html" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div><div id="MathJax_Message" style="display: none;"></div>
+<header class="detail-headfix">
+	<nav class="w-1200 clearfix">
+		<a href="http://www.jikexueyuan.com/" class="head-logo" target="_blank">
+			<h2>
+				<img src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/logo.png" class="jklogo" alt="极客学院" data-bd-imgshare-binded="1">
+			</h2>
+		</a>
+		<ul class="head-catalog">
+			<li class="head-catalog-list">
+				<a href="http://wiki.jikexueyuan.com/">Wiki</a>
+			</li>
+			<li class="head-catalog-list">
+				<a href="http://wiki.jikexueyuan.com/list/ai">人工智能</a>
+			</li>
+			<li class="head-catalog-list">
+				<a href="http://wiki.jikexueyuan.com/list/deep-learning">深度学习</a>
+			</li>
+			<li class="head-catalog-list">
+				<a href="http://wiki.jikexueyuan.com/project/tensorflow-zh">TensorFlow 官方文档中文版</a>
+			</li>
+		</ul>
+		<div class="head-loginbox" id="header-loginbox"><div class="un-loginbox"><a href="http://passport.jikexueyuan.com/sso/login" class="un-loginbox-out diaLoginBtn" target="_blank">登录</a><em>|</em><a href="http://passport.jikexueyuan.com/sso/reg_phone" class="un-loginbox-out diaRegBtn" target="_blank">注册</a></div></div>
+	</nav>
+</header>
+
+<div class="detail-wrapper w-1200  clearfix">
+	<div class="detail-left">
+		<ul class="detail-nav">
+			<li class="detail-navlist navlist-one">
+				<div class="detail-navlist-title"><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/">关于</a></div>
+			</li>
+			<li class="detail-navlist navlist-one">
+			<div class="detail-navlist-title"><a href="javascript:;">起步</a>
+				<div class="navlist-more more-one nav-down"></div> 			</div>
+							<ul class="navul-one " style="">
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/get_started/introduction.html">介绍</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/get_started/os_setup.html">下载及安装</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/get_started/basic_usage.html">基本用法</a>
+															</div>
+													</li>
+									</ul>
+					</li>
+			<li class="detail-navlist navlist-one navlist-active activekey-one">
+			<div class="detail-navlist-title"><a href="javascript:;">教程</a>
+				<div class="navlist-more more-one nav-up"></div> 			</div>
+							<ul class="navul-one " style="display: block;">
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/overview.html">总览</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_beginners.html">MNIST 机器学习入门</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_pros.html">深入 MNIST</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_tf.html">TensorFlow 运作方式入门</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/deep_cnn.html">卷积神经网络</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/word2vec.html">字词的向量表示</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/recurrent.html">递归神经网络</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mandelbrot.html">曼德布洛特(Mandelbrot)集合</a>
+															</div>
+													</li>
+											<li class="detail-navlist navlist-active">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html">偏微分方程</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_download.html">MNIST数据下载</a>
+															</div>
+													</li>
+									</ul>
+					</li>
+			<li class="detail-navlist navlist-one">
+			<div class="detail-navlist-title"><a href="javascript:;">运作方式</a>
+				<div class="navlist-more more-one nav-down"></div> 			</div>
+							<ul class="navul-one " style="">
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/overview.html">总览</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/variables.html">变量:创建、初始化、保存和加载</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/summaries_and_tensorboard.html">TensorBoard:可视化学习</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/graph_viz.html">TensorBoard:图表可视化</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/reading_data.html">读取数据</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/threading_and_queues.html">线程和队列</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/adding_an_op.html">添加新的Op</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/new_data_formats.html">自定义数据读取</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/using_gpu.html">使用gpu</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/how_tos/variable_scope.html">共享变量</a>
+															</div>
+													</li>
+									</ul>
+					</li>
+			<li class="detail-navlist navlist-one">
+			<div class="detail-navlist-title"><a href="javascript:;">资源</a>
+				<div class="navlist-more more-one nav-down"></div> 			</div>
+							<ul class="navul-one " style="">
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/resources/overview.html">总览</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/resources/bib.html">BibTex 引用</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/resources/uses.html">示例使用</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/resources/faq.html">FAQ</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/resources/glossary.html">术语表</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/resources/dims_types.html">Tensor排名、形状和类型</a>
+															</div>
+													</li>
+									</ul>
+					</li>
+			<li class="detail-navlist navlist-one">
+			<div class="detail-navlist-title"><a href="javascript:;">其他</a>
+				<div class="navlist-more more-one nav-down"></div> 			</div>
+							<ul class="navul-one " style="">
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/faq.html">常见问题汇总</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/resource.html">相关资源</a>
+															</div>
+													</li>
+											<li class="detail-navlist">
+							<div class="detail-navlist-title title-two "><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/personal.html">个人学习心得</a>
+															</div>
+													</li>
+									</ul>
+					</li>
+			</ul>
+		<div class="detail-left-bottom">
+			Via 由 [ <a href="http://wiki.jikexueyuan.com/" class="detail-navlist-wikilogo" target="_blank">极客学院 Wiki</a> ] 提供
+		</div>
+	</div>
+	<aside class="detail-right">
+		<!-- author -->
+		<div class="right-author">
+			<!-- 欢迎成为极客学院WIKI作者 -->
+									<!-- 极客学院团队出品 -->
+				<div class="right-author-jkprint"></div>
+					</div>
+		<!-- /author -->
+					<div class="mg-t10 ad" id="banner02-1"></div>
+<div class="mg-t10 ad" id="banner02-2"></div>
+<div class="mg-t10 ad" id="banner02-3"></div>
+
+<script type="text/javascript" async="" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/lccm"></script><script type="text/javascript" async="" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/lccm(1)"></script><script type="text/javascript" async="" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/lccm(2)"></script><script type="text/javascript" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/os.js.下载"></script>
+<script type="text/javascript">
+    BAIDU_CLB_fillSlotAsync('1175833', 'banner02-1');
+    BAIDU_CLB_fillSlotAsync('1175839', 'banner02-2');
+    BAIDU_CLB_fillSlotAsync('1175840', 'banner02-3');
+</script>				<!-- download -->
+		<h2 class="right-h2">离线下载</h2>
+		<div class="right-download">
+							<a href="http://passport.jikexueyuan.com/sso/login" target="_blank" class="download-pdf blue-btn">PDF版</a>
+				<a href="http://passport.jikexueyuan.com/sso/login" target="_blank" class="download-epub blue-btn">ePub版</a>
+			
+		</div>
+		<!-- /download -->
+
+		<!-- resource -->
+		<h2 class="right-h2">相关资源</h2>
+		<ul class="right-resource">
+					</ul>
+		<!-- /resource -->
+
+	</aside>
+	<div class="detail-main">
+		<div class="markdown-body"><h1>偏微分方程 <a class="md-anchor" id="AUTOGENERATED-partial-differential-equations"></a></h1>
+<p><strong><em>TensorFlow</em></strong> 不仅仅是用来机器学习，它更可以用来模拟仿真。在这里，我们将通过模拟仿真几滴落入一块方形水池的雨点的例子，来引导您如何使用 <strong><em>TensorFlow</em></strong> 中的偏微分方程来模拟仿真的基本使用方法。</p>
+<blockquote>
+<p>注：本教程最初是准备做为一个 <strong>IPython</strong> 的手册。</p>
+<blockquote>
+<p>译者注:关于偏微分方程的相关知识，译者推荐读者查看 <a rel="nofollow" href="http://open.163.com/" "=""><strong>网易公开课</strong></a> 上的<a rel="nofollow" href="http://open.163.com/special/opencourse/multivariable.html" "=""><strong>《麻省理工学院公开课：多变量微积分》</strong></a>课程。</p>
+</blockquote>
+</blockquote>
+<h2 id="697e5ac7aef0823742e09a8ac21c6a33">基本设置 <a class="md-anchor" id="AUTOGENERATED-basic-setup"></a></h2>
+<p>首先,我们需要导入一些必要的引用。</p>
+<pre><code class="language-python">#导入模拟仿真需要的库
+import tensorflow as tf
+import numpy as np
+
+#导入可视化需要的库
+import PIL.Image
+from cStringIO import StringIO
+from IPython.display import clear_output, Image, display</code></pre>
+<p>然后，我们还需要一个用于表示池塘表面状态的函数。</p>
+<pre><code class="language-python">def DisplayArray(a, fmt='jpeg', rng=[0,1]):
+  """Display an array as a picture."""
+  a = (a - rng[0])/float(rng[1] - rng[0])*255
+  a = np.uint8(np.clip(a, 0, 255))
+  f = StringIO()
+  PIL.Image.fromarray(a).save(f, fmt)
+  display(Image(data=f.getvalue()))</code></pre>
+<p>最后，为了方便演示，这里我们需要打开一个 <strong><em>TensorFlow</em></strong> 的交互会话（interactive session）。当然为了以后能方便调用，我们可以把相关代码写到一个可以执行的<strong><em>Python</em></strong>文件中。</p>
+<pre><code class="language-python">sess = tf.InteractiveSession()</code></pre>
+<h2 id="bbcb409583ab6c0f553772aab07622c8">定义计算函数 <a class="md-anchor" id="AUTOGENERATED-computational-convenience-functions"></a></h2>
+<pre><code class="language-python">def make_kernel(a):
+  """Transform a 2D array into a convolution kernel"""
+  a = np.asarray(a)
+  a = a.reshape(list(a.shape) + [1,1])
+  return tf.constant(a, dtype=1)
+
+def simple_conv(x, k):
+  """A simplified 2D convolution operation"""
+  x = tf.expand_dims(tf.expand_dims(x, 0), -1)
+  y = tf.nn.depthwise_conv2d(x, k, [1, 1, 1, 1], padding='SAME')
+  return y[0, :, :, 0]
+
+def laplace(x):
+  """Compute the 2D laplacian of an array"""
+  laplace_k = make_kernel([[0.5, 1.0, 0.5],
+                           [1.0, -6., 1.0],
+                           [0.5, 1.0, 0.5]])
+  return simple_conv(x, laplace_k)</code></pre>
+<h2 id="8788ffdb5bf445379a6876f21ee62346">定义偏微分方程 <a class="md-anchor" id="AUTOGENERATED-define-the-pde"></a></h2>
+<p>首先,我们需要创建一个完美的 500 × 500 的正方形池塘,就像是我们在现实中找到的一样。</p>
+<pre><code class="language-python">N = 500</code></pre>
+<p>然后，我们需要创建了一个池塘和几滴将要坠入池塘的雨滴。</p>
+<pre><code class="language-python"># Initial Conditions -- some rain drops hit a pond
+
+# Set everything to zero
+u_init = np.zeros([N, N], dtype="float32")
+ut_init = np.zeros([N, N], dtype="float32")
+
+# Some rain drops hit a pond at random points
+for n in range(40):
+  a,b = np.random.randint(0, N, 2)
+  u_init[a,b] = np.random.uniform()
+
+DisplayArray(u_init, rng=[-0.1, 0.1])</code></pre>
+<p><img src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/pde_output_1.jpg" alt="jpeg" data-bd-imgshare-binded="1"></p>
+<p>现在，让我们来指定该微分方程的一些详细参数。</p>
+<pre><code class="language-python"># Parameters:
+# eps -- time resolution
+# damping -- wave damping
+eps = tf.placeholder(tf.float32, shape=())
+damping = tf.placeholder(tf.float32, shape=())
+
+# Create variables for simulation state
+U  = tf.Variable(u_init)
+Ut = tf.Variable(ut_init)
+
+# Discretized PDE update rules
+U_ = U + eps * Ut
+Ut_ = Ut + eps * (laplace(U) - damping * Ut)
+
+# Operation to update the state
+step = tf.group(
+  U.assign(U_),
+  Ut.assign(Ut_))</code></pre>
+<h2 id="95a4ae35fdb6f282ed1cce3bd6ad5d97">开始仿真 <a class="md-anchor" id="AUTOGENERATED-run-the-simulation"></a></h2>
+<p>为了能看清仿真效果，我们可以用一个简单的 <strong>for</strong> 循环来远行我们的仿真程序。</p>
+<pre><code class="language-python"># Initialize state to initial conditions
+tf.initialize_all_variables().run()
+
+# Run 1000 steps of PDE
+for i in range(1000):
+  # Step simulation
+  step.run({eps: 0.03, damping: 0.04})
+  # Visualize every 50 steps
+  if i % 50 == 0:
+    clear_output()
+    DisplayArray(U.eval(), rng=[-0.1, 0.1])</code></pre>
+<p><img src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/pde_output_2.jpg" alt="jpeg" data-bd-imgshare-binded="1"></p>
+<p>看！！ 雨点落在池塘中,和现实中一样的泛起了涟漪。</p>
+<blockquote>
+<p>原文链接:<a rel="nofollow" href="http://tensorflow.org/tutorials/pdes/index.md" "=""></a><a rel="nofollow" href="http://tensorflow.org/tutorials/pdes/index.md" "="">http://tensorflow.org/tutorials/pdes/index.md</a>    翻译:<a rel="nofollow" href="https://github.com/wangaicc" "="">@wangaicc</a>   校对:<a rel="nofollow" href="https://github.com/tensorfly" "="">@tensorfly</a></p>
+</blockquote></div>
+
+		
+		<div class="previous-and-next">
+							<span class="pull-left">上一篇: <a id="previous_link" href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mandelbrot.html" data-toggle="tooltip" data-placement="top" title="" data-original-title="上翻页快捷键：左方向键">曼德布洛特(Mande...</a></span>
+			
+							<span class="pull-right">下一篇: <a id="next_link" href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/mnist_download.html" data-toggle="tooltip" data-placement="top" title="" data-original-title="下翻页快捷键：右方向键">MNIST数据下载</a></span>
+					</div>
+
+		<div class="detail-share clearfix">
+			<div class="bdsharebuttonbox share-item bdshare-button-style0-16" data-bd-bind="1497526535208">
+				<a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" class="bds_more" data-cmd="more"></a>
+				<a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+				<a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+				<a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+				<a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a>
+			</div>
+			<script>
+				window._bd_share_config = {
+					"common": {
+						"bdSnsKey": {},
+						"bdText": "",
+						"bdMini": "2",
+						"bdMiniList": false,
+						"bdPic": "",
+						"bdStyle": "0",
+						"bdSize": "16"
+					},
+					"share": {},
+					"image": {
+						"viewList": ["weixin", "tsina", "qzone", "youdao"],
+						"viewText": "分享到：",
+						"viewSize": "16"
+					}
+				};
+				with(document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = '/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+			</script>
+		</div>
+					<div id="jkcomments"><ul><li class="cf"><a href="http://my.jikexueyuan.com/0zgUjXXag/" target="_blank"><img src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/5739905.gif" class="user-icon"></a><div class="txt"><div class="txt-title"><a href="http://my.jikexueyuan.com/0zgUjXXag/" class="txt-name" target="_blank">weibo_fkareyvh</a><span class="txt-floor" id="1">#1</span></div><div class="txt-content"><pre>在python3下，
+--from cStringIO import StringIO
+++ from io import ByteIO
+-- f = StringIO()
+++f = BytesIO()</pre></div><div class="txt-oter"><span class="txt-time">2017年4月27日</span><span class="txt-zan" zan_id="5779">0</span><span class="txt-reply" reply_id="5779">回复</span><span class="txt-jubao" jubaoid="5779"><dl><dd>广告位等垃圾信息</dd><dd>不友善内容</dd><dd>违反法律法规的内容</dd><dd>不宜公开讨论的政治内容</dd><dd>其他</dd></dl></span><span class="txt-shoucang" scid="5779"></span></div></div></li></ul><div id="pager"></div><div class="jkxy-subask-nologin">只有登录了才能参与评论，快<a href="http://passport.jikexueyuan.com/sso/login">登录</a>！如果你还没有账号你可以<a href="http://passport.jikexueyuan.com/sso/reg_phone">注册</a>一个账号。</div></div>
+					<div class="wiki-right">
+			<div class="backtotop">
+				<a href="javascript:;" class="btn-backtotop" style="display: none;">
+					<div class="arrow"></div>
+					<div class="stick"></div>
+				</a>
+			</div>
+		</div>
+	</div>
+
+</div>
+<script type="text/javascript" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/jquery.min.js.下载"></script>
+<script type="text/javascript" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/detail.js.下载"></script>
+<script type="text/javascript" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/bootstrap.min.js.下载"></script>
+<script type="text/javascript" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/login_register.min.js.下载"></script>
+
+
+	<script>
+		var JKcomments = {
+			perPage: 15,
+			model: "wiki", //模块名称（必填）
+			parent_id: "tensorflow-zh",
+			item_id: "3a88c0a35697bdb6d8df76a37d761a18" //被评论信息ID（必填）
+		}
+	</script>
+
+	<script type="text/javascript" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/jquery.qqFace.js.下载"></script>
+	<script type="text/javascript" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/comments.min.js.下载"></script>
+	
+<script type="text/javascript">
+    $(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+    var _Sjkxy     = _Sjkxy || [];
+    _Sjkxy['params']    = {wikiP:'TensorFlow 官方文档中文版' , posId:117001, po:69001 , wPId : '581'};
+</script>
+
+
+<script type="text/javascript" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/growingio.js.下载"></script>
+<!-- 增加latex 数学公式-->
+<script src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/MathJax.js.下载" id=""></script>
+<script type="text/x-mathjax-config;executed=true">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+    });
+</script>
+
+
+
+<link type="text/css" href="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/nc.css" disabled=""><script type="text/javascript" src="./偏微分方程 - TensorFlow 官方文档中文版 - 极客学院Wiki_files/nc.js.下载"></script><div id="bdimgshare_1497526535212" class="sr-bdimgshare sr-bdimgshare-list sr-bdimgshare-16 sr-bdimgshare-black" style="height:36px;line-height:26px;font-size:12px;width:autopx;display:none;" data-bd-bind="1497526535212"><div class="bdimgshare-bg"></div><div class="bdimgshare-content bdsharebuttonbox bdshare-button-style0-16"><label class="bdimgshare-lbl">分享到：</label><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" onclick="return false;" class="bds_weixin" data-cmd="weixin" hidefocus=""></a><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" onclick="return false;" class="bds_tsina" data-cmd="tsina" hidefocus=""></a><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" onclick="return false;" class="bds_qzone" data-cmd="qzone" hidefocus=""></a><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" onclick="return false;" class="bds_youdao" data-cmd="youdao" hidefocus=""></a><a href="http://wiki.jikexueyuan.com/project/tensorflow-zh/tutorials/pdes.html#" onclick="return false;" class="bds_more" data-cmd="more" hidefocus=""></a></div></div></body></html>

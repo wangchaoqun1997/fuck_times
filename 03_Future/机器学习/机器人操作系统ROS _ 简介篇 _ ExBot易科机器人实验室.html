@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)http://blog.exbot.net/archives/2796 -->
+<html lang="zh-CN" xmlns:wb="“http://open.weibo.com/wb”" class=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width initial-scale=1.0, user-scalable=yes">
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+<title>机器人操作系统ROS | 简介篇 | ExBot易科机器人实验室</title>
+<meta name="description" content="前言">
+<meta name="keywords" content="ros">
+<link rel="shortcut icon" href="http://blog.exbot.net/wp-content/themes/Ality/img/favicon.ico">
+<link rel="apple-touch-icon" sizes="114x114" href="http://blog.exbot.net/wp-content/themes/Ality/img/favicon.png">
+<link rel="profile" href="http://gmpg.org/xfn/11">
+<link rel="pingback" href="http://blog.exbot.net/xmlrpc.php">
+<!--[if lt IE 9]><script src="http://blog.exbot.net/wp-content/themes/Ality/js/html5-css3.js"></script><![endif]-->
+<!--[if lt IE 8]><link rel="stylesheet" href="http://blog.exbot.net/wp-content/themes/Ality/css/ie7/ie7.css" /><![endif]-->
+<!--[if lt IE 7]><script src="http://blog.exbot.net/wp-content/themes/Ality/js/ie6.js" type="text/javascript"></script><![endif]-->
+<link rel="dns-prefetch" href="http://s.w.org/">
+		<script charset="utf-8" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/t.js.下载"></script><script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.2.1\/svg\/","svgExt":".svg","source":{"concatemoji":"http:\/\/blog.exbot.net\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.7.4"}};
+			!function(a,b,c){function d(a){var b,c,d,e,f=String.fromCharCode;if(!k||!k.fillText)return!1;switch(k.clearRect(0,0,j.width,j.height),k.textBaseline="top",k.font="600 32px Arial",a){case"flag":return k.fillText(f(55356,56826,55356,56819),0,0),!(j.toDataURL().length<3e3)&&(k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,65039,8205,55356,57096),0,0),b=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55356,57331,55356,57096),0,0),c=j.toDataURL(),b!==c);case"emoji4":return k.fillText(f(55357,56425,55356,57341,8205,55357,56507),0,0),d=j.toDataURL(),k.clearRect(0,0,j.width,j.height),k.fillText(f(55357,56425,55356,57341,55357,56507),0,0),e=j.toDataURL(),d!==e}return!1}function e(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i,j=b.createElement("canvas"),k=j.getContext&&j.getContext("2d");for(i=Array("flag","emoji4"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script><script src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/wp-emoji-release.min.js.下载" type="text/javascript" defer=""></script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel="stylesheet" id="style-css" href="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/style.css" type="text/css" media="all">
+<link rel="stylesheet" id="mediaqueries-css" href="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/mediaqueries.css" type="text/css" media="all">
+<link rel="stylesheet" id="highlight-css" href="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/highlight.css" type="text/css" media="all">
+<script type="text/javascript" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/jquery.min.js.下载"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var wpl_ajax_url = "http:\/\/blog.exbot.net\/wp-admin\/admin-ajax.php";
+/* ]]> */
+</script>
+<script type="text/javascript" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/script.js.下载"></script>
+<script type="text/javascript" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/jquery.fancybox.js.下载"></script>
+<script type="text/javascript" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/comments-ajax.js.下载"></script>
+<link rel="https://api.w.org/" href="http://blog.exbot.net/wp-json/">
+<link rel="canonical" href="http://blog.exbot.net/archives/2796">
+<link rel="alternate" type="application/json+oembed" href="http://blog.exbot.net/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fblog.exbot.net%2Farchives%2F2796">
+<link rel="alternate" type="text/xml+oembed" href="http://blog.exbot.net/wp-json/oembed/1.0/embed?url=http%3A%2F%2Fblog.exbot.net%2Farchives%2F2796&amp;format=xml">
+<style type="text/css" id="syntaxhighlighteranchor"></style>
+<script src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/share.js.下载"></script><style type="text/css">.fancybox-margin{margin-right:0px;}</style><script charset="UTF-8" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/bundle.js.下载"></script><script charset="UTF-8" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/iframeWidget.js.下载"></script><link rel="stylesheet" href="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/share_style1_16.css"><style>html{_background-image:url(about:blank);_background-attachment:fixed}</style></head>
+<body class="post-template-default single single-post postid-2796 single-format-standard"><iframe id="sina_anywhere_iframe" style="display: none;" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/saved_resource.html"></iframe>
+<div id="page" class="page-site">
+	<div id="header-top" class="shadow" style="position: fixed; top: 0px;">
+		<nav id="top-nav" class="main-nav">
+			<div class="home_h"><i class="icon-home_h"><a href="http://blog.exbot.net/" title="返回首页"></a></i></div>
+			<div class="menu-head-container"><ul id="menu-head" class="menu"><li id="menu-item-2293" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2293"><a href="http://books.exbot.net/">BOOKS</a></li>
+<li id="menu-item-2294" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2294"><a href="http://wiki.exbot.net/">WIKI</a></li>
+<li id="menu-item-2405" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2405"><a href="http://blog.exbot.net/spark/">星火计划</a></li>
+<li id="menu-item-681" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-681"><a href="http://blog.exbot.net/link">链接</a></li>
+<li id="menu-item-682" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-682"><a href="http://blog.exbot.net/about">关于我</a></li>
+</ul></div>			<span style="position: absolute;top: 8px;left: 800px;">
+				
+				<script src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/wb.js.下载" type="text/javascript" charset="utf-8"></script>
+				<wb:follow-button uid="3171634793" type="gray_4" width="67" height="24"><iframe src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/followbutton.html" width="67" height="24" frameborder="0" scrolling="no" marginheight="0"></iframe></wb:follow-button>
+			</span>
+			<span style="position: absolute;top: 6px;left: 880px;">
+			  <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=baf316ad163a102df7e8cebec205c58c65b9d134242f314720f3b317ccb9989a"><img border="0" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/group.png" alt="ExBotExBot开源机器人社区" title="ExBotExBot开源机器人社区"></a>
+			</span>
+			<span style="position: absolute;top: 6px;left: 980px;">
+			<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=5c53f0a788dcb09da034ee3338847aa6d0a1303bb8f572b154263273d2db4a82"><img border="0" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/group.png" alt="Exbot无人机专区" title="Exbot无人机专区"></a>
+			</span>
+			<span style="position: absolute;top: 6px;left: 1080px;">
+			<a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=f2caf05ecbf22a024f7598a0e2f6bfd22e6796375da793a5b5ca3e4de7b6b4fa"><img border="0" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/group.png" alt="ExBot ROS专区" title="ExBot ROS专区"></a>
+			</span>
+			<div class="clear"></div>
+		</nav>
+	</div>
+	<div id="simple-top">
+	<a id="simple-menu" href="http://blog.exbot.net/archives/2796#sidr"><i class="icon-simple-menu"></i></a>
+	</div>
+		<header id="header">
+			<div class="header-clear"></div>
+			<div class="main-header">
+					<hgroup class="logo-main"><a href="http://blog.exbot.net/" rel="home" title="ExBot易科机器人实验室"><h1 class="logo">ExBot易科机器人实验室</h1></a></hgroup>
+				<div id="set-main">
+	<div id="nav-search">
+		<a class="menu-search" href="http://blog.exbot.net/archives/2796#">搜索</a>
+	</div>
+	<div id="nav-login">
+		<a href="http://blog.exbot.net/archives/2796#login" class="flatbtn" id="login-main">登录</a>	</div>
+</div>									<div id="bulletin_div" class="bulletin_div">
+	<div id="bulletin_begin">
+		<ul>
+						<li><a href="http://blog.exbot.net/archives/bulletin/tongzhi" target="_blank" title="查看“星火计划”公开课"><i class="icon-bulletin"></i>ROS“星火计划”2017.6.10&nbsp;东莞站，敬请期待！报名点击！
+</a></li>
+								</ul>
+	</div>
+	<div id="bulletin_end">
+		<ul>
+						<li><a href="http://blog.exbot.net/archives/bulletin/tongzhi" target="_blank" title="查看“星火计划”公开课"><i class="icon-bulletin"></i>ROS“星火计划”2017.6.10&nbsp;东莞站，敬请期待！报名点击！
+</a></li>
+								</ul>
+	</div>
+</div>
+<script type="text/javascript">ScrollImgLeft();</script>							</div>
+			<div class="clear"></div>
+			<nav id="site-nav" class="main-nav">
+				<div class="menu-nav-container"><ul id="menu-nav" class="menu"><li id="menu-item-2298" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2298"><a href="http://blog.exbot.net/robot">机器人</a></li>
+<li id="menu-item-2295" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2295"><a href="http://blog.exbot.net/ros">ROS</a></li>
+<li id="menu-item-2297" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2297"><a href="http://blog.exbot.net/ml">机器学习</a></li>
+<li id="menu-item-2296" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2296"><a href="http://blog.exbot.net/note">点滴记录</a></li>
+</ul></div>				<ul><li class="fill"></li></ul>
+			</nav>
+			<!-- #site-nav -->
+			<div class="clear"></div>
+		</header>
+		<!-- #header -->
+
+	<div id="main" class="wrapper">
+		<div id="search-main">
+			<div id="searchbar">
+	<form method="get" id="searchform" action="http://blog.exbot.net/">
+		<div><input type="text" value="" name="s" id="s" placeholder="输入搜索内容" required="">
+		<input type="submit" id="searchsubmit" value="搜索">
+		</div>
+	</form>
+</div>			<form action="http://zhannei.baidu.com/cse/search" target="_blank">
+	<input type="hidden" value="5830027592913164384" name="s">
+	<input type="hidden" value="1" name="entry">
+	<input class="swap_value" placeholder="请输入关键词" name="q">
+	<input type="submit" class="submit" name="submit" id="searchsubmit" value="百度">
+</form>		</div>
+
+		<nav class="crumbs">现在位置： <a title="返回首页" href="http://blog.exbot.net/">首页</a> &gt; <a href="http://blog.exbot.net/archives/category/ros" rel="category tag">ROS</a> &gt;  正文 </nav>
+				<div id="primary" class="site-content">
+		<div class="single-content">
+		
+<article id="post-2796" class="post-2796 post type-post status-publish format-standard hentry category-ros tag-ros-2">
+	<div class="fontsize"><span class="smaller">A-</span><span class="bigger">A+</span></div>
+	<header class="single-header">
+		<h1 class="single-title">机器人操作系统ROS | 简介篇</h1>
+		<div class="single-meta">
+			<span class="date"><i class="icon-date"></i>2016年09月12日</span>
+			<span class="cat"><i class="icon-cat"></i><a href="http://blog.exbot.net/archives/category/ros" rel="category tag">ROS</a></span>
+			<span class="comment"><i class="icon-comment"></i><a href="http://blog.exbot.net/archives/2796#comments">评论 1 条</a></span>
+			<span class="views"><i class="icon-views"></i>阅读 5,248 次</span>					</div>
+		<!-- .entry-meta -->
+	</header>
+	<!-- .single-header -->
+
+			
+		
+	<div class="single-main">
+		<div class="content-main">
+			<h2 style="text-align: center;"></h2>
+<h2 style="text-align: center;">前言</h2>
+<p>&nbsp;</p>
+<p>先放一个ROS Industrial<strong>一周年剪辑视频</strong>。</p>
+<p style="text-align: center;"><iframe class="video_iframe" style="z-index: 1; width: 670px !important; height: 502.5px !important; overflow: hidden;" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/player.html" width="670" height="502.5" frameborder="0" scrolling="no" allowfullscreen="allowfullscreen" data-vidtype="1" data-src="https://v.qq.com/iframe/preview.html?vid=y0326mbe4h6&amp;width=500&amp;height=375&amp;auto=0"></iframe></p>
+<p>ROS已经发布八周年了，在国外科研机构中非常受欢迎。目前，以美国西南研究院为首的几位大佬开始尝试将ROS应用在工业机器人中，上面这个视频就是ROS-I项目一周年的进展情况。</p>
+<p>为了说明讲清楚ROS，我就从<strong>ROS是什么，为什么使用ROS，如何使用ROS</strong>三个方面展开。</p>
+<p><a href="http://blog.exbot.net/wp-content/uploads/2016/09/1473650669-6006-VJPH0YSURZfVSu5icVRicusGCXdA.jpg" class="cboxElement" rel="example_group" 2796=""><img class="attachment-medium size-medium aligncenter" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/1473650669-6006-VJPH0YSURZfVSu5icVRicusGCXdA-300x186.jpg" sizes="(max-width: 300px) 100vw, 300px" srcset="http://blog.exbot.net/wp-content/uploads/2016/09/1473650669-6006-VJPH0YSURZfVSu5icVRicusGCXdA-300x186.jpg 300w, http://blog.exbot.net/wp-content/uploads/2016/09/1473650669-6006-VJPH0YSURZfVSu5icVRicusGCXdA.jpg 640w" alt="1473650669-6006-VJPH0YSURZfVSu5icVRicusGCXdA" width="300" height="186" original="http://blog.exbot.net/wp-content/uploads/2016/09/1473650669-6006-VJPH0YSURZfVSu5icVRicusGCXdA-300x186.jpg"></a></p>
+<p style="text-align: center;">△出自今年《机器人视觉与应用》课程本人制作的课件</p>
+<h2 style="text-align: center;">是什么</h2>
+<p><a href="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/1473650669-5743-hK2VcywEvXz9DblMZn6wotSA14WA.png" class="cboxElement" rel="example_group" 2796=""><img class="attachment-medium size-medium aligncenter" alt="1473650669-5743-hK2VcywEvXz9DblMZn6wotSA14WA" width="127" height="63" original="http://blog.exbot.net/wp-content/uploads/2016/09/1473650669-5743-hK2VcywEvXz9DblMZn6wotSA14WA.png" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/1473650669-5743-hK2VcywEvXz9DblMZn6wotSA14WA.png" style="display: block;"></a></p>
+<p>ROS是<strong>R</strong>obot <strong>O</strong>perating <strong>S</strong>ystem的缩写，原本是斯坦福大学的一个机器人项目，后来由Willow Garage公司发展，目前由OSRF（Open Source Robotics Foundation, Inc）公司维护的<strong>开源</strong>项目。</p>
+<h3>1、首先是一个<strong>操作系统</strong></h3>
+<p>根据wikipedia定义，OS is system software that manages computer hardware and software resources and provides common services for computer programs。也就是说操作系统是用来管理计算机硬件与软件资源，并提供一些公用的服务的系统软件。而ROS也自称是一个<strong>OS</strong>。</p>
+<p><a href="http://blog.exbot.net/wp-content/uploads/2016/09/1473650672-4635-cr9ldg2dyagQl1jMicGWfbfQrZnw.jpg" class="cboxElement" rel="example_group" 2796=""><img class="attachment-medium size-medium aligncenter" sizes="(max-width: 300px) 100vw, 300px" srcset="http://blog.exbot.net/wp-content/uploads/2016/09/1473650672-4635-cr9ldg2dyagQl1jMicGWfbfQrZnw-300x175.jpg 300w, http://blog.exbot.net/wp-content/uploads/2016/09/1473650672-4635-cr9ldg2dyagQl1jMicGWfbfQrZnw.jpg 640w" alt="1473650672-4635-cr9ldg2dyagQl1jMicGWfbfQrZnw" width="300" height="175" original="http://blog.exbot.net/wp-content/uploads/2016/09/1473650672-4635-cr9ldg2dyagQl1jMicGWfbfQrZnw-300x175.jpg" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/1473650672-4635-cr9ldg2dyagQl1jMicGWfbfQrZnw-300x175.jpg" style="display: block;"></a></p>
+<p style="text-align: center;">△计算机OS与机器人OS对比示意图</p>
+<p>如上图所示，计算机的操作系统将计算机硬件封装起来，而应用软件运行在操作系统之上，不用管计算机具体应用的是什么类型的硬件产品。这能大大提高软件开发效率（否则大家只能都写汇编了）。</p>
+<p>同理，ROS则是对机器人的硬件进行了封装，不同的机器人、不同的传感器，在ROS里可以用相同的方式表示（topic等），供上层应用程序（运动规划等）调用。</p>
+<h3>2、是一种跨平台模块化软件<strong>通讯机制</strong></h3>
+<p>ROS用节点（Node）的概念表示一个应用程序，不同node之间通过事先定义好格式的消息（Topic），服务（Service），动作（Action）来实现连接。<br>
+△ROS分布特点<br>
+△三种通讯方式的特点</p>
+<p>三种通讯方式的优缺点可看上表，由于很多模块化编程工具都有类似功能，这里就不具体展开了。</p>
+<p>基于这种模块化的通讯机制，开发者可以很方便地替换、更新系统内的某些模块；也可以用自己编写的节点替换ROS的个别模块，十分适合算法开发。</p>
+<p>此外，ROS可以跨平台，在不同计算机、不同操作系统、不用编程语言、不同机器人上使用。</p>
+<h3>3、是一系列开源<strong>工具</strong></h3>
+<p>&nbsp;</p>
+<p>△几种ROS工具示意图：左上rqt_plot，右上rqt_graph，左下Rviz，右下TF</p>
+<p>如上图所示，ROS为开发者提供了一系列非常有用的工具，可以大大提高我们开发的效率。</p>
+<p><strong>rqt_plot</strong>：可以实时绘制当前任意Topic的数值曲线；</p>
+<p><strong>rqt_graph</strong>：可以绘制出各节点之间的连接状态，和正在使用的Topic等；</p>
+<p><strong>TF</strong>：TF是Transform的简写，利用它，我们可以实时知道各连杆坐标系的位姿，也可以求出两个坐标系的相对位置。</p>
+<p><strong>Rviz</strong>：超强大的3D可视化工具，可以显示机器人模型、3D电影、各种文字图标、也可以很方便二次开发；<br>
+△在Rviz里显示机器人模型、3D点云、物体模型等<br>
+△在Rviz里也可以实现方便交互功能</p>
+<p>除此之外，ROS还有很多其他有用的开源工具等待大家探索。</p>
+<h3>4、是一系列最先进的<strong>算法</strong></h3>
+<p>△ROS包含许多先进的机器人开源项目</p>
+<p>除了ROS之外，世界上已经有很多非常优秀的机器人开源项目，但是ROS正逐渐将它们一一囊括在自己的范畴里。例如：</p>
+<p>PS：我跟ROS的其他几个开发者也正在努力将LinuxCNC整合进ROS</p>
+<p><strong>OROCOS</strong>：这个开源项目主要侧重于机器人底层控制器的设计，包括用于计算串联机械臂运动学数值解的KDL、贝叶斯滤波、实时控制等功能。</p>
+<p><strong>OpenRave</strong>：这是在ROS之前最多人用来做运动规划的平台，ROS已经将其中的ikfast（计算串联机械臂运动学解析解）等功能吸收。</p>
+<p><strong>Player</strong>：一款优秀的二维仿真平台，可以用于平面移动机器人的仿真，现在在ROS里可以直接使用。</p>
+<p><strong>OpenCV</strong>：大名鼎鼎的机器视觉开源项目，ROS提供了cv_bridge，可以将OpenCV的图片与ROS的图片格式相互转换。</p>
+<p><strong>OMPL</strong>：现在最著名的运动规划开源项目，已经成了MoveIt的一部分。</p>
+<p><strong>Visp</strong>：一个开源视觉伺服项目，已经跟ROS完美整合。</p>
+<p><strong>Gazebo</strong>：一款优秀的开源仿真平台，可以实现动力学仿真、传感器仿真等，也已被ROS吸收。<br>
+△左下角gazebo，右下角Rviz</p>
+<p>当然，除了吸收别的优秀开源项目，ROS自己也发展出许多非常优秀的项目和库。<strong><br>
+</strong></p>
+<p><strong>ORK</strong>：一个物体识别与位姿估计开源库，包含LineMod等算法，但实际使用效果还不是太理想。<br>
+△LineMod识别效果</p>
+<p><strong>PCL</strong>：一个开源点云处理库，原本是从ROS中发展起来的，后来由于太受欢迎，为了让非ROS用户也能用，就单独立了一个PCL的项目。</p>
+<p><strong>Gmapping</strong>：这其实是在OpenSlam项目继承过来的（后来发展和改动较大），利用gmapping可以实现laser-based SLAM，快速建立室内二维地图。<br>
+△gmapping建立二维地图</p>
+<p><strong>Localization：</strong>基于扩展卡尔曼滤波（EKF）和无迹卡尔曼滤波（UKF）的机器人定位算法，可以融合各种传感器的定位信息，获得较为准确的定位效果。</p>
+<p>&nbsp;</p>
+<p>△robot_localization示意图</p>
+<p><strong>Navigation</strong>：基于Dijkstra、A*算法（全局规划器）和动态窗口法DWA（局部规划器）的移动机器人路径规划模块，可以在二维地图上实现机器人导航。<br>
+△navigation示意图</p>
+<p><strong>MoveIt</strong>：这个是专注于移动机械臂运动规划的模块，下次讲运动规划入门的时候再详细介绍它。<br>
+△MoveIt对UR5进行运动规划</p>
+<p>当然，除了这些最先进算法外，ROS还有各种机器人、传感器驱动等内容。</p>
+<h3>5、是一个<strong>最活跃</strong>的机器人开发交流平台</h3>
+<p>个人认为，这应该是最重要的一点。除了ROS外，现在有需要其他的项目可以代替或者部分代替ROS的功能：OpenRave运动规划，V-rep仿真。但是这些项目的社区远没有ROS活跃。</p>
+<p>ROS版本定期更新、主要模块有专人维护、问答区活跃、各mail lists也非常活跃、开发者非常热衷交流分享。如果深入到ROS社区，可以学到很多东西。</p>
+<p>为什么<strong>首先</strong>，用过工业机器人的人肯定知道，不同工业机器人的开发系统基本都不一样，示教、编程方法也不同，一个熟练使用Motoman的工程师很可能并不会使用Kuka机械臂。就算是同种机器人，由于固件版本的更新换代，也可能造成程序的不兼容（我在UR上就遇到过这个问题）。这就大大影响了机器人的推广普及。</p>
+<p><a href="http://blog.exbot.net/wp-content/uploads/2016/09/1473650671-4030-ADib3CK5jkRicUMctREbG0saLGlg.jpg" class="cboxElement" rel="example_group" 2796=""><img class="attachment-medium size-medium aligncenter" sizes="(max-width: 300px) 100vw, 300px" srcset="http://blog.exbot.net/wp-content/uploads/2016/09/1473650671-4030-ADib3CK5jkRicUMctREbG0saLGlg-300x158.jpg 300w, http://blog.exbot.net/wp-content/uploads/2016/09/1473650671-4030-ADib3CK5jkRicUMctREbG0saLGlg.jpg 640w" alt="1473650671-4030-ADib3CK5jkRicUMctREbG0saLGlg" width="300" height="158" original="http://blog.exbot.net/wp-content/uploads/2016/09/1473650671-4030-ADib3CK5jkRicUMctREbG0saLGlg-300x158.jpg"></a></p>
+<p style="text-align: center;">△左：不同机器人的示教器；右：UR固件版本不兼容</p>
+<p>对此，ROS可以用统一的方式来封装机器人（URDF模型+机器人驱动），用户只需要在ROS中编写应用程序，并不用关心机器人的控制方式。如果所有机器人都采用了这种方式，那么机器人必将得到更广泛地应用（对系统集成商的要求会降低）。<br>
+<strong>其次</strong>，现在越来越多机器人厂商开始尝试使用ROS，包括占据最多工业市场份额的机器人四大家族和各种流行的研究型机器人；甚至有如Rethink的Baxter，只能使用ROS控制。研究机器人的如果不去学习ROS的话，以后可能就会面临不会使用机器人的问题。</p>
+<p style="text-align: center;"><a href="http://blog.exbot.net/wp-content/uploads/2016/09/1473650671-8862-0p73zywCIJUFP7icAGpeewLeh8eg.jpg" class="cboxElement" rel="example_group" 2796=""><img class="attachment-medium size-medium aligncenter" sizes="(max-width: 300px) 100vw, 300px" srcset="http://blog.exbot.net/wp-content/uploads/2016/09/1473650671-8862-0p73zywCIJUFP7icAGpeewLeh8eg-300x209.jpg 300w, http://blog.exbot.net/wp-content/uploads/2016/09/1473650671-8862-0p73zywCIJUFP7icAGpeewLeh8eg.jpg 640w" alt="1473650671-8862-0p73zywCIJUFP7icAGpeewLeh8eg" width="300" height="209" original="http://blog.exbot.net/wp-content/uploads/2016/09/1473650671-8862-0p73zywCIJUFP7icAGpeewLeh8eg-300x209.jpg"></a><br>
+△使用ROS的机器人</p>
+<p><strong>再者</strong>，机器人是一个复杂且涉及面极广的学科，从下往上包括<em>机械设计、电机控制、传感器、轨迹规划、运动学与动力学、运动规划、机器视觉、定位导航、机器学习、高级智能</em>等等。一个研究生基本不可能在几年时间内掌握所有领域。</p>
+<p>对于一个做上层规划的研究生，如果不用ROS的话，往往需要花费非常长时间用于搭建实验系统，从而大大挤压了真正用在发明新知识的时间。例如，我做运动规划，就必须先把机械臂运动学正逆解、物体识别算法、碰撞检测算法等完成才有可能开始做运动规划。造轮子的事就交给专业造轮子的人做吧。</p>
+<p>所以，对于科研人员来说，ROS可以帮助你快速搭建机器人软件系统，同时其模块化的设计可以让你方便地用自己的算法替换其中某一模块，让你专注于自己的研究点。</p>
+<p><strong>最后</strong>，就是对于创业或者参加比赛的人来说，ROS可以帮助你快速搭建原型样机。原型样机出来了，自然比只有设计说明书的人有优势。<br>
+为防止做广告嫌疑，创业的例子就不说了，就拿我们去年参加的一个创业大赛来讲。我们组四个人用了不到两个月时间完成了下面这个超市购物机器人的软硬件设计与制作，功能包括<em>避障、防跌、人员跟随、蓝牙校正（跟踪对的人）、手势识别、商品自动计价、自动支付</em>等。<br>
+嗯，我的<strong>公众号Nao(qRobotics)的头像</strong>就是在这个项目时设计的。</p>
+<p style="text-align: center;"><a href="http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-6631-pwP7mZC69ofciafpic1RAqbRZcMg.jpg" class="cboxElement" rel="example_group" 2796=""><img class="attachment-medium size-medium aligncenter" sizes="(max-width: 300px) 100vw, 300px" srcset="http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-6631-pwP7mZC69ofciafpic1RAqbRZcMg-300x184.jpg 300w, http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-6631-pwP7mZC69ofciafpic1RAqbRZcMg.jpg 640w" alt="1473650674-6631-pwP7mZC69ofciafpic1RAqbRZcMg" width="300" height="184" original="http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-6631-pwP7mZC69ofciafpic1RAqbRZcMg-300x184.jpg"></a><br>
+△去年参加某创业大赛的作品MarketBot</p>
+<h2 style="text-align: center;">如何</h2>
+<p><a href="http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-8888-hK2VcywEvXz9DblMZn6wotSA14WA.png" class="cboxElement" rel="example_group" 2796=""><img class="attachment-medium size-medium aligncenter" alt="1473650674-8888-hK2VcywEvXz9DblMZn6wotSA14WA" width="127" height="63" original="http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-8888-hK2VcywEvXz9DblMZn6wotSA14WA.png"></a></p>
+<p>这方面已经可以找到很多答案了，但是学习这种东西只能靠自己多练习了，我只简单从我个人角度给出几个建议吧。</p>
+<p><strong>首先</strong>，就是要先了解ROS的基本架构和开发方式。我个人是强烈推荐直接看ROS官网上的教程<a target="_blank" rel="nofollow noreferrer">ROS/Tutorials<i class="icon-link"></i></a>的Beginner Level（多看几遍），同时充分使用ROS的问答社区<a target="_blank" rel="nofollow noreferrer">ROS Answers<i class="icon-link"></i></a>与各模块的Mail Lists，很多基础问题可能前人都遇到过。</p>
+<p><strong>其次</strong>，在了解ROS的基本架构与开发方式后，就可以有针对性地看自己所关心的部分了。如做移动机器人的同学就去看Navigation教程；做物体识别的就去看ORK教程；做运动规划的就去看MoveIt教程。这一步最好能跟有实际机器人练手（如果没有的话，就用gazebo仿真）。由于一些模块的教程不够清楚（如MoveIt），一定要多练习，甚至是去看部分源码，先保证自己会用ROS实现一些功能。</p>
+<p>对于ROS与实际机器人的连接，建议仔细看看action（编写机器人驱动package）、URDF（机器人描述文件）的教程（或者ros_control）。如下图，我为SDA5F机器人编写了URDF文件，并修改了motoman_driver中的action，使得在ROS环境中用MoveIt规划控制双臂机器人运动。</p>
+<p style="text-align: center;"><a href="http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-3341-Brk1cmtGBRhtABRLLfdHerdT61Yg.jpg" class="cboxElement" rel="example_group" 2796=""><img class="attachment-medium size-medium aligncenter" sizes="(max-width: 300px) 100vw, 300px" srcset="http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-3341-Brk1cmtGBRhtABRLLfdHerdT61Yg-300x169.jpg 300w, http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-3341-Brk1cmtGBRhtABRLLfdHerdT61Yg.jpg 640w" alt="1473650674-3341-Brk1cmtGBRhtABRLLfdHerdT61Yg" width="300" height="169" original="http://blog.exbot.net/wp-content/uploads/2016/09/1473650674-3341-Brk1cmtGBRhtABRLLfdHerdT61Yg-300x169.jpg"></a><br>
+△SDA5F双臂机器人与其URDF模型</p>
+<p><strong>最后</strong>，就是进阶阶段了。我要强调一句“<strong>ROS只是一个工具</strong>”，你会用ROS做SLAM并不能说明你会做SLAM。对于自己研究的内容，必须沉下心去看教材和论文，去理解每种算法背后的原理，知道如何调整算法参数、如何改进算法，最终能够自己编写某部分代码，并替换ROS的相应模块（如自己写运动学正逆解替代KDL等）。<br>
+做研究，交流非常重要。如果你改进ROS某一算法后，最好能与package的原作者交流，将自己的修改merge到原项目中，在交流中提高自己与package的水平。当然，如果对算法有疑问，也可以直接咨询作者，ROS里的贡献者大都非常愿意分享和交流。</p>
+<p>当然，在问别人之前，请一定要保证自己充分熟悉了官方Tutorials，而不是朝别人发一堆编译错误截图，然后问这是怎么回事。<strong>提问的艺术真的非常重要，有时候不是对方不愿意跟你交流，而是对方不愿意手把手带你过Tutorials</strong>。</p>
+<h2 style="text-align: center;">结尾</h2>
+<p><a href="http://blog.exbot.net/wp-content/uploads/2016/09/1473650675-1763-hK2VcywEvXz9DblMZn6wotSA14WA.png" class="cboxElement" rel="example_group" 2796=""><img class="attachment-medium size-medium aligncenter" alt="1473650675-1763-hK2VcywEvXz9DblMZn6wotSA14WA" width="127" height="63" original="http://blog.exbot.net/wp-content/uploads/2016/09/1473650675-1763-hK2VcywEvXz9DblMZn6wotSA14WA.png"></a></p>
+<p>很多人在争论是否应该使用ROS、是否应该在产品上使用ROS、是否应该在工业中使用ROS。但是从我个人的角度上看，ROS对于<strong>服务</strong>机器人<strong>上层</strong>算法开发和<strong>研究</strong>而言是一个很棒的<strong>工具</strong>，作为学术研究使用的话，可以大大加快实验平台搭建过程。</p>
+<p>作者：qqfly</p>
+<p>来源：NAO 公众号qRobotics</p>
+<p>作者授权ExBot转发</p>
+		</div>
+								<div class="clear"></div>
+	</div>
+	<!-- .single-content -->
+</article>
+
+		<div id="social">
+	<div class="social-main">
+		<span class="like">
+	         <a href="javascript:;" data-action="ding" data-id="2796" title="我赞" class="favorite"><i class="icon-zan"></i>喜欢 <i class="count">
+	            18</i>
+	        </a>
+		</span>
+		<span class="comment-s"><i class="icon-comment"></i><a href="http://blog.exbot.net/archives/2796#comments">还有板凳</a></span>
+		<span class="share-s"><a href="http://blog.exbot.net/archives/2796#share" id="share-main-s" title="分享"><i class="icon-share"></i>分享</a></span>
+	</div>
+	<div class="clear"></div>
+</div>	</div>
+	<div class="single-tag">标签：<a href="http://blog.exbot.net/archives/tag/ros-2" rel="tag">ros</a></div>
+	<!-- #content -->
+	<div class="authorbio">
+		<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/7cb6d867ed64a1f3f0edee9399fd8330" srcset="http://1.gravatar.com/avatar/7cb6d867ed64a1f3f0edee9399fd8330?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64"><ul class="spostinfo">
+		<li><strong>版权声明：</strong>本站原创文章，由<a href="http://blog.exbot.net/archives/author/poyoten" title="由poyoten发布" rel="author">poyoten</a>发表在<a href="http://blog.exbot.net/archives/category/ros" rel="category tag">ROS</a>分类下，于2016年09月14日最后更新</li>
+	<li><strong>转载请注明：</strong><a href="http://blog.exbot.net/archives/2796" rel="bookmark" title="本文固定链接 http://blog.exbot.net/archives/2796">机器人操作系统ROS | 简介篇 | ExBot易科机器人实验室</a><a href="http://blog.exbot.net/archives/2796#" onclick="copy_code(&#39;http://blog.exbot.net/archives/2796&#39;); return false;"> +复制链接</a></li>
+	</ul>	</div>
+			<div id="bdtj">
+	<div id="hm_t_14725"></div>
+</div>
+<style type="text/css">
+#bdtj {
+	background: #fff;
+	margin: 0 0 10px 0;
+	padding: 0;
+	border: 1px solid #ccc;
+}
+.hm-t-header {
+	border-bottom: none !important;
+	height:24px !important;
+}
+.hm-t-container{
+	padding: 5px 0 0 15px !important;
+	width: 95% !important;
+	height: 160px !important;
+}
+.hm-t-footer{
+	display: none;
+}
+
+/** 等于或小于680px **/
+@media screen and (max-width: 680px) {
+	#bdtj {
+		display: none;
+	}
+}
+</style>	
+	<div id="single-widget">
+				<div class="clear"></div>
+	</div>
+
+	<nav class="nav-single">
+		【上篇】<a href="http://blog.exbot.net/archives/2790" rel="prev">机器人工程师之路——从大一到研究生，YY硕经验谈</a><br>【下篇】<a href="http://blog.exbot.net/archives/2827" rel="next">机器人书单与学习资源——控制篇(博士课程学习列表)</a>	</nav>
+	
+<!-- 引用 -->
+<div id="comments" class="comments-area">
+		<h2 class="comments-title">
+		1 条留言&nbsp;&nbsp;访客：1 条&nbsp;&nbsp;博主：0 条 			</h2>
+
+	<ol class="comment-list">
+			<div id="anchor"><div id="comment-330094"></div></div>
+	<li class="comment even thread-even depth-1" id="comment-330094">
+			<div id="div-comment-330094" class="comment-body">
+		<div class="comment-author vcard">
+		<img alt="" srcset="http://2.gravatar.com/avatar/e3577a963d092e09398df33751441b8d?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64" original="http://2.gravatar.com/avatar/e3577a963d092e09398df33751441b8d?s=64&amp;r=g">		<!--<cite class="fn">zhangrelay</cite> <span class="says">:</span>-->
+		<strong>zhangrelay</strong>
+		<span class="comment-meta commentmetadata">
+			<a href="http://blog.exbot.net/archives/2796#comment-330094"></a>
+			<span class="comment-aux">
+				2016年09月13日 下午 10:31												<span class="floor">
+					&nbsp;-49楼									</span>
+			</span>
+			<span class="reply">&nbsp;<a rel="nofollow" class="comment-reply-link" href="http://blog.exbot.net/archives/2796?replytocom=330094#respond" onclick="return addComment.moveForm( &quot;div-comment-330094&quot;, &quot;330094&quot;, &quot;respond&quot;, &quot;2796&quot; )" aria-label="回复给zhangrelay">回复</a></span>
+		</span>
+	</div>
+	<p>认真看完，满满收获，非常赞。</p>
+			</div>
+	</li><!-- #comment-## -->
+	</ol><!-- .comment-list -->
+
+	
+	
+		
+		
+		<div id="respond" class="comment-respond">
+			<h3 id="reply-title" class="comment-reply-title">给我留言<small><a rel="nofollow" id="cancel-comment-reply-link" href="http://blog.exbot.net/archives/2796#respond" style="display:none;">取消回复</a></small></h3>
+			
+			
+			<form action="http://blog.exbot.net/ex-comments-post.php" method="post" id="commentform">
+				
+								<div id="comment-author-info">
+					<p class="comment-form-author">
+						<input type="text" name="author" id="author" class="commenttext" value="" tabindex="1">
+						<label for="author">昵称（必填）</label>
+					</p>
+					<p class="comment-form-email">
+						<input type="text" name="email" id="email" class="commenttext" value="" tabindex="2">
+						<label for="email">邮箱（必填）</label>
+					</p>
+					<p class="comment-form-url">
+						<input type="text" name="url" id="url" class="commenttext" value="" tabindex="3">
+						<label for="url">网址</label>
+					</p>
+				</div>
+				
+		        <p class="comment-tool">
+		        	<a class="tool-img" href="javascript:embedImage();" title="插入图片"><i class="icon-img"></i></a>
+		        	<a class="smiley" href="http://blog.exbot.net/archives/2796" title="插入表情"><i class="icon-smiley"></i></a>
+		        	<span class="smiley-box"><a href="javascript:grin(&#39;:?:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_question.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_question.gif"></a>
+<a href="javascript:grin(&#39;:razz:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_razz.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_razz.gif"></a>
+<a href="javascript:grin(&#39;:sad:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_sad.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_sad.gif"></a>
+<a href="javascript:grin(&#39;:evil:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_evil.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_evil.gif"></a>
+<a href="javascript:grin(&#39;:!:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_exclaim.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_exclaim.gif"></a>
+<a href="javascript:grin(&#39;:smile:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_smile.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_smile.gif"></a>
+<a href="javascript:grin(&#39;:oops:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_redface.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_redface.gif"></a>
+<a href="javascript:grin(&#39;:grin:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_biggrin.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_biggrin.gif"></a>
+<a href="javascript:grin(&#39;:eek:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_surprised.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_surprised.gif"></a>
+<a href="javascript:grin(&#39;:shock:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_eek.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_eek.gif"></a>
+<a href="javascript:grin(&#39;:???:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_confused.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_confused.gif"></a>
+<a href="javascript:grin(&#39;:cool:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_cool.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_cool.gif"></a>
+<a href="javascript:grin(&#39;:lol:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_lol.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_lol.gif"></a>
+<a href="javascript:grin(&#39;:mad:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_mad.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_mad.gif"></a>
+<a href="javascript:grin(&#39;:twisted:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_twisted.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_twisted.gif"></a>
+<a href="javascript:grin(&#39;:roll:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_rolleyes.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_rolleyes.gif"></a>
+<a href="javascript:grin(&#39;:wink:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_wink.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_wink.gif"></a>
+<a href="javascript:grin(&#39;:idea:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_idea.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_idea.gif"></a>
+<a href="javascript:grin(&#39;:arrow:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_arrow.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_arrow.gif"></a>
+<a href="javascript:grin(&#39;:neutral:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_neutral.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_neutral.gif"></a>
+<a href="javascript:grin(&#39;:cry:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_cry.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_cry.gif"></a>
+<a href="javascript:grin(&#39;:mrgreen:&#39;)"><img src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/icon_mrgreen.gif" alt="" original="http://blog.exbot.net/wp-includes/images/smilies/icon_mrgreen.gif"></a></span>
+		        </p>
+
+		        <p class="comment-form-comment"><textarea id="comment" name="comment" rows="4" tabindex="4"></textarea><div id="loading" style="display: none;"> 正在提交, 请稍候...</div><div id="error" style="display: none;">#</div></p>
+
+				<p class="form-submit">
+					<input id="submit" name="submit" type="submit" tabindex="5" value="提 交">
+					<input id="reset" name="reset" type="reset" tabindex="6" value="重 写">
+					<input type="hidden" name="comment_post_ID" value="2796" id="comment_post_ID">
+<input type="hidden" name="comment_parent" id="comment_parent" value="0">
+</p><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="81ed9f5d4d"></p><p style="display: none;"></p>				<p></p>
+			<input type="hidden" id="ak_js" name="ak_js" value="1497057718127"></form>
+			<script type="text/javascript">
+				document.getElementById("comment").onkeydown = function (moz_ev){
+				var ev = null;
+				if (window.event){
+				ev = window.event;
+				}else{
+				ev = moz_ev;
+				}
+				if (ev != null && ev.ctrlKey && ev.keyCode == 13){
+				document.getElementById("submit").click();}
+				}
+			</script>
+	 				</div>
+		</div>
+<!-- #comments -->	</div>
+<!-- #primary -->
+<div id="sidebar" class="widget-area">
+				<aside id="hot_commend-2" class="widget widget_hot_commend"><h3 class="widget-title"><p><i class="icon-st"></i></p>本站推荐</h3>
+<div id="hot" class="hot_commend">
+	<ul>
+					<li>
+				<figure class="thumbnail">
+					<a href="http://blog.exbot.net/archives/2515" rel="bookmark" title="SLAM第一篇：基础知识">
+<img class="home-thumb" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/640.webp_-300x254.jpg" alt="SLAM第一篇：基础知识" original="http://blog.exbot.net/wp-content/uploads/2016/03/640.webp_-300x254.jpg">
+</a>
+				</figure>
+				<div class="hot-title"><a href="http://blog.exbot.net/archives/2515" rel="bookmark" title="SLAM第一篇：基础知识">SLAM第一篇：基础知识</a></div>
+				<div class="views"><i class="icon-views"></i>阅读 15,920 次</div>			</li>
+					<li>
+				<figure class="thumbnail">
+					<a href="http://blog.exbot.net/archives/1696" rel="bookmark" title="TOP原创 | Lily无人机深度解析">
+<img class="home-thumb" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/5552cbf837525.png" alt="TOP原创 | Lily无人机深度解析" original="http://blog.exbot.net/wp-content/uploads/2015/05/5552cbf837525.png">
+</a>
+				</figure>
+				<div class="hot-title"><a href="http://blog.exbot.net/archives/1696" rel="bookmark" title="TOP原创 | Lily无人机深度解析">TOP原创 | Lily无人机深度解析</a></div>
+				<div class="views"><i class="icon-views"></i>阅读 7,204 次</div>			</li>
+					<li style="border: none;">
+				<figure class="thumbnail">
+					<a href="http://blog.exbot.net/archives/2966" rel="bookmark" title="机器人程序设计——之如何正确入门ROS | 硬创公开课（附视频/PPT）">
+<img class="home-thumb" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/5879f4f25490d.png" alt="机器人程序设计——之如何正确入门ROS | 硬创公开课（附视频/PPT）" original="http://static.leiphone.com/uploads/new/article/740_740/201701/5879f4f25490d.png?imageMogr2/format/jpg/quality/90">
+</a>
+				</figure>
+				<div class="hot-title"><a href="http://blog.exbot.net/archives/2966" rel="bookmark" title="机器人程序设计——之如何正确入门ROS | 硬创公开课（附视频/PPT）">机器人程序设计——之如何正确入门ROS | 硬创公开课（附视频/PPT）</a></div>
+				<div class="views"><i class="icon-views"></i>阅读 12,449 次</div>			</li>
+				<div class="clear"></div>
+	</ul>
+</div>
+
+<div class="clear"></div></aside><aside id="hot_post-2" class="widget widget_hot_post"><h3 class="widget-title"><p><i class="icon-st"></i></p>热门文章</h3>
+<div id="hot_post_widget">
+	<ul>
+	     
+	    <li><span class="li-icon li-icon-1">1</span><a href="http://blog.exbot.net/archives/3001">大学本科《机器人程序设计课程》配...</a></li><li><span class="li-icon li-icon-2">2</span><a href="http://blog.exbot.net/archives/3026">智能机器人与ROS相关进展——星火计...</a></li><li><span class="li-icon li-icon-3">3</span><a href="http://blog.exbot.net/archives/3003">当我们选择ROS的时候，我们在想些什么</a></li><li><span class="li-icon li-icon-4">4</span><a href="http://blog.exbot.net/archives/3033">深度透彻！中国机器人教育三大痛点...</a></li><li><span class="li-icon li-icon-5">5</span><a href="http://blog.exbot.net/archives/3035">虚拟机运行Gazebo问题修复</a></li>	    			</ul>
+</div>
+
+<div class="clear"></div></aside><aside id="categories-4" class="widget widget_categories"><h3 class="widget-title"><p><i class="icon-st"></i></p>分类目录</h3>		<ul>
+	<li class="cat-item cat-item-4"><a href="http://blog.exbot.net/archives/category/machine-learning" title="关于机器学习的一切">Machine Learning</a>
+</li>
+	<li class="cat-item cat-item-29"><a href="http://blog.exbot.net/archives/category/note" title="只言片语">note</a>
+</li>
+	<li class="cat-item cat-item-1"><a href="http://blog.exbot.net/archives/category/other" title="杂项">Other</a>
+</li>
+	<li class="cat-item cat-item-66"><a href="http://blog.exbot.net/archives/category/quadrotor">QuadRotor</a>
+</li>
+	<li class="cat-item cat-item-24"><a href="http://blog.exbot.net/archives/category/resource" title="分享来源于网络的稀少资源">Resource</a>
+</li>
+	<li class="cat-item cat-item-3"><a href="http://blog.exbot.net/archives/category/robotics" title="关于机器人的一切">robotics</a>
+</li>
+	<li class="cat-item cat-item-5"><a href="http://blog.exbot.net/archives/category/ros" title="关于ROS机器人操作系统的一切">ROS</a>
+</li>
+	<li class="cat-item cat-item-85"><a href="http://blog.exbot.net/archives/category/spark">星火计划</a>
+</li>
+	<li class="cat-item cat-item-67"><a href="http://blog.exbot.net/archives/category/%e6%9c%ba%e5%99%a8%e4%ba%ba%e6%9c%aa%e6%9d%a5">机器人未来</a>
+</li>
+		</ul>
+<div class="clear"></div></aside><aside id="related_post-2" class="widget widget_related_post"><h3 class="widget-title"><p><i class="icon-st"></i></p>相关文章</h3>
+<div id="related_post_widget">
+	<ul>
+				<li><i class="icon-li"></i><a href="http://blog.exbot.net/archives/3051">ROS机器人星火计划公开课总结</a></li>
+				<li><i class="icon-li"></i><a href="http://blog.exbot.net/archives/3035">虚拟机运行Gazebo问题修复</a></li>
+				<li><i class="icon-li"></i><a href="http://blog.exbot.net/archives/3026">智能机器人与ROS相关进展——星火计划大连站PPT</a></li>
+				<li><i class="icon-li"></i><a href="http://blog.exbot.net/archives/3003">当我们选择ROS的时候，我们在想些什么</a></li>
+				<li><i class="icon-li"></i><a href="http://blog.exbot.net/archives/3001">大学本科《机器人程序设计课程》配套系统镜像使用说明（ Ubuntu 14.04.5 + ROS indigo ）</a></li>
+			</ul>
+</div>
+
+<div class="clear"></div></aside><aside id="recent_comments-3" class="widget widget_recent_comments"><h3 class="widget-title"><p><i class="icon-st"></i></p>近期评论</h3>
+<div id="message" class="message-widget">
+	<ul>
+						<li>
+					<a href="http://blog.exbot.net/archives/3035#comment-330336" title="发表在 &gt; 虚拟机运行Gazebo问题修复">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/e3577a963d092e09398df33751441b8d" srcset="http://2.gravatar.com/avatar/e3577a963d092e09398df33751441b8d?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>zhangrelay</strong></span>
+						<img draggable="false" class="emoji" alt="😛" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/1f61b.svg"> 支持下					</a>
+				</li>
+								<li>
+					<a href="http://blog.exbot.net/archives/1169#comment-330335" title="发表在 &gt; （四旋翼文献精选之一）无人机/四旋翼方面值得一读的论文(基础版)">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/10aa3f3c3b0f65b9e511d32fa7d5b8ff" srcset="http://1.gravatar.com/avatar/10aa3f3c3b0f65b9e511d32fa7d5b8ff?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>飞飞</strong></span>
+						不好意思，弄错了					</a>
+				</li>
+								<li>
+					<a href="http://blog.exbot.net/archives/223#comment-330334" title="发表在 &gt; 关于强化学习(Reinforcement Learning)学习过程中的几点想法">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/6fb9c85e8c17cc3285470a859beebad8" srcset="http://0.gravatar.com/avatar/6fb9c85e8c17cc3285470a859beebad8?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>随风</strong></span>
+						你好能否给我发一份，万分感谢。suifeng_505@126.com					</a>
+				</li>
+								<li>
+					<a href="http://blog.exbot.net/archives/2972#comment-330333" title="发表在 &gt; Ubuntu 16.04 + ROS Kinetic 学习镜像">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/7a1609cb47aa2719260a03edd65d9421" srcset="http://1.gravatar.com/avatar/7a1609cb47aa2719260a03edd65d9421?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>月光</strong></span>
+						您好！首先非常感谢博主分享您的成果！
+ 因为我是在单位使用这个Ubuntu+ROS，所以我直接下载这个版本之后，就直接用vmware导入了。
+ 现在不管是任何更改都没有办法保存到系统中，比如，我新建一个文件夹，它当时显示成功了，可是重新启动进入之后就没有这个文件夹。比如我更改了分辨率，可是重新启动之后，还是原来的分辨率。
+ 请问博主，这个怎么解决呢？
+
+非常感谢！
+ 月光					</a>
+				</li>
+								<li>
+					<a href="http://blog.exbot.net/archives/2966#comment-330332" title="发表在 &gt; 机器人程序设计——之如何正确入门ROS | 硬创公开课（附视频/PPT）">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/437e8725ea9ce2d28598c91181baeaee" srcset="http://1.gravatar.com/avatar/437e8725ea9ce2d28598c91181baeaee?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>山高水长</strong></span>
+						写的真好，感谢老师！					</a>
+				</li>
+								<li>
+					<a href="http://blog.exbot.net/archives/3001#comment-330331" title="发表在 &gt; 大学本科《机器人程序设计课程》配套系统镜像使用说明（ Ubuntu 14.04.5 + ROS indigo ）">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/7a1609cb47aa2719260a03edd65d9421" srcset="http://1.gravatar.com/avatar/7a1609cb47aa2719260a03edd65d9421?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>月光</strong></span>
+						您好！首先非常感谢博主分享您的成果！
+因为我是在单位使用这个Ubuntu+ROS，所以我直接下载这个版本之后，就直接用vmware导入了。
+现在不管是任何更改都没有办法保存到系统中，比如，我新建一个文件夹，它当时显示成功了，可是重新启动进入之后就没有这个文件夹。比如我更改了分辨率，可是重新启动之后，还是原来的分辨率。
+请问博主，这个怎么解决呢？
+
+非常感谢！
+月光					</a>
+				</li>
+								<li>
+					<a href="http://blog.exbot.net/archives/3001#comment-330326" title="发表在 &gt; 大学本科《机器人程序设计课程》配套系统镜像使用说明（ Ubuntu 14.04.5 + ROS indigo ）">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/4b0ebbdb3f5e5225673617458e773b7c" srcset="http://1.gravatar.com/avatar/4b0ebbdb3f5e5225673617458e773b7c?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>nini</strong></span>
+						想问下，这个课程在哪里下载					</a>
+				</li>
+								<li>
+					<a href="http://blog.exbot.net/archives/2790#comment-330325" title="发表在 &gt; 机器人工程师之路——从大一到研究生，YY硕经验谈">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/e818139709ae615a2005a786b7ee8e89" srcset="http://2.gravatar.com/avatar/e818139709ae615a2005a786b7ee8e89?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>小茗同学</strong></span>
+						博主现在在哪高就？					</a>
+				</li>
+								<li>
+					<a href="http://blog.exbot.net/archives/899#comment-330324" title="发表在 &gt; 10分钟上手玩ROS仿真机器人">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/8b20fa49f916292fe951fa27ad776218" srcset="http://2.gravatar.com/avatar/8b20fa49f916292fe951fa27ad776218?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>123</strong></span>
+						你好，你这个问题解决了吗》？我也遇到相同的问题，求帮助。					</a>
+				</li>
+								<li style="border: none;">
+					<a href="http://blog.exbot.net/archives/2594#comment-330318" title="发表在 &gt; ROS与Matlab系列：一个简单的运动控制">
+						<img alt="" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/c57bbbbbddc253a544266fb9ed31677f" srcset="http://0.gravatar.com/avatar/c57bbbbbddc253a544266fb9ed31677f?s=128&amp;r=g 2x" class="avatar avatar-64 photo" height="64" width="64">						<span class="comment_author"><strong>top</strong></span>
+						哇，好棒，我研究下					</a>
+				</li>
+					</ul>
+</div>
+
+<div class="clear"></div></aside>		<div class="sidebar-roll" style="position: fixed; top: 45px;">
+					</div>
+			</div>
+<div class="clear"></div>
+<footer id="footer">
+	<div class="site-info">
+		Copyright © ExBot易科机器人实验室  保留所有权利.&nbsp;&nbsp;
+		<span class="info-add">
+			Theme&nbsp;&nbsp; <a target="_blank" href="http://zmingcx.com/" title="主题：知更鸟" rel="nofollow">Robin</a> modified by poyoten
+			<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fc00ac7d360298837bc20b0460d90e664' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/h.js.下载" type="text/javascript"></script><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" id="HolmesIcon1497057718" width="20" height="20"><param name="movie" value="http://eiv.baidu.com/hmt/icon/11.swf"><param name="flashvars" value="s=http://tongji.baidu.com/hm-web/welcome/ico?s=c00ac7d360298837bc20b0460d90e664"><param name="allowscriptaccess" value="always"><embed type="application/x-shockwave-flash" name="HolmesIcon1497057718" width="20" height="20" src="http://eiv.baidu.com/hmt/icon/11.swf" flashvars="s=http://tongji.baidu.com/hm-web/welcome/ico?s=c00ac7d360298837bc20b0460d90e664" allowscriptaccess="always"></object>			<a href="http://blog.exbot.net/archives/%3C/span">
+	</a></span></div><a href="http://blog.exbot.net/archives/%3C/span">
+	<!-- .site-info -->
+</a><div id="sidr" style="display: none;" class="sidr left"><a href="http://blog.exbot.net/archives/%3C/span"></a><a id="simple-menu-s" href="http://blog.exbot.net/archives/2796#sidr"><i class="icon-close"></i></a><div class="menu-head-container"><ul id="menu-head-1" class="menu"><li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2293"><a href="http://books.exbot.net/">BOOKS</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2294"><a href="http://wiki.exbot.net/">WIKI</a></li>
+<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-2405"><a href="http://blog.exbot.net/spark/">星火计划</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-681"><a href="http://blog.exbot.net/link">链接</a></li>
+<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-682"><a href="http://blog.exbot.net/about">关于我</a></li>
+</ul></div></div>
+
+<div id="login">
+	<h1>用户登录</h1>
+	<form action="http://blog.exbot.net/wp-login.php?redirect_to=http%3A%2F%2Fblog.exbot.net%2Farchives%2F2796" method="post" id="loginform">
+		<fieldset id="inputs">
+			<input id="username" type="text" name="log" placeholder="名称" required="">
+			<input id="password" type="password" name="pwd" placeholder="密码" required="">
+		</fieldset>
+		<fieldset id="actions">
+		<input type="submit" id="submit" value="登录">
+		<input type="hidden" name="redirect_to" value="/archives/2796">
+		<label><input type="checkbox" name="rememberme" id="modlogn_remember" value="yes" checked="checked" alt="Remember Me">记住登录信息</label>
+		</fieldset>
+	</form>
+</div>
+<ul id="scroll" class="">
+	<li><a class="scroll_t" title="返回顶部"><i class="icon-scroll_t"></i></a></li>
+			<li><a href="http://blog.exbot.net/archives/2796#share" id="share-main" title="分享"><i class="icon-share"></i></a></li>
+	
+			<li><a class="scroll_c" title="查看评论"><i class="icon-scroll_c"></i></a></li>
+		<li><a class="scroll_b" title="转到底部"><i class="icon-scroll_b"></i></a></li>
+</ul>
+<div id="share">
+	<h4>分享到：</h4>
+	<div class="bdsharebuttonbox bdshare-button-style1-16" data-bd-bind="1497057718312">
+		<a title="分享到QQ空间" href="http://blog.exbot.net/archives/2796#" class="icon-qzone" data-cmd="qzone"></a>
+		<a title="分享到新浪微博" href="http://blog.exbot.net/archives/2796#" class="icon-tsina" data-cmd="tsina"></a>
+		<a title="分享到腾讯微博" href="http://blog.exbot.net/archives/2796#" class="icon-tqq" data-cmd="tqq"></a>
+		<a title="分享到人人网" href="http://blog.exbot.net/archives/2796#" class="icon-renren" data-cmd="renren"></a>
+		<a title="分享到微信" href="http://blog.exbot.net/archives/2796#" class="icon-weixin" data-cmd="weixin"></a>
+		<a href="http://blog.exbot.net/archives/2796#" class="icon-more" data-cmd="more"></a>
+	</div>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+</footer>
+<!-- #footer -->
+</div><!-- #main -->
+</div><!-- #page -->
+<script type="text/javascript" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/form.js.下载"></script>
+<script type="text/javascript" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/jquery.sidr.min.js.下载"></script>
+<script type="text/javascript" src="./机器人操作系统ROS _ 简介篇 _ ExBot易科机器人实验室_files/wp-embed.min.js.下载"></script>
+
+
+<div id="lean_overlay" class=""></div><div id="lean_overlay" class=""></div><div id="lean_overlay" class=""></div><div id="lean_overlay" class=""></div><div id="hm_t_56421" style="display: block; margin: 0px; padding: 0px; float: none; clear: none; overflow: hidden; position: fixed; border: 0px; background: none; max-width: none; max-height: none; border-radius: 0px; box-shadow: none; transition: none; text-align: left; box-sizing: content-box; bottom: 2px; z-index: 2147483646; left: 2px; width: 36px; height: 306px;" class=""><div style="display: block; margin: 0px; padding: 0px; float: none; clear: none; overflow: hidden; position: relative; border: 0px; background: none; max-width: none; max-height: none; border-radius: 0px; box-shadow: none; transition: none; text-align: left; box-sizing: content-box; width: 100%; height: 100%;"></div></div></body></html>

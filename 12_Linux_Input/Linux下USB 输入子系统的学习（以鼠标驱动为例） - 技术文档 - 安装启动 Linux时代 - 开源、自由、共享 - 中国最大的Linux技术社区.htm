@@ -1,0 +1,636 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=gbk">
+
+<title>Linux下USB 输入子系统的学习（以鼠标驱动为例） - 技术文档 - 安装启动 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区</title>
+<meta name="keywords" content="Linux下USB 输入子系统的学习（以鼠标驱动为例） - 技术文档 - 安装启动 Linux时代 - 开源、自由、共享 - 中国最大的Linux技术社区">
+<meta name="description" content="Linux下USB 输入子系统的学习（以鼠标驱动为例） - 技术文档 - 安装启动  安装启动 Linux 技术文档">
+
+<link href="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/all.css" rel="stylesheet" type="text/css">
+
+<style type="text/css">
+
+<!--
+
+.STYLE1 {color: #FF0000}
+
+.STYLE2 {font-size: 14px}
+
+-->
+
+</style>
+
+</head>
+
+
+
+<body>
+
+<table cellpadding="0" cellspacing="0" align="center" border="0" width="950">
+
+  <tbody><tr>
+
+    <td height="27">	<table style="border-collapse: collapse" cellpadding="0" cellspacing="0" border="0" width="100%">
+	<tbody><tr><form name="login" action="http://linux.chinaunix.net/bbs/logging.php?action=login" method="post"></form>
+	<td><script language="javascript" src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/loginbox.htm"></script></td>
+	
+	<td align="right">
+	·<a href="http://www.chinaunix.net/" class="list1">ChinaUnix首页</a>
+
+	·<a href="http://bbs.chinaunix.net/" class="list1">论坛</a>
+	·<a href="http://blog.chinaunix.net/" class="list1">博客</a>&nbsp;
+	</td>
+	</tr>
+	</tbody></table></td>
+
+  </tr>
+
+  <tr>
+
+    <td bgcolor="#CCCCCC" height="1"></td>
+
+  </tr>
+
+  <tr>
+
+    <td><table cellpadding="0" cellspacing="0" border="0" width="100%">
+
+      <tbody><tr>
+
+        <td height="84"><img src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/logo.jpg"></td>
+
+        <td align="right"><iframe src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/iframe.htm" frameborder="0" height="80" scrolling="no" width="750"></iframe>
+</td>
+
+      </tr>
+
+    </tbody></table></td>
+
+  </tr>
+
+  <tr>
+
+    <td><table cellpadding="0" cellspacing="0" border="0" width="100%">
+
+      <tbody><tr>
+
+        <td width="3"><img src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/bgtop1.jpg" height="26" width="3"></td>
+
+        <td class="whitetop" background="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/bgtop2.gif" width="944">
+<a href="http://linux.chinaunix.net/" target="_blank">Linux首页</a> |
+<a href="http://linux.chinaunix.net/news/">Linux新闻</a> |
+<a target="_blank" href="http://linux.chinaunix.net/bbs" style="color:red"><b>Linux论坛</b></a> |
+<a href="http://linux.chinaunix.net/techdoc/">Linux文档</a> |
+<a target="_blank" href="http://download.chinaunix.net/disc/linux/">Linux下载</a> |
+<a target="_blank" href="http://blog.chinaunix.net/techart.php?frmid=6">Linux博客</a> |
+<a target="_blank" href="http://search.chinaunix.net/">Linux搜索</a> |
+<a target="_blank" href="http://linux.chinaunix.net/bbs/index.php?gid=68">开源项目孵化平台</a>
+ |
+<a target="_blank" href="http://linux.chinaunix.net/ebook/" style="color:red">《开源时代》</a></td>
+
+        <td align="right" width="3"><img src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/bgtop3.jpg" height="26" width="3"></td>
+
+      </tr>
+
+    </tbody></table></td>
+
+  </tr>
+
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" align="center" border="0" width="950">
+
+<tbody><tr>
+
+    <td class="BlkLightblue" valign="bottom">
+<a target="_blank" href="http://linux.chinaunix.net/techdoc/beginner/">
+		新手入门</a> | <span lang="zh-cn">
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/install/">
+		安装启动</a> | </span>
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/system/">
+		管理员指南</a> | <a target="_blank" href="http://man.chinaunix.net/">开发手册</a> 
+		| <a target="_blank" href="http://linux.chinaunix.net/techdoc/desktop/">
+		桌面应用</a> |
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/develop/">
+		程序开发</a> |
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/database/">
+		数据库</a> | <span lang="zh-cn">
+		<a target="_blank" href="http://linux.chinaunix.net/techdoc/net/">网络技术</a>|
+<a target="_blank" href="http://linux.chinaunix.net/topics/2007-01-25/15/index.shtml">
+CentOS</a></span> |
+<a target="_blank" href="http://linux.chinaunix.net/search2.php?key=fedora&amp;id=0">
+Fedora</a> <span lang="zh-cn">| </span>
+<a target="_blank" href="http://linux.chinaunix.net/search2.php?key=mysql&amp;id=0">
+MySQL</a>
+
+<span lang="zh-cn">| </span>
+<a target="_blank" href="http://linux.chinaunix.net/search2.php?key=apache&amp;id=0">
+Apache</a>
+
+<span lang="zh-cn">| </span>
+<a target="_blank" href="http://linux.chinaunix.net/search2.php?key=ubuntu&amp;id=0">
+<font color="#FF0000">Ubuntu</font></a>
+
+<span lang="zh-cn">| </span>
+<a target="_blank" href="http://linux.chinaunix.net/topics/2008-07-10/18/index.shtml">
+<font color="#FF0000">Gentoo</font></a>| 
+<b>
+<a target="_blank" href="http://linux.chinaunix.net/topics/2008-07-30/19/index.shtml">
+<font color="#FF0000">OSCON08</font></a></b>
+</td>
+
+</tr>
+<tr><td>
+
+</td></tr>
+  <tr>
+
+    <td height="30" valign="bottom">&nbsp;&nbsp;<a href="http://linux.chinaunix.net/">Linux时代</a> &gt;&gt;  <a href="http://linux.chinaunix.net/techdoc/" class="list1">技术文档</a> &gt;&gt; <a href="http://linux.chinaunix.net/techdoc/install/" class="list1">安装启动</a></td>
+
+  </tr>
+
+  <tr>
+
+    <td bgcolor="#CCCCCC" height="1"></td>
+
+  </tr>
+
+  <tr>
+
+    <td height="8"></td>
+
+  </tr>
+
+</tbody></table><table cellpadding="0" cellspacing="0" align="center" border="0" width="950">
+
+  <tbody><tr>
+
+    <td class="BLKtext" valign="top"><table cellpadding="0" cellspacing="0" align="center" border="0" width="660">
+
+      <tbody><tr>
+
+        <td height="8">&nbsp;</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="Ftext1" height="30">Linux下USB 输入子系统的学习（以鼠标驱动为例）</td>
+
+      </tr>
+
+      <tr>
+
+        <td><table cellpadding="0" cellspacing="0" align="center" border="0" width="80%">
+
+          <tbody><tr>
+
+            <td bgcolor="#CCCCCC" height="1"></td>
+
+          </tr>
+
+        </tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td align="center" height="40">来源: 
+ ChinaUnix博客 　日期：
+2009.07.10 17:35　(共有<span class="STYLE1" id="postcount"></span>条评论)  <a href="http://linux.chinaunix.net/bbs/thread-1123454-1-1.html" target="_blank">我要评论</a></td>
+
+      </tr>
+
+      <tr>
+
+        <td>&nbsp;</td>
+
+      </tr>
+
+      <tr>
+
+        <td class="F14">
+<font color="&quot;#02368d&quot;"><b>Linux下USB 输入子系统的学习（以鼠标驱动为例）<br>
+</b></font>usb 1-1.2: new low speed USB device using musb_hdrc and address 3<br>
+usb 1-1.2: Product: USB Optical Mouse<br>
+input: USB HID v1.11 Mouse [USB Optical Mouse] on usb-musb_hdrc-1.2<br>
+//drivers/usb/input/hid-core.c<br>
+&gt;hid_probe()<br>
+{<br>
+&nbsp; &nbsp; printk(": USB HID v%x.%02x %s [%s] on %s\n",<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;hid-&gt;version &gt;&gt; 8, hid-&gt;version &amp; 0xff, c, hid-&gt;name, path);<br>
+}<br>
+//drivers/input/mouse/sermouse.c----&gt;sermouse_connect()<br>
+&nbsp; &nbsp; printk(KERN_INFO "input: %s on %s\n", sermouse_protocols[sermouse-&gt;type], serio-&gt;phys);<br>
+/proc/bus/input # cat devices <br>
+I: Bus=0003 Vendor=0461 Product=4d15 Version=0200<br>
+N: Name="USB Optical Mouse"<br>
+P: Phys=usb-musb_hdrc-1.1/input0<br>
+H: Handlers=mouse1 <br>
+B: EV=f <br>
+B: KEY=70000 0 0 0 0 0 0 0 0 <br>
+B: REL=103 <br>
+B: ABS=100 0 <br>
+ 驱动层负责和底层的硬件设备打交道，<br>
+将底层硬件对用户输入的响应转换为标准的输入事件以后再向上发送给Input Core。<br>
+驱动层通过调用Input_register_device函数和<br>
+Input_unregister_device函数来向输入子系统中注册和注销输入设备---<br>
+/////drivers/us/input/usbmouse.c<br>
+usb_mouse_probe-&gt;<br>
+input_register_device(&amp;mouse-&gt;dev)&gt;<br>
+usb_mouse_disconnect&gt;<br>
+input_unregister_device(&amp;mouse-&gt;dev);<br>
+usb_mouse_irq()&gt;<br>
+input_report_key&gt;<br>
+input_event&gt;//drivers/input/input.c<br>
+input_sync&gt;//每次终端数据发送完成后都会跟随发送一个同步事件，便与鼠标、按键数据及时更新到响应的全局变量<br>
+//输入子系统层的操作--drivers/input/input.c<br>
+open /dev/input/mouse0&gt;<br>
+mousedev_open()&gt; //drivers/input/mousedev.c /*打开鼠标类输入设备*/<br>
+input_open_device()&gt;<br>
+input_handle-&gt;dev-&gt;open&gt;<br>
+//驱动层物理设备的操作---drivers/usb/input/usbmouse.c<br>
+usb_mouse_open()<br>
+注册Input Handler<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;驱动层只是把输入设备注册到输入子系统中，在驱动层的代码中本身并不创建设备结点。<br>
+应用程序用来与设备打交道的设备结点的创建由Event Handler层调用Input core中的函数来实现。<br>
+而在创建具体的设备节点之前，Event Handler层需要先注册一类设备的输入事件处理函数及相关接口<br>
+static int __init mousedev_init(void){//注册输入事件处理、连接、断开、设备（文件）操作函数&nbsp; 
+&nbsp; 
+input_register_handler(&amp;mousedev_handler);//创建输入设备节点
+devfs_mk_cdev(MKDEV(INPUT_MAJOR, MOUSEDEV_MINOR_BASE + 
+MOUSEDEV_MIX),&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+&nbsp;S_IFCHR|S_IRUGO|S_IWUSR, "input/mice");}<br>
+static struct input_handler mousedev_handler = {<br>
+&nbsp; &nbsp; .event =&nbsp; &nbsp; mousedev_event,//REL（相对坐标）、按键、ABS（绝对坐标）、SYNC等事件处理<br>
+&nbsp; &nbsp; .connect =&nbsp; &nbsp; mousedev_connect,<br>
+&nbsp; &nbsp; .disconnect =&nbsp; &nbsp; mousedev_disconnect,<br>
+&nbsp; &nbsp; .fops =&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&amp;mousedev_fops,//鼠标打开、poll、读写等操作<br>
+&nbsp; &nbsp; .minor =&nbsp; &nbsp; MOUSEDEV_MINOR_BASE,<br>
+&nbsp; &nbsp; .name =&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;"mousedev",<br>
+&nbsp; &nbsp; .id_table =&nbsp; &nbsp; mousedev_ids,<br>
+};<br>
+下面集中分析mousedev_event事件处理：分析数据事件结构体linux/input.h中有定义，这个文件还定义了标准按键的编码等
+struct input_event {&nbsp; &nbsp; struct timeval 
+time;&nbsp;&nbsp;//按键时间&nbsp; &nbsp; __u16 type; //类型，在下面有定义&nbsp; 
+&nbsp; __u16 code; //要模拟成什么按键&nbsp; &nbsp; __s32 value;//是按下还是释放};<br>
+code：<br>
+事<br>
+件的代码.如果事件的类型代码是EV_KEY,该代码code为设备键盘代码.代码植0~127为键盘上的按键代码,0x110~0x116<br>
+为鼠标上按键代码,其中0x110(BTN_ LEFT)为鼠标左键,0x111(BTN_RIGHT)为鼠标右键,0x112(BTN_<br>
+MIDDLE)为鼠标中键.其它代码含义请参看include/linux/input.h文件. 
+如果事件的类型代码是EV_REL,code值表示轨迹的类型.如指示鼠标的X轴方向REL_X(代码为0x00),指示鼠标的Y轴方向REL_Y(代码
+为0x01),指示鼠标中轮子方向REL_WHEEL(代码为0x08).<br>
+type: <br>
+ EV_SYN，同步事件<br>
+EV_KEY,键盘<br>
+EV_REL,相对坐标<br>
+EV_ABS,绝对坐标<br>
+ value：<br>
+事件的值.如果事件的类型代码是EV_KEY,当按键按下时值为1,松开时值为0;如果事件的类型代码是EV_ REL,value的正数值和负数值分别代表两个不同方向的值.<br>
+mousedev_event()<br>
+{<br>
+//以相对坐标移动事件为例：<br>
+case EV_REL:<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;mousedev_rel_event(mousedev, code, value);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;break;<br>
+}<br>
+mousedev_rel_event(struct mousedev *mousedev, unsigned int code, int value)<br>
+{<br>
+&nbsp;&nbsp;//code区分X Y 轴、滚轮移动<br>
+//value代表正负移动量<br>
+&nbsp; &nbsp; switch (code) {<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;case REL_X:&nbsp; &nbsp; mousedev-&gt;packet.dx += value; break;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;case REL_Y:&nbsp; &nbsp; mousedev-&gt;packet.dy -= value; break;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;case REL_WHEEL:&nbsp; &nbsp; mousedev-&gt;packet.dz -= value; break;<br>
+&nbsp; &nbsp; }<br>
+}<br>
+分析mousedev中的packet：struct mousedev_hw_data {&nbsp; &nbsp; int dx, dy, 
+dz;&nbsp; &nbsp; int x, y;&nbsp; &nbsp; int abs_event;&nbsp; &nbsp; 
+unsigned long buttons;};<br>
+struct mousedev_hw_data packet;<br>
+更新mousedev中的packet数据，然后触摸屏输入、鼠标输入分别使用touch、EV_SYN方式调用mousedev_notify_readers()将其更新到mousedev_list中，这就是为什么每次按键、移动事件都跟随一个同步事件的原因<br>
+//屏幕分辨率的设置：<br>
+#ifndef CONFIG_INPUT_MOUSEDEV_SCREEN_X<br>
+#define CONFIG_INPUT_MOUSEDEV_SCREEN_X&nbsp; &nbsp; 1024<br>
+#endif<br>
+#ifndef CONFIG_INPUT_MOUSEDEV_SCREEN_Y<br>
+#define CONFIG_INPUT_MOUSEDEV_SCREEN_Y&nbsp; &nbsp; 768<br>
+#endif<br>
+其他参考链接：http://blog.csdn.net/wind20/archive/2008/04/25/2327510.aspx<br>
+http://blog.csdn.net/chenzhixin/archive/2008/03/12/2173530.aspx<br>
+测试应用程序代码：<br>
+#include <br>
+#include <br>
+#include <br>
+#include <br>
+#include <br>
+#define USB_MOUSE&nbsp; &nbsp;("/dev/input/mouse0")<br>
+struct pollfd&nbsp;&nbsp;mypoll;<br>
+int main(int argc,&nbsp;&nbsp;char *argv[])<br>
+{<br>
+&nbsp; &nbsp; int mouseFd;<br>
+&nbsp; &nbsp; struct input_event buff; <br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;if ((mouseFd = open(USB_MOUSE, O_RDONLY)) == -1) {<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;printf("Failed to open /dev/input/mouse0\n");<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;return -1;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;mypoll.fd =&nbsp;&nbsp;mouseFd;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;mypoll.events = POLLIN;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;while(1)<br>
+&nbsp; &nbsp; {<br>
+&nbsp; &nbsp;&nbsp; &nbsp; if(poll( &amp;mypoll, 1, 10) &gt; 0)<br>
+&nbsp; &nbsp;&nbsp; &nbsp;{<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;unsigned char data[4] ={0};&nbsp; &nbsp; <br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;/*<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;data的数据格式:<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;data0:00xx 
+1xxx&nbsp; &nbsp;----低三位是按键值---左中右分别为01 02 04, 
+第4/5位分别代表x、y移动方向，右上方x/y&gt;0,左下方xy&lt;0<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;data1:取值范围-127~127，代表x轴移动偏移量<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+&nbsp;data2:取值范围-127~127，代表y轴移动偏移量&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 
+&nbsp;&nbsp; &nbsp;<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;*/<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;usleep(50000);&nbsp; &nbsp; <br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;read(mouseFd, data, 4); //MOUSEDEV_EMUL_PS2方式每次采样数据为3个字节，多读不会出错，只返回成功读取的数据数<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;printf("mouse data=%02x%02x%02x%02x\n", data[0],data[1], data[2], data[3]);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;}<br>
+&nbsp; &nbsp; }<br>
+&nbsp; &nbsp; <br>
+&nbsp; &nbsp; close(mouseFd);<br>
+&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;return 0;<br>
+}<br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <br>
+<br>
+<b>本文来自ChinaUnix博客，如果查看原文请点：</b><a href="http://blog.chinaunix.net/u3/90973/showart_1992263.html" target="_blank">http://blog.chinaunix.net/u3/90973/showart_1992263.html</a> 
+</td>
+
+      </tr>
+
+
+      <tr>
+
+        <td align="right" height="20"> 　 <a href="http://linux.chinaunix.net/bbs/thread-1123454-1-1.html" target="_blank">发表评论</a>
+
+  <a href="http://linux.chinaunix.net/bbs/thread-1123454-1-1.html" target="_blank">查看评论</a>(共有<span class="STYLE1" id="postcount2"></span>条评论)
+
+</td>
+
+      </tr>
+      <tr>
+
+        <td>&nbsp;</td>
+
+      </tr>
+
+      
+
+    </tbody></table>
+
+
+</td>
+
+    <td width="8">&nbsp;</td>
+
+    <td bgcolor="#FFF9EB" valign="top" width="245">
+<center><br>
+<form action="/search2.php" method="GET">
+<input name="key" size="15" type="text"><input name="id" value="0" type="hidden"><input value="搜索" type="submit">
+</form>
+<br>
+</center>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+
+      <tbody><tr>
+
+        <td class="F13" background="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/bg245.jpg" height="27"><table width="100%"><tbody><tr><td class="F13">最新资讯</td><td align="right"><a href="http://linux.chinaunix.net/news" target="_blank">更多&gt;&gt;</a>&nbsp;</td></tr></tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td class="BLKtext" bgcolor="#FFFFFF" valign="top"><table cellpadding="0" cellspacing="0" align="center" border="0" width="97%">
+
+          <tbody><tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+          <tr>
+
+            <td>· <a href="http://linux.chinaunix.net/news/2010/12/10/1175491.shtml" title="谷歌劝说诺基亚采用Android操作系统" target="_blank">谷歌劝说诺基亚采用Android操作..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/10/1175493.shtml" title="Apache 基金会确认退出 JCP 执行委员会" target="_blank">Apache 基金会确认退出 JCP 执..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175306.shtml" title="Chrome 10 新功能探秘：新增GPU混合加速功能" target="_blank">Chrome 10 新功能探秘：新增GP..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175307.shtml" title="金山宣布开源其安全软件" target="_blank">金山宣布开源其安全软件</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175309.shtml" title="女黑客在开源会议上抱受骚扰" target="_blank">女黑客在开源会议上抱受骚扰</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175310.shtml" title="21款值得关注的Linux游戏" target="_blank">21款值得关注的Linux游戏</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175311.shtml" title="马化腾：腾讯半年后彻底转型，开放和分享" target="_blank">马化腾：腾讯半年后彻底转型，..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/07/1175305.shtml" title="[多图] Chrome OS 预发布版本多图赏析" target="_blank">[多图] Chrome OS 预发布版本多..</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/01/1175001.shtml" title="Lubuntu 11.04 默认应用抢先一览" target="_blank">Lubuntu 11.04 默认应用抢先一览</a><br>
+· <a href="http://linux.chinaunix.net/news/2010/12/01/1175002.shtml" title="Red Hat宣布收购云计算软件提供商Makara" target="_blank">Red Hat宣布收购云计算软件提供..</a><br>
+</td>
+
+          </tr>
+
+          <tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+        </tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td bgcolor="#FFFFFF" height="10"></td>
+
+      </tr>
+
+      <tr></tr></tbody></table>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+
+      <tbody><tr>
+
+        <td class="F13" background="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/bg245.jpg" height="27"><table width="100%"><tbody><tr><td class="F13">论坛热点</td><td align="right"><a href="http://linux.chinaunix.net/bbs" target="_blank">更多&gt;&gt;</a>&nbsp;</td></tr></tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td class="BLKtext" bgcolor="#FFFFFF" valign="top"><table cellpadding="0" cellspacing="0" align="center" border="0" width="97%">
+
+          <tbody><tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+          <tr>
+
+            <td>· <a href="http://bbs.chinaunix.net/thread-3687970-1-1.html" title="do_execve时候用户栈中参数的位置问题" target="_blank">do_execve时候用户栈中参数的..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687969-1-1.html" title="swapinfo -atm 问题" target="_blank">swapinfo -atm 问题</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687968-1-1.html" title="Linux 的优点简述" target="_blank">Linux 的优点简述</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687967-1-1.html" title="VM虚拟机上得Red Hat Linux上搭建的ftp服务器，windows登陆不进去，但一个局域网其他" target="_blank">VM虚拟机上得Red Hat Linux上..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687965-1-1.html" title="我看成了上海男人喜欢女人毛多还是毛少" target="_blank">我看成了上海男人喜欢女人毛..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687964-1-1.html" title="校车展览，看了你就知道" target="_blank">校车展览，看了你就知道</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687963-1-1.html" title="在遇到他之前，唯一需要做的，就是让自己足够优秀。在遇到他之前，请把最好的年华留给" target="_blank">在遇到他之前，唯一需要做的..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687962-1-1.html" title="GRUB的疑问" target="_blank">GRUB的疑问</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687961-1-1.html" title="从来没有人真正付足书价——所付的只是印刷费" target="_blank">从来没有人真正付足书价——..</a><br>
+· <a href="http://bbs.chinaunix.net/thread-3687960-1-1.html" title="云存储 vs 网盘" target="_blank">云存储 vs 网盘</a><br>
+</td>
+
+          </tr>
+
+          <tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+        </tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td bgcolor="#FFFFFF" height="10"></td>
+
+      </tr>
+
+      <tr></tr></tbody></table>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+
+      <tbody><tr>
+
+        <td class="F13" background="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/bg245.jpg" height="27"><table width="100%"><tbody><tr><td class="F13">文档更新</td><td align="right"><a href="http://linux.chinaunix.net/techdoc" target="_blank">更多&gt;&gt;</a>&nbsp;</td></tr></tbody></table></td>
+
+      </tr>
+
+      <tr>
+
+        <td class="BLKtext" bgcolor="#FFFFFF" valign="top"><table cellpadding="0" cellspacing="0" align="center" border="0" width="97%">
+
+          <tbody><tr>
+
+            <td height="5"></td>
+
+          </tr>
+
+          <tr>
+
+            <td>· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686893.shtml" title="orcale queue" target="_blank">orcale queue</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686868.shtml" title="谁可以推荐几本经典的操作系统的书（英文版）" target="_blank">谁可以推荐几本经典的操作系统的..</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686867.shtml" title="【北京】某物联网公司招云计算应用高级开发工程师" target="_blank">【北京】某物联网公司招云计算应..</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686866.shtml" title="【北京】某物联网公司招云计算应用高级开发工程师" target="_blank">【北京】某物联网公司招云计算应..</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686865.shtml" title="谁能推荐几本关于操作系统的书" target="_blank">谁能推荐几本关于操作系统的书</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686864.shtml" title="如何添加网络接口eth1" target="_blank">如何添加网络接口eth1</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686863.shtml" title="葡萄牙语入门教材的选取与经验分享" target="_blank">葡萄牙语入门教材的选取与经验分享</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686862.shtml" title="葡萄牙语就业前景分析" target="_blank">葡萄牙语就业前景分析</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686861.shtml" title="葡萄牙语学习经验交流" target="_blank">葡萄牙语学习经验交流</a><br>
+· <a href="http://linux.chinaunix.net/techdoc/develop/2012/03/16/3686860.shtml" title="Щ" target="_blank">Щ</a><br>
+</td>
+
+          </tr>
+
+   
+        </tbody></table></td>
+
+      </tr>
+
+
+      <tr></tr></tbody></table>
+</td>
+
+  </tr>
+
+</tbody></table>
+<script src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/threadcount.htm"></script>
+<table cellpadding="0" cellspacing="0" align="center" border="0" width="950">
+
+  <tbody><tr>
+
+    <td>&nbsp;</td>
+
+  </tr>
+
+</tbody></table>
+
+<table cellpadding="0" cellspacing="0" align="center" border="0" width="950">
+
+  <tbody><tr>
+
+    <td bgcolor="#308CF6" height="2"></td>
+
+  </tr>
+
+  <tr>
+
+    <td align="center" height="30"><a href="http://www.chinaunix.net/about/index.shtml" target="_blank">关于我们</a> | <a href="http://www.chinaunix.net/about/connect.html" target="_blank">联系方式</a> | <a href="http://www.chinaunix.net/about/service.html" target="_blank">广告合作</a> | <a href="http://www.wintalent.cn:8031/wt5/sequelmedia/web/index" target="_blank">诚聘英才</a> | <a href="http://www.chinaunix.net/about/channel.html" target="_blank">网站地图</a> | <a href="http://www.chinaunix.net/about/friend.html" target="_blank">友情链接</a> | <a href="http://linux.chinaunix.net/bbs/register.php" target="_blank">免费注册</a></td>
+
+  </tr>
+
+  <tr>
+
+    <td bgcolor="#308CF6" height="2"></td>
+
+  </tr>
+
+  <tr>
+
+    <td align="center"><p>Copyright &#169; 2001-2009 ChinaUnix.net All Rights Reserved</p>
+
+        <p>感谢所有关心和支持过ChinaUnix的朋友们<br>
+	</p><p>
+ <a href="http://www.it168.com/images/icp.jpg" target="_blank">京ICP证:060528号</a></p></td>
+
+  </tr>
+
+</tbody></table>
+
+<!-- 统计 START -->
+<script src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/pv.js" type="text/javascript"></script>
+<script>
+function sendPV(){
+    var pvTrack = new PvTrack();
+    pvTrack.type = 10; // 频道类别ID
+    pvTrack.channel = 22; // 频道ID
+   
+    pvTrack.pageType = 0;
+    pvTrack.track();
+}
+window.setTimeout("sendPV()", 0);
+</script>
+<script language="javascript" src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/pv_002.js" type="text/javascript"></script><script src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/ga.js" type="text/javascript"></script>
+<!-- 统计 .END -->
+<div style="display:none">
+<script type="text/javascript"> 
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F0ee5e8cdc4d43389b3d1bfd76e83216b' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/h.js" type="text/javascript"></script>
+</div>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-11982772-4");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+<script type="text/javascript" src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/601.js"></script><script type="text/javascript" src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/601_003.js"></script><script type="text/javascript" src="Linux%E4%B8%8BUSB%20%E8%BE%93%E5%85%A5%E5%AD%90%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BB%A5%E9%BC%A0%E6%A0%87%E9%A9%B1%E5%8A%A8%E4%B8%BA%E4%BE%8B%EF%BC%89%20-%20%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3%20-%20%E5%AE%89%E8%A3%85%E5%90%AF%E5%8A%A8%20Linux%E6%97%B6%E4%BB%A3%20-%20%E5%BC%80%E6%BA%90%E3%80%81%E8%87%AA%E7%94%B1%E3%80%81%E5%85%B1%E4%BA%AB%20-%20%E4%B8%AD%E5%9B%BD%E6%9C%80%E5%A4%A7%E7%9A%84Linux%E6%8A%80%E6%9C%AF%E7%A4%BE%E5%8C%BA_files/601_002.js"></script>
+
+
+
+
+
+
+</body></html>

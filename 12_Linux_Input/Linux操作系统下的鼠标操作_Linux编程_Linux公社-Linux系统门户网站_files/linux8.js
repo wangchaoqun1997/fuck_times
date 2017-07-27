@@ -1,0 +1,5 @@
+﻿document.writeln("<p><\/p>")
+document.writeln("<p style=\"text-align: center;\"><span style=\"color: #ff0000;\">Linux公社<\/span>推荐:<a rel=\"external nofollow\" href=\"http:\/\/daosenpx.taobao.com\/\" target=\"_blank\"><span style=\"color: #ff0000;\"><strong><span style=\"font-size: large;\">足不出户，年薪10万，国内第一家YY培训ORACLE课程<\/span><\/strong><\/span><\/a><\/p>")
+document.writeln("<p style=\"text-align: center;\"><a rel=\"external nofollow\" href=\"http:\/\/www.bosenrui.com\/jiuyeke\/dba\/\" target=\"_blank\"><span style=\"color: #ff0000;\">Linux公社<\/span>推荐:<strong><span style=\"color: #ff0000; font-size: medium;\">金领DBA课程、Oracle专题课程、Oracle RAC专题课程<\/span><\/strong>&nbsp;<span style=\"font-size: large;\">点这里<\/span><\/a><\/p>");
+document.writeln("<p style=\"text-align: center;\"><span style=\"color: #0000ff;\">=====================分割线=====================<\/span><\/p>")
+document.writeln("<p style=\"text-align: center;\"><a href=\"http:\/\/www.linuxidc.com\/Linux\/2013-12\/93755.htm\" target=\"_blank\"><span style=\"color: #ff0000; font-size: medium;\"><strong>关注Linux公社（LinuxIDC.com）官方微信，以后随机在微信里发放邀请码<\/strong><\/span><\/a><\/p>")

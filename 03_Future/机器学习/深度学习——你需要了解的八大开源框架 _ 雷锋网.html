@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)https://www.leiphone.com/news/201608/5kCJ4Vim3wMjpBPU.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" async="" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/cmp.api"></script>
+	
+	<title>深度学习——你需要了解的八大开源框架 | 雷锋网</title>
+    <meta itemprop="image" content="https://www.leiphone.com/resWeb/images/common/metaLogo.jpg">
+            <link rel="dns-prefetch" href="https://www.leiphone.com/">
+        <link rel="dns-prefetch" href="https://home.leiphone.com/">
+        <link rel="dns-prefetch" href="https://m.leiphone.com/">
+        <link rel="dns-prefetch" href="https://leiphone.com/">
+        <meta name="baidu-site-verification" content="qBnDqyynv4">
+    <meta property="og:type" content="article">
+    <meta property="article:published_time" content="2016-08-05T19:18:35+08:00">
+    <meta property="article:author" content="李尊">
+    <meta property="article:published_first" content="雷锋网, https://www.leiphone.com/news/201608/5kCJ4Vim3wMjpBPU.html">
+    	<meta name="google-site-verification" content="4c2S0LRoSpcyGiNmASqakMSa7yVC9C8Jnu-IRNyq5oU">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=1">
+    <meta property="qc:admins" content="10002525706451007656375">
+    <link rel="alternate" media="only screen and(max-width: 640px)" href="https://m.leiphone.com/">
+            	<meta name="keywords" content="深度学习,Google,Facebook,FAIR">
+	<meta name="description" content="深度学习八大开源框架">
+    <meta name="sogou_site_verification" content="ilkqV8FehD">
+    <meta name="renderer" content="webkit">
+	<link rel="cannoical" href="https://www.leiphone.com/news/201608/5kCJ4Vim3wMjpBPU.html">    <link rel="stylesheet" type="text/css" href="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/common.css" media="all">
+    
+	<script src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/push.js.下载"></script><script async="" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/gtm.js.下载"></script><script src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/hm.js.下载"></script><script type="text/javascript">window.BWEUM||(BWEUM={});BWEUM.info = {"stand":true,"agentType":"browser","agent":"bi-collector.oneapm.com/static/js/bw-send-411.4.5.js","beaconUrl":"bi-collector.oneapm.com/beacon","licenseKey":"fqiyF~7R36YyFnEB","applicationID":2284957};</script><script type="text/javascript" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/bw-loader-411.4.5.js.下载"></script>
+	<!-- <script type="text/javascript" src="//s.union.360.cn/9052.js"></script> -->
+	<script type="text/javascript" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/mobilecheck.js.下载"></script>
+	<script>
+                    //百度统计开始
+            var _hmt = _hmt || [];
+            (function() {
+                var hm = document.createElement("script");
+                hm.src = "//hm.baidu.com/hm.js?0f7e8686c8fcc36f05ce11b84012d5ee";
+                var s = document.getElementsByTagName("script")[0];
+                s.parentNode.insertBefore(hm, s);
+            })();
+            //百度统计结束
+        
+        var SCRIPT_URL 	= "https://www.leiphone.com/";
+		var BASE_URL 	= "https://www.leiphone.com/";
+		var HOME_URL 	= "https://home.leiphone.com/";
+		var IS_LOGIN 	= "1";
+        var LEIPHONE_HOME_URL = USER_CENTER  = "https://home.leiphone.com/";
+        var HAITAO_URL  = "https://haitao.leiphone.com";
+        var TRYOUT_URL  = "https://tryout.igao7.com/";
+        var PRODUCT_URL = "https://product.igao7.com/";
+	</script>
+
+	<!--[if IE]>
+    <script>
+       (function(){var e="abbr, article, aside, audio, canvas, datalist, details, dialog, eventsource, figure, footer, header, hgroup, mark, menu, meter, nav, output, progress, section, time, video".split(', ');var i=e.length;while(i--){document.createElement(e[i])}})()
+    </script>
+    <![endif]-->
+
+    <!--<script src="/resWeb/js/libs/sea.js"></script>-->
+    <script src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/jquery-sea.js.下载"></script>
+    <script src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/tips.js.下载"></script><link rel="stylesheet" href="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/tips.css">
+    <script>
+        seajs.config({
+            map:[
+                ['.js','.js?201706121600']
+            ]
+        });
+        seajs.use('https://www.leiphone.com/resWeb/js/common/global',function(){
+                    });
+        document.domain = "leiphone.com";
+         // 英鹏账号登录回调
+        function yingpengIslogin_callback(){
+            seajs.use('https://www.leiphone.com/resWeb/js/common/com_login',function(user) {
+              user.init();
+            });
+        }
+    </script>
+
+<script src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/share.js.下载"></script><script src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/yp_login.js.下载"></script><link rel="stylesheet" href="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/yp_login.css"><link rel="stylesheet" href="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/share_style0_24.css"></head>
+<body>
+<!-- 顶栏广告位 -->
+<div class="top-banner" style="display: block;">
+    <a href="https://www.leiphone.com/banner/updateClickNum/id/1215" target="_blank" title="CCF-ADL">
+        <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/58e7374edcbc0.jpg" alt="CCF-ADL">
+    </a>
+</div>
+
+<div class="explorer" id="low-explorer">
+    <div class="inner">
+        <em class="warn ico"></em>
+        <span>您正在使用IE低版浏览器，为了您的雷锋网账号安全和更好的产品体验，强烈建议使用更快更安全的浏览器</span>
+        <span class="ico exp-ico1"></span>
+        <span class="ico exp-ico2"></span>
+        <span class="ico exp-ico3"></span>
+        <span class="ico exp-ico4"></span>
+        <span class="ico exp-ico5"></span>
+    </div>
+</div>
+<!--[if lte IE 8]>
+    <script>
+       (function(){var e=['abbr', 'article', 'aside', 'audio', 'canvas', 'datalist', 'details', 'dialog', 'eventsource', 'figure', 'footer', 'header', 'hgroup', 'mark', 'menu', 'meter', 'nav', 'output', 'progress', 'section', 'time', 'video'];for(var i = e.length; i--;) document.createElement(e[i])})()
+
+       //低版本浏览器
+        document.getElementById("low-explorer").style.display = 'block';
+
+    </script>
+<![endif]-->
+
+
+
+<!-- header start-->
+<header class="yp-header">
+    <div class="yp-header-top clr">
+        <a class="yp-header-logo" href="https://www.leiphone.com/">
+            <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/lph-headerlogo.png" alt="雷锋网">
+                        <span>读懂<em>智能</em>&amp;未来</span>
+        </a>
+        <!-- navi -->
+
+        <div class="yp-header-menu">
+            <ul>
+                <li class="first">
+                    <a href="https://www.leiphone.com/" class="sub_a">首页</a>
+                </li>
+                <li>
+                    <a href="https://www.leiphone.com/zhuanlan" class="sub_a">专栏</a>
+                </li>
+                <li>
+                    <a href="https://www.leiphone.com/specials" class="sub_a">专题</a>
+                </li>
+                <li>
+                    <a href="https://www.leiphone.com/special/ycopen" class="sub_a">公开课</a>
+                </li>
+                <li class="borleft aiB">
+                    <div class="line"></div>
+                    <a href="http://www.mooc.ai/" target="_blank" class="sub_a">AI慕课学院</a>
+                </li>
+                <li class="ej borleft ig">
+                    <a href="http://www.igao7.com/">爱搞机<span class="arro"></span></a>
+                    <div class="sub-menu">
+                        <span class="arro"></span>
+                        <a href="http://www.igao7.com/category/chai" target="_blank" class="sub_a">评测</a>
+                        <!-- <a href="https://tryout.igao7.com" target="_blank" class="sub_a">试用</a>
+                        <a href="https://product.igao7.com" target="_blank" class="sub_a">优选</a> -->
+                        <a href="http://product.igao7.com/testReport/allList" target="_blank" class="sub_a">体验</a>
+                        <a href="http://www.igao7.com/video" target="_blank" class="sub_a">TV</a>
+                        <!-- <a href="https://product.igao7.com/qa" target="_blank" class="sub_a">问答</a> -->
+                    </div>
+                </li>
+                <li class="ej borleft ig">
+                    <a href="https://haitao.leiphone.com/" class="sub_a">极客购<span class="arro"></span></a>
+                    <div class="sub-menu">
+                        <span class="arro"></span>
+                        <a href="http://tryout.igao7.com/" target="_blank" class="sub_a">试用</a>
+                    </div>
+                </li>
+            </ul>
+            <a href="javascript:;" class="contribute"><em></em>申请专栏作者</a>
+        </div>
+        <!-- 用户登录 -->
+        <div class="yp-header-user-box">
+            <div class="yp-header-user"><input type="hidden" id="is_login_tag_status" value="0"><div class="user-main"><div class="avatar"><a href="https://home.leiphone.com/login/wechatLogin"><img width="36" height="36" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/noLogin.png" alt=""></a></div></div></div>
+        </div>
+        <!-- 用户消息 -->
+        <div class="yp-header-message">
+            <a href="https://home.leiphone.com/login/wechatLogin" class="bell">
+                 <i class="ico"></i>
+                 <em class="count"></em>   
+            </a>
+        </div>
+        <div class="yp-header-search">
+           <form method="GET" name="allSearchForm" action="https://www.leiphone.com/search" style="height: 100%;">
+                <input type="hidden" name="site" value="">
+                <input class="text" type="text" name="s" autocomplete="off" value="">
+                <input class="submit" type="submit" value="">
+                <input class="submit2" type="submit" value="">
+            </form>
+        </div>
+        
+    </div>
+</header>   
+<!-- header end-->
+<nav class="yp-secNav">
+    <div class="wrapper">
+        <a href="https://www.leiphone.com/category/sponsor" class=" ">业界</a>
+        <a href="https://gair.leiphone.com/" target="_blank" class="">GAIR</a>
+        <a href="https://www.leiphone.com/category/ai" class=" ">人工智能</a>
+        <a href="https://www.leiphone.com/category/transportation" class=" ">智能驾驶</a>
+        <a href="https://www.leiphone.com/category/letshome" class=" ">网络安全</a>
+        <a href="https://www.leiphone.com/category/arvr" class=" ">AR/VR</a>
+        <a href="https://www.leiphone.com/category/robot" class=" ">机器人</a>
+        <a href="https://www.leiphone.com/category/fintech" class=" ">Fintech</a>
+        <a href="https://www.leiphone.com/category/iot" class=" ">物联网</a>
+        <a href="https://www.leiphone.com/category/aihealth" class=" ">未来医疗</a>
+        <a href="https://www.leiphone.com/category/weiwu" class=" ">智能硬件</a>
+        <a href="https://www.leiphone.com/category/aijuejinzhi" class=" ">AI+</a>
+        <a href="https://www.leiphone.com/category/yanxishe" class=" ">开发者</a>
+    </div>
+</nav>
+
+
+<link rel="stylesheet" type="text/css" href="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/artCont_web_admin.css">
+<link rel="stylesheet" type="text/css" href="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/main.css" media="all">
+<script type="text/javascript">
+    var ARTICLE_CATEGORY = '132';
+    var ADMIN_URL = 'https://yingpeng.leiphone.com/';
+</script>
+
+<div class="wrapper">
+    <div class="lph-Nowsite clr">
+        <a href="https://www.leiphone.com/"><em class="ico"></em></a>
+        <em class="arro"></em>
+        <a href="https://www.leiphone.com/category/ai">人工智能</a>
+        <em class="arro"></em>
+        <a href="https://www.leiphone.com/news/201608/5kCJ4Vim3wMjpBPU.html#">正文</a>
+    </div>
+</div>
+
+<!-- 发送私信 -->
+<div class="sendMsg-pop">
+    <a href="javascript:;" class="closePop"><em></em></a>
+    <div class="title">发私信给<span>李尊</span></div>
+    <div class="main">
+        <textarea placeholder="私信内容"></textarea>
+    </div>
+    <div class="btns">
+        <a href="javascript:;" class="send-button">发送</a>
+    </div>
+</div>
+<!-- 评论数 -->
+<a href="https://www.leiphone.com/news/201608/5kCJ4Vim3wMjpBPU.html#lph-comment-115950" class="cmtNums">
+    <em></em>
+    <p>0</p>
+</a>
+<div class="lph-overlay"></div>
+<!-- 文章详情页 -->
+<div class="lphArticle-detail" data-article_url="https://www.leiphone.com/news/201608/5kCJ4Vim3wMjpBPU.html" data-article_id="115950" data-article_unique="5kCJ4Vim3wMjpBPU" data-article_seo_title="深度学习——你需要了解的八大开源框架 | 雷锋网" data-article_seo_keywords="深度学习,Google,Facebook,FAIR" data-article_seo_description="深度学习八大开源框架" data-comment_type="2" data-collect_type="2" data-author_id="23584" data-author_name="李尊" data-article_cmtnum="0">
+    <div class="article-template">
+        <div class="article-title">
+            <div class="inner">
+                <h1 class="headTit">
+                    深度学习——你需要了解的八大开源框架                </h1>
+                <div class="msg">
+                    <table>
+                        <tbody><tr>
+                            <td class="aut">
+                                本文作者：<a href="https://www.leiphone.com/author/Blake" target="_blank" rel="nofollow">李尊</a>
+                            </td>
+                                                        <td class="time">
+                                2016-08-05 19:18                            </td>
+                                                                                    <!-- <td class="tags">
+                                <em></em> -->
+                                                                                                                            <!-- </td> -->
+                                                      <!--   <td class='cmtNum'>
+                                <a href="https://www.leiphone.com/news/201608/5kCJ4Vim3wMjpBPU.html#lph-comment-115950">0条评论</a>
+                            </td> -->
+                        </tr>
+                    </tbody></table>
+                </div>
+                <div class="article-lead">
+                    <em></em>导语：深度学习八大开源框架                </div>
+            </div>
+        </div>
+        <div class="info">
+            <div class="wrapper clr">
+                <div class="article-left">
+                    <div class="lph-article-comView">
+                                                <!-- 正文内容 -->
+                        <h2>深度学习八大开源框架</h2><p><em>导读：深度学习（Deep Learning）是机器学习中一种基于对数据进行表征学习的方法，深度学习的好处是用<span style="color: rgb(0, 112, 192);"></span></em><em><span style="color: rgb(0, 112, 192);"><strong>非</strong></span><span style="color: rgb(0, 112, 192);"><strong>监督式或半监督式</strong></span></em><em><span style="color: rgb(0, 112, 192);"></span>的特征学习、分层特征提取高效算法来替代手工获取特征（feature）。作为当下最热门的话题，Google、Facebook、Microsoft等巨头都围绕深度学习重点投资了一系列新兴项目，他们也一直在支持一些开源深度学习框架。</em></p><p>目前研究人员正在使用的深度学习框架不尽相同，有 TensorFlow、Torch 、Caffe、Theano、Deeplearning4j等，这些深度学习框架被应用于<span style="color: rgb(0, 112, 192);">计算机视觉</span>、<span style="color: rgb(0, 112, 192);">语音识别</span>、<span style="color: rgb(0, 112, 192);">自然语言处理</span>与<span style="color: rgb(0, 112, 192);">生物信息学</span>等领域，并获取了极好的效果。</p><p>下面让我们一起来认识目前深度学习中最常使用的八大开源框架：</p><p><span style="color: rgb(0, 112, 192);"></span></p><p><span style="color: rgb(0, 112, 192);"><strong>一．TensorFlow</strong></span></p><p style="text-align: center;"><span style="color: rgb(0, 112, 192);"><strong><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a46d716d180.png" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a46d716d180.png"></strong></span></p><p><br></p><p>TensorFlow是一款开源的数学计算软件，使用数据流图（Data Flow Graph）的形式进行计算。图中的节点代表数学运算，而图中的线条表示多维数据数组（tensor）之间的交互。TensorFlow灵活的架构可以部署在一个或多个CPU、GPU的台式以及服务器中，或者使用单一的API应用在移动设备中。TensorFlow最初是由研究人员和Google Brain团队针对机器学习和深度神经网络进行研究所开发的，目前开源之后可以在几乎各种领域适用。</p><p>Data Flow Graph: 使用有向图的节点和边共同描述数学计算。graph中的nodes代表数学操作，也可以表示数据输入输出的端点。边表示节点之间的关系，传递操作之间互相使用的多位数组（tensors），tensor在graph中流动——这也就是TensorFlow名字的由来。一旦节点相连的边传来了数据流，节点就被分配到计算设备上异步的（节点间）、并行的（节点内）执行。</p><p style="text-align: center;"><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a46d7330a08.gif" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a46d7330a08.gif"></p><p><br></p><p>TensorFlow的特点：</p><blockquote><p>机动性: TensorFlow并不只是一个规则的neural network库，事实上如果你可以将你的计算表示成data flow graph的形式，就可以使用TensorFlow。用户构建graph，写内层循环代码驱动计算，TensorFlow可以帮助装配子图。定义新的操作只需要写一个Python函数，如果缺少底层的数据操作，需要写一些C++代码定义操作。</p><p>可适性强: 可以应用在不同设备上，cpus，gpu，移动设备，云平台等</p><p>自动差分: TensorFlow的自动差分能力对很多基于Graph的机器学习算法有益</p><p>多种编程语言可选: TensorFlow很容易使用，有python接口和C++接口。其他语言可以使用SWIG工具使用接口。（SWIG—Simplified Wrapper and Interface Generator， 是一个非常优秀的开源工具，支持将 C/C++ 代码与任何主流脚本语言相集成。）</p><p>最优化表现: &nbsp;充分利用硬件资源，TensorFlow可以将graph的不同计算单元分配到不同设备执行，使用TensorFlow处理副本。</p></blockquote><p><span style="color: rgb(0, 112, 192);"><strong>二．Torch</strong></span></p><p style="text-align: center;"><span style="color: rgb(0, 112, 192);"><strong><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a46db809bd6.png" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a46db809bd6.png"></strong></span></p><p><br></p><p>Torch是一个有大量机器学习算法支持的科学计算框架，其诞生已经有十年之久，但是真正起势得益于Facebook开源了大量Torch的深度学习模块和扩展。Torch另外一个特殊之处是采用了编程语言Lua(该语言曾被用来开发视频游戏)。</p><p>Torch的优势：</p><blockquote><p>构建模型简单</p><p>高度模块化</p><p>快速高效的GPU支持</p><p>通过LuaJIT接入C</p><p>数值优化程序等</p><p>可嵌入到iOS、Android和FPGA后端的接口&nbsp;</p></blockquote><p><span style="color: rgb(0, 112, 192);"><strong>三．Caffe</strong></span></p><p style="text-align: center;"><span style="color: rgb(0, 112, 192);"><strong><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a46a254e8d8.png" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a46a254e8d8.png"></strong></span></p><p>Caffe由加州大学伯克利的PHD贾扬清开发，全称Convolutional Architecture for Fast Feature Embedding，是一个清晰而高效的开源深度学习框架，目前由伯克利视觉学中心（Berkeley Vision and Learning Center，BVLC）进行维护。（贾扬清曾就职于MSRA、NEC、Google Brain，他也是TensorFlow的作者之一，目前任职于Facebook FAIR实验室。）</p><p>Caffe基本流程：Caffe遵循了神经网络的一个简单假设——所有的计算都是以layer的形式表示的，layer做的事情就是获得一些数据，然后输出一些计算以后的结果。比如说卷积——就是输入一个图像，然后和这一层的参数（filter）做卷积，然后输出卷积的结果。每一个层级（layer）需要做两个计算：前向forward是从输入计算输出，然后反向backward是从上面给的gradient来计算相对于输入的gradient，只要这两个函数实现了以后，我们就可以把很多层连接成一个网络，这个网络做的事情就是输入我们的数据（图像或者语音等），然后来计算我们需要的输出（比如说识别的标签），在训练的时候，我们可以根据已有的标签来计算损失和gradient，然后用gradient来更新网络的参数。</p><p>Caffe的优势：</p><blockquote><p>上手快：模型与相应优化都是以文本形式而非代码形式给出</p><p>速度快：能够运行最棒的模型与海量的数据</p><p>模块化：方便扩展到新的任务和设置上</p><p>开放性：公开的代码和参考模型用于再现</p><p>社区好：可以通过BSD-2参与开发与讨论</p></blockquote><p><span style="color: rgb(0, 112, 192);"><strong>四．Theano</strong></span></p><p style="text-align: center;"><span style="color: rgb(0, 112, 192);"><strong><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a46a6f67338.png" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a46a6f67338.png"></strong></span></p><p>2008年诞生于蒙特利尔理工学院,Theano派生出了大量深度学习Python软件包，最著名的包括Blocks和Keras。Theano的核心是一个数学表达式的编译器，它知道如何获取你的结构。并使之成为一个使用numpy、高效本地库的高效代码，如BLAS和本地代码（C++）在CPU或GPU上尽可能快地运行。它是为深度学习中处理大型神经网络算法所需的计算而专门设计的，是这类库的首创之一（发展始于2007年），被认为是深度学习研究和开发的行业标准。</p><p>Theano的优势：</p><blockquote><p>集成NumPy-使用numpy.ndarray</p><p>使用GPU加速计算-比CPU快140倍（只针对32位float类型）</p><p>有效的符号微分-计算一元或多元函数的导数</p><p>速度和稳定性优化-比如能计算很小的x的函数log(1+x)的值</p><p>动态地生成C代码-更快地进行计算</p><p>广泛地单元测试和自我验证-检测和诊断多种错误</p><p>灵活性好</p></blockquote><p><span style="color: rgb(0, 112, 192);"><strong><span style="line-height: 1.8;">五．Deeplearning4j</span></strong></span></p><p style="text-align: center;"><span style="color: rgb(0, 112, 192);"><strong><span style="line-height: 1.8;"><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a46bd665af0.png" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a46bd665af0.png"></span></strong></span></p><p><span style="line-height: 1.8;">顾名思义，Deeplearning4j是“for Java”的深度学习框架，也是首个商用级别的深度学习开源库。Deeplearning4j由创业公司Skymind于2014年6月发布，使用 Deeplearning4j的不乏埃森哲、雪弗兰、博斯咨询和IBM等明星企业。</span><span style="line-height: 1.8;">DeepLearning4j是一个面向生产环境和商业应用的高成熟度深度学习开源库，可与Hadoop和Spark集成，即插即用，方便开发者在APP中快速集成深度学习功能，可应用于以下深度学习领域：</span></p><blockquote><p>人脸/图像识别</p><p>语音搜索</p><p>语音转文字（Speech to text）</p><p>垃圾信息过滤（异常侦测）</p><p>电商欺诈侦测</p></blockquote><p>除了以上几个比较成熟知名的项目，还有很多有特色的深度学习开源框架也值得关注：</p><p><span style="color: rgb(0, 112, 192);"><strong>六．ConvNetJS</strong></span></p><p style="text-align: center;"><span style="color: rgb(0, 112, 192);"><strong><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a46f8f66c78.png" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a46f8f66c78.png"></strong></span></p><p>这是斯坦福大学博士生Andrej Karpathy开发的浏览器插件，基于万能的JavaScript可以在你的游览器中训练深度神经模型。<span style="line-height: 1.8;">不需要安装软件，也不需要GPU。</span></p><p><span style="color: rgb(0, 112, 192);"><strong><span style="line-height: 1.8;">七．MXNet</span></strong></span></p><p style="text-align: center;"><span style="color: rgb(0, 112, 192);"><strong><span style="line-height: 1.8;"><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a4727723405.png" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a4727723405.png"></span></strong></span></p><p><span style="line-height: 1.8;">出自CXXNet、Minerva、Purine 等项目的开发者之手，主要用C++ 编写。MXNet 强调提高内存使用的效率，甚至能在智能手机上运行诸如图像识别等任务。<br></span></p><p><span style="line-height: 1.8;">MXNet的系统架构如下图所示：</span></p><p style="text-align: center;"><span style="line-height: 1.8;"><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a4735f59d8f.png" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a4735f59d8f.png"></span></p><p><span style="line-height: 1.8;"></span></p><p>从上到下分别为各种主语言的嵌入，编程接口（矩阵运算，符号表达式，分布式通讯），两种编程模式的统一系统实现，以及各硬件的支持。</p><p><span style="color: rgb(0, 112, 192);"><strong>八．Chainer</strong></span></p><p><img alt="深度学习——你需要了解的八大开源框架" href="//static.leiphone.com/uploads/new/article/740_740/201608/57a47428c2947.png" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57a47428c2947.png" style="text-align: center; line-height: 1.8;"></p><p><span style="text-align: center; line-height: 1.8;"></span></p><p>来自一个日本的深度学习创业公司Preferred Networks，今年6月发布的一个Python框架。Chainer 的设计基于 define by run原则，也就是说该网络在运行中动态定义，而不是在启动时定义。<span style="line-height: 1.8; text-align: center;"></span></p><p><span style="color: rgb(0, 112, 192);"></span></p><p>PS : 本文由雷锋网<span style="color:#FD5D3C;">(公众号：雷锋网)</span>独家编译，未经许可拒绝转载！</p><p>via&nbsp;<a href="http://www.kdnuggets.com/2016/01/top-10-deep-learning-github.html" target="_blank" rel="nofollow">KDnuggets</a>等<br></p><p><br></p><p>雷锋网原创文章，未经授权禁止转载。详情见<a href="http://dwz.cn/4ErMxZ" rel="nofollow" target="_blank">转载须知</a>。</p>
+                        
+                                                                      <a href="http://gair.leiphone.com/" target="_blank">
+                            <img alt="深度学习——你需要了解的八大开源框架" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/590a90e81083c.jpg">
+                       </a>
+                                              <!-- 正文内容结束 -->
+                    </div>
+                    <!-- 分享 -->
+                    <div class="pageActive clr">
+                        <div class="mark-like-btn ">
+                            <a class="collect collect-no" href="javascript:;"><i></i><span>14</span>人收藏</a>
+                        </div>
+                        <!-- Baidu Button BEGIN -->
+                        <div class="bdsharebuttonbox bdshare-button-style0-24" data-tag="share_115950" data-bd-bind="1497526562476">
+                            <span class="s-txt">分享：</span>
+                            <a href="javascript:void()" onclick="openYNote(&#39;https://www.leiphone.com/news/201608/5kCJ4Vim3wMjpBPU.html&#39;,&#39;深度学习——你需要了解的八大开源框架&#39;, &#39;https://static.leiphone.com/uploads/new/article/pic/201608/57a46de292307.jpg&#39;,&#39;leiphone&#39;,&#39;深度学习——你需要了解的八大开源框架&#39;)" class="youdao " title="收藏此篇文章到有道云笔记"><i></i></a>
+                            <a class="bds_tsina weibo-btn  " data-cmd="tsina" title="分享到新浪微博"></a>
+                            <a class="weixin-btn bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+                            <a class="bds_more more-btn" data-cmd="more"></a>
+                        </div>
+                        <script type="text/javascript">
+                            //在这里定义bds_config
+                            // var bds_config = {'snsKey':{'tsina':'2475906690'}};
+                            // var qcode = {
+                            //     api : "http://qr.liantu.com/api.php?text=",
+                            //     url :  window.location.href,
+                            //     exist : false,
+                            //     create : function(){
+                            //         if(!this.exist){
+                            //             var image = document.createElement('img');
+                            //             image.src = this.api + this.url;
+                            //             image.width = 120;
+                            //             this.exist = true;
+                            //             return image;
+                            //         }
+                            //     }
+                            // };
+                        </script>
+
+                    </div>
+                    <!-- 相关文章 -->
+                    <!-- 相关文章 start -->
+<div class="realted-article clr">
+    <div class="title clr">
+        <span class="fl">相关文章</span>
+    </div>
+    <div class="related-link clr">
+                         <a href="https://www.leiphone.com/tag/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0" target="_blank" title="深度学习">深度学习</a>
+                 <a href="https://www.leiphone.com/tag/Google" target="_blank" title="Google">Google</a>
+                 <a href="https://www.leiphone.com/tag/Facebook" target="_blank" title="Facebook">Facebook</a>
+                 <a href="https://www.leiphone.com/tag/FAIR" target="_blank" title="FAIR">FAIR</a>
+                     </div>
+    <div class="list">
+        <ul>
+                        <li class="first">
+                <a href="https://www.leiphone.com/news/201706/FZcktWIYi3NrmsO8.html" target="_blank" class="pic">
+                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/59424a7cc671e.png" alt="" width="170" height="100">
+                </a>
+                <div class="txt">
+                    <a href="https://www.leiphone.com/news/201706/FZcktWIYi3NrmsO8.html" target="_blank">用深度学习为自动驾驶汽车提供仿真测试，这家名为Co ...</a>
+                </div>
+            </li>
+                        <li>
+                <a href="https://www.leiphone.com/news/201706/wDbtbaLGQ4qG8EHg.html" target="_blank" class="pic">
+                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/593f9630b68ae.png" alt="" width="170" height="100">
+                </a>
+                <div class="txt">
+                    <a href="https://www.leiphone.com/news/201706/wDbtbaLGQ4qG8EHg.html" target="_blank">Yoav Goldberg与Yann LeCun论战背后：arXiv是个好平 ...</a>
+                </div>
+            </li>
+                        <li>
+                <a href="https://www.leiphone.com/news/201706/uvEmBfzNFczQLm3w.html" target="_blank" class="pic">
+                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/593e9ccdd35a3.jpg" alt="" width="170" height="100">
+                </a>
+                <div class="txt">
+                    <a href="https://www.leiphone.com/news/201706/uvEmBfzNFczQLm3w.html" target="_blank">看深度学习十九般武艺：它还能帮助保护濒危动物</a>
+                </div>
+            </li>
+                        <li>
+                <a href="https://www.leiphone.com/news/201706/qsPTfLYYRZJSHZQK.html" target="_blank" class="pic">
+                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/593fc31373a97.jpg" alt="" width="170" height="100">
+                </a>
+                <div class="txt">
+                    <a href="https://www.leiphone.com/news/201706/qsPTfLYYRZJSHZQK.html" target="_blank">深度学习真的可以零基础入门吗？</a>
+                </div>
+            </li>
+                    </ul>
+    </div>
+</div>
+
+<!-- 相关文章 end -->
+
+
+                    <!-- 推荐文章 -->
+                    <div class="realted-article clr recmdArticle" data-article_id="115950">
+                        <div class="list">
+                            <ul><li data-id="165272" data-parameter="1_5021df_hot_0_6a583da3a8f84bcda46fd3d12ce5ac05">					                <a href="http://www.leiphone.com/news/201705/3i1jPOz3SLyUagRx.html?ulu-rcmd=1_5021df_hot_0_6a583da3a8f84bcda46fd3d12ce5ac05" class="pic" target="_blank">					                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/5926a4b0acd0d.jpg" alt="小米Max 2发布，雷军说这是大号 iPhone 7 Plus" width="170" height="100">					                </a>					                <div class="txt">					                    <a href="http://www.leiphone.com/news/201705/3i1jPOz3SLyUagRx.html?ulu-rcmd=1_5021df_hot_0_6a583da3a8f84bcda46fd3d12ce5ac05" target="_blank">小米Max 2发布，雷军说这是大号 iPhone 7 Plus</a>					                </div>					            </li><li data-id="164253" data-parameter="1_5021df_hot_1_6a583da3a8f84bcda46fd3d12ce5ac05">					                <a href="http://www.leiphone.com/news/201704/VGKD2w53IMadGQAR.html?ulu-rcmd=1_5021df_hot_1_6a583da3a8f84bcda46fd3d12ce5ac05" class="pic" target="_blank">					                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/5900741629d15.png" alt="旷视科技如何推进人脸识别在安防领域的落地？" width="170" height="100">					                </a>					                <div class="txt">					                    <a href="http://www.leiphone.com/news/201704/VGKD2w53IMadGQAR.html?ulu-rcmd=1_5021df_hot_1_6a583da3a8f84bcda46fd3d12ce5ac05" target="_blank">旷视科技如何推进人脸识别在安防领域的落地？</a>					                </div>					            </li><li data-id="164330" data-parameter="1_5021df_hot_2_6a583da3a8f84bcda46fd3d12ce5ac05">					                <a href="http://www.leiphone.com/news/201704/3yqX3tXfIM8WuY23.html?ulu-rcmd=1_5021df_hot_2_6a583da3a8f84bcda46fd3d12ce5ac05" class="pic" target="_blank">					                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/5902f0ed49ad5.png" alt="一个机器人就能建一座大厦，建筑业迎来了颠覆行业的时机" width="170" height="100">					                </a>					                <div class="txt">					                    <a href="http://www.leiphone.com/news/201704/3yqX3tXfIM8WuY23.html?ulu-rcmd=1_5021df_hot_2_6a583da3a8f84bcda46fd3d12ce5ac05" target="_blank">一个机器人就能建一座大厦，建筑业迎来了颠覆行业的时机</a>					                </div>					            </li><li data-id="164695" data-parameter="1_5021df_hot_3_6a583da3a8f84bcda46fd3d12ce5ac05">					                <a href="http://www.leiphone.com/news/201705/FbxvN9fYhTIwxbvP.html?ulu-rcmd=1_5021df_hot_3_6a583da3a8f84bcda46fd3d12ce5ac05" class="pic" target="_blank">					                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/59119ad30f991.jpg" alt="号称「国内首个人工智能测试品牌」，班墨科技要做的是独家创新" width="170" height="100">					                </a>					                <div class="txt">					                    <a href="http://www.leiphone.com/news/201705/FbxvN9fYhTIwxbvP.html?ulu-rcmd=1_5021df_hot_3_6a583da3a8f84bcda46fd3d12ce5ac05" target="_blank">号称「国内首个人工智能测试品牌」，班墨科技要做的是独家创新</a>					                </div>					            </li></ul>
+                        </div>
+                    </div>
+                    <!-- 广告 -->
+                    
+                    <!-- 文章 评论  -->
+                    <!-- 评论 -->
+<div class="article-comment lp-comment" id="lph-comment-115950">
+    <div class="useComJs">
+        <!-- <input id="lp_item_id" type="hidden" name="item_id" value="115950">
+        <input id="lp_item_type" type="hidden" name="type" value="2"> -->
+
+        <div class="h2 clr">
+            <h2>文章点评：</h2>
+            <!-- <strong class="h2-tip">
+                （您需要<a class="c-log" href="javascript:openPop('#lp-login-pop');">登录</a>后才能评论 <a href="https://home.leiphone.com/main/register" class="c-reg">没有账号</a> ？）</strong>
+            -->        
+        </div>
+        <div class="submit clr commentForm" id="">
+            <div class="text">
+                <textarea name="Comment[content]" placeholder="我有话要说……"></textarea>
+            </div>
+            <div class="sub clr publishtosina">
+                <span class="emotionc emotion0" data-emotion="0">表情</span>
+                <label><input id="" type="checkbox" name="pushForWeibo"> 同步到新浪微博</label>
+                <div class="qqFace" style="position:absolute; display:none; z-index:10"></div>
+                <button type="submit" title="提交">提交</button>
+            </div>
+        </div>
+        <!-- <div class="jcWords">
+            <h3><strong>精彩评论</strong></h3>
+            <ul class="comment-say">
+                
+            </ul>
+        </div>
+        <div class="words">
+            <h3><strong>最新评论</strong><span></span>条评论<i></i></h3>
+            <ul class="comment-say">
+                
+            </ul>
+            <div id="comment-say-more" class="comment-say-more">
+
+                <span>加载更多</span>
+                <em>没有更多了</em>
+
+            </div>
+        </div> -->
+    </div>
+				<div class="article-comment-container" data-item-id="-1" data-type-id="2">														</div>		</div>
+<!-- 评论 -->
+
+
+
+                </div>
+
+                <script>
+    var codeAuthor_id   = "Blake";
+    var author_id       = "23584";
+</script>
+<div class="article-right">
+        <div class="aboutAur-main">
+        <div class="aboutAur-msg">
+            <a href="https://www.leiphone.com/author/Blake" class="avater" target="_blank" rel="nofollow">
+                <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/57bfae4beef50_100_100.jpg" alt="" width="80" height="80">
+            </a>
+            <div class="name">
+                <a href="https://www.leiphone.com/author/Blake" target="_blank" rel="nofollow"><span>李尊</span><em class="gold"></em></a>
+            </div>
+            <p class="profession">编辑</p>
+            <div class="saying">
+                <em class="l-quote"></em>
+                <span></span>
+                <em class="r-quote"></em>
+            </div>
+            <div class="operate-btn">
+                <table>
+                    <tbody><tr>
+                                                                                                <td>
+                            <a href="javascript:;" class="wx sub_a" rel="nofollow">
+                                <em></em>
+                                <div class="hideCode">
+                                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/580ef9366fe38.jpg" width="114" height="114">
+                                    <p>扫描关注作者微信</p>
+                                </div>
+                            </a>
+                        </td>
+                                            </tr>
+                </tbody></table>
+            </div>
+            <div class="btns">
+                <a href="javascript:;">发私信</a>
+            </div>
+        </div>
+
+
+        <!-- 作者的文章 -->
+        
+<div class="mouthHot-article">
+    <div class="title">当月热门文章</div>
+        <div class="list">
+            <ul>
+                    </ul>
+    </div>
+</div>
+       <!-- 作者文章结束 -->
+    </div>
+
+            <div class="weekly-choice hotNew-article">
+        <div class="rComTitle">
+            最新文章
+        </div>
+        <div class="list">
+            <ul class="justTxt">
+                                    <li>
+                        <a href="https://www.leiphone.com/news/201706/b01OYHw9BLkPYMz0.html" target="_blank">
+                            <em></em>重磅 | DeepMind新神经网络学会关系推理，还击败了人类 </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.leiphone.com/news/201706/khecTtIA4hQDVSvZ.html" target="_blank">
+                            <em></em>美国考虑限制中国在AI领域的投资，外交部这样回应 </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.leiphone.com/news/201706/e7NO9PNiOpzlOTnH.html" target="_blank">
+                            <em></em>谷歌开源计算机视觉模型MobileNets：专为不同级别移动设备优化 </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.leiphone.com/news/201706/oSbBAbYPoDrdzsIY.html" target="_blank">
+                            <em></em>中科院计算所开源Easy Machine Learning系统，用交互式图形界面简化ML开发过程 </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.leiphone.com/news/201706/IUT2WD2dgHzH5F4c.html" target="_blank">
+                            <em></em>你做我评——OpenAI和DeepMind全新的强化学习方法，根据人类反馈高效学习 </a>
+                    </li>
+                                    <li>
+                        <a href="https://www.leiphone.com/news/201706/5skk4PL4OCqkeSE6.html" target="_blank">
+                            <em></em>议程公布！ 30位顶级学术大牛聚集CCF-GAIR 2017  带你看见AIR的9种未来 </a>
+                    </li>
+                            </ul>
+        </div>
+    </div>
+        <div class="serKesy-list">
+    <div class="rComTitle">
+        热门搜索
+    </div>
+    <div class="list clr">
+                <a href="https://www.leiphone.com/tag/Apple%20Watch" target="_blank">Apple Watch</a>
+                <a href="https://www.leiphone.com/tag/LG" target="_blank">LG</a>
+                <a href="https://www.leiphone.com/tag/App%20Store" target="_blank">App Store</a>
+                <a href="https://www.leiphone.com/tag/%E4%BA%92%E8%81%94%E7%BD%91" target="_blank">互联网</a>
+                <a href="https://www.leiphone.com/tag/%E9%9B%B7%E7%A9%BF%E6%88%B4" target="_blank">雷穿戴</a>
+                <a href="https://www.leiphone.com/tag/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB" target="_blank">人脸识别</a>
+                <a href="https://www.leiphone.com/tag/%E4%B8%8A%E5%B8%82" target="_blank">上市</a>
+                <a href="https://www.leiphone.com/tag/CES%202015" target="_blank">CES 2015</a>
+                <a href="https://www.leiphone.com/tag/iOS%208" target="_blank">iOS 8</a>
+                <a href="https://www.leiphone.com/tag/%E4%BA%A7%E5%93%81%E8%AE%BE%E8%AE%A1" target="_blank">产品设计</a>
+                <a href="https://www.leiphone.com/tag/%E9%87%91%E8%9E%8D" target="_blank">金融</a>
+            </div>
+</div>
+</div>
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="lineBg"></div>
+    <!-- 百度分享 -->
+    <script>
+
+        window._bd_share_config = {
+            common:{
+                bdMiniList:['tsina','weixin','more']
+            },
+            share : [
+                {
+                    bdText : '深度学习——你需要了解的八大开源框架',
+                    bdDesc : '深度学习——你需要了解的八大开源框架',
+                    bdUrl : 'https://www.leiphone.com/news/201608/5kCJ4Vim3wMjpBPU.html',
+                    bdPic : 'https://static.leiphone.com/uploads/new/article/pic/201608/57a46de292307.jpg',
+                    "tag" : "share_115950",
+                    "bdSize" : 24
+                },
+            ],
+        }
+        with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='https://www.leiphone.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+
+    </script>
+</div>
+
+
+
+<script>
+    function openYNote(url, title, pic, vendor, summary) {
+        var target = 'http://note.youdao.com/memory/?url=' + encodeURIComponent(url) +
+            '&title=' + encodeURIComponent(title) + '&pic=' + encodeURIComponent(pic) +
+            '&product=' + encodeURIComponent('网页收藏') +
+            '&summary=' + encodeURIComponent(summary) + '&vendor=' + encodeURIComponent(vendor);
+        window.open(target);
+    }
+  seajs.use(['https://www.leiphone.com/resWeb/js/article' , 'https://www.leiphone.com/resWeb/js/load_articles']);
+
+
+
+   // document.getElementById('weixin-qt').insertBefore(qcode.create(),document.getElementById('weixin-qt-msg'));
+</script>
+
+<footer class="yp-footer">
+    <!-- 友情链接，热门关键字 -->
+    <div class="yp-footer-link">
+        <div class="wrapper">
+            <div class="tab_tit clr">
+                                <a href="javascript:;">热门关键字</a>
+            </div>
+            <div class="tab_con">
+                <ul>
+                                        
+                                        <li class="cur">
+                                        
+                                                                                            <a href="http://www.leiphone.com/tags" target="_blank">热门标签</a>                                                                    <a href="http://www.leiphone.com/special/235/201609/57e4fe78a71ea.html" target="_blank">微信小程序平台</a>                                                                    <a href="http://www.leiphone.com/news/201701/ri7dDB7Fq0mMj1qh.html" target="_blank">微信小程序在哪</a>                                                                    <a href="http://www.leiphone.com/tag/CES%202017" target="_blank">CES 2017</a>                                                                    <a href="http://www.leiphone.com/tag/CES" target="_blank">CES</a>                                                                    <a href="http://www.leiphone.com/tag/2016%E5%B9%B4%E6%9C%80%E5%80%BC%E5%BE%97%E8%B4%AD%E4%B9%B0%E7%9A%84%E6%99%BA%E8%83%BD%E7%A1%AC%E4%BB%B6" target="_blank">2016年最值得购买的智能硬件</a>                                                                    <a href="http://www.leiphone.com/news/201612/sI2n04bJ5aVzS5Pr.html" target="_blank">2016 互联网</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%B0%8F%E7%A8%8B%E5%BA%8F" target="_blank">小程序</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%BE%AE%E4%BF%A1%E6%9C%8B%E5%8F%8B%E5%9C%88" target="_blank">微信朋友圈</a>                                                                    <a href="http://www.leiphone.com/news/201612/J8qZLCwViDpwygen.html" target="_blank">抢票软件</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%99%BA%E8%83%BD%E6%89%8B%E6%9C%BA" target="_blank">智能手机</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%99%BA%E8%83%BD%E5%AE%B6%E5%B1%85" target="_blank">智能家居</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%99%BA%E8%83%BD%E6%89%8B%E7%8E%AF" target="_blank">智能手环</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%99%BA%E8%83%BD%E6%9C%BA%E5%99%A8%E4%BA%BA" target="_blank">智能机器人</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%99%BA%E8%83%BD%E7%94%B5%E8%A7%86" target="_blank">智能电视</a>                                                                    <a href="http://www.leiphone.com/tag/360%E6%99%BA%E8%83%BD%E7%A1%AC%E4%BB%B6" target="_blank">360智能硬件</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%99%BA%E8%83%BD%E6%91%84%E5%83%8F%E6%9C%BA" target="_blank">智能摄像机</a>                                                                    <a href="http://www.leiphone.com/news/201601/mQ8TFsppN7ROxYmS.html" target="_blank">智能硬件产品</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%99%BA%E8%83%BD%E7%A1%AC%E4%BB%B6%E5%8F%91%E5%B1%95" target="_blank">智能硬件发展</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%99%BA%E8%83%BD%E7%A1%AC%E4%BB%B6%E5%88%9B%E4%B8%9A" target="_blank">智能硬件创业</a>                                                                    <a href="http://www.leiphone.com/tag/%E9%BB%91%E5%AE%A2" target="_blank">黑客</a>                                                                    <a href="http://www.leiphone.com/tag/%E7%99%BD%E5%B8%BD%E5%AD%90" target="_blank">白帽子</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE" target="_blank">大数据</a>                                                                    <a href="http://www.leiphone.com/tag/%E4%BA%91%E8%AE%A1%E7%AE%97" target="_blank">云计算</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%96%B0%E8%83%BD%E6%BA%90%E6%B1%BD%E8%BD%A6" target="_blank">新能源汽车</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%97%A0%E4%BA%BA%E9%A9%BE%E9%A9%B6" target="_blank">无人驾驶</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%97%A0%E4%BA%BA%E6%9C%BA" target="_blank">无人机</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%A4%A7%E7%96%86" target="_blank">大疆</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%B0%8F%E7%B1%B3%E6%97%A0%E4%BA%BA%E6%9C%BA" target="_blank">小米无人机</a>                                                                    <a href="http://www.leiphone.com/tag/%E7%89%B9%E6%96%AF%E6%8B%89" target="_blank">特斯拉</a>                                                                    <a href="http://www.leiphone.com/tag/VR%E6%B8%B8%E6%88%8F" target="_blank">VR游戏</a>                                                                    <a href="http://www.leiphone.com/tag/VR%E7%94%B5%E5%BD%B1" target="_blank">VR电影</a>                                                                    <a href="http://www.leiphone.com/tag/VR%E8%A7%86%E9%A2%91" target="_blank">VR视频</a>                                                                    <a href="http://www.leiphone.com/tag/VR%E7%9C%BC%E9%95%9C" target="_blank">VR眼镜</a>                                                                    <a href="http://www.leiphone.com/tag/VR%E8%B4%AD%E7%89%A9" target="_blank">VR购物</a>                                                                    <a href="http://www.leiphone.com/tag/AR" target="_blank">AR</a>                                                                    <a href="http://www.leiphone.com/tag/%E7%9B%B4%E6%92%AD" target="_blank">直播</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%89%AB%E5%9C%B0%E6%9C%BA%E5%99%A8%E4%BA%BA" target="_blank">扫地机器人</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%8C%BB%E7%96%97%E6%9C%BA%E5%99%A8%E4%BA%BA" target="_blank">医疗机器人</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%B7%A5%E4%B8%9A%E6%9C%BA%E5%99%A8%E4%BA%BA" target="_blank">工业机器人</a>                                                                    <a href="http://www.leiphone.com/tag/%E7%B1%BB%E4%BA%BA%E6%9C%BA%E5%99%A8%E4%BA%BA" target="_blank">类人机器人</a>                                                                    <a href="http://www.leiphone.com/tag/%E8%81%8A%E5%A4%A9%E6%9C%BA%E5%99%A8%E4%BA%BA" target="_blank">聊天机器人</a>                                                                    <a href="http://www.leiphone.com/news/201606/kyKJpmCelZrWE7K4.html" target="_blank">微信机器人</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F" target="_blank">微信小程序</a>                                                                    <a href="http://www.leiphone.com/tag/%E7%A7%BB%E5%8A%A8%E6%94%AF%E4%BB%98" target="_blank">移动支付</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%94%AF%E4%BB%98%E5%AE%9D" target="_blank">支付宝</a>                                                                    <a href="http://www.leiphone.com/tag/P2P" target="_blank">P2P</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%8C%BA%E5%9D%97%E9%93%BE" target="_blank">区块链</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%AF%94%E7%89%B9%E5%B8%81" target="_blank">比特币</a>                                                                    <a href="http://www.leiphone.com/tag/%E9%A3%8E%E6%8E%A7" target="_blank">风控</a>                                                                    <a href="http://www.leiphone.com/tag/%E9%AB%98%E7%9B%9B" target="_blank">高盛</a>                                                                    <a href="http://www.leiphone.com/tag/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB" target="_blank">人脸识别</a>                                                                    <a href="http://www.leiphone.com/tag/%E6%8C%87%E7%BA%B9%E8%AF%86%E5%88%AB" target="_blank">指纹识别</a>                                                                    <a href="http://www.leiphone.com/tag/%E9%BB%91%E7%A7%91%E6%8A%80" target="_blank">黑科技</a>                                                                    <a href="http://www.leiphone.com/news/201502/S5yH58slS9gpBrm4.html" target="_blank">谷歌地图</a>                                                                    <a href="http://www.leiphone.com/tag/%E8%B0%B7%E6%AD%8C" target="_blank">谷歌</a>                                                                    <a href="http://www.leiphone.com/tag/IBM" target="_blank">IBM</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%BE%AE%E8%BD%AF" target="_blank">微软</a>                                                                    <a href="http://www.leiphone.com/tag/%E4%B9%90%E8%A7%86" target="_blank">乐视</a>                                                                    <a href="http://www.leiphone.com/tag/%E7%99%BE%E5%BA%A6" target="_blank">百度</a>                                                                    <a href="http://www.leiphone.com/tag/%E4%B8%89%E6%98%9Fs8" target="_blank">三星s8</a>                                                                    <a href="http://www.leiphone.com/tag/%E8%85%BE%E8%AE%AF" target="_blank">腾讯</a>                                                                    <a href="http://www.leiphone.com/list/%E4%B8%89%E6%98%9FNote8" target="_blank">三星Note8 </a>                                                                    <a href="http://www.leiphone.com/news/201610/oUUuMZtyi7H6xMGA.html" target="_blank">小米MIX</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%B0%8F%E7%B1%B3Note" target="_blank">小米Note</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%8D%8E%E4%B8%BA" target="_blank">华为</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%B0%8F%E7%B1%B3" target="_blank">小米</a>                                                                    <a href="http://www.leiphone.com/tag/%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4" target="_blank">阿里巴巴</a>                                                                    <a href="http://www.leiphone.com/tag/%E8%8B%B9%E6%9E%9C" target="_blank">苹果</a>                                                                    <a href="http://www.leiphone.com/tag/MacBook%20Pro" target="_blank">MacBook Pro</a>                                                                    <a href="http://www.leiphone.com/tag/iPhone" target="_blank">iPhone</a>                                                                    <a href="http://www.leiphone.com/tag/Facebook" target="_blank">Facebook</a>                                                                    <a href="http://www.leiphone.com/tag/GAIR" target="_blank">GAIR</a>                                                                    <a href="http://www.leiphone.com/tag/IROS" target="_blank">IROS</a>                                                                    <a href="http://www.leiphone.com/tag/%E5%8F%8C%E5%88%9B%E5%91%A8" target="_blank">双创周</a>                                                                    <a href="http://www.leiphone.com/tag/%E4%BA%91%E6%A0%96%E5%A4%A7%E4%BC%9A" target="_blank">云栖大会</a>                                                                    <a href="http://www.leiphone.com/news/201610/qN5pHyh1kQUQEGtw.html" target="_blank">智能硬件公司</a>                                                                    <a href="http://www.leiphone.com/category/weiwu" target="_blank">智能硬件</a>                                                                    <a href="http://www.leiphone.com/news/201701/RnURKJ8H5PaG9g7y.html" target="_blank">QQ红包</a>                                                                    <a href="http://www.leiphone.com/news/201701/RnURKJ8H5PaG9g7y.html" target="_blank">支付宝红包</a>                                                                    <a href="http://www.leiphone.com/news/201701/cdANtd69SJLFwdXs.html" target="_blank">敬业福</a>                                                                    <a href="http://www.leiphone.com/news/201701/EK4K7NRObdSzxmm3.html" target="_blank">支付宝敬业福</a>                                                                    <a href="http://www.leiphone.com/news/201701/EK4K7NRObdSzxmm3.html" target="_blank">支付宝集五福</a>                                                                    <a href="http://www.leiphone.com/news/201701/FoqZiCzO1Fsst8jk.html" target="_blank">Waymo</a>                                                                    <a href="http://www.leiphone.com/tag%E8%99%9A%E6%8B%9F%E7%8E%B0%E5%AE%9E" target="_blank">虚拟现实</a>                                                                    <a href="http://www.leiphone.com/news/201701/LqwiP7VUJO9DgBPi.html" target="_blank">深度学习</a>                                                                    <a href="http://www.leiphone.com/tag/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD" target="_blank">人工智能 </a>                                                                    <a href="http://www.leiphone.com/tag/%E4%B8%AD%E5%9B%BD%E9%93%B6%E8%81%94" target="_blank">中国银联</a>                                                                    <a href="http://www.leiphone.com/tag/%E8%9A%82%E8%9A%81%E9%87%91%E6%9C%8D" target="_blank">蚂蚁金服</a>                                                                    <a href="http://www.leiphone.com/tag/WRC" target="_blank">WRC</a>                                                                    <a href="http://www.leiphone.com/tag/CNCC" target="_blank">CNCC</a>                                                                                    
+                        <a href="https://www.leiphone.com/list/%E5%A4%A7%E7%96%86%E6%97%A0%E4%BA%BA%E6%9C%BA" target="_blank">大疆无人机</a><a href="https://www.leiphone.com/list/imagenet" target="_blank">imagenet</a><a href="https://www.leiphone.com/list/paddle" target="_blank">paddle</a><a href="https://www.leiphone.com/list/%E8%BD%A6%E7%89%8C%E8%AF%86%E5%88%AB%E7%B3%BB%E7%BB%9F" target="_blank">车牌识别系统</a><a href="https://www.leiphone.com/list/google%E7%BF%BB%E8%AF%91" target="_blank">google翻译</a><a href="https://www.leiphone.com/list/www.leiphone.com" target="_blank">www.leiphone.com</a><a href="https://www.leiphone.com/list/%E5%85%89%E5%AD%A6%E8%BF%B7%E5%BD%A9" target="_blank">光学迷彩</a><a href="https://www.leiphone.com/list/%E7%B4%A2%E5%B0%BCz5%20compact" target="_blank">索尼z5 compact</a><a href="https://www.leiphone.com/list/fdd%20tdd" target="_blank">fdd tdd</a><a href="https://www.leiphone.com/list/%E9%A3%9E%E8%B1%B9%E6%97%A0%E4%BA%BA%E6%9C%BA" target="_blank">飞豹无人机</a><a href="https://www.leiphone.com/list/tensorflow%20windows%20%E5%AE%89%E8%A3%85" target="_blank">tensorflow windows 安装</a><a href="https://www.leiphone.com/list/nest%E6%B8%A9%E6%8E%A7%E5%99%A8" target="_blank">nest温控器</a><a href="https://www.leiphone.com/list/mali-t760" target="_blank">mali-t760</a><a href="https://www.leiphone.com/list/%E7%82%B9%E5%BF%83os" target="_blank">点心os</a><a href="https://www.leiphone.com/list/iphone%E7%BF%BB%E6%96%B0" target="_blank">iphone翻新</a>                        <a href="https://www.leiphone.com/list/" target="_blank">更多</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="yp-footer-msg">
+        <div class="wrapper clr">
+            <!-- links -->
+            <div class="links">
+                <a rel="nofollow" href="https://www.leiphone.com/us/concact">联系我们</a>
+                <a rel="nofollow" href="https://www.leiphone.com/us/index">关于我们</a>
+                <a rel="nofollow" href="https://www.leiphone.com/news/201611/0nOqnvNoxI6vX4L9.html">加入我们</a>
+                <a rel="nofollow" href="https://www.leiphone.com/us/feedback">意见反馈</a>
+                <a rel="nofollow" href="https://www.leiphone.com/contribute/index">投稿</a>
+            </div>
+            <!-- 下载app -->
+            <div class="downLoad-app">
+                <div class="qrcode">
+                    <!-- /site/download -->
+                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/downCode.jpg" width="96" height="96" alt="">
+                </div>
+                <div class="txt">
+                    <p>下载雷锋网客户端</p>
+                    <a rel="nofollow" href="https://itunes.apple.com/cn/app/lei-feng-wang-yi-dong-hu-lian/id579529120?mt=8" target="_blank" class="iPhone"><em></em>iPhone</a>
+                    <a rel="nofollow" href="https://android.myapp.com/myapp/detail.htm?apkName=com.leiphone.app" target="_blank" class="Android"><em></em>Android</a>
+                </div>
+            </div>
+            <!-- 关注-->
+            <div class="contact">
+                <a rel="nofollow" href="mailto:web@leiphone.com" class="eml sub_a"><em></em></a>
+                <a rel="nofollow" href="https://www.weibo.com/p/1006062118746300" target="_blank" class="sina sub_a"><em></em></a>
+            </div>
+        </div>
+    </div>
+    <!-- copyRight -->
+    <div class="yp-copyright">
+        <div class="wrapper">
+            <p>Copyright © 2011-2018 www.leiphone.com 雷锋网-移动互联网智能终端第一媒体 All Rights Reserved <a target="_blank" style="color:#9baab6;" href="https://www.miitbeian.gov.cn/">粤ICP备11095991号-1</a>
+                <a key="54914497efbfb06e545f711c" logo_size="83x30" logo_type="realname" href="https://v.pinpaibao.com.cn/authenticate/cert/?site=www.leiphone.com&amp;at=realname" target="_blank"><script src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/aq_auth.js.下载"></script><b id="aqLogoLHTBB" style="display: none;"></b><img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/sm_83x30.png" alt="安全联盟认证" width="83" height="30" style="border: none;"></a>
+                &nbsp;&nbsp;
+                <a href="http://szcert.ebs.org.cn/0ee69ac3-f114-4bd9-9ea1-a5a04f7cd44b" rel="nofollow" target="_blank"><img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/govIcon.gif" width="29" height="40"></a>
+<!--                <script id="ebsgovicon" src="https://szcert.ebs.org.cn/govicon.js?id=0ee69ac3-f114-4bd9-9ea1-a5a04f7cd44b&width=29&height=40&type=1" type="text/javascript" charset="utf-8"></script>                &nbsp;&nbsp;-->
+                <a rel="nofollow" href="https://www.leiphone.com/resWeb/images/ICP.jpg" target="_blank" style="color:#9baab6">ICP证粤B2-20150332</a>
+                <a rel="nofollow" href="http://www.qiniu.com/" target="_blank" style="float:right">
+                    <img src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/hzs4.png">
+                </a>
+            </p>
+        </div>
+    </div>
+</footer>
+<div id="lph-footer-gotoBar">
+    <div class="gotoTop">   
+        <a href="javascript:;" class="top" data-goto="0" data-start="100"><em></em></a>
+    </div>
+</div>
+
+<!-- 遮罩层 -->
+<div class="lph-overlay"></div>
+    <!-- 右上角持续提示，邮箱未绑定的时候输出 -->
+    <div class="yzEmail_tip yzEmail_tip1" id="bandEmailTip">
+        <em></em>
+        <span>为了您的账户安全，请<a class="bbtn" href="javascript:;">验证邮箱</a></span>
+        <i class="close"></i>
+    </div>
+
+    <!-- 右上角持续提示，邮箱发送但未验证的时候输出 -->
+    <div class="yzEmail_tip yzEmail_tip2" id="sendEmailTip">
+        <span style="text-align: center;">您的邮箱还未验证,完成可获20积分哟！</span>
+        <p class="links"><a class="rbtn" href="javascript:;">重发邮箱</a><a class="sbtn" href="javascript:;">修改邮箱</a></p>
+        <i class="close"></i>
+    </div>
+
+    <!-- 记cookie弹窗，邮箱未绑定的时候弹出 -->
+    <div class="yzEmail_box yzEmail_box1 lph-pops" id="sendEmailBox">
+        <div class="head">请验证您的邮箱</div>
+        <div class="box">
+            <span class="tipp"><!-- *邮箱 --></span>
+            <input class="inp" id="sendEmail_input" placeholder="输入您的邮箱" value="">
+            <!-- <strong>验证邮件已发送，请您查收</strong> -->
+            <a class="btn" href="javascript:;" target="_blank" id="sendEmail_btn"><i></i><em>立即验证</em></a>
+            <div class="error"></div>
+        </div>
+        <!-- <div class="boxOk">
+            <strong>验证邮件已发送，请您查收</strong>
+        </div> -->
+        <i class="close"></i>
+    </div>
+
+    <!-- 记cookie弹窗，已发送邮件但未验证 -->
+    <div class="yzEmail_box yzEmail_box2 lph-pops" id="setPwBox">
+        <div class="head">完善账号信息</div>
+        <div class="top">
+            <span>您的账号已经绑定，现在您可以<a href="javascript:;">设置密码</a>以方便用邮箱登录</span>
+        </div>
+        <div class="btm">
+            <input class="inp" type="password" id="sendEmail_input" placeholder="输入您的密码" value="">
+            <a class="btn" href="javascript:;" target="_blank" id="sendEmail_btn"><i></i><em>立即设置</em></a>
+            <a class="clo" href="javascript:;">以后再说</a>
+            <div class="error"></div>
+        </div>
+        <i class="close"></i>
+    </div>
+
+
+<!-- 申请专栏作者 -->
+<form id="applyAutor" onsubmit="return false">
+    <div class="applyAutor-pop">   
+        <i class="close"></i> 
+        <div class="title">请填写申请人资料</div>
+        <div class="main">
+            <div class="rows clr">
+               <span class="name">姓名</span>
+               <input type="text" id="name" name="MemberAuthorType[name]" value="">
+               <span class="error"></span>
+            </div>
+            <div class="rows clr">
+               <span class="name">电话</span>
+               <input type="text" id="phone" name="MemberAuthorType[phone]" value="">
+               <span class="error"></span>
+            </div>
+            <div class="rows clr">
+               <span class="name">邮箱</span>
+               <input type="text" id="eml" name="MemberAuthorType[email]" value="">
+               <span class="error"></span>
+            </div>
+            <div class="rows clr">
+               <span class="name">微信号</span>
+               <input type="text" id="weixin" name="MemberAuthorType[wechat]" value="">
+               <span class="error"></span>
+            </div>
+            <div class="rows clr">
+               <span class="name">作品链接</span>
+               <input type="text" id="job" name="MemberAuthorType[link]" value="">
+            </div>
+            <div class="rows clr">
+               <span class="name">个人简介</span>
+               <textarea id="description" name="MemberAuthorType[description]"></textarea>
+            </div>
+            <div class="rows clr rows-last">
+                <input type="submit" value="提 交" id="subBtn">
+                <input type="button" value="取 消" id="clsBtn">
+            </div>
+        </div>
+    </div>  
+</form>
+<script>
+    // 四站登录
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src=BASE_URL+'/resWeb/home/js/login/yp_login.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<!-- 优路跟踪代码 -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5HDG4H');</script>
+<script>
+    (function(){
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https'){
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        }
+        else{
+            bp.src = 'https://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+
+
+
+
+<script type="text/javascript" id="">(function(){var e="https:"==location.protocol?"https://":"http://",g=e+"uluai.com.cn/cmp",h=5021,e=function(){function e(a,b){b&&(a.addEventListener?a.onload=b:a.onreadystatechange=function(){a.readyState in{loaded:1,complete:1}&&(a.onreadystatechange=null,b())})}function k(a,b,f){var d=c.createElement("script");d.type="text/javascript";d.async=!0;d.src=a;e(d,b);f&&(d.onerror=f);a=d;b=c.getElementsByTagName("script")[0]||c.body||c.head;b.parentNode.insertBefore(a,b)}var c=document;k(g+"/cmp.api?r\x3d"+
+encodeURIComponent(c.referrer||"")+"\x26s\x3d"+h+"\x26u\x3d"+encodeURIComponent(c.location.href));window._ycnt_cb=function(a,b){}};e()})();</script>
+<iframe id="YP_LOGIN_WINDOW" class="YP-LOGIN" scrolling="no" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/saved_resource.html"></iframe><div id="YP_LOGIN_WINDOW_OVERLAY" class="YP-OVERLAY"><div class="close" title="关闭" style="background-image: url(&quot;https://home.leiphone.com/resWeb/home/images/login/close_03.png&quot;);"></div></div><script src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/bw-send-411.4.5.js.下载"></script><script type="text/javascript" src="./深度学习——你需要了解的八大开源框架 _ 雷锋网_files/saved_resource" async=""></script></body></html>

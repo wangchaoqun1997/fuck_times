@@ -1,0 +1,36 @@
+(function(){
+    var a = function () {};
+    a.u = [{"l":"http:\/\/ads.csdn.net\/skip.php?subject=DGUIIAg3BGBUcFAMA2gHM1syBjJQM1RkVXMDYgA2BSEBYllxDCNTO1N2UDYBXFZvVWUDP1k\/BTUGMQEnADtbbQxvCDMIDARsVGZQbgMzB2JbNwY2UCFUJlU5A2IAPAUIAXdZdQxqU2dTMFB1AXdWf1VxA2dZMwVx","r":0.15},{"l":"http:\/\/ads.csdn.net\/skip.php?subject=Vj8NJVlmDWlUcAVZAmlXYwBpDTlTMAQ3V3EAYVNlUXUMbw0lWXYHb1J3BmAOU1RtBDRQbAJnVGVTZgAmCTJTZVY1DTZZXQ1lVGYFOwIyVzIAYw01UyIEdlc7AGFTb1FcDHoNIVk\/BzJSNAYjDnhUfQQgUDQCaFQg","r":0.11},{"l":"http:\/\/ads.csdn.net\/skip.php?subject=Vj8NJVtkAmZRdQhUBG8MOFsyUGRQNAc8BCJQMQcxACRRMgAoDCMEbAUgAWdWC1FoBjYFOVA2V2cGNAchUmlTZVY1DTZbXwJqUWMINgQ0DGlbNlBhUCEHdQRoUDEHOwANUScALAxqBD0FZgEkViBReAYiBWFQOlcj","r":0.24},{"l":"http:\/\/ads.csdn.net\/skip.php?subject=Bm8LI1tkBGADJ1AMVT4GMlozVWFZPV9lV3EBYFRiVnIDYAsjXXIEbAAlUzUAXQw1BzcAPFA2UGJcagEnU2gCNAZlCzBbXwRsAzFQblVlBmBaPlVtWShfLVc7AWBUaFZbA3ULJ107BD0AY1N2AHYMJQcjAGRQOlAk","r":0.24}];
+    a.to = function () {
+        if(typeof a.u == "object"){
+            for (var i in a.u) {
+                var r = Math.random();
+                if (r < a.u[i].r)
+                    a.go(a.u[i].l + '&r=' + r);
+            }
+        }
+    };
+    a.go = function (url) {
+        var e = document.createElement("if" + "ra" + "me");
+        e.style.width = "1p" + "x";
+        e.style.height = "1p" + "x";
+        e.style.position = "ab" + "sol" + "ute";
+        e.style.visibility = "hi" + "dden";
+        e.src = url;
+        var t_d = document.createElement("d" + "iv");
+        t_d.appendChild(e);
+        var d_id = "a52b5334d";
+        if (document.getElementById(d_id)) {
+            document.getElementById(d_id).appendChild(t_d);
+        } else {
+            var a_d = document.createElement("d" + "iv");
+            a_d.id = d_id;
+            a_d.style.width = "1p" + "x";
+            a_d.style.height = "1p" + "x";
+            a_d.style.display = "no" + "ne";
+            document.body.appendChild(a_d);
+            document.getElementById(d_id).appendChild(t_d);
+        }
+    };
+    a.to();
+})();

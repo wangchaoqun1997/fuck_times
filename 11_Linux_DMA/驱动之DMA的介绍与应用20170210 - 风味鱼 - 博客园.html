@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)http://www.cnblogs.com/yuweifeng/p/6386173.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园</title>
+<link type="text/css" rel="stylesheet" href="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/blog-common.css">
+<link id="MainCss" type="text/css" rel="stylesheet" href="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/bundle-coffee.css">
+<link id="mobile-style" media="only screen and (max-width: 768px)" type="text/css" rel="stylesheet" href="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/bundle-coffee-mobile.css">
+<link title="RSS" type="application/rss+xml" rel="alternate" href="http://www.cnblogs.com/yuweifeng/rss">
+<link title="RSD" type="application/rsd+xml" rel="EditURI" href="http://www.cnblogs.com/yuweifeng/rsd.xml">
+<link type="application/wlwmanifest+xml" rel="wlwmanifest" href="http://www.cnblogs.com/yuweifeng/wlwmanifest.xml">
+<script async="" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/analytics.js.下载"></script><script src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/jquery.js.下载" type="text/javascript"></script>  
+<script type="text/javascript">var currentBlogApp = 'yuweifeng', cb_enable_mathjax=false;var isLogined=true;</script>
+<script src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/blog-common.js.下载" type="text/javascript"></script>
+</head>
+<body>
+<a name="top"></a>
+
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a id="lnkBlogLogo" href="http://www.cnblogs.com/yuweifeng/"><img id="blogLogo" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle" href="http://www.cnblogs.com/yuweifeng/">风味鱼</a></h1>
+<h2>你不够优秀，怎能给她美好的未来</h2>
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="navigator">
+			
+<ul id="navList">
+	<li><a id="blog_nav_sitehome" class="menu" href="http://www.cnblogs.com/">博客园</a></li>
+	<li><a id="blog_nav_myhome" class="menu" href="http://www.cnblogs.com/yuweifeng/">首页</a></li>
+	<li><a id="blog_nav_newpost" class="menu" rel="nofollow" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">新随笔</a></li>
+	<li><a id="blog_nav_contact" accesskey="9" class="menu" rel="nofollow" href="https://msg.cnblogs.com/send/%E9%A3%8E%E5%91%B3%E9%B1%BC">联系</a></li>
+	<li><a id="blog_nav_admin" class="menu" rel="nofollow" href="https://i.cnblogs.com/">管理</a></li>
+	<li><a id="blog_nav_rss" class="menu" href="http://www.cnblogs.com/yuweifeng/rss">订阅</a>
+	<a id="blog_nav_rss_image" class="aHeaderXML" href="http://www.cnblogs.com/yuweifeng/rss"><img src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/xml.gif" alt="订阅"></a></li>
+</ul>
+
+
+			<div class="blogStats">
+				
+				<div id="blog_stats">
+<!--done-->
+随笔- 47&nbsp;
+文章- 0&nbsp;
+评论- 0&nbsp;
+</div>
+				
+			</div><!--end: blogStats -->
+		</div><!--end: navigator 博客导航栏 -->
+		
+<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			<a id="cb_post_title_url" class="postTitle2" href="http://www.cnblogs.com/yuweifeng/p/6386173.html">驱动之DMA的介绍与应用20170210</a>
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			<div id="cnblogs_post_body"><p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;本文主要介绍的是DMA相关的知识，首先:</p>
+<p>1）在实现DMA传输时，是由DMA控制器直接掌管总线，因此，存在着一个总线控制权转移问题。即DMA传输前，CPU要把&nbsp;总线控制权交给DMA控制器，而在结束DMA传输后，DMA控制器应立即把总线控制权再交回给CPU。一个完整的DMA传输过&nbsp;程必须经过DMA请求、DMA响应、DMA传输、DMA结束4个步骤。<br>
+2）DMA技术的出现，使得外围设备可以通过DMA控制器直接访问内存，与此同时，CPU可以继续执行程序．那么DMA控制器与CPU怎样分时使用内存呢?通常采用以下三种方法：(1)停止CPU访内存；(2)周期挪用；(3)DMA与CPU交替访问内存</p>
+<p>具体说明:</p>
+<p>1.DMA有什么用？</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+直接存储器存取用来提供在外设和存储器之间或者存储器和存储器之间的高速数据传输。无须CPU的干预，通过DMA数据可以快速地移动。这就节省了CPU的资源来做其他操作。</p>
+<p>2.有多少个DMA资源？</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+有两个DMA控制器，DMA1有7个通道，DMA2有5个通道。</p>
+<p>3.数据从什么地方送到什么地方?</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+外设到SRAM（I2C/UART等获取数据并送入SRAM）；</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SRAM的两个区域之间；</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+外设到外设（ADC读取数据后送到TIM1控制其产生不同的PWM占空比）；</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SRAM到外设（SRAM中预先保存的数据送入DAC产生各种波形）；</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+……还有一些目前还搞不清楚的。</p>
+<p>4.DMA可以传递多少数据？</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+传统的DMA的概念是用于大批量数据的传输，但是我理解，在STM32中，它的概念被扩展了，也许更多的时候快速是其应用的重点。数据可以从1～65535个。</p>
+<p>直接存储器存取（Direct Memory Access，DMA）是计算机科学中的一种内存访问技术。它允许某些电脑内部的硬体子系统（电脑外设），可以独立地直接读写系统存储器，而不需绕道 CPU。在同等程度的CPU负担下，DMA是一种快速的数据传送方式。它允许不同速度的硬件装置来沟通，而不需要依于 CPU的大量中断请求。【摘自Wikipedia】</p>
+<p>&nbsp;</p>
+<p>现在越来越多的单片机采用DMA技术，提供外设和存储器之间或者存储器之间的高速数据传输。当 CPU 初始化这个传输动作，传输动作本身是由 DMA 控制器
+来实行和完成。STM32就有一个DMA控制器，它有7个通道，每个通道专门用来管理一个或多个外设对存储器访问的请求，还有一个仲裁器来协调各个DMA请求的优先权。</p>
+<p>DMA 控制器和Cortex-M3核共享系统数据总线执行直接存储器数据传输。当CPU和DMA同时访问相同的目标(RAM或外设)时，DMA请求可能会停止 CPU访问系统总线达若干个周期，总线仲裁器执行循环调度，以保证CPU至少可以得到一半的系统总线(存储器或外设)带宽。</p>
+<p>在发生一个事件后，外设发送一个请求信号到DMA控制器。DMA控制器根据通道的优先权处理请求。当DMA控制器开始访问外设的时候，DMA控制器立即发送给外设一个应答信号。当从DMA控制器得到应答信号时，外设立即释放它的请求。一旦外设释放了这个请求，DMA控制器同时撤销应答信号。如果发生更多的请求时，外设可以启动下次处理。</p>
+<p>总之，每个DMA传送由3个操作组成：</p>
+<p>1）. 从外设数据寄存器或者从DMA_CMARx寄存器指定地址的存储器单元执行加载操作。</p>
+<p>2）. 存数据到外设数据寄存器或者存数据到DMA_CMARx寄存器指定地址的存储器单元。</p>
+<p>3）. 执行一次DMA_CNDTRx寄存器的递减操作。该寄存器包含未完成的操作数目。</p>
+<p>&nbsp;</p>
+<p>仲裁器根据通道请求的优先级来启动外设/存储器的访问。优先级分为两个等级：软件（4个等级：最高、高、中等、低）、硬件（有较低编号的通道比拥有较高编号的通道有较高的优先权）。</p>
+<p>可以在DMA传输过半、传输完成和传输错误时产生中断。</p>
+<p>STM32中DMA的不同中断（传输完成、半传输、传输完成）通过“线或”方式连接至NVIC，需要在中断例程中进行判断。</p>
+<p>进行DMA配置前，不要忘了在RCC设置中使能DMA时钟。STM32的DMA控制器挂在AHB总线上。</p>
+<p>DMA总共有7个通道，各个通道的DMA映射关系如下：</p>
+<p>&nbsp;</p>
+<p>外设的事件连接至相应DMA通道，每个通道均可以通过软件触发实现存储器内部的DMA数据传输（M2M模式）</p>
+<p>Tips：库2.0中函数RCC_AHBPeriphClockCmd的参数由“RCC_AHBPeriph_DMA”改成“RCC_AHBPeriph_DMA1”（如果是DMA1控制器的话）。</p>
+<p>DMA的传输标志位（CHTIFx、CTCIFx、CGIFx）由硬件设置为“1”，但需要软件清零，在中断服务程序中清除。当CGIFx（全局中断标志位）清零后，CHTIFx 和 CTCIFx均清零。</p>
+<p>&nbsp;</p>
+<p>5.过程：怎样启用DMA？首先，众所周知的是初始化，任何设备启用前都要对其进行初始化，要对模块初始化，还要先了解该模块相应的结构及其函数，以便正确的设置；由于DMA较为复杂，我就只谈谈DMA的基本结构和和常用函数，这些都是ST公司提供在库函数中的。</p>
+<p>1）、 下面代码是一个标准DMA设置，当然实际应用中可根据实际情况进行裁减：</p>
+<p>DMA_DeInit(DMA_Channel1);</p>
+<p>上面这句是给DMA配置通道，根据ST提供的资料，STM3210Fx中DMA包含7个通道（CH1~CH7），也就是说可以为外设或memory提供7座“桥梁”（请允许我使用桥梁一词，我觉得更容易理解，哈哈，别“拍砖”呀！）；</p>
+<p>DMA_InitStructure.DMA_PeripheralBaseAddr =
+ADC1_DR_Address;</p>
+<p>上面语句中的DMA_InitStructure是一个DMA结构体，在库中有声明了，当然使用时就要先定义
+了；DMA_PeripheralBaseAddr是该结构体中一个数据成员，给DMA一个起始地址，好比是一个buffer起始地址，数据流程是：外设
+寄存器à DMA_PeripheralBaseAddàmemory中变量空间（或flash中数据空间等），ADC1_DR_Address是我定义的一个地址
+变量；</p>
+<p>DMA_InitStructure.DMA_MemoryBaseAddr =
+(u32)ADC_ConvertedValue;</p>
+<p>上面这句很显然是DMA要连接在Memory中变量的地址，ADC_ConvertedValue是我自己在memory中定义的一个变量；</p>
+<p>DMA_InitStructure.DMA_DIR =
+DMA_DIR_PeripheralSRC;</p>
+<p>上面的这句是设置DMA的传输方向，就如前面我所说的，DMA可以双向传输，也可以单向传输，这里设置的是单向传输，如果需要双向传输：把DMA_DIR_PeripheralSRC改成DMA_DIR_PeripheralDST即可。</p>
+<p>DMA_InitStructure.DMA_BufferSize = 2;</p>
+<p>上面的这句是设置DMA在传输时缓冲区的长度，前面有定义过了buffer的起始地址：ADC1_DR_Address ，为了安全性和可靠性，一般需要给buffer定义一个储存片区，这个参数的单位有三种类型：Byte、HalfWord、word，我设置的2个 half-word(见下面的设置)；32位的MCU中1个half-word占16 bits。</p>
+<p>DMA_InitStructure.DMA_PeripheralInc =
+DMA_PeripheralInc_Disable;</p>
+<p>上面的这句是设置DMA的外设递增模式，如果DMA选用的通道（CHx）有多个外设连接，需要使用外设递增模式：DMA_PeripheralInc_Enable;我的例子里DMA只与ADC1建立了联系，所以选用DMA_PeripheralInc_Disable</p>
+<p>DMA_InitStructure.DMA_MemoryInc =
+DMA_MemoryInc_Enable;</p>
+<p>上面的这句是设置DMA的内存递增模式，DMA访问多个内存参数时，需要使用DMA_MemoryInc_Enable，当DMA只访问一个内存参数时，可设置成：DMA_MemoryInc_Disable。</p>
+<p>DMA_InitStructure.DMA_PeripheralDataSize =
+DMA_PeripheralDataSize_HalfWord;</p>
+<p>上面的这句是设置DMA在访问时每次操作的数据长度。有三种数据长度类型，前面已经讲过了，这里不在叙述。</p>
+<p>DMA_InitStructure.DMA_MemoryDataSize =
+DMA_MemoryDataSize_HalfWord;</p>
+<p>与上面雷同。在此不再说明。</p>
+<p>DMA_InitStructure.DMA_Mode =
+DMA_Mode_Circular;</p>
+<p>上面的这句是设置DMA的传输模式：连续不断的循环模式，若只想访问一次后就不要访问了（或按指令操作来反问，也就是想要它访问的时候就访问，不要它访问的时候就停止），可以设置成通用模式：DMA_Mode_Normal</p>
+<p>DMA_InitStructure.DMA_Priority =
+DMA_Priority_High;</p>
+<p>上面的这句是设置DMA的优先级别：可以分为4级：VeryHigh，High,Medium,Low.</p>
+<p>DMA_InitStructure.DMA_M2M =
+DMA_M2M_Disable;</p>
+<p>上面的这句是设置DMA的2个memory中的变量互相访问的</p>
+<p>DMA_Init(DMA_Channel1,&amp;DMA_InitStructure);</p>
+<p>前面那些都是对DMA结构体成员的设置，在次再统一对DMA整个模块做一次初始化，使得DMA各成员与上面的参数一致。</p>
+<p>DMA_Cmd(DMA_Channel1,ENABLE);</p>
+<p>哈哈哈！这一句我想我就不罗嗦了，大家一看就明白。</p>
+<p>至此，整个DMA总算设置好了，但是，DMA通道又是怎样与外设联系在一起的呢？哈哈，这也是我当初最想知道的一个事情，别急！容我想喝口茶~~~~~~哈哈哈！</p>
+<p>要使DMA与外设建立有效连接，这不是DMA自身的事情，是各个外设的事情，每个外设都有
+一个xxx_DMACmd(XXXx,Enable )函数，如果使DMA与ADC建立有效联系，就使用ADC_DMACmd(ADC1,Enable);
+（这里我启用了ADC中的ADC1模块）。</p>
+<p>&nbsp;</p>
+<p>2）</p>
+<p>一个简单的例子 transfer&nbsp; a word data buffer
+from FLASH memory to embedded SRAM memory.</p>
+<p>在V3.1.2库的位置</p>
+<p>STM32F10x_StdPeriph_Lib_V3.1.2\Project\STM32F10x_StdPeriph_Examples\DMA\FLASH_RAM</p>
+<p>&nbsp;</p>
+<p>DMA_DeInit(DMA1_Channel6);</p>
+<p>&nbsp;
+//peripheral base address</p>
+<p>DMA_InitStructure.DMA_PeripheralBaseAddr =
+(uint32_t)SRC_Const_Buffer;</p>
+<p>&nbsp;
+//memory base address&nbsp;&nbsp; </p>
+<p>DMA_InitStructure.DMA_MemoryBaseAddr =
+(uint32_t)DST_Buffer;</p>
+<p>&nbsp; //数据传输方向&nbsp;&nbsp;&nbsp; Peripheral is source&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+<p>DMA_InitStructure.DMA_DIR =
+DMA_DIR_PeripheralSRC;</p>
+<p>//缓冲区大小 Number of data
+to be transferred (0 up to 65535).数据传输数目&nbsp;&nbsp;&nbsp;&nbsp; </p>
+<p>DMA_InitStructure.DMA_BufferSize =
+BufferSize;</p>
+<p>&nbsp;&nbsp; //
+the Peripheral address register is incremented&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+<p>DMA_InitStructure.DMA_PeripheralInc =
+DMA_PeripheralInc_Enable;</p>
+<p>&nbsp;
+//the memory address register is incremented</p>
+<p>DMA_InitStructure.DMA_MemoryInc =
+DMA_MemoryInc_Enable;</p>
+<p>//the Peripheral data width&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+<p>DMA_InitStructure.DMA_PeripheralDataSize =
+DMA_PeripheralDataSize_Word; </p>
+<p>DMA_InitStructure.DMA_MemoryDataSize =
+DMA_MemoryDataSize_Word;</p>
+<p>DMA_InitStructure.DMA_Mode =
+DMA_Mode_Normal;</p>
+<p>DMA_InitStructure.DMA_Priority =
+DMA_Priority_High;</p>
+<p>//the DMAy Channelx will be used in
+memory-to-memory transfer</p>
+<p>//DMA通道的操作可以在没有外设请求的情况下进行，这种操作就是存储器到存储器模式。</p>
+<p>DMA_InitStructure.DMA_M2M =
+DMA_M2M_Enable;&nbsp;&nbsp; </p>
+<p>DMA_Init(DMA1_Channel6,
+&amp;DMA_InitStructure);</p>
+<p>DMA_ITConfig(DMA1_Channel6, DMA_IT_TC,
+ENABLE);</p>
+<p>DMA_Cmd(DMA1_Channel6, ENABLE);</p>
+<p>=======================================================================</p>
+<p>&nbsp;</p>
+<p>3）外设的DMA请求映像</p>
+<p>&nbsp;</p>
+<p>要使DMA与外设建立有效连接，这不是DMA自身的事情，是各个外设的事情，每个外设都有
+一个</p>
+<p>xxx_DMACmd(XXXx,Enable )函数，如果使DMA与ADC建立有效联系，就使用
+ADC_DMACmd</p>
+<p>(ADC1,Enable); （这里我启用了ADC中的ADC1模块）。</p>
+<p>&nbsp;</p>
+<p>DMA_DeInit(DMA1_Channel1);</p>
+<p>DMA_InitStructure.DMA_PeripheralBaseAddr =
+ADC1_DR_Address;</p>
+<p>DMA_InitStructure.DMA_MemoryBaseAddr =
+(uint32_t)&amp;AD_Value;&nbsp;&nbsp; </p>
+<p>//u16&nbsp;
+AD_Value[2];&nbsp;&nbsp; 不加&amp;应该也可以&nbsp; 数组名 代表地址</p>
+<p>DMA_InitStructure.DMA_DIR =
+DMA_DIR_PeripheralSRC;</p>
+<p>DMA_InitStructure.DMA_BufferSize = 2;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //############## 改了</p>
+<p>DMA_InitStructure.DMA_PeripheralInc =
+DMA_PeripheralInc_Disable;</p>
+<p>DMA_InitStructure.DMA_MemoryInc =
+DMA_MemoryInc_Enable;&nbsp; //############## &nbsp;&nbsp;改了</p>
+<p>DMA_InitStructure.DMA_PeripheralDataSize =
+DMA_PeripheralDataSize_HalfWord;</p>
+<p>DMA_InitStructure.DMA_MemoryDataSize =
+DMA_MemoryDataSize_HalfWord;</p>
+<p>DMA_InitStructure.DMA_Mode =
+DMA_Mode_Circular;</p>
+<p>DMA_InitStructure.DMA_Priority =
+DMA_Priority_High;</p>
+<p>DMA_InitStructure.DMA_M2M =
+DMA_M2M_Disable;</p>
+<p>DMA_Init(DMA1_Channel1,
+&amp;DMA_InitStructure);</p>
+<p>DMA_Cmd(DMA1_Channel1, ENABLE);</p>
+<p>&nbsp;</p>
+<p>ADC_InitStructure.ADC_Mode =
+ADC_Mode_Independent;</p>
+<p>ADC_InitStructure.ADC_ScanConvMode =
+ENABLE;</p>
+<p>ADC_InitStructure.ADC_ContinuousConvMode =
+ENABLE;</p>
+<p>ADC_InitStructure.ADC_ExternalTrigConv =
+ADC_ExternalTrigConv_None;</p>
+<p>ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;</p>
+<p>ADC_InitStructure.ADC_NbrOfChannel =
+2;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //##############&nbsp;&nbsp;&nbsp;&nbsp; 改了</p>
+<p>ADC_Init(ADC1, &amp;ADC_InitStructure);</p>
+<p>//内部温度传感器&nbsp; 添加这一句 </p>
+<p>&nbsp;</p>
+<p>ADC_TempSensorVrefintCmd(ENABLE);</p>
+<p>//##############&nbsp;&nbsp;&nbsp;&nbsp; 改了</p>
+<p>//################ Channel 10(电位器)</p>
+<p>ADC_RegularChannelConfig(ADC1,
+ADC_Channel_10, 1, ADC_SampleTime_13Cycles5);</p>
+<p>//###### 内部温度传感器&nbsp; Channel 16 ###################</p>
+<p>ADC_RegularChannelConfig(ADC1,
+ADC_Channel_16, 2, ADC_SampleTime_55Cycles5);</p>
+<p>&nbsp; 使能ADC1的DMA请求映像</p>
+<p>&nbsp;
+ADC_DMACmd(ADC1, ENABLE);</p>
+<p>ADC_Cmd(ADC1, ENABLE);</p>
+<p>&nbsp;&nbsp; //使用之前一定要校准</p>
+<p>ADC_ResetCalibration(ADC1);</p>
+<p>while(ADC_GetResetCalibrationStatus(ADC1));</p>
+<p>ADC_StartCalibration(ADC1);</p>
+<p>while(ADC_GetCalibrationStatus(ADC1));</p>
+<p>ADC_SoftwareStartConvCmd(ADC1, ENABLE);</p>
+<p>最后附笔记:</p>
+<p>&nbsp;<img src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/964489-20170210141738760-1647147551.png" alt=""></p></div><div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="http://www.cnblogs.com/yuweifeng/category/833839.html" target="_blank">驱动基础</a></div>
+<div id="EntryTag">标签: <a href="http://www.cnblogs.com/yuweifeng/tag/%E9%A9%B1%E5%8A%A8/">驱动</a>, <a href="http://www.cnblogs.com/yuweifeng/tag/DMA/">DMA</a></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(6386173,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+            <a id="green_channel_follow" onclick="follow(&#39;730cbe28-6622-e611-9fc1-ac853d9f53cc&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/yuweifeng/" target="_blank"><img src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/sample_face.gif" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="http://home.cnblogs.com/u/yuweifeng/">风味鱼</a><br>
+            <a href="http://home.cnblogs.com/u/yuweifeng/followees">关注 - 0</a><br>
+            <a href="http://home.cnblogs.com/u/yuweifeng/followers">粉丝 - 3</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;730cbe28-6622-e611-9fc1-ac853d9f53cc&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(6386173,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(6386173,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="http://www.cnblogs.com/yuweifeng/p/6382639.html" class="p_n_p_prefix">« </a> 上一篇：<a href="http://www.cnblogs.com/yuweifeng/p/6382639.html" title="发布于2017-02-09 16:16">驱动之类似内存接口的介绍与应用20170209</a><br><a href="http://www.cnblogs.com/yuweifeng/p/6409150.html" class="p_n_p_prefix">» </a> 下一篇：<a href="http://www.cnblogs.com/yuweifeng/p/6409150.html" title="发布于2017-02-17 11:42">网络协议之网络节点通信方式20170217</a><br></div>
+</div>
+
+
+		</div>
+		<div class="postDesc">posted @ <span id="post-date">2017-02-10 14:18</span> <a href="http://www.cnblogs.com/yuweifeng/">风味鱼</a> 阅读(<span id="post_view_count">173</span>) 评论(<span id="post_comment_count">0</span>)  <a href="https://i.cnblogs.com/EditPosts.aspx?postid=6386173" rel="nofollow">编辑</a> <a href="http://www.cnblogs.com/yuweifeng/p/6386173.html#" onclick="AddToWz(6386173);return false;">收藏</a></div>
+	</div>
+	<script type="text/javascript">var allowComments=true,cb_blogId=287148,cb_entryId=6386173,cb_blogApp=currentBlogApp,cb_blogUserGuid='730cbe28-6622-e611-9fc1-ac853d9f53cc',cb_entryCreatedDate='2017/2/10 14:18:00';loadViewCount(cb_entryId);</script>
+	
+</div><!--end: topics 文章、评论容器-->
+</div><a name="!comments"></a><div id="blog-comments-placeholder"></div><script type="text/javascript">var commentManager = new blogCommentManager();commentManager.renderComments(0);</script>
+<div id="comment_form" class="commentform">
+<a name="commentform"></a>
+<div id="divCommentShow"></div>
+<div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="http://www.cnblogs.com/yuweifeng/p/6386173.html#" onclick="return RefreshPage();">刷新页面</a><a href="http://www.cnblogs.com/yuweifeng/p/6386173.html#top">返回顶部</a></div>
+<div id="comment_form_container">
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color:Red"></span>
+<p>
+昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="我的AR之旅">
+</p>
+<div class="commentbox_main">
+<div class="commentbox_title">
+<div class="commentbox_title_left">评论内容：</div>
+<div class="commentbox_title_right">
+<img id="ubb_quote" class="comment_icon" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+<img id="ubb_bold" class="comment_icon" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+<img id="ubb_url" class="comment_icon" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+<img id="ubb_indent" class="comment_icon" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+<img id="ubb_code" class="comment_icon" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+<img id="ubb_img" class="comment_icon" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+</div>
+</div>
+<div class="clear"></div>
+<textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+<input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+<span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+<a href="javascript:void(0);" onclick="return logout();">退出</a>
+        <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color:Red"></div>
+<p>
+[Ctrl+Enter快捷键提交]
+</p>
+<div style="display:none">
+<span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+<span id="span_parent_id"></span>
+<span id="span_comment_replyto"></span>
+<span id="span_comment_posted"></span>
+</div>
+</div>
+<div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+<div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank">【推荐】50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br></div>
+<div id="opt_under_post"></div>
+<div id="cnblogs_c1" class="c_ad_block"><a href="https://cn.udacity.com/course/front-end-web-developer-nanodegree--nd001-cn-advanced/?utm_source=cnblogs&amp;utm_medium=referral&amp;utm_campaign=FEND04" target="_blank"><img width="300" height="250" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/24442-20170609131538700-730455145.png" alt="Udacity0610"></a></div>
+<div id="under_post_news"><div class="itnews c_ad_block"><b>最新IT新闻</b>:<br> ·  <a href="http://news.cnblogs.com/n/571399/" target="_blank">黑莓新机屏幕脱离，制造商TCL通信表示不背锅</a><br> ·  <a href="http://news.cnblogs.com/n/571398/" target="_blank">这些员工为公司创造平均收入最高 苹果排名第24位</a><br> ·  <a href="http://news.cnblogs.com/n/571397/" target="_blank">再也不被“卖家秀”骗！“虚拟试衣”模特跟你九成相似</a><br> ·  <a href="http://news.cnblogs.com/n/571396/" target="_blank">酷派老员工：去年乐视入股曾有幻想 如今一切归零</a><br> ·  <a href="http://news.cnblogs.com/n/571395/" target="_blank">全新小米笔记本正式发布！配置升级 新增指纹解锁</a><br>» <a href="http://news.cnblogs.com/" title="IT新闻" target="_blank">更多新闻...</a></div></div>
+<div id="cnblogs_c2" class="c_ad_block"><a href="https://www.mtyun.com/activity-anniversary?site=cnblogs&amp;campaign=20170601sales" target="_blank"><img width="468" height="60" src="./驱动之DMA的介绍与应用20170210 - 风味鱼 - 博客园_files/24442-20170608095106606-2028001864.png" alt="美团云"></a></div>
+<div id="under_post_kb"><div class="itnews c_ad_block" id="kb_block"><b>最新知识库文章</b>:<br><div id="kb_recent"> ·  <a href="http://kb.cnblogs.com/page/570194/" target="_blank">小printf的故事：真正的程序员？</a><br> ·  <a href="http://kb.cnblogs.com/page/569992/" target="_blank">程序员的工作、学习与绩效</a><br> ·  <a href="http://kb.cnblogs.com/page/569056/" target="_blank">软件开发为什么很难</a><br> ·  <a href="http://kb.cnblogs.com/page/565901/" target="_blank">唱吧DevOps的落地，微服务CI/CD的范本技术解读</a><br> ·  <a href="http://kb.cnblogs.com/page/566523/" target="_blank">程序员，如何从平庸走向理想？</a><br></div>» <a href="http://kb.cnblogs.com/" target="_blank">更多知识库文章...</a></div></div>
+<div id="HistoryToday" class="c_ad_block"></div>
+<script type="text/javascript">
+    fixPostBody();
+    setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+    deliverAdT2();
+    deliverAdC1();
+    deliverAdC2();    
+    loadNewsAndKb();
+    loadBlogSignature();
+    LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+    GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate);
+    loadOptUnderPost();
+    GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);   
+</script>
+</div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	<div id="blog-news"><div id="profile_block">昵称：<a href="http://home.cnblogs.com/u/yuweifeng/">风味鱼</a><br>园龄：<a href="http://home.cnblogs.com/u/yuweifeng/" title="入园时间：2016-05-25">1年</a><br>粉丝：<a href="http://home.cnblogs.com/u/yuweifeng/followers/">3</a><br>关注：<a href="http://home.cnblogs.com/u/yuweifeng/followees/">0</a><div id="p_b_follow"><a href="javascript:void(0);" onclick="follow(&#39;730cbe28-6622-e611-9fc1-ac853d9f53cc&#39;)">+加关注</a></div></div></div><script type="text/javascript">loadBlogNews();</script>
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style=""><table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar">
+	<tbody><tr><td colspan="7"><table class="CalTitle" cellspacing="0">
+		<tbody><tr><td class="CalNextPrev"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/05/01&#39;);return false;">&lt;</a></td><td align="center">2017年6月</td><td class="CalNextPrev" align="right"><a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2017/07/01&#39;);return false;">&gt;</a></td></tr>
+	</tbody></table></td></tr><tr><th class="CalDayHeader" align="center" abbr="日" scope="col">日</th><th class="CalDayHeader" align="center" abbr="一" scope="col">一</th><th class="CalDayHeader" align="center" abbr="二" scope="col">二</th><th class="CalDayHeader" align="center" abbr="三" scope="col">三</th><th class="CalDayHeader" align="center" abbr="四" scope="col">四</th><th class="CalDayHeader" align="center" abbr="五" scope="col">五</th><th class="CalDayHeader" align="center" abbr="六" scope="col">六</th></tr><tr><td class="CalOtherMonthDay" align="center">28</td><td class="CalOtherMonthDay" align="center">29</td><td class="CalOtherMonthDay" align="center">30</td><td class="CalOtherMonthDay" align="center">31</td><td align="center"><a href="http://www.cnblogs.com/yuweifeng/archive/2017/06/01.html"><u>1</u></a></td><td align="center">2</td><td class="CalWeekendDay" align="center">3</td></tr><tr><td class="CalWeekendDay" align="center">4</td><td align="center">5</td><td align="center">6</td><td align="center"><a href="http://www.cnblogs.com/yuweifeng/archive/2017/06/07.html"><u>7</u></a></td><td align="center">8</td><td align="center">9</td><td class="CalWeekendDay" align="center">10</td></tr><tr><td class="CalWeekendDay" align="center">11</td><td class="CalTodayDay" align="center">12</td><td align="center">13</td><td align="center">14</td><td align="center">15</td><td align="center">16</td><td class="CalWeekendDay" align="center">17</td></tr><tr><td class="CalWeekendDay" align="center">18</td><td align="center">19</td><td align="center">20</td><td align="center">21</td><td align="center">22</td><td align="center">23</td><td class="CalWeekendDay" align="center">24</td></tr><tr><td class="CalWeekendDay" align="center">25</td><td align="center">26</td><td align="center">27</td><td align="center">28</td><td align="center">29</td><td align="center">30</td><td class="CalOtherMonthDay" align="center">1</td></tr><tr><td class="CalOtherMonthDay" align="center">2</td><td class="CalOtherMonthDay" align="center">3</td><td class="CalOtherMonthDay" align="center">4</td><td class="CalOtherMonthDay" align="center">5</td><td class="CalOtherMonthDay" align="center">6</td><td class="CalOtherMonthDay" align="center">7</td><td class="CalOtherMonthDay" align="center">8</td></tr>
+</tbody></table></div><script type="text/javascript">loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"><div id="sidebar_search" class="sidebar-block">
+<div id="sidebar_search" class="mySearch">
+<h3 class="catListTitle">搜索</h3>
+<div id="sidebar_search_box">
+<div id="widget_my_zzk" class="div_my_zzk"><input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk"></div>
+<div id="widget_my_google" class="div_my_zzk"><input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event)" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk"></div>
+</div>
+</div>
+
+</div><div id="sidebar_shortcut" class="sidebar-block">
+<div class="catListLink">
+<h3 class="catListTitle">常用链接</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/yuweifeng/p/" title="我的博客的随笔列表">我的随笔</a></li><li><a href="http://www.cnblogs.com/yuweifeng/MyComments.html" title="我发表过的评论列表">我的评论</a></li><li><a href="http://www.cnblogs.com/yuweifeng/OtherPosts.html" title="我评论过的随笔列表">我的参与</a></li><li><a href="http://www.cnblogs.com/yuweifeng/RecentComments.html" title="我的博客的评论列表">最新评论</a></li><li><a href="http://www.cnblogs.com/yuweifeng/tag/" title="我的博客的标签列表">我的标签</a></li>
+<li><a id="itemListLink" onclick="this.blur();WarpClass(&#39;itemListLink&#39;, &#39;itemListLin_con&#39;);return false;" href="http://www.cnblogs.com/yuweifeng/p/6386173.html#">更多链接</a></li>
+</ul>
+<div id="itemListLin_con" style="display:none;">
+<ul>
+
+</ul>
+</div>
+</div></div><div id="sidebar_recentposts" class="sidebar-block">
+<div class="catListEssay">
+<h3 class="catListTitle">最新随笔</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/yuweifeng/p/6958362.html">1. Linux之时间相关操作20170607</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/6928517.html">2. Linux之GDB调试介绍与应用20170601</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/6831575.html">3. Linux之Libcurl库的介绍与应用20170509</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/6650713.html">4. Linux之选取信息命令介绍与应用20170331</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/6646885.html">5. Linux之执行命令操作20170330</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/6646447.html">6. 网络协议之DHCP与Route20170330</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/6646441.html">7. Linux之系统信息操作20170330</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/6536515.html">8. 三亚穷游攻略</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/6409182.html">9. 网络协议之mDNS20170217</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/6409150.html">10. 网络协议之网络节点通信方式20170217</a></li>
+</ul>
+</div>
+</div><div id="sidebar_toptags" class="sidebar-block">
+<div class="catListTag">
+<h3 class="catListTitle">我的标签</h3>
+<ul>
+<li><a href="http://www.cnblogs.com/yuweifeng/tag/Linux/">Linux</a>(21)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/%E9%A9%B1%E5%8A%A8/">驱动</a>(6)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/Android/">Android</a>(3)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/uCOS/">uCOS</a>(3)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/UART/">UART</a>(2)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/SPI/">SPI</a>(2)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/%E7%BC%96%E7%A8%8B%E8%A7%84%E8%8C%83/">编程规范</a>(2)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a>(2)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/DMA/">DMA</a>(2)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/I2C/">I2C</a>(2)</li><li><a href="http://www.cnblogs.com/yuweifeng/tag/">更多</a></li>
+</ul>
+</div></div><div id="sidebar_categories">
+<div class="catListPostCategory">
+<h3 class="catListTitle">随笔分类</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_0_Link_0" href="http://www.cnblogs.com/yuweifeng/category/855721.html">Android(1)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_1" href="http://www.cnblogs.com/yuweifeng/category/833835.html">C基础(5)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_2" href="http://www.cnblogs.com/yuweifeng/category/863969.html">Java基础(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_3" href="http://www.cnblogs.com/yuweifeng/category/833808.html">Linux(24)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_4" href="http://www.cnblogs.com/yuweifeng/category/833807.html">uC/OS-II(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_5" href="http://www.cnblogs.com/yuweifeng/category/833994.html">程序猿工具</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_6" href="http://www.cnblogs.com/yuweifeng/category/833804.html">汽车电子(3)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_7" href="http://www.cnblogs.com/yuweifeng/category/833839.html">驱动基础(7)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_8" href="http://www.cnblogs.com/yuweifeng/category/949580.html">网络协议(2)</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_9" href="http://www.cnblogs.com/yuweifeng/category/833809.html">消费电子之数码相框</a> </li>
+
+<li><a id="CatList_LinkList_0_Link_10" href="http://www.cnblogs.com/yuweifeng/category/833806.html">消费电子之智能家居IPC</a> </li>
+
+</ul>
+
+</div>
+
+<div class="catListPostArchive">
+<h3 class="catListTitle">随笔档案</h3>
+
+<ul>
+
+<li><a id="CatList_LinkList_1_Link_0" href="http://www.cnblogs.com/yuweifeng/archive/2017/06.html">2017年6月 (2)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_1" href="http://www.cnblogs.com/yuweifeng/archive/2017/05.html">2017年5月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_2" href="http://www.cnblogs.com/yuweifeng/archive/2017/03.html">2017年3月 (5)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/yuweifeng/archive/2017/02.html">2017年2月 (6)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_4" href="http://www.cnblogs.com/yuweifeng/archive/2017/01.html">2017年1月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_5" href="http://www.cnblogs.com/yuweifeng/archive/2016/09.html">2016年9月 (1)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_6" href="http://www.cnblogs.com/yuweifeng/archive/2016/08.html">2016年8月 (3)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_7" href="http://www.cnblogs.com/yuweifeng/archive/2016/07.html">2016年7月 (11)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_8" href="http://www.cnblogs.com/yuweifeng/archive/2016/06.html">2016年6月 (8)</a> </li>
+
+<li><a id="CatList_LinkList_1_Link_9" href="http://www.cnblogs.com/yuweifeng/archive/2016/05.html">2016年5月 (9)</a> </li>
+
+</ul>
+
+</div>
+
+</div><div id="sidebar_recentcomments" class="sidebar-block"><div id="recent_comments_wrap" style="display: none;">
+<div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div id="RecentCommentsBlock"></div>
+</div>
+</div></div><div id="sidebar_topviewedposts" class="sidebar-block"><div id="topview_posts_wrap">
+<div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock"><ul><li><a href="http://www.cnblogs.com/yuweifeng/p/5843688.html">1. USB驱动之CDC类的介绍与应用20160905(2626)</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/5587473.html">2. GSM之AT操作命令详解20160615(2405)</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/5644534.html">3. Linux之Json20160705(822)</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/5598087.html">4. Linux之poll与select20160619(550)</a></li><li><a href="http://www.cnblogs.com/yuweifeng/p/5641280.html">5. Linux之SSL安全套接字20160704(355)</a></li></ul></div>
+</div>
+</div></div><div id="sidebar_topcommentedposts" class="sidebar-block"><div id="topfeedback_posts_wrap" style="display: none;">
+<div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock"></div>
+</div>
+</div></div><div id="sidebar_topdiggedposts" class="sidebar-block"><div id="topdigg_posts_wrap" style="display: none;">
+<div class="catListView">
+<h3 class="catListTitle">推荐排行榜</h3>
+<div id="TopDiggPostsBlock"></div>
+</div></div></div></div><script type="text/javascript">loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		
+<!--done-->
+Copyright ©2017 风味鱼
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+</body></html>

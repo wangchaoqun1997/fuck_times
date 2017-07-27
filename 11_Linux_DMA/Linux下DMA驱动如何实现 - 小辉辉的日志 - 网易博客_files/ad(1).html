@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- saved from url=(0184)http://iad.g.163.com/wa/ad?affiliate=blog&cat=homepage&location=10&site=netease&type=logo300x250&url=http%3A%2F%2Fblog.163.com%2Fthinki_cao%2Fblog%2Fstatic%2F83944875201362142939337%2F -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>网易个性化广告投放系统</title>
+<script type="text/javascript" src="./jquery-1.4.2.js.下载"></script>
+                        <style type="text/css">
+                .dm_ad_hover {
+                    display: inline-block;
+                    position: absolute;
+                    bottom: 0px;
+                    right: 0px;
+                    width: 24px;
+                    height: 18px;
+                    overflow: hidden;
+                    line-height: 999px;
+                    background: url("https://img3.126.net/iad/ad/img/short.png") no-repeat scroll right top;
+                    z-index: 100;
+                }
+            </style>
+            <script type="text/javascript">
+    function sendHover(uuid, flight_id, ad_id) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://iad.g.163.com/wa/s',
+            data: {
+                'uuid': uuid,
+                'flight_id': flight_id,
+                'ad_id': ad_id
+            },
+            dataType: 'json',
+            success: function(info) {
+            }
+        });
+    }
+    
+    function sendClick(uuid, flight_id, ad_id) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://iad.g.163.com/wa/c',
+            data: {
+                'uuid': uuid,
+                'flight_id': flight_id,
+                'ad_id': ad_id
+            },
+            dataType: 'json',
+            success: function(info) {
+            }
+        });
+    }
+    
+    var count = 0;
+    $(document).ready(function() {
+        $('body').click(function() {
+            var uuid = $('body').attr('data-uuid');
+            var flight_id = $('body').attr('data-flight_id');
+            var ad_id = $('body').attr('data-ad_id');
+            sendClick(uuid, flight_id, ad_id);
+        });
+        
+        $('body').hover(function() {
+            if(count == 0) {
+                var uuid = $('body').attr('data-uuid');
+                var flight_id = $('body').attr('data-flight_id');
+                var ad_id = $('body').attr('data-ad_id');
+                sendHover(uuid, flight_id, ad_id);
+            }
+            count++;
+        });
+    });
+</script>
+</head>
+<body class="adrec" marginwidth="0" marginheight="0" data-uuid="3269bcbf-c419-4aac-b2de-98354c0b0f45" data-flight_id="2469" data-ad_id="mat_5039">
+    <a class="dm_ad_hover" target="_blank"></a>
+<a target="_blank" href="http://rd.da.netease.com/redirect?t=5721ca2781833c81&amp;p=e172df95&amp;proId=1024&amp;target=http%3A%2F%2Fwww.kaola.com%2Factivity%2Fdetail%2F28100.shtml%3Ftag%3D978fe5d0533ca7e091b65cb0ddde5121"><img src="./ad.bid.material_1d019c5f28324bbeaad9f156112029a7" border="0" height="250" width="300" alt="300X250"></a>
+
+
+</body></html>

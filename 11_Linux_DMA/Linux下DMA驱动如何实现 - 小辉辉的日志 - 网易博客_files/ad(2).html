@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- saved from url=(0131)https://iad.g.163.com/wa/ad?site=netease&affiliate=blog&cat=detail&type=kl_240x275&location=1&uuid=bb26f67be6704f5a853a379c5b7a81fc -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>网易个性化广告投放系统</title>
+<script type="text/javascript" src="./jquery-1.4.2.js.下载"></script>
+                        <style type="text/css">
+                .dm_ad_hover {
+                    display: inline-block;
+                    position: absolute;
+                    bottom: 0px;
+                    right: 0px;
+                    width: 24px;
+                    height: 18px;
+                    overflow: hidden;
+                    line-height: 999px;
+                    background: url("https://img3.126.net/iad/ad/img/short.png") no-repeat scroll right top;
+                    z-index: 100;
+                }
+            </style>
+            <script type="text/javascript">
+    function sendHover(uuid, flight_id, ad_id) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://iad.g.163.com/wa/s',
+            data: {
+                'uuid': uuid,
+                'flight_id': flight_id,
+                'ad_id': ad_id
+            },
+            dataType: 'json',
+            success: function(info) {
+            }
+        });
+    }
+    
+    function sendClick(uuid, flight_id, ad_id) {
+        $.ajax({
+            type: 'GET',
+            url: 'https://iad.g.163.com/wa/c',
+            data: {
+                'uuid': uuid,
+                'flight_id': flight_id,
+                'ad_id': ad_id
+            },
+            dataType: 'json',
+            success: function(info) {
+            }
+        });
+    }
+    
+    var count = 0;
+    $(document).ready(function() {
+        $('body').click(function() {
+            var uuid = $('body').attr('data-uuid');
+            var flight_id = $('body').attr('data-flight_id');
+            var ad_id = $('body').attr('data-ad_id');
+            sendClick(uuid, flight_id, ad_id);
+        });
+        
+        $('body').hover(function() {
+            if(count == 0) {
+                var uuid = $('body').attr('data-uuid');
+                var flight_id = $('body').attr('data-flight_id');
+                var ad_id = $('body').attr('data-ad_id');
+                sendHover(uuid, flight_id, ad_id);
+            }
+            count++;
+        });
+    });
+</script>
+</head>
+<body class="adrec" marginwidth="0" marginheight="0" data-uuid="1f7b4d2b-de0f-4009-835d-0418e30665b8" data-flight_id="2529" data-ad_id="mat_4607">
+    <a class="dm_ad_hover" target="_blank"></a>
+<a target="_blank" href="http://www.lofter.com/selection?id=1435100&amp;type=2&amp;utm_term=ad_3629"><img src="./ad.bid.material_63d8ca51fa2c4cca8cab9c78f3ccf9d6" border="0" height="275" width="240" alt="240-275"></a>
+
+
+</body></html>

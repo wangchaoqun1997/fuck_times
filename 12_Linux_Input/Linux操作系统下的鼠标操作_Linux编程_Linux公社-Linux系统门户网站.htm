@@ -1,0 +1,411 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh"><head>
+<title>Linux操作系统下的鼠标操作_Linux编程_Linux公社-Linux系统门户网站</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="icon" href="http://www.linuxidc.com/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="http://www.linuxidc.com/favicon.ico" type="image/x-icon">
+<meta name="description" content="本不想写这些玩意儿，其实我并不喜欢它们，只不过没办法，谁叫我是靠这些家伙糊口的呢！若干年前，我自认为很喜欢Linux操作系统；">
+<meta name="keywords" content="Linux技巧,Linux操作系统下的鼠标操作,编程,Linux编程,Linux Shell,Android,Android教程,JAVA,C语言,Python,HTML5">
+<meta name="generator" content="Linux公社">
+<meta name="generator" content="Linux">
+<link rel="stylesheet" href="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/style.css" type="text/css">
+<meta name="generator" content="专业的Linux网站">
+<script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/jquery.js"></script>
+<script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/iwms.js"></script>
+<script type="text/javascript">iwms.urlPrefix="../../";</script>
+
+<script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/show.js"></script>
+<link type="text/css" rel="stylesheet" href="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/bdsstyle.css"><script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/logger.js"></script></head>
+<body><div style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;" id="BAIDU_DUP_fp_wrapper"><iframe style="width: 0px; height: 0px; visibility: hidden; display: none;" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/o.htm" id="BAIDU_DUP_fp_iframe"></iframe></div><div style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;" id="BAIDU_DUP_fp_wrapper"><iframe style="width: 0px; height: 0px; visibility: hidden; display: none;" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/o_002.htm" id="BAIDU_DUP_fp_iframe"></iframe></div><iframe style="display: none;" frameborder="0"></iframe><div style="display: block;" id="bdshare_s"><iframe id="bdsIfr" style="position:absolute;display:none;z-index:9999;" frameborder="0"></iframe><div style="display: none;" id="bdshare_l"><div id="bdshare_l_c"><h6>分享到</h6><ul><li><a href="#" class="bds_mshare mshare">一键分享</a></li><li><a href="#" class="bds_qzone qqkj">QQ空间</a></li><li><a href="#" class="bds_tsina xlwb">新浪微博</a></li><li><a href="#" class="bds_bdysc bdysc">百度云收藏</a></li><li><a href="#" class="bds_renren rrw">人人网</a></li><li><a href="#" class="bds_tqq txwb">腾讯微博</a></li><li><a href="#" class="bds_bdxc bdxc">百度相册</a></li><li><a href="#" class="bds_kaixin001 kxw">开心网</a></li><li><a href="#" class="bds_tqf txpy">腾讯朋友</a></li><li><a href="#" class="bds_tieba bdtb">百度贴吧</a></li><li><a href="#" class="bds_douban db">豆瓣网</a></li><li><a href="#" class="bds_tsohu shwb">搜狐微博</a></li><li><a href="#" class="bds_bdhome bdhome">百度新首页</a></li><li><a href="#" class="bds_sqq sqq">QQ好友</a></li><li><a href="#" class="bds_thx thx">和讯微博</a></li><li><a href="#" class="bds_more">更多...</a></li></ul><p><a href="#" class="goWebsite">百度分享</a></p></div></div></div>
+<div class="topBar">
+	<div class="twidth">
+	
+	<div style="float:right">
+		<script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/language.js"></script> <a title="點擊以繁體中文方式浏覽" href="javascript:StranBody()" id="StranLink">繁體</a>
+	</div>
+	
+	<div id="topUser">你好，游客 <a href="#" onclick="iwms.logPop()">登录</a>
+	<a href="http://www.linuxidc.com/memberreg.aspx" rel="nofollow">注册</a>
+	<a href="http://www.linuxidc.com/search.aspx" rel="nofollow">搜索</a>
+	</div>
+	</div>
+</div>
+<div class="twidth">
+<div id="sitehead">
+<div class="l"></div>
+<div class="r"></div>
+<div class="m">
+	<table width="100%">
+	<tbody><tr align="center"><td width="160">
+	<a href="http://www.linuxidc.com/"><img style="filter: chroma(color=#FFFFFF);" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/logo.jpg" alt="Linux公社" border="0" height="53" width="155"></a>
+	</td><td>
+	<div align="center"><script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux.js" type="text/javascript" language="javaScript"></script><!-- Linuxidc -->
+<script type="text/javascript">BAIDU_CLB_SLOT_ID = "850698";</script>
+<script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/o.js"></script><div id="BAIDU_DUP_wrapper_850698_0"><iframe id="baidu_clb_slot_iframe_850698_0" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/a.htm" onload="BAIDU_DUP_CLB_renderFrame('850698_0')" vspace="0" hspace="0" allowtransparency="true" marginwidth="0" marginheight="0" style="border:0; vertical-align:bottom; margin:0; display:block;" frameborder="0" height="65" scrolling="no" width="468"></iframe></div><script charset="utf-8" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_007"></script><script charset="utf-8" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/fixed7o.js"></script>
+</div>
+	</td>
+	</tr></tbody></table>
+</div>
+</div>
+<div id="navbar">
+<div class="l"></div>
+<div class="r"></div>
+<div class="m">
+	<a href="http://www.linuxidc.com/index.htm" class="first">首页</a><a href="http://www.linuxidc.com/it/">Linux新闻</a><a href="http://www.linuxidc.com/Linuxit/">Linux教程</a><a href="http://www.linuxidc.com/MySql/">数据库技术</a><a href="http://www.linuxidc.com/RedLinux/" class="thisclass">Linux编程</a><a href="http://www.linuxidc.com/Apache/">服务器应用</a><a href="http://www.linuxidc.com/Unix/">Linux安全</a><a href="http://www.linuxidc.com/download/">Linux下载</a><a href="http://www.linuxidc.com/Linuxrz/">Linux认证</a><a href="http://www.linuxidc.com/theme/">Linux主题</a><a href="http://www.linuxidc.com/Linuxwallpaper/">Linux壁纸</a><a href="http://www.linuxidc.com/linuxsoft/">Linux软件</a><a href="http://www.linuxidc.com/digi/">数码</a><a href="http://www.linuxidc.com/mobile/">手机</a><a href="http://www.linuxidc.com/diannao/">电脑</a>
+
+</div>
+</div>
+
+<div id="navsub">
+<div class="l"></div>
+<div class="r"></div>
+<div class="m">
+	<a href="http://www.linuxidc.com/index.htm">首页</a> → <a href="http://www.linuxidc.com/RedLinux/">Linux编程</a>
+</div>
+</div>
+<div class="linuxe1"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linuxe1.js"></script><a rel="external nofollow" href="http://www.yutianedu.com/list.asp?unid=22475" target="_blank"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux95070.gif" alt="" height="60" width="970"></a>
+</div>
+<div class="linux1"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux1.js"></script><script type="text/javascript">/*Linux����ͨ��*/ var cpro_id = 'u533706';</script><script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/c.js" type="text/javascript"></script><div id="BAIDU_DUP_wrapper_u533706_0"><iframe src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom.htm" marginwidth="0" marginheight="0" allowtransparency="true" frameborder="0" align="center,center" height="90" scrolling="no" width="960"></iframe></div><script charset="utf-8" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_005"></script>
+</div>
+<div class="linuxa"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linuxa.js"></script><script type="text/javascript">
+/*LinuxIDC��������960*38��������2012-11-25*/
+var cpro_id = "u995685";
+</script>
+<script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/c_002.js" type="text/javascript"></script><div id="BAIDU_DUP_wrapper_u995685_0"><iframe src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_002.htm" marginwidth="0" marginheight="0" allowtransparency="true" frameborder="0" align="center,center" height="38" scrolling="no" width="960"></iframe></div><script charset="utf-8" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom"></script>
+</div>
+<div class="linuxa1"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linuxa1.htm"></script></div>
+<table id="middle" style="table-layout:fixed" cellpadding="0" cellspacing="0" width="100%">
+<tbody><tr valign="top"><td>
+
+	<div class="mframe mR">
+	<div class="tl"></div>
+	<div class="tr"></div>
+	<div class="tm">
+		<div class="moreR">
+			背景：<script type="text/javascript">WriteBg()</script><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" style="cursor:pointer;width:7px;height:6px;border:1px solid #999;background:#EDF0F5" alt="#EDF0F5" onclick='ContentBg("#EDF0F5")'> <img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" style="cursor:pointer;width:7px;height:6px;border:1px solid #999;background:#FAFBE6" alt="#FAFBE6" onclick='ContentBg("#FAFBE6")'> <img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" style="cursor:pointer;width:7px;height:6px;border:1px solid #999;background:#FFF2E2" alt="#FFF2E2" onclick='ContentBg("#FFF2E2")'> <img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" style="cursor:pointer;width:7px;height:6px;border:1px solid #999;background:#FDE6E0" alt="#FDE6E0" onclick='ContentBg("#FDE6E0")'> <img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" style="cursor:pointer;width:7px;height:6px;border:1px solid #999;background:#F3FFE1" alt="#F3FFE1" onclick='ContentBg("#F3FFE1")'> <img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" style="cursor:pointer;width:7px;height:6px;border:1px solid #999;background:#DAFAF3" alt="#DAFAF3" onclick='ContentBg("#DAFAF3")'> <img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" style="cursor:pointer;width:7px;height:6px;border:1px solid #999;background:#EAEAEF" alt="#EAEAEF" onclick='ContentBg("#EAEAEF")'> <img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" style="cursor:pointer;width:7px;height:6px;border:1px solid #999;background:#FFF" alt="默认" onclick='ContentBg("")'> 
+		</div>
+		<span class="tt">阅读新闻</span>
+	</div>
+	<div class="wrapper">
+	<div class="ml"></div>
+	<div class="mr"></div>
+	<div class="mm" id="bodyTd">
+		<div id="printBody" style="word-break:break-all;">
+			<div style="text-align:center"><h1 class="aTitle">Linux操作系统下的鼠标操作</h1></div>
+			
+			<table align="center" width="97%">
+				<tbody><tr>
+				<td width="140">[日期：2008-05-11]</td>
+				<td align="center">来源：<a href="http://www.linuxidc.com/" target="_blank">Linux公社</a>&nbsp;
+				作者：Linux整理</td>
+				<td align="right" width="160">[字体：<a href="javascript:ContentSize(16)">大</a> <a href="javascript:ContentSize(0)">中</a> <a href="javascript:ContentSize(12)">小</a>]
+				</td></tr>
+			</tbody></table>
+<div id="li_all">
+<div id="li_1"><script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux201.htm"></script></div>
+<div id="li_2"><script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux2.js"></script><script type="text/javascript"><!--
+google_ad_client = "ca-pub-5195587195407606";
+/* Linux公社右侧中部300&#42;250 */
+google_ad_slot = "5547023324";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/show_ads.js">
+</script><ins style="display:inline-table;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:300px;background-color:transparent"><ins id="aswift_0_anchor" style="display:block;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:300px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_0" name="aswift_0" style="left:0;position:absolute;top:0;" frameborder="0" height="250" scrolling="no" width="300"></iframe></ins></ins>
+</div>
+</div>
+			<div style="overflow-x: hidden; word-break: break-all;" id="content"><div class="linux19"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux19.js"></script><script type="text/javascript"><!--
+google_ad_client = "pub-5195587195407606";
+/* 300x250, 创建于 09-12-6 */
+google_ad_slot = "6879159141";
+google_ad_width = 300;
+google_ad_height = 250;
+//-->
+</script>
+<script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/show_ads.js">
+</script><ins style="display:inline-table;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:300px;background-color:transparent"><ins id="aswift_1_anchor" style="display:block;border:none;height:250px;margin:0;padding:0;position:relative;visibility:visible;width:300px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_1" name="aswift_1" style="left:0;position:absolute;top:0;" frameborder="0" height="250" scrolling="no" width="300"></iframe></ins></ins>
+</div> <p>本不想写这些玩意儿，其实我并不喜欢它们，只不过没办法，谁叫我是靠这些家伙糊口的呢！</p>
+<p>若干年前，我自认为很喜欢Linux操作系统；若干年后，我发现我当初是何等的天真。</p>
+<p>恩，一分钱，一分货！我坚信这一点！所以我现在坚持用MS的Vista，正版的哦！</p>
+<p>言归正传，前段时间因为工作，需要在Linux下操作鼠标，当然啦，肯定不会是在X-window下操作，那样的话也就不会有这篇文章的存在了。我
+要做的就是在Console下面得到鼠标的坐标。百度、谷歌都用上了，可就是找不到相关的资料。无奈之下，只能拿起Linux的内核啃代码了。下面是这段
+时间的成果：</p>
+<p>1. 关于"/dev/input/mice"<br>相信很多人都用过Linux，也许你发现不管是在X-window下面，还是在Console下面，鼠标都是可以操作的。那么你有没有考虑过这些鼠标都是从哪来的？</p>
+<p>不错！他们都是从"/dev/input/mice"这个文件里来的。如果你对Linux比较熟，那么你肯定看得出来这是一个设备文
+件。"mice"就是Linux下面鼠标的设备文件，不管你用的是PS2的还是USB的，所有关于鼠标的操作都被抽象到"mice"这个文件中。</p>
+<p>2. "mice"之母<br>"mice"之母是谁？female mouse? 
+当然不是！在linux下面，她是"mousedev.c"这个文件。你可以在内核的"Drivers/input"目录里找到她。在她那里，你可以得到
+关于"mice"的一切。但是我想99%的人对于"mice"他妈到底是干嘛的是不会感兴趣的。所以我就不废话了。如果你有兴趣，可自行翻阅。</p>
+<p>3. 坐标<br>如何得到mouse的当前坐标值？可通过如下几步：</p>
+<p>1）打开"/dev/input/mice"文件。</p>
+<p>2）读3个字节。三个字节的值分别是“Button类型”，“X的相对位移”，“Y的相对位移”。这里先用Button, xRel, yRel表示。</p>
+<p>3）取Button的低3位（Button &amp; 0x07）。0x00 = LeftButtonUp, 0x01 = LeftButtonDown, 0x02 = RightButtonDown.</p>
+<p>4）因为这里取得是相对位移，所以X, Y要分别与上一次的坐标值相加。xPos += xRel; yPos +=yRel.</p>
+<p>好了，到这里完成了一次读取操作。具体的代码请参见附录一。附录二介绍一下gpm。</p>
+<p>我很奇怪为什么在网上找不到这方面的资料，关于gpm的资料也是寥寥无几。</p>
+<p>附录一：</p>
+<p>#include<br>#include<br>#include<br>#include<br>#include<br>#include<br>#include</p>
+<p>int main()<br>{<br>int fd, retval;<br>char buf[6];<br>fd_set readfds;<br>struct timeval tv;</p>
+<p>fd = open("/dev/input/mice", O_RDONLY);<br>if(!fd)<br>{<br>printf("Failed to open \"/dev/input/mice\"\n");<br>return -1;<br>}</p>
+<p>while(1)<br>{<br>FD_ZERO(&amp;readfds);<br>FD_SET(fd, &amp;readfds);<br>tv.tv_sec = 5;<br>tv.tv_usec = 0;<br>if((retval = select(fd+1, &amp;readfds, NULL, NULL, &amp;tv)) == 1)<br>{<br>if(read(fd, buf, 6) &lt;= 0)<br>{<br>continue; <br>}<br>printf("Button type = %d, X = %d, Y = %d\n", (buf[0] &amp; 0x07), buf[1], buf[2]);<br>}<br>}<br>close(fd);<br>return 0;<br>}</p>
+<p>附录二：<br>gpm是linux console下的鼠标操作服务。用它可以实现copy和paste操作。你也可以用gpm提供的API得到鼠标的坐标。但这些API的原理也是跟上面讲的一样，都是操作mice文件。 </p><a href="http://www.linuxidc.com/" target="_blank"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/logo.gif" alt="linux" height="17" width="15"></a></div><a href="http://www.linuxidc.com/" target="_blank">
+</a><div class="linux301"><a href="http://www.linuxidc.com/" target="_blank"><script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux301.js"></script></a><p style="text-align: center;"><a href="http://www.linuxidc.com/" target="_blank"></a><a href="http://www.linuxidc.com/Linux/2014-03/99038.htm" target="_blank"><span style="color: #ff0000; font-size: large;"><strong>Linux公社（LinuxIDC.com）新年第<span style="font-size: xx-large;">⑫</span>轮抢楼【送8G精美U盘】</strong></span></a></p>
+</div>
+<div class="linux3"><script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux3.js"></script><script async="" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/adsbygoogle.js"></script>
+<!-- Linux��������ҳ336*280 -->
+<ins data-adsbygoogle-status="done" class="adsbygoogle" style="display:inline-block;width:336px;height:280px" data-ad-client="ca-pub-5195587195407606" data-ad-slot="7284216523"><ins style="display:inline-table;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent"><ins id="aswift_2_anchor" style="display:block;border:none;height:280px;margin:0;padding:0;position:relative;visibility:visible;width:336px;background-color:transparent"><iframe marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" onload="var i=this.id,s=window.google_iframe_oncopy,H=s&amp;&amp;s.handlers,h=H&amp;&amp;H[i],w=this.contentWindow,d;try{d=w.document}catch(e){}if(h&amp;&amp;d&amp;&amp;(!d.body||!d.body.firstChild)){if(h.call){setTimeout(h,0)}else if(h.match){try{h=s.upd(h,i)}catch(e){}w.location.replace(h)}}" id="aswift_2" name="aswift_2" style="left:0;position:absolute;top:0;" frameborder="0" height="280" scrolling="no" width="336"></iframe></ins></ins></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+<div class="linux302"><script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux302.htm"></script></div>		
+			
+			
+		</div>
+		<div style="padding:0 15px">
+			<ul id="digg" class="digg">
+				<li class="digg1">0</li>
+				<li class="digg2"><a href="###" onclick="iwms.diggIt(this,iwms.aId)">顶一下</a></li>
+			</ul>	
+		</div>
+<div class="linuxfx"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/fx.js"></script><!-- Baidu Button BEGIN -->
+    <div id="bdshare" class="bdshare_t bds_tools_32 get-codes-bdshare">
+        <a href="#" title="分享到新浪微博" class="bds_tsina"></a>
+        <a href="#" title="分享到百度搜藏" class="bds_baidu"></a>
+        <a href="#" title="分享到QQ空间" class="bds_qzone"></a>
+        <a href="#" title="分享到腾讯微博" class="bds_tqq"></a>
+        <a href="#" title="分享到人人网" class="bds_renren"></a>
+        <a href="#" title="分享到搜狐微博" class="bds_tsohu"></a>
+        <a href="#" title="分享到有道云笔记" class="bds_youdao"></a>
+		<a title="累计分享0次" href="#" class="shareCount">0</a>
+    </div>
+<script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/bds_s_v2.js" type="text/javascript" id="bdshare_js" data="type=tools"></script>
+
+<script type="text/javascript">
+	document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?t=" + new Date().getHours();
+</script>
+<!-- Baidu Button END -->
+<p>&nbsp;</p>
+</div>	
+<div class="linux8"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux8.js"></script><p></p>
+<p style="text-align: center;"><span style="color: #ff0000;">Linux公社</span>推荐:<a rel="external nofollow" href="http://daosenpx.taobao.com/" target="_blank"><span style="color: #ff0000;"><strong><span style="font-size: large;">足不出户，年薪10万，国内第一家YY培训ORACLE课程</span></strong></span></a></p>
+<p style="text-align: center;"><a rel="external nofollow" href="http://www.bosenrui.com/jiuyeke/dba/" target="_blank"><span style="color: #ff0000;">Linux公社</span>推荐:<strong><span style="color: #ff0000; font-size: medium;">金领DBA课程、Oracle专题课程、Oracle RAC专题课程</span></strong>&nbsp;<span style="font-size: large;">点这里</span></a></p>
+<p style="text-align: center;"><span style="color: #0000ff;">=====================分割线=====================</span></p>
+<p style="text-align: center;"><a href="http://www.linuxidc.com/Linux/2013-12/93755.htm" target="_blank"><span style="color: #ff0000; font-size: medium;"><strong>关注Linux公社（LinuxIDC.com）官方微信，以后随机在微信里发放邀请码</strong></span></a></p>
+</div>
+<div class="linux801"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux801.js"></script><script type="text/javascript">
+/*Linux公社自定义标签云*/
+var cpro_id = "u1331231";
+</script>
+<script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/c_002.js" type="text/javascript"></script><div id="BAIDU_DUP_wrapper_u1331231_0"><iframe src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_003.htm" marginwidth="0" marginheight="0" allowtransparency="true" frameborder="0" align="center,center" height="180" scrolling="no" width="600"></iframe></div><script charset="utf-8" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_004"></script>
+</div>
+		<div class="nearNews">
+			<div class="prevNews"><a href="http://www.linuxidc.com/Linux/2008-05/12874.htm">CentOS 5.1编译内核2.6.25.2以及相关后续工作</a></div>
+			<div class="nextNews"><a href="http://www.linuxidc.com/Linux/2008-05/12894.htm">Linux kernel CS8900网卡驱动的移植</a></div>
+		</div>
+	</div>
+	</div>
+	<div class="bl"></div>
+	<div class="br"></div>
+	<div class="bm"></div>
+	</div>
+	
+	<div class="mframe mR">
+	<div class="tl"></div>
+	<div class="tr"></div>
+	<div class="tm">
+		<span class="tt">相关资讯</span> &nbsp; &nbsp; &nbsp;
+		<a href="http://www.linuxidc.com/search.aspx?where=nkey&amp;keyword=2330" target="_blank">Linux技巧</a>&nbsp; 
+	</div>
+	<div class="wrapper">
+	<div class="ml"></div>
+	<div class="mr"></div>
+	<div class="mm">
+		<table width="100%"><tbody><tr><td valign="top" width="50%"><ul class="nl"><li><a href="http://www.linuxidc.com/Linux/2014-01/96001.htm" target="_blank">8个有趣的Linux提示与技巧！</a>&nbsp; <span class="gray">(01月31日)</span></li>
+<li><a href="http://www.linuxidc.com/Linux/2011-02/32048.htm" target="_blank">35款基于terminal的Linux应用</a>&nbsp; <span class="gray">(02/07/2011 12:54:14)</span></li>
+<li><a href="http://www.linuxidc.com/Linux/2011-02/31916.htm" target="_blank" title="在Linux终端下使用中文的软件——zhcon">在Linux终端下使用中文的软件——z</a>&nbsp; <span class="gray">(02/04/2011 08:18:25)</span></li>
+</ul></td><td valign="top" width="50%"><ul class="nl"><li><a href="http://www.linuxidc.com/Linux/2013-06/85927.htm" target="_blank" title="Linux技巧：一次删除一百万个文件的最快方法">Linux技巧：一次删除一百万个文件</a>&nbsp; <span class="gray">(06/13/2013 11:11:05)</span></li>
+<li><a href="http://www.linuxidc.com/Linux/2011-02/31917.htm" target="_blank">Linux下VirtualBox虚拟机中使用USB</a>&nbsp; <span class="gray">(02/04/2011 08:21:35)</span></li>
+<li><a href="http://www.linuxidc.com/Linux/2010-08/27682.htm" target="_blank" title="Linux启动文件grub.conf损坏的恢复过程">Linux启动文件grub.conf损坏的恢复</a>&nbsp; <span class="gray">(08/10/2010 07:09:16)</span></li>
+</ul></td></tr></tbody></table>
+	</div>
+	</div>
+	<div class="bl"></div>
+	<div class="br"></div>
+	<div class="bm"></div>
+	</div>
+
+	<div class="mframe mR">
+	<div class="tl"></div>
+	<div class="tr"></div>
+	<div class="tm">
+		<span class="tt">图片资讯</span> &nbsp; &nbsp; &nbsp;
+	</div>
+	<div class="wrapper">
+	<div class="ml"></div>
+	<div class="mr"></div>
+	<div class="mm">
+<div class="imgList"><ul><li style="width:25%"><a href="http://www.linuxidc.com/Linux/2014-01/96001.htm" target="_blank" title="8个有趣的Linux提示与技巧！"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/140131080785641t.jpg" alt="8个有趣的Linux提示与技巧！" height="90" width="120">8个有趣的Linux提示与</a></li><li style="width:25%"><a href="http://www.linuxidc.com/Linux/2011-02/32048.htm" target="_blank" title="35款基于terminal的Linux应用"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/110207125545853t.jpg" alt="35款基于terminal的Linux应用" height="90" width="120">35款基于terminal的</a></li><li style="width:25%"><a href="http://www.linuxidc.com/Linux/2011-02/31916.htm" target="_blank" title="在Linux终端下使用中文的软件——zhcon"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/110204082121241t.jpg" alt="在Linux终端下使用中文的软件——zhcon" height="90" width="120">在Linux终端下使用中</a></li><li style="width:25%"><a href="http://www.linuxidc.com/Linux/2008-08/14865.htm" target="_blank"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/080811155199821t.jpg" alt="[图文]Linux下体验w3m" height="90" width="120">[图文]Linux下体验w3m</a></li><li style="width:25%"><a href="http://www.linuxidc.com/Linux/2008-05/13095.htm" target="_blank" title="Linux下享受IPv6的畅快(图)"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/080520200588291t.jpg" alt="Linux下享受IPv6的畅快(图)" height="90" width="120">Linux下享受IPv6的畅</a></li><li style="width:25%"><a href="http://www.linuxidc.com/Linux/2008-05/12772.htm" target="_blank" title="用Compiz Check测试Linux桌面3D兼容性的问题(图)"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/08050706079742t.jpg" alt="用Compiz Check测试Linux桌面3D兼容性的问题(图)" height="90" width="120">用Compiz Check测试</a></li><li style="width:25%"><a href="http://www.linuxidc.com/Linux/2008-05/12724.htm" target="_blank" title="Linux操作系统中创建ADSL拨号上网全过程（新手图文版）"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/08050518488558t.jpg" alt="Linux操作系统中创建ADSL拨号上网全过程（新手图文版）" height="90" width="120">Linux操作系统中创建</a></li><li style="width:25%"><a href="http://www.linuxidc.com/Linux/2008-04/12006.htm" target="_blank" title="Linux环境下使用Wine上运行MS Office 2007指南"><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/080401111470641t.jpg" alt="Linux环境下使用Wine上运行MS Office 2007指南" height="90" width="120">Linux环境下使用Wine</a></li></ul></div>
+	</div>
+	</div>
+	<div class="bl"></div>
+	<div class="br"></div>
+	<div class="bm"></div>
+	</div>
+	
+	
+	<div class="mframe mR">
+	<div class="tl"></div>
+	<div class="tr"></div>
+	<div class="tm">
+		<span class="tt">本文评论</span>
+		 	　　<a href="http://www.linuxidc.com/remark.aspx?id=12893" target="_blank">查看全部评论</a> <span class="gray">(2)</span>
+	</div>
+	<div class="wrapper">
+	<div class="ml"></div>
+	<div class="mr"></div>
+	<div class="mm">
+		<table style="margin:6px" width="100%">		
+		<tbody><tr><td width="100%">
+			<form action="" name="fmRemarkSt" onsubmit="return remark.post(this);">
+			<input disabled="disabled" value="1" name="face" type="hidden">
+			表情： <img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" alt="表情" class="face1" style="cursor:pointer;vertical-align:middle" onclick="remark.dispFace(this)" onmouseout="remark.hideFace()">
+			姓名： <input disabled="disabled" name="username" value="匿名" maxlength="15" style="width:60px" class="inputbg" type="text">
+			<input checked="checked" disabled="disabled" id="rmAnonymitySt" onclick="remark.anony(this)" type="checkbox"><label for="rmAnonymitySt">匿名</label>
+			字数 <input disabled="disabled" id="bodyLen" size="3" readonly="readonly" style="border-width:0;background:transparent;vertical-align:middle" value="0" type="text">
+			<br>
+			<textarea disabled="disabled" name="body" cols="40" rows="4" onkeydown="remark.dispLen(this)" onkeyup="remark.handle(event,this);remark.dispLen(this)" style="width:40em;height:100px;margin:3px 0;overflow-y:auto"></textarea>
+				<br>
+		　　　<input disabled="disabled" checked="checked" id="rmAgreeSt" type="checkbox"><label for="rmAgreeSt">同意评论声明</label>
+		　　　<button disabled="disabled" type="submit" style="width: 50px; padding: 0px;">请登录</button>
+			</form>
+		</td></tr>
+		<tr><td width="100%">
+			评论声明
+			<ul style="list-style-type:square;margin:5px 0 0 1em;padding:0">
+			<li>尊重网上道德，遵守中华人民共和国的各项有关法律法规</li>
+			<li>承担一切因您的行为而直接或间接导致的民事或刑事法律责任</li>
+			<li>本站管理人员有权保留或删除其管辖留言中的任意内容</li>
+			<li>本站有权在网站内转载或引用您的评论</li>
+			<li>参与本评论即表明您已经阅读并接受上述条款</li>
+			</ul>
+		</td></tr>
+		</tbody></table>
+		<script type="text/javascript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/remark.js"></script>
+		<script type="text/javascript">
+			remark.maxSize=500;
+			remark.minSize=2;
+			remark.sourceEle=$(document.fmRemarkSt).find("button").get(0);
+			iwms.vCode="D2BDA41E";
+			iwms.user.name.length==0 ? $i("rmAnonymitySt").click() : $i("rmAnonymitySt").form.username.value=iwms.user.name;
+		</script>
+		
+		<div class="reCont" id="reContainer"><div class="reHead"><div class="reLayer">第 2 楼</div><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" class="face1" alt="*"> <span class="reName">匿名</span> 发表于 <span class="reDate">2013/5/26 22:05:45</span></div><div class="reBody"><fieldset><legend>回复 <span class="reName">我</span> 的评论</legend><div>打开"/dev/input/mice"但根本读不到</div></fieldset>你的头文件是什么啊？</div><div class="reFun"><a href="###" onclick="remark.disp(this,5788)">回复</a> <a href="###" onclick="remark.vote(this,5788,1)">支持</a><span> (0)</span> <a href="###" onclick="remark.vote(this,5788,0)">反对</a><span> (0)</span></div><div class="reHead"><div class="reLayer">第 1 楼</div><img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/b.gif" class="face1" alt="*"> <span class="reName">我</span> 发表于 <span class="reDate">2012/7/8 13:19:15</span></div><div class="reBody">打开"/dev/input/mice"但根本读不到</div><div class="reFun"><a href="###" onclick="remark.disp(this,4098)">回复</a> <a href="###" onclick="remark.vote(this,4098,1)">支持</a><span> (0)</span> <a href="###" onclick="remark.vote(this,4098,0)">反对</a><span> (0)</span></div></div>
+	</div>
+	</div>
+	<div class="bl"></div>
+	<div class="br"></div>
+	<div class="bm"></div>
+	</div>
+	
+</td><td valign="top" width="300">
+<div class="linux901"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux901.js"></script><script type="text/javascript">
+/*Linux公社右上300x250*/
+var cpro_id = "u516543";
+</script>
+<script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/c_002.js" type="text/javascript"></script><div id="BAIDU_DUP_wrapper_u516543_0"><iframe src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_004.htm" marginwidth="0" marginheight="0" allowtransparency="true" frameborder="0" align="center,center" height="250" scrolling="no" width="300"></iframe></div><script charset="utf-8" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_008"></script>
+</div>
+<div class="linux902"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux902.js"></script><script type="text/javascript">
+/*Linux公社右侧上部第2个*/
+var cpro_id = "u925299";
+</script>
+<script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/c_002.js" type="text/javascript"></script><div id="BAIDU_DUP_wrapper_u925299_0"><iframe src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_005.htm" marginwidth="0" marginheight="0" allowtransparency="true" frameborder="0" align="center,center" height="250" scrolling="no" width="300"></iframe></div><script charset="utf-8" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_002"></script>
+</div>
+<div class="linux903"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux903.htm"></script></div>
+<div class="linux905"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux905.htm"></script></div>
+	
+	<div class="lframe">
+	<div class="tl"></div>
+	<div class="tr"></div>
+	<div class="tm">
+		<span class="tt">最新资讯</span>
+	</div>
+	<div class="wrapper">
+	<div class="ml"></div>
+	<div class="mr"></div>
+	<div class="mm">
+		<ul class="nl">
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96102.htm" target="_blank">MySQL内存使用以及优化中需要的几点注意</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96101.htm" target="_blank">Steam主机最大的问题在于基于Linux的操作系统</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96100.htm" target="_blank">在Arch上使用Syslinux替代GRUB</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96099.htm" target="_blank">HAproxy-1.5-dev22 发布</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96098.htm" target="_blank">Android回调机制总结</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96097.htm" target="_blank">Golang cgo编程 [] string 转 C语言 char**</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96096.htm" target="_blank">Golang 模拟Java超类型(abstract class)的实现</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96095.htm" target="_blank">Golang 强制类型转换</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96094.htm" target="_blank">Golang 单例模式 singleton pattern</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2014-02/96093.htm" target="_blank">Golang二分查找算法的简单实现</a></li>
+</ul>
+	</div>
+	</div>
+	<div class="bl"></div>
+	<div class="br"></div>
+	<div class="bm"></div>
+	</div>
+
+	<div class="lframe">
+	<div class="tl"></div>
+	<div class="tr"></div>
+	<div class="tm">
+		<span class="tt">本周热门</span>
+	</div>
+	<div class="wrapper">
+	<div class="ml"></div>
+	<div class="mr"></div>
+	<div class="mm">
+		<ul class="nl">
+<li><a href="http://www.linuxidc.com/Linux/2012-10/72627.htm" target="_blank">Node.js零起点开发教程</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2012-02/55500.htm" target="_blank" title="Android的onCreateOptionsMenu()创建菜单Menu详解">Android的onCreateOptionsMenu()创建菜单Menu详</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2011-10/44305.htm" target="_blank" title="Android开发：多点触控测试代码 PointerLocation">Android开发：多点触控测试代码 PointerLocatio</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2011-02/32603.htm" target="_blank">Android SD卡路径问题以及如何获取SDCard 内存</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2011-07/39271.htm" target="_blank">Android Binder设计与实现 – 设计篇</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2007-06/4767.htm" target="_blank">Linux shell脚本全面学习</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2011-06/37739.htm" target="_blank">Ubuntu 10.04下编译OpenWrt完全新手教程</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2011-05/35839.htm" target="_blank">Linux驱动工程师成长之路</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2012-11/74422.htm" target="_blank">Android中实现下拉刷新</a></li>
+<li><a href="http://www.linuxidc.com/Linux/2012-11/74910.htm" target="_blank">Android之收音机UI实现</a></li>
+</ul>
+	</div>
+	</div>
+	<div class="bl"></div>
+	<div class="br"></div>
+	<div class="bm"></div>
+	</div>
+	<div class="linuxy9"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/y9.js"></script><script type="text/javascript">
+/*Linux公社右侧悬停300*250，创建于2013-7-30*/
+var cpro_id = "u1331237";
+</script>
+<script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/c_002.js" type="text/javascript"></script><div style="width: 300px; height: 250px; margin: 0px; padding: 0px; background: none repeat scroll 0% 0% transparent; border: medium none; display: inline-block;" id="BAIDU_DUP_wrapper_u1331237_0placeholder"></div><div style="z-index: 2147483646; position: fixed; top: 5px; left: 859px;" height="250px" width="300px" id="BAIDU_DUP_wrapper_u1331237_0"><iframe id="cproIframe1" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_006.htm" marginwidth="0" marginheight="0" allowtransparency="true" frameborder="0" align="center,center" height="250" scrolling="no" width="300"></iframe></div><script charset="utf-8" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_003"></script>
+</div>	
+</td></tr>
+</tbody></table>
+<div class="linux906"><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linux906.htm"></script></div>
+<div id="footer">
+<a href="http://www.linuxidc.com/aboutus.htm">Linux公社简介</a> - <a href="http://www.linuxidc.com/adsense.htm">广告服务</a> - <a href="http://www.linuxidc.com/sitemap.aspx">网站地图</a> - <a href="http://www.linuxidc.com/help.htm">帮助信息</a> - <a href="http://www.linuxidc.com/contactus.htm">联系我们</a><br>本站（LinuxIDC）所刊载文章不代表同意其说法或描述，仅为提供更多信息，也不构成任何建议。<br><script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/qq.js"></script>主编：漏网的鱼 (QQ:3165270) 联系邮箱:<img src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/email.png" alt="" height="20" width="138"> (如有版权及广告合作请联系)
+<br>
+<script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/foot.js"></script>本站带宽由[<a href="http://www.6688.cc/"><font color="red">6688.CC</font></a>]友情提供<br>关注Linux，关注LinuxIDC.com，<font color="red">请向您的QQ好友宣传LinuxIDC.com</font>，多谢支持！
+<br>Copyright © 2006-2011　<a href="http://www.linuxidc.com/">Linux公社</a>　All rights reserved 浙ICP备06018118号
+	<script type="text/javascript">iwms.aId=12893;$(function(){iwms.imgCont=$i('content');iwms.imgResize();InitContStyle();iwms.getVars();})</script>
+	
+</div>
+</div>
+<script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linuxren1.js"></script><script type="text/javascript">
+document.body.oncopy = function () { setTimeout( function () { var text = clipboardData.getData("text"); if (text) { text = text + "\r\n本篇文章来源于 Linux公社网站(www.linuxidc.com)  原文链接："+location.href; clipboardData.setData("text", text); } }, 100 ) }
+</script>
+
+<script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linuxren2.js"></script><script type="text/javascript">/*Linux������������120*270��������2012-7-31*/ var cpro_id = 'u1004368';</script><script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/f.js" type="text/javascript"></script><script type="text/javascript" charset="utf-8" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/ecom_006"></script>
+
+<script type="text/javascript" language="javaScript" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/linuxren3.js"></script><script src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/h.js" type="text/javascript"></script><div id="cproIframe1holder" style="padding: 0px; display: block; visibility: visible; border: medium none; background: none repeat scroll 0% 0% transparent; float: none; overflow: hidden; position: fixed; z-index: 2147483646; width: 130px; height: 360px; right: 59px; top: 150px;"><div style="position: absolute; top: 275px; left: 0px; cursor: pointer; width: 130px; height: 28px; z-index: 100; opacity: 0; background-color: rgb(153, 153, 153);" id="cproIframe1CloseBtnWrap"></div><div style="position: absolute; width: 130px; height: 20px; top: 280px; left: 0px; cursor: pointer; background-color: rgb(153, 153, 153); color: rgb(255, 255, 255); font-size: 12px; font-family: 微软雅黑; text-align: center; line-height: 20px;" id="cproIframe1CloseBtn">关闭</div><div style="width: 130px; height: 360px; overflow: hidden;"><div style="display:none">-</div> <iframe id="cproIframe1" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/uijs.htm" marginwidth="0" marginheight="0" allowtransparency="true" frameborder="0" align="center,center" height="360" scrolling="no" width="130"></iframe></div></div><div id="cproIframe2holder" style="padding: 0px; display: block; visibility: visible; border: medium none; background: none repeat scroll 0% 0% transparent; float: none; overflow: hidden; position: fixed; z-index: 2147483646; width: 130px; height: 360px; left: 59px; top: 150px;"><div style="position: absolute; top: 275px; left: 0px; cursor: pointer; width: 130px; height: 28px; z-index: 100; opacity: 0; background-color: rgb(153, 153, 153);" id="cproIframe2CloseBtnWrap"></div><div style="position: absolute; width: 130px; height: 20px; top: 280px; left: 0px; cursor: pointer; background-color: rgb(153, 153, 153); color: rgb(255, 255, 255); font-size: 12px; font-family: 微软雅黑; text-align: center; line-height: 20px;" id="cproIframe2CloseBtn">关闭</div><div style="width: 130px; height: 360px; overflow: hidden;"><div style="display:none">-</div> <iframe id="cproIframe2" src="Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8B%E7%9A%84%E9%BC%A0%E6%A0%87%E6%93%8D%E4%BD%9C_Linux%E7%BC%96%E7%A8%8B_Linux%E5%85%AC%E7%A4%BE-Linux%E7%B3%BB%E7%BB%9F%E9%97%A8%E6%88%B7%E7%BD%91%E7%AB%99_files/uijs_002.htm" marginwidth="0" marginheight="0" allowtransparency="true" frameborder="0" align="center,center" height="360" scrolling="no" width="130"></iframe></div></div>
+
+</body></html>

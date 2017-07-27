@@ -1,0 +1,933 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- saved from url=(0067)http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="zh" lang="zh"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    
+    <meta http-equiv="content-style-type" content="text/css">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="version" content="neblog-1.0">
+    <script async="" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/analytics.js.下载"></script><script type="text/javascript">
+      
+      
+      document.uniqueID!=document.uniqueID&&!!location.hash&&(location.hash=location.hash); 
+      document.domain = location.hostname.replace(/^.*\.([\w]+\.[\w]+)$/,'$1');
+      window.focus();
+      window.getMusicTimeStamp=function(){return '739f0c545601a2dca3eab7a6ae04f47c';};
+    
+      //BLOG-647:博客OS服务不稳定，导致页面加载很慢
+      (function(){
+        window.setTimeout(function(){
+          var _loginUserIcon = document.getElementById('loginUserIcon');
+          var _rsavatarimg = document.getElementById('rsavatarimg');
+          if(!!_loginUserIcon){
+            var _loaded1 = false;
+            var _img1 = new Image();
+            _img1.onload = function(){
+                _loaded1 = true;
+                _img1.onload = null;
+            };
+            _img1.src = _loginUserIcon.src;
+            window.setTimeout(function(){
+              if(!_loaded1){
+                _img1.src = '';
+                _loginUserIcon.src = location.f60 || 'http://b.bst.126.net/common/face60.png';
+              }
+            },1000);
+          }
+          
+          if(!!_rsavatarimg){
+           var _loaded2 = false;
+           var _img2 = new Image();
+            _img2.onload = function(){
+                _loaded2 = true;
+                _img2.onload = null;
+            };
+            _img2.src = _rsavatarimg.src;
+            window.setTimeout(function(){
+              if(!_loaded2){
+                _img2.src = '';
+                _rsavatarimg.src = location.f140 || 'http://b.bst.126.net/common/face140.png';
+              }
+            },1000);
+          }
+          
+        },1000);
+      })()
+      
+    </script>
+<title>Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客</title>
+<meta name="author" content="thinki_cao,小辉辉">
+<meta name="keywords" content="Linux下DMA驱动如何实现,日志,小辉辉,小辉辉的博客,网易博客,网易,blog">
+<meta name="description" content="Linux下DMA驱动如何实现,小辉辉的网易博客,---------------那些逝去的岁月，用文字记录我们的心路历程,">
+  <script type="text/javascript">
+    (function(){
+     var R=24,C=11,a=[];
+     for(var i=0;i<C;i++)for(var j=0;j<R;a.push('.icn0-'+i+j+'{background-position:'+(i>0?('-'+i*40+'px'):'0')+' '+(j>0?('-'+j*20+'px'):'0')+';}'),j++);
+          document.write('<style type="text/css">'+a.join('')+'</st'+'yle>');
+    })();
+  </script><style type="text/css">.icn0-00{background-position:0 0;}.icn0-01{background-position:0 -20px;}.icn0-02{background-position:0 -40px;}.icn0-03{background-position:0 -60px;}.icn0-04{background-position:0 -80px;}.icn0-05{background-position:0 -100px;}.icn0-06{background-position:0 -120px;}.icn0-07{background-position:0 -140px;}.icn0-08{background-position:0 -160px;}.icn0-09{background-position:0 -180px;}.icn0-010{background-position:0 -200px;}.icn0-011{background-position:0 -220px;}.icn0-012{background-position:0 -240px;}.icn0-013{background-position:0 -260px;}.icn0-014{background-position:0 -280px;}.icn0-015{background-position:0 -300px;}.icn0-016{background-position:0 -320px;}.icn0-017{background-position:0 -340px;}.icn0-018{background-position:0 -360px;}.icn0-019{background-position:0 -380px;}.icn0-020{background-position:0 -400px;}.icn0-021{background-position:0 -420px;}.icn0-022{background-position:0 -440px;}.icn0-023{background-position:0 -460px;}.icn0-10{background-position:-40px 0;}.icn0-11{background-position:-40px -20px;}.icn0-12{background-position:-40px -40px;}.icn0-13{background-position:-40px -60px;}.icn0-14{background-position:-40px -80px;}.icn0-15{background-position:-40px -100px;}.icn0-16{background-position:-40px -120px;}.icn0-17{background-position:-40px -140px;}.icn0-18{background-position:-40px -160px;}.icn0-19{background-position:-40px -180px;}.icn0-110{background-position:-40px -200px;}.icn0-111{background-position:-40px -220px;}.icn0-112{background-position:-40px -240px;}.icn0-113{background-position:-40px -260px;}.icn0-114{background-position:-40px -280px;}.icn0-115{background-position:-40px -300px;}.icn0-116{background-position:-40px -320px;}.icn0-117{background-position:-40px -340px;}.icn0-118{background-position:-40px -360px;}.icn0-119{background-position:-40px -380px;}.icn0-120{background-position:-40px -400px;}.icn0-121{background-position:-40px -420px;}.icn0-122{background-position:-40px -440px;}.icn0-123{background-position:-40px -460px;}.icn0-20{background-position:-80px 0;}.icn0-21{background-position:-80px -20px;}.icn0-22{background-position:-80px -40px;}.icn0-23{background-position:-80px -60px;}.icn0-24{background-position:-80px -80px;}.icn0-25{background-position:-80px -100px;}.icn0-26{background-position:-80px -120px;}.icn0-27{background-position:-80px -140px;}.icn0-28{background-position:-80px -160px;}.icn0-29{background-position:-80px -180px;}.icn0-210{background-position:-80px -200px;}.icn0-211{background-position:-80px -220px;}.icn0-212{background-position:-80px -240px;}.icn0-213{background-position:-80px -260px;}.icn0-214{background-position:-80px -280px;}.icn0-215{background-position:-80px -300px;}.icn0-216{background-position:-80px -320px;}.icn0-217{background-position:-80px -340px;}.icn0-218{background-position:-80px -360px;}.icn0-219{background-position:-80px -380px;}.icn0-220{background-position:-80px -400px;}.icn0-221{background-position:-80px -420px;}.icn0-222{background-position:-80px -440px;}.icn0-223{background-position:-80px -460px;}.icn0-30{background-position:-120px 0;}.icn0-31{background-position:-120px -20px;}.icn0-32{background-position:-120px -40px;}.icn0-33{background-position:-120px -60px;}.icn0-34{background-position:-120px -80px;}.icn0-35{background-position:-120px -100px;}.icn0-36{background-position:-120px -120px;}.icn0-37{background-position:-120px -140px;}.icn0-38{background-position:-120px -160px;}.icn0-39{background-position:-120px -180px;}.icn0-310{background-position:-120px -200px;}.icn0-311{background-position:-120px -220px;}.icn0-312{background-position:-120px -240px;}.icn0-313{background-position:-120px -260px;}.icn0-314{background-position:-120px -280px;}.icn0-315{background-position:-120px -300px;}.icn0-316{background-position:-120px -320px;}.icn0-317{background-position:-120px -340px;}.icn0-318{background-position:-120px -360px;}.icn0-319{background-position:-120px -380px;}.icn0-320{background-position:-120px -400px;}.icn0-321{background-position:-120px -420px;}.icn0-322{background-position:-120px -440px;}.icn0-323{background-position:-120px -460px;}.icn0-40{background-position:-160px 0;}.icn0-41{background-position:-160px -20px;}.icn0-42{background-position:-160px -40px;}.icn0-43{background-position:-160px -60px;}.icn0-44{background-position:-160px -80px;}.icn0-45{background-position:-160px -100px;}.icn0-46{background-position:-160px -120px;}.icn0-47{background-position:-160px -140px;}.icn0-48{background-position:-160px -160px;}.icn0-49{background-position:-160px -180px;}.icn0-410{background-position:-160px -200px;}.icn0-411{background-position:-160px -220px;}.icn0-412{background-position:-160px -240px;}.icn0-413{background-position:-160px -260px;}.icn0-414{background-position:-160px -280px;}.icn0-415{background-position:-160px -300px;}.icn0-416{background-position:-160px -320px;}.icn0-417{background-position:-160px -340px;}.icn0-418{background-position:-160px -360px;}.icn0-419{background-position:-160px -380px;}.icn0-420{background-position:-160px -400px;}.icn0-421{background-position:-160px -420px;}.icn0-422{background-position:-160px -440px;}.icn0-423{background-position:-160px -460px;}.icn0-50{background-position:-200px 0;}.icn0-51{background-position:-200px -20px;}.icn0-52{background-position:-200px -40px;}.icn0-53{background-position:-200px -60px;}.icn0-54{background-position:-200px -80px;}.icn0-55{background-position:-200px -100px;}.icn0-56{background-position:-200px -120px;}.icn0-57{background-position:-200px -140px;}.icn0-58{background-position:-200px -160px;}.icn0-59{background-position:-200px -180px;}.icn0-510{background-position:-200px -200px;}.icn0-511{background-position:-200px -220px;}.icn0-512{background-position:-200px -240px;}.icn0-513{background-position:-200px -260px;}.icn0-514{background-position:-200px -280px;}.icn0-515{background-position:-200px -300px;}.icn0-516{background-position:-200px -320px;}.icn0-517{background-position:-200px -340px;}.icn0-518{background-position:-200px -360px;}.icn0-519{background-position:-200px -380px;}.icn0-520{background-position:-200px -400px;}.icn0-521{background-position:-200px -420px;}.icn0-522{background-position:-200px -440px;}.icn0-523{background-position:-200px -460px;}.icn0-60{background-position:-240px 0;}.icn0-61{background-position:-240px -20px;}.icn0-62{background-position:-240px -40px;}.icn0-63{background-position:-240px -60px;}.icn0-64{background-position:-240px -80px;}.icn0-65{background-position:-240px -100px;}.icn0-66{background-position:-240px -120px;}.icn0-67{background-position:-240px -140px;}.icn0-68{background-position:-240px -160px;}.icn0-69{background-position:-240px -180px;}.icn0-610{background-position:-240px -200px;}.icn0-611{background-position:-240px -220px;}.icn0-612{background-position:-240px -240px;}.icn0-613{background-position:-240px -260px;}.icn0-614{background-position:-240px -280px;}.icn0-615{background-position:-240px -300px;}.icn0-616{background-position:-240px -320px;}.icn0-617{background-position:-240px -340px;}.icn0-618{background-position:-240px -360px;}.icn0-619{background-position:-240px -380px;}.icn0-620{background-position:-240px -400px;}.icn0-621{background-position:-240px -420px;}.icn0-622{background-position:-240px -440px;}.icn0-623{background-position:-240px -460px;}.icn0-70{background-position:-280px 0;}.icn0-71{background-position:-280px -20px;}.icn0-72{background-position:-280px -40px;}.icn0-73{background-position:-280px -60px;}.icn0-74{background-position:-280px -80px;}.icn0-75{background-position:-280px -100px;}.icn0-76{background-position:-280px -120px;}.icn0-77{background-position:-280px -140px;}.icn0-78{background-position:-280px -160px;}.icn0-79{background-position:-280px -180px;}.icn0-710{background-position:-280px -200px;}.icn0-711{background-position:-280px -220px;}.icn0-712{background-position:-280px -240px;}.icn0-713{background-position:-280px -260px;}.icn0-714{background-position:-280px -280px;}.icn0-715{background-position:-280px -300px;}.icn0-716{background-position:-280px -320px;}.icn0-717{background-position:-280px -340px;}.icn0-718{background-position:-280px -360px;}.icn0-719{background-position:-280px -380px;}.icn0-720{background-position:-280px -400px;}.icn0-721{background-position:-280px -420px;}.icn0-722{background-position:-280px -440px;}.icn0-723{background-position:-280px -460px;}.icn0-80{background-position:-320px 0;}.icn0-81{background-position:-320px -20px;}.icn0-82{background-position:-320px -40px;}.icn0-83{background-position:-320px -60px;}.icn0-84{background-position:-320px -80px;}.icn0-85{background-position:-320px -100px;}.icn0-86{background-position:-320px -120px;}.icn0-87{background-position:-320px -140px;}.icn0-88{background-position:-320px -160px;}.icn0-89{background-position:-320px -180px;}.icn0-810{background-position:-320px -200px;}.icn0-811{background-position:-320px -220px;}.icn0-812{background-position:-320px -240px;}.icn0-813{background-position:-320px -260px;}.icn0-814{background-position:-320px -280px;}.icn0-815{background-position:-320px -300px;}.icn0-816{background-position:-320px -320px;}.icn0-817{background-position:-320px -340px;}.icn0-818{background-position:-320px -360px;}.icn0-819{background-position:-320px -380px;}.icn0-820{background-position:-320px -400px;}.icn0-821{background-position:-320px -420px;}.icn0-822{background-position:-320px -440px;}.icn0-823{background-position:-320px -460px;}.icn0-90{background-position:-360px 0;}.icn0-91{background-position:-360px -20px;}.icn0-92{background-position:-360px -40px;}.icn0-93{background-position:-360px -60px;}.icn0-94{background-position:-360px -80px;}.icn0-95{background-position:-360px -100px;}.icn0-96{background-position:-360px -120px;}.icn0-97{background-position:-360px -140px;}.icn0-98{background-position:-360px -160px;}.icn0-99{background-position:-360px -180px;}.icn0-910{background-position:-360px -200px;}.icn0-911{background-position:-360px -220px;}.icn0-912{background-position:-360px -240px;}.icn0-913{background-position:-360px -260px;}.icn0-914{background-position:-360px -280px;}.icn0-915{background-position:-360px -300px;}.icn0-916{background-position:-360px -320px;}.icn0-917{background-position:-360px -340px;}.icn0-918{background-position:-360px -360px;}.icn0-919{background-position:-360px -380px;}.icn0-920{background-position:-360px -400px;}.icn0-921{background-position:-360px -420px;}.icn0-922{background-position:-360px -440px;}.icn0-923{background-position:-360px -460px;}.icn0-100{background-position:-400px 0;}.icn0-101{background-position:-400px -20px;}.icn0-102{background-position:-400px -40px;}.icn0-103{background-position:-400px -60px;}.icn0-104{background-position:-400px -80px;}.icn0-105{background-position:-400px -100px;}.icn0-106{background-position:-400px -120px;}.icn0-107{background-position:-400px -140px;}.icn0-108{background-position:-400px -160px;}.icn0-109{background-position:-400px -180px;}.icn0-1010{background-position:-400px -200px;}.icn0-1011{background-position:-400px -220px;}.icn0-1012{background-position:-400px -240px;}.icn0-1013{background-position:-400px -260px;}.icn0-1014{background-position:-400px -280px;}.icn0-1015{background-position:-400px -300px;}.icn0-1016{background-position:-400px -320px;}.icn0-1017{background-position:-400px -340px;}.icn0-1018{background-position:-400px -360px;}.icn0-1019{background-position:-400px -380px;}.icn0-1020{background-position:-400px -400px;}.icn0-1021{background-position:-400px -420px;}.icn0-1022{background-position:-400px -440px;}.icn0-1023{background-position:-400px -460px;}</style>
+    <link type="text/css" rel="stylesheet" href="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/c.css">
+    <link type="text/css" rel="stylesheet" href="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/b.css" id="blog-163-com-theme">
+  <!--[if lte IE 6]>
+  <style type="text/css">
+    html,body,#blog-163-com-ie6body{height:100%;width:100%;overflow:hidden;}
+    #blog-163-com-ie6body{overflow:auto;overflow-y:scroll;}
+    #blog-163-com{background:none;}
+  </style>
+  <![endif]-->
+  
+  
+  <style type="text/css">.m-3 .nbw-ryt .left .mcnt{padding-left:10px;}.m-3 .nbw-ryt .right .acts{position:relative;margin:0 0 12px 0;line-height:20px;}.m-3 .nbw-ryt .right .more{margin-top:-15px;height:24px;line-height:24px;}#blog-163-com .m-3 .phide{display:none;}.m-3 .nbw-ryt .left .nbw-bitm{margin:0;padding:0 10px 0 10px;position:relative;}.m-3 .nbw-ryt .left .nbw-bitm .title{margin:30px 0 20px;line-height:32px;}.m-3 .nbw-ryt .left .nbw-bitm .title .tcnt{font-size:26px;font-weight:bold;font-family:"Hiragino Sans GB W3","Hiragino Sans GB","Microsoft YaHei","\5FAE\8F6F\96C5\9ED1",Arial,Helvetica,simsun,"\5B8B\4F53";}.m-3 .nbw-ryt .left .nbw-bitm .tdep{margin-bottom:20px;}.m-3 .nbw-ryt .left .nbw-bitm .tbar{margin:5px 0;padding:10px 0 10px 0;line-height:20px;text-align:right;}.m-3 .nbw-ryt .left .nbw-bitm .bct{font-size:16px;padding-left:0}.m-3 .nbw-ryt .left .nbw-bitm .muava{float:left;margin:5px 7px 0 0;border-width:0 1px 0 0;height:40px;}.m-3 .nbw-ryt .left .snl .pnb div{line-height:20px;text-align:left;}.m-3 .nbw-ryt .cite{margin:20px 0 0 50px;line-height:24px;text-align:left;}.m-3 .nbw-ryt .cite .close{float:right;margin:0;text-align:right;}.m-3 .nbw-ryt .cite span{cursor:pointer;}.m-3 .nbw-ryt .cite .nbw-act{text-align:center;}.m-3 .nbw-ryt .cite .ads{margin-left:20px;width:400px;}.m-3 .nbw-ryt .cite .tbac{margin-left:60px;padding:0;border:0;list-style:none;line-height:24px;}.m-3 .nbw-ryt .cite .tbl{width:150px;overflow:hidden;}.m-3 .nbw-ryt .cite .tbr{margin-left:20px;overflow:hidden;}.m-3 .nbw-act-share{position:relative;}.m-3 .nbw-act-share .nas-wrap{visibility:hidden;}.m-3 .nbw-act-share:hover .nas-wrap,.m-3 .js-share-hover .nas-wrap{visibility:visible;}.m-3 .nas-wrap,.nas-itm,.nas-wb{background:url(/newpage/images/blog/icn-share.png?0011) no-repeat 9999px 9999px;}.m-3 .nas-wrap{margin-top:5px;}.nas-itm,.nas-wb{text-decoration:none;}.nas-itm,.nas-wb:hover{text-decoration:underline;}.m-3 .nas-itm{float:left;width:16px;height:16px;margin:0 1px 0 6px;overflow:hidden;cursor:pointer;}.m-3 .nas-itm0{background-position:0 -173px;}.m-3 .nas-itm1{background-position:0 -56px;}.m-3 .nas-itm2{background-position:0 -85px;}.m-3 .nas-itm3{background-position:0 -227px;}.m-3 .nas-itm4{background-position:0 -143px;}.m-3 .nas-itm5{background-position:0 -201px;}.m-3 .nas-itm6{background-position:0 -249px;}.m-3 .nas-itm7{background-position:0 -283px;}.m-3 .nas-itm8{background-position:0 -313px;}.m-3 .nas-itm9{background-position:0 -342px;}.nas-wb{padding-left:20px;cursor:pointer;line-height:normal;background-position:0 -173px;}.nas-icn0fix{margin-top:4px;}.nas-tofix{margin-top:0;*margin-top:2px;line-height:25px;}.m-3 .ptc{position:absolute;cursor:pointer;}.m-3 .ptc .ptcp .bcmimg{float:left;background-image:url("http://b.bst.126.net/newpage/images/blogcmtimg.png");background-position:0 0;background-repeat:no-repeat;height:22px;line-height:22px;width:22px;padding:0 6px 0 0;}.m-3 .ptc .ptcp{cursor:pointer;position:absolute;left:5px;bottom:5px;clear:both;width:94px;}.m-3 .ptc .ptcp .ptcmi{float:left;width:16px;height:16px;padding:3px 6px 3px 5px;_padding:2px 6px 0 3px;margin:0;}.m-3 .ptc .ptcp .ptcmt{background-position:-418px -50px;float:left;width:67px;height:22px;overflow:hidden;margin:0px 0 0 -3px;line-height:22px;*line-height:23px;text-align:left;color:#444444;}.m-3 .ptc .ptcp .ptcmt-2{width:61px;padding-left:6px;background-position:-424px -50px;}.m-3 .relateblog{text-align:left;}.m-3 .relateblog h4{margin:0;padding:0 0 0 10px;line-height:30px;}.m-3 .relateblog .cnt{padding-left:8px;margin:10px 0 10px 0px;}.m-3 .relateblog .cnt ul{margin:0;padding:0;list-style:none;}.m-3 .relateblog .cnt ul li{height:24px;margin-right:20px;line-height:24px;}.m-3 .relateblog .cnt ul li span{margin:0 8px;}.m-3 .author, .m-3 .comment{text-align:left;}.m-3 .author .nlogif{width:150px;line-height:20px;margin-left:5px;_margin-left:3px;}.m-3 .author .nlogif .nbw-fce{margin:0 3px 0 10px;_margin-left:5px}.m-3 .author .nlogif .pright{width:85px;margin:0;padding:5px 0;_padding-top:10px}.m-3 .nbw-ryt .right h4{margin:0;padding:0;line-height:30px;}.m-3 .author h4, .m-3 .comment h4{margin:0;padding:0 0 0 10px;line-height:30px;}.m-3 .author .cwd{border:0;text-align:left;}.m-3 .author .vname{width:50px;text-align:center;}.m-3 .author .cnt{margin:10px 0 10px -5px;}.m-3 .author .nbw-fce{margin:0 11px;}.m-3 .author .nbw-f50{width:50px}.m-3 .nbw-ryt .left .top{position:relative;padding-bottom:5px;line-height:20px;}.m-3 .nbw-ryt .left .top .ilft{position:absolute;left:0;top:0;}.m-3 .nbw-ryt .left .top .irgt{position:absolute;right:-10px;top:0;}.m-3 .nbw-ryt .left .top .pleft{margin-left:20px;_margin-left:10px;overflow:hidden;width:40%;height:20px;text-align:left}.m-3 .nbw-ryt .left .top .pright{margin-right:10px;_margin-right:5px;overflow:hidden;width:40%;height:20px;text-align:right}.m-3 .nbw-ryt .left .snl .top{position:relative;padding:5px 0 15px 0;line-height:20px;}.m-3 .nbw-ryt .left .snl .top .ilft{position:absolute;left:-10px;top:5px;}.m-3 .nbw-ryt .left .snl .top .irgt{position:absolute;right:-10px;top:5px;}.m-3 .nbw-ryt .left .snl .top .pleft{margin-left:10px;_margin-left:5px;overflow:hidden;width:40%;height:20px;text-align:left}.m-3 .nbw-ryt .left .snl .top .pright{margin-right:10px;_margin-left:5px;overflow:hidden;width:40%;height:20px;text-align:right}.m-3 .nbw-ryt .left .snl .pnb{padding:5px 0 10px 10px;overflow:hidden;_width:100%}.m-3 .comment h4{padding:0 0 0 10px}.m-3 .comment .publish{margin:10px 0;padding:0 0 10px 5px;text-align:left;}.m-3 .comment .publish .nbw-fce{padding-top:0;}.m-3 .comment .publish .nbw-fce .cwd{border:0;}.m-3 .comment .publish .redt{margin-left:65px;}.m-3 .comment .nolog{border:1px solid #000;background-color:#FFFFE1;height:40px;line-height:40px;text-align:center;padding:0;_padding:10px 0;_height:20px;}.m-3 .comment .case{padding-left:5px;padding-bottom:10px;}.m-3 .comment .vgl{margin:8px;width:75%;text-align:center;}#blog-163-com .m-3 .comment .nbw-cmt .cnt{width:488px;}#blog-163-com .m-3 .comment .nbw-cmt .nbw-cmt .cnt{width:444px;}.m-3 .edt-cmt{width:444px;}.m-3 .comment .publish .edt-cmt{width:488px;}.m-3 .comment .publish .edt-cmt .zbcc{display:none;}.m-3 .nbw-ryt .left .nbw-bitm .js-fs0{font-size:150%;}.m-3 .nbw-ryt .left .nbw-bitm .js-fs1, .m-3 .nbw-ryt .left .nbw-bitm .js-fs1 *{font-size:20px;}.m-3 .nbw-ryt .left .nbw-bitm .js-fs2{}.m-3 .nbw-ryt .left .nbw-bitm .js-fs3, .m-3 .nbw-ryt .left .nbw-bitm .js-fs3 *{font-size:12px;}.m-3 .js-fcurrent{font-color:#000;font-weight:bold;text-decoration:none;}.m-3 .nbw-bitm .dream{margin-top:-10px;clear:both}.m-3 .nbw-bitm .cited{margin-top:-15px;}.m-3 .nbw-bitm .rdif{line-height:24px;height:24px;}.m-3 .nbw-bitm .rdif .pnt{line-height:24px;height:24px;margin-right:10px;}.m-3 .nbw-bitm .rdif .pclass{vertical-align:middle;width:57px;height:22px;}.m-3 .nbw-bitm .rdif .rdct{display:inline-block;}.m-3 .snl .rdcnt{padding:5px;text-align:left}.m-3 .snl .rdcnt .nbw-fce{margin:0 5px}.m-3 .snl .rdcnt p{margin:10px 0}.m-3 .snl .rdcnt .rrb{list-style:none;height:22px;line-height:22px;}.m-3 .acts .iblock{width:18px;}.m-3 .ns{margin:0 0 0 2px;}.m-3 .cancel{display:none;}.m-3 .js-hover .cancel, .m-3 .follow:hover .cancel, .m-3 .frd:hover .cancel{display:inline;}.m-3 .follow{*margin-left:2px;}.m-3 .flw{padding:7px 8px;color:#000;background:#fefce4;border:1px solid #b7b7b7;}.m-3 .acts .flw .iblock{width:20px;}.m-3 .sntesctf{width:15px;margin-left:3px;}.dr-warm{width:420px;padding:12px 18px;margin:18px 0;line-height:20px;border:1px solid #aaa;color:#666;background:#ffffdc;}.dr-warm a,.dr-warm a:hover{text-decoration:underline;color:#02a;}.dr-warm .codeinput{width:70px;text-align:center;}.dr-warm .codediv{margin:10px 0 0;}.dr-warm .ml{margin:0px 10px;vertical-align:middle;}.dr-warm .button{background-color:#77716F;width:42px;height:20px;border:0 none;color:#fff;cursor:pointer;}.m-3 .commentcntwrap{position:relative;zoom:1;}.m-3 .cmtMultiUserRole{position:absolute;left:62px;bottom:5px;width:300px;overflow-x;hidden;}.m-3 .cmtMultiUserRole .selectRole{float:right;padding:1px 1px 0 1px;border:none;}.m-3 .cmtMultiUserRole .selectRole .ztxt{float:left;width:auto;overflow:hidden;}.m-3 .cmtMultiUserRole .selectRole .zdwn{float:left;background:url("/newpage/images/icon.png") -240px -420px no-repeat;text-indent:-9999px;}.m-3 .cmtMultiUserRole .selectRole .zlst .zitm{}.m-3 .cmtMultiUserRole .selectRole .zlst .zitm:hover, .m-3 .cmtMultiUserRole .selectRole .slst .item.js-zhvr-910{color:#333;background-color:#ececec;}.m-3 .nbw-cmt{position:static;}.m-3 .nbw-cmt .thde{position:relative;zoom:1;}.m-3 .publish .redt{position:relative;zoom:1;}.m-3 .publish .redt .cmtMultiUserRole{left:135px;_left:132px;}.m-3 .cmtMultiUserRole .js-showlist{padding:0;margin:0;border-style:solid;border-width:1px 1px 0 1px;border-color:#aaa;}.m-3 .cmtMultiUserRole .js-showlist .zlst{border-style:solid;border-width:0 1px 1px 1px;border-color:#aaa;}.m-3 .multiuserItem{}.m-3 .multiuserItem .author{margin-right:-50px;}.m-3 .multiuserItem .multicntwrap{padding:30px 0 20px 0;}.m-3 .multiuserItem .multicnt{_padding-top:2px;margin-left:50px;}.m-3 .nbw-ryt .left .multiuserItem .multicnt .title{width:95%;margin-top:0;margin-bottom:0;}.m-3 .nbw-ryt .left .multiuserItem .multicnt .tdep{margin-bottom:0;}.m-3 .attachment{margin-bottom:20px;}.m-3 .awidth{width:40px;}.m-3 .view{margin-right:10px;}.m-3 .nbw-cmt .op{height:18px;line-height:18px;}.m-3 .suggestedreading{overflow:hidden;position:relative;zoom:1;}.m-3 .suggestedreading .m-list{margin-left:0;padding-left:15px;overflow:hidden;font-size:14px;}.m-3 .suggestedreading .m-list .gap{margin-left:8px;color:#ADADAD;}.m-3 .suggestedreading .m-list li{height:20px;padding:3px 0 2px;vertical-align:middle;}.m-3 .suggestedreading .wrap li{float:left;width:118px;height:146px;}.m-3 .suggestedreading .suggesteditem1{line-height:24px;margin:5px 0;font-size:12px;margin-right:10px;}.m-3 .suggestedreading .suggesteditem2{margin:5px 0;font-size:12px;}.m-3 .suggestedreading .suggesteditem2 .imgwrap1{position:relative;overflow:hidden;width:90px;height:90px;zoom:1;}.m-3 .suggestedreading .suggesteditem2 .imgwrap2{z-index:2;position:absolute;left:0;top:0;}.m-3 .suggestedreading .suggesteditem2 .btitle{width:96px;height:148px;overflow:hidden;text-decoration:none;}.m-3 .suggestedreading .suggesteditem2 .sep{padding:5px 10px 0 10px;}.m-3 .suggestedreading .suggesteditem2 a{cursor:pointer;}.m-3 .suggestedreading .suggesteditem2 a:hover{text-decoration:none;}.m-3 .suggestedreading .suggesteditem2 img{border-width:0;}.m-3 .suggestedreading .color1{background-color:#B3786B;}.m-3 .suggestedreading .color2{background-color:#D2C1A8;}.m-3 .suggestedreading .color3{background-color:#D46646;}.m-3 .suggestedreading .color4{background-color:#D28FA8;}.m-3 .suggestedreading .color5{background-color:#C84F54;}.m-3 .suggestedreading .white{color:white;}.m-3 .suggestedreading .imgtip{margin:2px;font-weight:bold;color:white;font-size:13px;}.m-3 .suggestedreading .borderwrap{padding:2px;background-color:#fff;}.m-3 .suggestedreading .time{position:absolute;bottom:0;right:0;}.m-3 .suggestedreading .hidsep{margin-left:-1px;}.m-3 .suggestedreading .srtitle{font-size:14px;font-weight:bold;margin-bottom:10px;}.m-3 #yodaoad{padding-left:5px;}.m-3 #yodaoad_3{padding:20px 0 25px 0;}.m-3 .relategroup{width:45%}.m-3 .blogvote{padding-left:35px;position:relative;zoom:1;}.m-3 .blogvote .sep{margin:0 5px;}.m-3 .blogvote .vtitle{margin:15px 0 15px -30px;}.m-3 .blogvote .vtitle span{padding-right:8px;}.m-3 .blogvote .vtitle .close{width:60px;height:24px;vertical-align:middle;}.m-3 .blogvote .roleview{padding-right:10px}.m-3 .blogvote .roleview .iblock{width:10px}.m-3 .blogvote .options{clear:both;margin-right:10px}.m-3 .blogvote .options ul{margin:0;padding:0;list-style:none;}.m-3 .blogvote .options ul li{padding:10px 0;line-height:16px;}.m-3 .blogvote .options .role{margin-bottom:15px;}.m-3 .blogvote .options .acts{margin-bottom:15px;height:24px;line-height:26px;}.m-3 .blogvote .options .acts .leftpt{height:24px;line-height:26px;}.m-3 .blogvote .options .acts .leftpt button{height:24px;line-height:18px;}.m-3 .blogvote .options .acts .leftpt span{}.m-3 .blogvote .options .acts .view{margin-left:5px;}.m-3 .blogvote .fvote{padding-top:10px;}.m-3 .blogvote .fvote ul{list-style:none;margin:10px 0;padding:0;}.m-3 .blogvote .fvote ul li{line-height:20px;margin:5px 0;}.m-3 .blogvote .options ul .col0{width:230px;margin-right:10px;margin-top:-3px;_margin-top:-5px;line-height:20px}.m-3 .blogvote .options ul .col0 input{_position:relative;_top:3px}.m-3 .blogvote .options ul .col0 label{width:200px;_position:relative;_top:4px}.m-3 .blogvote .options ul .col1{width:190px;height:14px;line-height:14px;;background:none repeat scroll 0 0 #EAEAEA;}.m-3 .blogvote .options ul .col1 .iblock{width:100%;height:16px;vertical-align:middle;}.qing001{margin:0;border:none;}.qing001 .nb-mc{background:none;}.qing001 .nb-mc .cc{width:942px;padding:0;margin:0 auto;}.qing001 .nb-mc .cl{display:none;}.qing001 .nb-mc .cr{display:none;}.qing001 .bh{display:none;}.qing001 .nbw-ryt{background:url(/newpage/images/qingtheme/qing001/blogdetail_cntbg.png) 0 0 repeat-y;}.qing001 .nbw-ryt .left{background:url(/newpage/images/qingtheme/qing001/blogdetail_ftbg.png) bottom left no-repeat;}.qing001 .nbw-ryt .left .lcnt{width:100%;padding:0;margin:0;background:url(/newpage/images/qingtheme/qing001/blogdetail_ttlbg.png) 0 0 no-repeat;}.qing001 .nbw-ryt .left .mcnt{padding:0 30px;}.qing001 .nbw-ryt .left .nbw-bitm{padding:0;}.qing001 .nb-mt{display:none;}.qing001 .nbw-ryt .left .top{display:none;}.qing001 .nbw-ryt .left .nbw-bitm .title{height:31px;padding:30px 0 46px 3px;margin:0;}.qing001 .nbw-ryt .left .nbw-bitm .title .tcnt{color:#fffadc;font-size:24px;}.qing001 .nbw-ryt .left .nbw-bitm .tdep{padding-top:6px;}.qing001 .comment .case{padding-bottom:40px;}.m-3 .article .douban{float:left;width:200px;margin:0 10px 10px 0;font-size:12px;}.m-3 .article .douban .field{padding-top:5px;}.m-3 .article .douban .field .dbyinyue{width:10px;height:8px;border-width:0;}.m-3 .article .douban img{max-width:100%;width:100%;border-color:#e9e9e9;display:inline-block;border-width:1px;border-style:solid;}.m-3 .article-1 .douban{float:right;width:200px;margin:0 3px 10px 10px;}.m-3 .article-2 .douban{float:left;width:250px;margin:0 -250px 0 0;}.m-3 .article-2 .blog{margin-left:270px;}.m-3 .article-2 .blogc{width:99%;overflow:hidden;}.m-3 .article-3 .douban{float:right;width:250px;margin:0 3px 0 -250px;}.m-3 .article-3 .blog{margin-right:270px;}.m-3 .article-3 .blogc{width:99%;overflow:hidden;}.m-3 .vote_star{overflow:visible;}.m-3 .rateword{display:none;left:88px;width:37px;top:-2px;position:absolute;line-height:23px;}.m-3 .star_d0 .rateword0{display:inline;}.m-3 .star_d1 .rateword1{display:inline;}.m-3 .star_d2 .rateword2{display:inline;}.m-3 .star_d3 .rateword3{display:inline;}.m-3 .star_d4 .rateword4{display:inline;}.m-3 .star_d5 .rateword5{display:inline;}.m-3 .nbw-act .blogsep{margin:0 2px}.m-3 .zihao{position:relative;cursor:default;}.m-3 .zihaoshow{position:absolute;width:26px;top:-57px;left:-3px;padding:0 0 3px;line-height:18px;}.m-3 .zihaoshow span{display:block;text-align:center;cursor:pointer;}.m-3 .zihaoc{border-style:solid;border-width:1px;}.m-3 .mbga{margin-bottom:12px;position:relative;}.m-3 .mbga a{margin-left:20px;}.m-3 .mbgai{position:absolute;top:-1px;width:17px;background:url(/newpage/images/microblog.png?1) no-repeat;_background:none transparent;_filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='http://b2.bst.126.net/newpage/images/microblog.png');_zoom:1;}.m-3 .mingxing{width:18px;background-position:-43px -80px;}.m-3 .xinxing{width:18px;background-position:-81px -80px;}.m-3 .darendesc{padding:7px 15px;margin-top:10px;line-height:18px;background:#efeae7;vertical-align:middle;}.m-3 .js-cmt-noavatar .nbw-cmt .nbw-fce{display:none;}.m-3 .js-cmt-noavatar .nbw-cmt .thde{padding-left:8px;margin-left:0;}.m-3 .js-cmt-noavatar .nbw-cmt .reps .thde{margin-left:55px;}.m-3 .toLofter{cursor:pointer;position:absolute;bottom:5px;width:112px;height:22px;background:url(/newpage/images/publishtolofter/tolofter.png?v=20130909) 0 0 no-repeat;text-indent:-9999px;}.m-3 .nbw-ryt .left .lcnt{padding-right:20px;}.m-3 .edt-cmt{width:auto;}.m-3 .comment .publish .edt-cmt{width:auto;}#blog-163-com .m-3 .comment .nbw-cmt .cnt{width:auto;}#blog-163-com .m-3 .comment .nbw-cmt .nbw-cmt .cnt{width:auto;}.m-3 .nbw-cmt .nbw-cmt{padding:20px 5px 1px 0;}.m-3 .nbw-cmt .op{height:18px;line-height:18px;margin-bottom:18px;}.m-3 .nbw-ryt .left .nbw-bitm .title{margin:34px 0 10px;line-height:normal;}.m-3 .nbw-ryt .left .nbw-bitm .title .tcnt{line-height:38px;}.m-3 .nbw-ryt .left .nbw-bitm .tdep{margin-bottom:25px;}.m-3 .comment .publish{padding:0 5px 10px 0;margin:20px 0 0 0;}.m-3 .nbw-sdt .miniBlogArea{bottom:12px;}.m-3 .nbw-sdt .edt .zbtn{height:40px;line-height:40px;}.m-3 .nbw-sdt .edt .zbtn .zfce{top:10px;}.m-3 .nas-tofix{line-height:24px;}.m-3 .nas-wrap{margin-top:4px;}.m-3 .leftoperatebar{height:24px;line-height:24px;padding:8px 0;}.m-3 .nbw-bitm .rdif{padding:8px 0;}.m-3 .leftoperatebar .sep-last{margin-right:8px;}.m-3 .rightoperatebar{height:40px;line-height:40px;margin-left:0px;}.m-3 .reblogbtn, .m-3 .recommendbtn, .m-3 .likebtn{width:48px;height:38px;line-height:38px;padding-left:44px;margin:0 0 0 5px;font-size:14px;color:#fff;text-align:left;}.m-3 .reblogbtn{background-position:1px -431px;}.m-3 .recommendbtn{background-position:1px -271px;}.m-3 .js-recommended{background-position:1px -351px;}.m-3 .likebtn{background-position:1px -111px;}.m-3 .js-liked{background-position:1px -191px;}.m-3 .hotarea{}.m-3 .hotarea .hotItem{position:relative;zoom:1;display:block;float:left;}.m-3 .hotarea .hotItem .hottype{position:absolute;right:-5px;top:29px;width:20px;height:20px;text-decoration:none;}.m-3 .hotarea .hotItem .js-liketype{background-position:-4px -536px;}.m-3 .hotarea .hotItem .js-reblogtype{background-position:-4px -648px;}.m-3 .hotarea .hotItem .js-sharetype{background-position:-4px -592px;}.m-3 .hotarea .expandHotItem{}.m-3 .hotarea .expeadbg{width:40px;height:40px;margin:0 auto;background-position:-2px -728px;cursor:pointer;}.js-openlikewin .showhint .zcvr{background:#000;opacity:0.5;filter:alpha(opacity=50);}.f-openlikeicon{background:url(/newpage/images/liketolofter/openlike24.png) -9999px -9999px no-repeat;_background:url(/newpage/images/liketolofter/openlike8.png) -9999px -9999px no-repeat;}#blog-163-com #blog-163-com-layer div.openlikewin{border:none;}.openlikewin .nbwinwrap .ztbr, .openlikewin .nbwinwrap .zcls, .openlikewin .nbwinwrap .zext, .openlikewin .nbwinwrap .zbtnbar{display:none;}.openlikewin .nbwinwrap .zcnt{padding:0;}.openlikewin .hdarea{position:relative;zoom:1;width:500px;height:145px;padding-top:30px;background:#d6e6f1;}.openlikewin .hdarea .tticon{width:86px;height:73px;margin:0 auto;background-position:-8px -111px;}.openlikewin .hdarea .ttcnt{height:60px;line-height:60px;color:#333;font-size:25px;}.openlikewin .hdarea .close{position:absolute;right:10px;top:10px;width:21px;height:21px;background-position:-6px -720px;cursor:pointer;}.openlikewin .bdarea{padding-bottom:40px;}.openlikewin .step{padding-top:30px;}.openlikewin .step .stepicon{width:60px;height:64px;margin:0 auto;}.openlikewin .step .stepcnt{width:500px;height:32px;line-height:32px;padding-top:16px;color:#333;font-size:20px;}.openlikewin .stepone{}.openlikewin .stepone .stepicon{background-position:-6px -247px;}.openlikewin .stepone .stepcnt{}.openlikewin .steptwo{}.openlikewin .steptwo .stepicon{background-position:-6px -359px;}.openlikewin .steptwo .stepcnt{}.openlikewin .stepthree{margin-bottom:40px;}.openlikewin .stepthree .stepicon{background-position:-6px -470px;}.openlikewin .stepthree .stepcnt{margin-bottom:5px;}.openlikewin .likeaddr{width:304px;height:40px;line-height:40px;padding:6px;margin:0 auto;background-position:-1px -600px;}.openlikewin .likeaddr .blogname{font-family:"Hiragino Sans GB W3","Hiragino Sans GB",Arial,Helvetica,simsun,u5b8bu4f53;}.openlikewin .likeaddr .blogname{text-align:right;float:left;width:150px;height:40px;line-height:40px;padding:0;margin:0;color:#666;font-size:20px;border:none;outline:none;background:none;}.openlikewin .likeaddr .urlsuffix{text-align:left;float:left;width:120px;height:40px;line-height:40px;color:#666;font-size:20px;}.openlikewin .openmylike{width:316px;height:54px;margin:0 auto;background-position:1px 1px;cursor:pointer;}.outlinklayer{position:absolute;width:398px;background:#fff;border:1px solid #cdcdcd;text-align:left;}.outlinklayer .hdarea{height:25px;}.outlinklayer .hdarea .close{position:absolute;right:0;top:0;width:30px;height:30px;background:url(/newpage/images/outlink/close.png) 10px 8px no-repeat;cursor:pointer;}.outlinklayer .bdarea{height:108px;padding:0 0 25px 30px;}.outlinklayer .bdarea .ttl{height:26px;line-height:26px;color:#333;font-size:16px;font-weight:bold;}.outlinklayer .bdarea .url{width:340px;height:22px;line-height:22px;color:#666;font-size:14px;font-weight:bold;}.outlinklayer .bdarea .prompt{height:22px;line-height:22px;padding-top:12px;color:#999;font-size:14px;}.outlinklayer .bdarea .goon{height:26px;line-height:26px;color:#536c86;font-size:16px;text-decoration:underline;}.outlinklayer .adarea{padding:10px;border-top:1px solid #e6e6e6;}.outlinklayer .adarea .adlink{}.outlinklayer .adarea .adpic{display:block;width:378px;height:50px;border:none;}.blogPublicAccount{width:95px;height:340px;padding:25px 10px 25px 25px;background:#fff;}.blogPublicAccount h3{height:26px;line-height:26px;padding:1px 0 0 0;margin:0;font-weight:normal;font-size:18px;color:#444;background:url(/newpage/images/publicaccount/sinav.png) 72px 8px no-repeat;}.blogPublicAccount h3{_background-position:72px 6px;}.blogPublicAccount .wbttl, .blogPublicAccount .yxttl, .blogPublicAccount .wxttl{height:18px;line-height:18px;padding:0;margin:0;font-weight:normal;font-size:12px;color:#444;}.blogPublicAccount .wbttl{margin-bottom:7px;color:#999;}.blogPublicAccount .yxttl{margin-bottom:4px;}.blogPublicAccount .wxttl{margin-bottom:4px;}.blogPublicAccount .wbiframe{height:24px;margin-bottom:27px;}.blogPublicAccount .yx2d{width:80px;height:80px;margin-bottom:27px;background:url(/newpage/images/publicaccount/yx2d.png) 0 0 no-repeat;}.blogPublicAccount .wx2d{width:80px;height:80px;background:url(/newpage/images/publicaccount/wx2d.jpg) 0 0 no-repeat;}.f-trans{transition:all 0.3s linear;-webkit-transition:all 0.3s linear;-moz-transition:all 0.3s linear;-o-transition:all 0.3s linear;}.nbw-ryt .right{width:260px;}.nbw-ryt .left{margin-right:-262px;}.nbw-ryt .left .lcnt{margin-right:260px;}.js-auto-098 .left, .js-fix-098 .left{margin:0 auto;}.js-auto-098 .left .lcnt, .js-fix-098 .left .lcnt{margin-right:0;}.m-3 .m-aboutme .nick .mingxing{background-position:-43px -76px;}.m-3 .m-aboutme .nick .xinxing{background-position:-81px -76px;}.m-3 .m-aboutme .flw{position:relative;z-index:10;margin:0 15px;}.m-3 .f-bkicons, .m-3 .rightoperatebar-new .f-myLikeIcons{background:url(/newpage/images/redesign2014/bkicons24.png) -9999px -9999px no-repeat;_background:url(/newpage/images/redesign2014/bkicons8.png) -9999px -9999px no-repeat;}.m-3 .share-wrap .shareitm{float:left;width:24px;height:24px;padding:0 0 0 6px;cursor:pointer;}.m-3 .share-wrap .lofter{background-position:0 -144px;}.m-3 .share-wrap .sinawb{background-position:0 -192px;}.m-3 .share-wrap .qqzone{background-position:0 -240px;}.m-3 .share-wrap .qqweibo{background-position:0 -288px;}.m-3 .share-wrap .weixin{background-position:0 -336px;}.m-3 .share-wrap .yixin{background-position:0 -384px;}.m-3 .share-wrap .weixin, .m-3 .share-wrap .yixin{position:relative;zoom:1;}.m-3 .share-wrap .code2dimlayer{visibility:hidden;position:absolute;left:-22px;bottom:28px;width:242px;height:113px;text-align:left;cursor:default;}.m-3 .share-wrap .code2dimlayer{background:url(/newpage/images/redesign2014/code2dbg24.png) 0 0 no-repeat;_background:url(/newpage/images/redesign2014/code2dbg8.png) 0 0 no-repeat;}.m-3 .share-wrap .code2dimlayer img{float:left;width:84px;height:84px;margin:11px -108px 0 11px;}.m-3 .share-wrap .code2dimlayer .tips{margin:30px 0 0 108px;color:#777;font-size:12px;}.m-3 .share-wrap .code2dimlayer .tips p{padding:0;margin:0;line-height:24px;}.m-3 .share-wrap .js-show2dimlayer{}.m-3 .share-wrap .js-show2dimlayer .code2dimlayer{visibility:visible;}.m-3 .rightoperatebar-new{height:25px;line-height:25px;padding-top:6px;}.m-3 .rightoperatebar-new .likebtn, .m-3 .rightoperatebar-new .reblogbtn, .m-3 .rightoperatebar-new .recommendbtn{width:34px;height:25px;line-height:25px;padding-left:29px;margin-left:6px;color:#fff;font-size:12px;}.m-3 .rightoperatebar-new .likebtn{background-position:0 -96px;}.m-3 .rightoperatebar-new .reblogbtn{background-position:0 0;}.m-3 .rightoperatebar-new .recommendbtn{background-position:0 -48px;}.m-3 .rightoperatebar-new .js-liked{background-position:-137px -96px;}.m-3 .rightoperatebar-new .js-recommended{background-position:-137px -48px;}.m-3 .editopbar{margin-bottom:10px;}.m-3 .author img.cwd, .m-3 .hotarea .expeadbg, .m-3 .comment .nbw-f40 img.cwd{border-radius:20px;-webkit-border-radius:20px;-moz-border-radius:20px;-o-border-radius:20px;}.m-3 .comment .nbw-f50 img.cwd, .m-3 .comment .publish .nbw-fce img.cwd{border-radius:25px;-webkit-border-radius:25px;-moz-border-radius:25px;-o-border-radius:25px;}.m-3 .comment .nbw-f40 img.cwd, .m-3 .comment .nbw-f50 img.cwd{transition:all 0.35s linear;-webkit-transition:all 0.35s linear;-moz-transition:all 0.35s linear;-o-transition:all 0.35s linear;}.m-3 .comment img.js-rotate, .m-3 .comment .nbw-f40 a:hover img.cwd, .m-3 .comment .nbw-f50 a:hover img.cwd{transform:rotate(360deg);-ms-transform:rotate(360deg);-moz-transform:rotate(360deg);-webkit-transform:rotate(360deg);-o-transform:rotate(360deg);}.m-3 .nbw-blog img{height:auto;}.newtmpl_common .m-3 .nbw-ryt .left .nbw-bitm .bct embed{max-height:336px;}.newtmpl_common .wsy{min-width:990px;}.newtmpl_common .nb-cnt{background:none;}.newtmpl_common .nb-cnt .wc{margin:0;}.newtmpl_common .m-3{width:990px;padding-top:10px;margin:0 auto;border:none;}.newtmpl_common .m-3 .nbw-ryt .left .top{height:20px;}.newtmpl_common .m-3 .nb-mc .cc{padding:0;margin:0;background:none;}.newtmpl_common .m-3 .nb-mt{display:none;}.newtmpl_common .nb-mdl .l, .newtmpl_common .nb-mdl .r{display:none;}.newtmpl_common .nb-mdl .bh{display:none;}.newtmpl_common .nbw-ryt .right{border:none;}.newtmpl_common .m-3 .nbw-ryt .left{width:688px;padding-right:31px;margin-right:0;}.newtmpl_common .m-3 .nbw-ryt .left .lcnt{padding:26px 30px;margin-right:0;border:none;}.newtmpl_common .m-3 .nbw-ryt .left .lcnt{-webkit-border-radius:8px;-moz-border-radius:8px;border-radius:8px;}.newtmpl_common .m-3 .left{position:relative;zoom:1;overflow:visible;}.newtmpl_common .m-3 .left .uperbox, .newtmpl_common .m-3 .left .downbox{position:absolute;right:-3px;width:5px;height:5px;overflow:hidden;}.newtmpl_common .m-3 .left .uperbox{top:0px;}.newtmpl_common .m-3 .left .downbox{bottom:0px;}.newtmpl_13664000 .m-3 .nbw-ryt .left{border-right:1px solid #c1c1c1;}.newtmpl_13664000 .m-3 .nbw-ryt .left .lcnt{background:#fff;border:1px solid #d6cdc1;}.newtmpl_13664000 .m-3 .left .uperbox, .newtmpl_13664000 .m-3 .left .downbox{background:#c1c1c1;}.newtmpl_13664000 .m-aboutme .ttlbar, .newtmpl_13664000 .m-blogclasses .ttlbar, .newtmpl_13664000 .m-lofteriframe .ttlbar, .newtmpl_13664000 .m-163news .ttlbar{color:#333;border-bottom:4px solid #333;}.newtmpl_13664000 .m-aboutme .nick a{color:#666;}.newtmpl_13664000 .m-aboutme .desc{border-color:#666;}.newtmpl_13664000 .m-aboutme .desc p{color:#666;}.newtmpl_13664000 .m-blogclasses li a, .newtmpl_13664000 .m-163news .newscnt li a{color:#666;}.newtmpl_13664000 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13664000 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13664000 .m-163news .newscnt .download163news .fc03{color:#c14f4f;}.newtmpl_13664000 .m-163news .newscnt li .fc05:hover{color:#c14f4f;}.newtmpl_13664001 .m-3 .nbw-ryt .left{border-right:1px solid #9ababa;}.newtmpl_13664001 .m-3 .nbw-ryt .left .lcnt{background:#fff;border:1px solid #d6cdc1;}.newtmpl_13664001 .m-3 .left .uperbox, .newtmpl_13664001 .m-3 .left .downbox{background:#9ababa;}.newtmpl_13664001 .m-aboutme .ttlbar, .newtmpl_13664001 .m-blogclasses .ttlbar, .newtmpl_13664001 .m-lofteriframe .ttlbar, .newtmpl_13664001 .m-163news .ttlbar{color:#303a3a;border-bottom:4px solid #303a3a;}.newtmpl_13664001 .m-aboutme .nick a{color:#455353;}.newtmpl_13664001 .m-aboutme .desc{border-color:#455353;}.newtmpl_13664001 .m-aboutme .desc p{color:#455353;}.newtmpl_13664001 .m-blogclasses li a, .newtmpl_13664001 .m-163news .newscnt li a{color:#455353;}.newtmpl_13664001 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13664001 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13664001 .m-163news .newscnt .download163news .fc03{color:#c14f4f;}.newtmpl_13664001 .m-163news .newscnt li .fc05:hover{color:#c14f4f;}.newtmpl_13664002 .m-3 .nbw-ryt .left{border-right:1px solid #666;}.newtmpl_13664002 .m-3 .nbw-ryt .left .lcnt{background:#eee;border:1px solid #eee;}.newtmpl_13664002 .m-3 .left .uperbox, .newtmpl_13664002 .m-3 .left .downbox{background:#666;}.newtmpl_13664002 .m-aboutme .ttlbar, .newtmpl_13664002 .m-blogclasses .ttlbar, .newtmpl_13664002 .m-lofteriframe .ttlbar, .newtmpl_13664002 .m-163news .ttlbar{color:#999;border-bottom:4px solid #666;}.newtmpl_13664002 .m-aboutme .nick a{color:#999;}.newtmpl_13664002 .m-aboutme .desc{border-color:#666;}.newtmpl_13664002 .m-aboutme .desc p{color:#999;}.newtmpl_13664002 .m-blogclasses li a, .newtmpl_13664002 .m-163news .newscnt li a{color:#999;}.newtmpl_13664002 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13664002 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13664002 .m-163news .newscnt .download163news .fc03{color:#c38c81;}.newtmpl_13664002 .m-163news .newscnt li .fc05:hover{color:#c38c81;}.newtmpl_13665001 .m-3 .nbw-ryt .left{border-right:1px solid #b8b3a8;}.newtmpl_13665001 .m-3 .nbw-ryt .left .lcnt{background:#f9f7f1;border:1px solid #d6cdc1;}.newtmpl_13665001 .m-3 .left .uperbox, .newtmpl_13665001 .m-3 .left .downbox{background:#b8b3a8;}.newtmpl_13665001 .m-aboutme .ttlbar, .newtmpl_13665001 .m-blogclasses .ttlbar, .newtmpl_13665001 .m-lofteriframe .ttlbar, .newtmpl_13665001 .m-163news .ttlbar{color:#443e39;border-bottom:4px solid #443e3a;}.newtmpl_13665001 .m-aboutme .nick a{color:#443e3a;}.newtmpl_13665001 .m-aboutme .desc{border-color:#666159;}.newtmpl_13665001 .m-aboutme .desc p{color:#443e3a;}.newtmpl_13665001 .m-blogclasses li a, .newtmpl_13665001 .m-163news .newscnt li a{color:#443e3a;}.newtmpl_13665001 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13665001 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13665001 .m-163news .newscnt .download163news .fc03{color:#cc6666;}.newtmpl_13665001 .m-163news .newscnt li .fc05:hover{color:#cc6666;}.newtmpl_13664003 .m-3 .nbw-ryt .left{border-right:1px solid #9e939c;}.newtmpl_13664003 .m-3 .nbw-ryt .left .lcnt{background:#fbf9fd;border:1px solid #d6cdc1;}.newtmpl_13664003 .m-3 .left .uperbox, .newtmpl_13664003 .m-3 .left .downbox{background:#9e939c;}.newtmpl_13664003 .m-aboutme .ttlbar, .newtmpl_13664003 .m-blogclasses .ttlbar, .newtmpl_13664003 .m-lofteriframe .ttlbar, .newtmpl_13664003 .m-163news .ttlbar{color:#301d28;border-bottom:4px solid #301d28;}.newtmpl_13664003 .m-aboutme .nick a{color:#61535c;}.newtmpl_13664003 .m-aboutme .desc{border-color:#61535c;}.newtmpl_13664003 .m-aboutme .desc p{color:#61535c;}.newtmpl_13664003 .m-blogclasses li a, .newtmpl_13664003 .m-163news .newscnt li a{color:#61535c;}.newtmpl_13664003 .m-aboutme .statusNode .findfrd .fc03, .newtmpl_13664003 .m-aboutme .statusNode .dofollow .fc03, .newtmpl_13664003 .m-163news .newscnt .download163news .fc03{color:#93466e;}.newtmpl_13664003 .m-163news .newscnt li .fc05:hover{color:#93466e;}#blog-163-com-main{z-index:2;}.m-fixedPCAd{_display:none;visibility:hidden;opacity:0;}.m-fixedPCAd .fixedbar{position:fixed;right:0;bottom:0;z-index:99;width:300px;height:49px;}.m-fixedPCAd .fixedbar a{background:url(/newpage/images/loftlayer/bottom2.png) 0 0 no-repeat;border:1px solid #316062;}.m-fixedPCAd .fixedbar em{background:url(/newpage/images/loftlayer/arrows24.png) 0 2px no-repeat;}.m-fixedPCAd .fixedbar a{position:fixed;right:0;bottom:0;z-index:99;width:298px;height:48px;text-decoration:none;}.m-fixedPCAd .fixedbar em{position:absolute;right:22px;bottom:20px;z-index:100;width:12px;height:10px;}.m-fixedPCAd .hoverbar{visibility:hidden;border-style:solid;border-width:1px 1px 0 1px;border-color:#316062;}.m-fixedPCAd .hoverbar{position:fixed;right:0;bottom:-193px;z-index:98;width:298px;height:200px;background-position:0 0;}.m-fixedPCAd .hoverbar .part1{height:34px;line-height:34px;padding:8px 10px 2px 10px;text-align:left;}.m-fixedPCAd .hoverbar .part1 a{float:right;color:#3a7a7b;font-size:14px;text-decoration:none;}.m-fixedPCAd .hoverbar .part1 span{color:#000;font-size:14px;}.m-fixedPCAd .part2{padding-left:10px;}.m-fixedPCAd .part2 .jximgwrap{float:left;width:134px;height:134px;margin-right:10px;}.m-fixedPCAd .part2 .jximgwrap img{display:block;width:100%;height:100%;}.js-fixedPCAd-hover .hoverbar{visibility:visible;bottom:49px;}.js-fixedPCAd-hover .fixedbar em{background-position:0 -69px;}.m-3 .nbw-bitm .cited{margin-top:20px;}.m-shareAndDownLoad{height:24px;line-height:24px;margin-top:-8px;}.m-lmiddlead{position:relative;width:100%;overflow:hidden;}.m-lmiddlead img, .m-lmiddlead embed, .m-lmiddlead object{display:block;width:100%;border:none;cursor:pointer;}.m-lmiddlead .adlink{display:block;position:relative;z-index:10;_width:590px;max-width:590px;background:url(http://b.bst.126.net/common/empty.png) 0 0 repeat;}.m-lmiddlead .flashadwrap{}.m-lmiddlead-flash .adlink img{display:none;}.m-lmiddlead-flash .flashadwrap{display:block;position:absolute;left:0;top:0;z-index:5;}.voteValCodeArea{}.m-valcode{height:24px;line-height:24px;padding:8px 0;margin-bottom:20px;}.m-valcode .txtcode{float:left;width:50px;height:24px;padding:0 5px;margin-right:10px;border-width:1px;border-style:solid;border-color:#c2c2c2 #d7d7d7 #d7d7d7 #c2c2c2;}.m-valcode .codeimg{float:left;width:60px;height:24px;margin-right:10px;}.m-valcode .changeimg{float:left;cursor:pointer;text-decoration:underline;} </style>
+  
+  <link href="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/prettify.css" type="text/css" rel="stylesheet">
+  <script type="text/javascript" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/related_items_v2"></script><style type="text/css">.ui-7142636789 .zcvr,.ui-7142636789 .zhnt{display:none;position:fixed;_position:absolute;z-index:80;} .ui-7142636789 .zcvr{top:0;left:0;width:100%;height:100%;background:url(http://b.bst.126.net/common/empty.png);} .ui-7142636789 .zhnt{top:5px;right:5px;padding:4px;color:#000;background:#ffffae;z-index:120;}.ui-4251188738-hack{position:absolute;z-index:99;} .ui-4251188738{position:absolute;z-index:100;border:1px solid #97abc9;background-color:#fff;}.ui-4436454311-hack{position:absolute;z-index:99;} .ui-4436454311-cover{position:absolute;top:0;left:0;width:100%;height:100%;background:url(http://b.bst.126.net/common/empty.png);z-index:10;} .ui-4436454311{position:absolute;top:0;left:0;z-index:100;text-align:center;border:1px solid #97abc9;background-color:#fff;} .ui-4436454311 .ztbr{height:30px;line-height:30px;text-align:left;background-color:#5e9ff7;font-size:14px;font-weight:bold;color:#fff;} .ui-4436454311 .zmov{cursor:move;} .ui-4436454311 .zttl{width:85%;padding-left:10px;} .ui-4436454311 .zcls{position:absolute;top:5px;right:10px;width:20px;height:20px;overflow:hidden;cursor:pointer;z-index:5;} .ui-4436454311 .zcnt{padding:10px;min-height:100px;_height:100px;font-size:12px;} .ui-4436454311 .zext{display:none;} .ui-4436454311.js-zncls-102 .zcls{display:none;}.zbwin{color:#000;border:1px solid #aaa;background-color:#fff;} .zbwin .zcls{top:8px;background:url(http://b.bst.126.net/common/widget/wincls.gif) no-repeat 2px center;text-indent:50px;} .zbwin .ztbr{height:35px;line-height:35px;color:#000;background:url(http://b.bst.126.net/common/widget/winbar.gif) repeat-x;} .zbwin .zact{margin:10px 0;text-align:center;} .zbwin .ztxt{height:1.3em;padding-top:3px;} .zbwin .zbtn{height:28px;padding:0 8px;font-size:14px;cursor:pointer;} .zbwin .zbtnok{font-weight:bold;} .zbwin .zbtncc{margin-left:20px;}.ui-6948574849{position:relative;zoom:1;text-align:left;} .ui-6948574849-hack{position:absolute;z-index:99;} .ui-6948574849 .zcom{width:200px;border:1px solid #aaa;} .ui-6948574849 .zcse{visibility:hidden;position:absolute;top:20px;left:0;background:#fff;} .ui-6948574849 .zitm{width:100%;height:20px;line-height:20px;cursor:default;} .ui-6948574849 .zitm.js-zhvr-900{background-color:#316ac5;} .ui-6948574849 .zcse .js-login-hovered{background-color:#ddd;color:#fff;}.ui-2214210630 .iblock{display:-moz-inline-box;display:inline-block;*display:inline;zoom:1;} .ui-2214210630 .fs1{font-size:14px;} .ui-2214210630 .fw1{font-weight:bold;} .ui-2214210630 .noselect{user-select:none;-moz-user-select:none;-webkit-user-select:none;-khtml-user-select:none;-o-user-select:none;} .ui-2214210630 .zcvr,.ui-2214210630 .zhnt{display:none;position:fixed;_position:absolute;z-index:80;} .ui-2214210630 .zcvr{top:0;left:0;width:100%;height:100%;background:url(http://b.bst.126.net/common/empty.png);} .ui-2214210630 .zhnt{position:absolute;height:36px;line-height:36px;top:5px;right:5px;padding:11px 10px 11px 4px;color:#000;z-index:120;vertical-align:middle;} .ui-2214210630 .showhint-0{background-image:url(/common/showhint/hintbg.png);background-repeat:no-repeat;background-position:-7px -1px;_background-image:url(/common/showhint/hintbg2.png);} .ui-2214210630 .showhint-1{background-image:url(/common/showhint/hintbg_right.png);background-repeat:no-repeat;background-position:0px 0px;width:20px;_background-image:url(/common/showhint/hintbg2_right.png);} .ui-2214210630 .showhint-2{background-image:url(/common/showhint/hinticon.png);background-repeat:no-repeat;} .ui-2214210630 .showhint-2-0{background-position:0 1px;} .ui-2214210630 .showhint-2-1{background-position:0 -45px;} .ui-2214210630 .showhint-2-2{background-position:0 -90px;} .ui-2214210630 .showhint-3{background-image:url(/common/showhint/loading.gif);background-repeat:no-repeat;} .ui-2214210630 .typeicon{width:25px;height:25px;padding:4px 5px 7px 6px;margin:0 10px 0 15px;line-height:25px;vertical-align:middle;} .ui-2214210630 .typeicon .loading{width:25px;height:25px;line-height:25px;vertical-align:middle;} .ui-2214210630 .bg_right{position:absolute;right:-20px;top:2px;z-index:120;display:block;height:36px;padding:11px 0 11px 0;} .ui-2214210630 .txthint{vertical-align:middle;} .ui-2214210630 .showhint-bg{position:absolute;right:0;top:0;width:200px;height:30px;background:#f5f5f5;border:1px solid #ccc;} .ui-2214210630-hack{display:none;position:absolute;z-index:101;width:100%;height:100%;overflow:hidden;}.ui-4430709832-hack,.ui-4430709832-cvr-hack{position:absolute;z-index:99;} .ui-4430709832-cover{position:absolute;top:-99999px;left:-99999px;width:100%;height:100%;background:url(http://b.bst.126.net/common/empty.png);z-index:10;} .ui-4430709832{position:absolute;top:-99999px;left:-99999px;z-index:100;text-align:center;} .ui-4430709832 .ztbr{height:30px;line-height:30px;text-align:left;background-color:#5e9ff7;font-size:14px;font-weight:bold;/*color:#fff;*/} .ui-4430709832 .zmov{cursor:move;} .ui-4430709832 .zttl{width:85%;padding-left:10px;} .ui-4430709832 .zcls{position:absolute;top:5px;right:10px;width:20px;height:20px;overflow:hidden;cursor:pointer;z-index:5;} .ui-4430709832 .zcnt{padding:10px;min-height:30px;_height:30px;font-size:12px;background-color:#fff;} .ui-4430709832 .zext{display:none;} .ui-4430709832.js-zncls-102 .zcls{display:none;}.nbwindow{color:#000;border:1px solid #beb8ab;} #blog-163-com #blog-163-com-layer .nbwindow{/*height:auto;*/min-height:100px;border:1px solid #beb8ab;} .nbwindow .js-hide{display:none;} .nbwindow .zttl{font-size:12px;} .nbwindow .txtclose{position:absolute;top:4px;_top:5px;right:11px;_right:9px;width:10px;height:10px;line-height:10px;} .nbwindow .zcls{right:12px;top:-1px;width:32px;height:18px;line-height:18px;background:#beb8ab url(http://b.bst.126.net/common/nbwindow/close_01.png) no-repeat 0px center;color:#646464;text-indent:1px;_text-indent:2px;} .nbwindow .zclshover{background:#cd3503 url(http://b.bst.126.net/common/nbwindow/close_02.png) no-repeat 0px center;color:#ffe9e1;} .nbwindow .zclsmousedown{background:#ae2601 url(http://b.bst.126.net/common/nbwindow/close_03.png) no-repeat 0px center;color:#ffd9cb;} .nbwindow .ztbr{height:23px;line-height:23px;margin:0 auto;color:#000;background:#e8e8e6 url(http://b.bst.126.net/common/nbwindow/top_bg.png) bottom repeat-x;} .nbwindow .zact{margin:10px 0;text-align:center;} .nbwindow .ztxt{height:1.3em;padding-top:3px;} .nbwindow .zbtnbar{height:31px;line-height:31px;background:#eee;} .nbwindow .zbtn{height:28px;padding:0 8px;font-size:14px;cursor:pointer;} .nbwindow .zbtnok{font-weight:bold;} .nbwindow .zbtncc{margin-left:20px;} #blog-163-com .nbwindow .nbwinwrap .nbwinbtnbar{position:absolute;right:-2px;bottom:0;z-index:101;height:22px;line-height:22px;padding:4px 14px 4px 0;margin:0;border:none;background:none;} #blog-163-com .nbwindow .nbwinwrap .nbwinbtnbar .nbwinbtn{height:22px;padding:0px 10px;margin:0 0 0 10px;line-height:100%;*line-height:20px;font-size:12px;font-weight:normal;cursor:pointer;text-align:center;} #blog-163-com .nbwindow .nbwinwrap .nbwinclear{height:0;padding:0;margin:0;border:none;} #blog-163-com .nbwindow .nbwinwrap .nbwinhide{display:none;} #blog-163-com #blog-163-com-layer .nbwinascard{border:none;} .nbwinascard .zcls{display:none;} .nbwinascard .ztbr{display:none;} .nbwinascard .zcnt{padding:0;background:none;} .nbwinascard .zbtnbar{display:none;} #blog-163-com #blog-163-com-layer .nbwinautoheight{height:auto;} #nbwinNeedScroll{position:absolute;z-index:110;overflow:auto;background:url(http://b.bst.126.net/common/empty.png);} .nbwindow .zcls .txtclose{visibility:hidden;} .nbwinzindex{position:relative;z-index:120;} .nbwinzindex .zcse{z-index:120;} #blog-163-com .nbwindow .nbwinwrap .nbwinlogin{width:230px;padding-bottom:5px;} #blog-163-com .nbwindow .nbwinwrap .nbwinlogin .nbwinloginreg{*height:16px;*line-height:16px;*padding-top:6px;} .nbwindow .zext{display:block;position:absolute;} .nbwindow .zext0{left:0;top:-6px;width:100%;height:6px;background:url(http://b.bst.126.net/common/nbwindow/top_bg.png) top repeat-x;} .nbwindow .zext1{left:0;bottom:-6px;width:100%;height:6px;background:url(http://b.bst.126.net/common/nbwindow/bottom_bg.png) bottom repeat-x;} .nbwindow .zext2{left:-6px;top:0;width:6px;height:100%;background:url(http://b.bst.126.net/common/nbwindow/left_bg.png) left repeat-y;} .nbwindow .zext3{right:-6px;top:0;width:6px;height:100%;background:url(http://b.bst.126.net/common/nbwindow/right_bg.png) right repeat-y;} .nbwindow .zext4{left:-6px;top:-6px;width:12px;height:29px;background:url(http://b.bst.126.net/common/nbwindow/left_top.png) no-repeat;} .nbwindow .zext5{right:-6px;top:-6px;width:12px;height:29px;background:url(http://b.bst.126.net/common/nbwindow/right_top.png) no-repeat;} .nbwindow .zext6{left:-6px;bottom:-6px;width:12px;height:37px;background:url(http://b.bst.126.net/common/nbwindow/left_bottom.png) no-repeat;} .nbwindow .zext7{right:-6px;bottom:-6px;width:12px;height:37px;background:url(http://b.bst.126.net/common/nbwindow/right_bottom.png) no-repeat;} .nbwinascard .zext{display:none;} .ui-5772558910{position:relative;zoom:1;text-align:left;} .ui-5772558910-hack{position:absolute;z-index:99;} .ui-5772558910 .zcom{width:200px;border:1px solid #aaa;} .ui-5772558910 .zcse{visibility:hidden;position:absolute;top:20px;left:0;background:#fff;} .ui-5772558910 .zitm{width:100%;height:20px;line-height:20px;cursor:default;} .ui-5772558910 .zitm.js-zhvr-900{background-color:#316ac5;} .ui-5772558910 .zcse .js-login-hovered{background-color:#ddd;color:#fff;}.zibox{position:relative;zoom:1;} .zibox .zitm{float:left;margin:-1px 0 0 -1px;overflow:hidden;text-indent:200px;border:1px solid #e5e5e1;cursor:pointer;background-repeat:no-repeat;zoom:1;} .zibox .zitm:hover,.zibox .js-zhvr-110{position:relative;border-color:#000;}.zibox .zitm.a{width:30px;height:30px;line-height:30px;}.zibox .a0{background-position:-0px -0px;}.zibox .a1{background-position:-30px -0px;}.zibox .a2{background-position:-60px -0px;}.zibox .a3{background-position:-90px -0px;}.zibox .a4{background-position:-120px -0px;}.zibox .a5{background-position:-150px -0px;}.zibox .a6{background-position:-180px -0px;}.zibox .a7{background-position:-210px -0px;}.zibox .a8{background-position:-240px -0px;}.zibox .a9{background-position:-270px -0px;}.zibox .a10{background-position:-0px -30px;}.zibox .a11{background-position:-30px -30px;}.zibox .a12{background-position:-60px -30px;}.zibox .a13{background-position:-90px -30px;}.zibox .a14{background-position:-120px -30px;}.zibox .a15{background-position:-150px -30px;}.zibox .a16{background-position:-180px -30px;}.zibox .a17{background-position:-210px -30px;}.zibox .a18{background-position:-240px -30px;}.zibox .a19{background-position:-270px -30px;}.zibox .a20{background-position:-0px -60px;}.zibox .a21{background-position:-30px -60px;}.zibox .a22{background-position:-60px -60px;}.zibox .a23{background-position:-90px -60px;}.zibox .a24{background-position:-120px -60px;}.zibox .a25{background-position:-150px -60px;}.zibox .a26{background-position:-180px -60px;}.zibox .a27{background-position:-210px -60px;}.zibox .a28{background-position:-240px -60px;}.zibox .a29{background-position:-270px -60px;}.zibox .a30{background-position:-0px -90px;}.zibox .a31{background-position:-30px -90px;}.zibox .a32{background-position:-60px -90px;}.zibox .a33{background-position:-90px -90px;}.zibox .a34{background-position:-120px -90px;}.zibox .a35{background-position:-150px -90px;}.zibox .a36{background-position:-180px -90px;}.zibox .a37{background-position:-210px -90px;}.zibox .a38{background-position:-240px -90px;}.zibox .a39{background-position:-270px -90px;}.zibox .a40{background-position:-0px -120px;}.zibox .a41{background-position:-30px -120px;}.zibox .a42{background-position:-60px -120px;}.zibox .a43{background-position:-90px -120px;}.zibox .a44{background-position:-120px -120px;}.zibox .a45{background-position:-150px -120px;}.zibox .a46{background-position:-180px -120px;}.zibox .a47{background-position:-210px -120px;}.zibox .a48{background-position:-240px -120px;}.zibox .a49{background-position:-270px -120px;}.zibox .a50{background-position:-0px -150px;}.zibox .a51{background-position:-30px -150px;}.zibox .a52{background-position:-60px -150px;}.zibox .a53{background-position:-90px -150px;}.zibox .a54{background-position:-120px -150px;}.zibox .a55{background-position:-150px -150px;}.zibox .a56{background-position:-180px -150px;}.zibox .a57{background-position:-210px -150px;}.zibox .a58{background-position:-240px -150px;}.zibox .a59{background-position:-270px -150px;}.zibox .zitm.b{width:61px;height:60px;line-height:60px;}.zibox .b0{background-position:-0px -0px;}.zibox .b1{background-position:-60px -0px;}.zibox .b2{background-position:-120px -0px;}.zibox .b3{background-position:-180px -0px;}.zibox .b4{background-position:-240px -0px;}.zibox .b5{background-position:-0px -60px;}.zibox .b6{background-position:-60px -60px;}.zibox .b7{background-position:-120px -60px;}.zibox .b8{background-position:-180px -60px;}.zibox .b9{background-position:-240px -60px;}.zibox .b10{background-position:-0px -120px;}.zibox .b11{background-position:-60px -120px;}.zibox .b12{background-position:-120px -120px;}.zibox .b13{background-position:-180px -120px;}.zibox .b14{background-position:-240px -120px;} .zibox .zprv{position:absolute;top:0;left:0;background:#fff no-repeat center center;border:1px solid #888;} .zibox div.zprv{width:60px;height:60px;}.ui-4943845239{width:310px;padding:5px;background:#e5e5e1;border:1px solid #888;} .ui-4943845239 .zibox{height:190px;} .ui-4943845239 .zibox.js-page-0 .zitm{background-image:url(http://b.bst.126.net/common/portrait/face/face-0.png);} .ui-4943845239 .zibox.js-page-1 .zitm{background-image:url(http://b.bst.126.net/common/portrait/face/face-1.png);} .ui-4943845239 .zpgr{line-height:20px;padding:3px;font-size:12px;text-align:right;} .ui-4943845239 .zpgr .ztag{color:#000;cursor:pointer;} .ui-4943845239 .zpgr .zsep{margin:0 3px;} .ui-4943845239 .zpgr .js-zdsab-307{color:#777;cursor:default;}.ui-2778921007{font-size:12px;text-align:left;} .ui-2778921007 .zbrd{border-width:1px;border-style:solid;} .ui-2778921007 .zbgp{background:url(http://b.bst.126.net/common/icon.png) no-repeat;} .ui-2778921007 .zcnt{height:100px;overflow:hidden;} .ui-2778921007 .zcnt iframe,.ui-2778921007 .zcnt textarea{width:100%;height:100%;border:0;} .ui-2778921007 .zcnt textarea{overflow:auto;} .ui-2778921007 .zhnd{cursor:pointer;} .ui-2778921007 .zbtn{position:relative;height:30px;line-height:30px;zoom:1;text-align:right;} .ui-2778921007 .zbok{_margin-top:4px;} .ui-2778921007 .zfce{position:absolute;left:0;top:5px;width:20px;height:20px;cursor:pointer;background-position:0 1px;} .ui-2778921007 .zvcd{position:absolute;top:0;right:80px;} .ui-2778921007 .zvcd *{vertical-align:middle;} .ui-2778921007 .zvcd img{width:40px;height:24px;margin:0 3px;cursor:pointer;} .ui-2778921007 .zvcd span{text-decoration:underline;cursor:pointer;} .ui-2778921007 .zvcd input{width:35px;padding:2px 0;} .ui-2778921007 .zmsg{line-height:20px;} .ui-2778921007 .zmsg .zicn{width:25px;height:20px;background-position:5px -58px;} .ui-2778921007 .zprt{left:0;top:30px;}.ui-1204031626{font-size:12px;padding-bottom:3px;text-align:center;} .ui-1204031626 .frg{display:none;font-weight:bold;} .ui-1204031626 .iblock{height:22px;line-height:22px;padding:1px 8px;margin:0 2px;cursor:pointer;text-decoration:underline;} .ui-1204031626 .pgi:hover,.ui-1204031626 .pgi.js-zhvr-258{padding:0 7px;border-width:1px;border-style:solid;} .ui-1204031626 .pgi.js-zslt-987{padding:1px 8px;border-width:0;background-color:transparent;font-weight:bold;cursor:default;text-decoration:none;} .ui-1204031626 .pgb.js-znpg-097{visibility:hidden;} .ui-1204031626.js-zfrg-6540 .frg{display:none;} .ui-1204031626.js-zfrg-6541 .frg.fgn{display:inline;} .ui-1204031626.js-zfrg-6542 .frg.fgp{display:inline;} .ui-1204031626.js-zfrg-6543 .frg{display:inline;}.lightphotowin{width:450px;height:365px;text-align:left;} .lightphotowin .js-hide{display:none;} .lightphotowin .zcnt{position:relative;z-index:100;padding:0 22px 20px 22px;} .lightphotowin .zbtnbar{display:none;} .lightphotowin .lightphotobox .toparea{height:28px;line-height:28px;padding:14px 0;} .lightphotowin .lightphotobox .uploadarea{position:relative;zoom:1;height:28px;line-height:28px;} .lightphotowin .lightphotobox .uploadfile{position:absolute;left:161px;top:1px;width:58px;height:26px;opacity:0;filter:alpha(opacity=0);overflow:hidden;text-align:left;background:none;} .lightphotowin .lightphotobox .uploadform{height:28px;} .lightphotowin .lightphotobox .uploadform .iptfile{position:absolute;left:-155px;top:-3px;height:30px;cursor:pointer;opacity:0;filter:alpha(opacity=0);} .lightphotowin .lightphotobox .btnupload{width:58px;height:25px;line-height:25px;padding:0;margin-right:22px;background:#ff7700;color:#fff;border:1px solid #bf7331;} .lightphotowin .lightphotobox .tips-fc1{color:#7d7d7d;} .lightphotowin .lightphotobox .error-fc1{color:#990000;} .lightphotowin .lightphotobox .loadingarea{text-align:center;} .lightphotowin .lightphotobox .loading{width:25px;height:25px;line-height:25px;background:url("/common/showhint/loading.gif") no-repeat;} .lightphotowin .lightphotobox .iptttl{width:99%;height:28px;line-height:28px;padding:1px;margin-bottom:10px;} .lightphotowin .lightphotobox .txtarea{width:99%;height:128px;padding:1px;} .lightphotowin .lightphotobox .blogclass{padding:20px 0 15px 0;} .lightphotowin .lightphotobox .selclass{width:180px;padding:1px;} .lightphotowin .lightphotobox .previewarea{padding:20px 0;} .lightphotowin .lightphotobox .imgwrap{width:406px;height:406px;} .lightphotowin .lightphotobox .previmg{display:block;margin:0 auto;border:none;} .lightphotowin .lightphotobox .prevbtm{padding-top:3px;} .lightphotowin .lightphotobox .modify{color:#21759B;} .lightphotowin .lightphotobox .vcdarea{height:22px;line-height:22px;padding-bottom:15px;vertical-align:middle;} .lightphotowin .lightphotobox .valid{width:60px;height:18px;line-height:18px;padding:1px;} .lightphotowin .lightphotobox .valid,.lightphotowin .lightphotobox .vcdimg{height:22px;margin-right:5px;} .lightphotowin .lightphotobox .showfileaddr{width:80px;height:18px;margin-right:16px;} .lightphotowin .lightphotobox .imgname{display:block;width:360px;overflow:hidden;text-overflow:ellipsis;word-break:break-all;} .ui-8503236215{display:none;margin-right:6px;} .ui-8503236215 .miniBlogSetInfo{width:16px;height:16px;} .ui-8503236215 .chkMiniBlogSetInfo{float:left;position:relative;width:16px;height:16px;cursor:pointer;} .ui-8503236215 .chkMiniBlogSetInfo em{position:absolute;top:0;left:0;z-index:3;width:100%;height:100%;overflow:hidden;text-indent:-2000px;background:url("/newpage/images/setting/synminiblog/synicon8.png") -40px -21px no-repeat;} .ui-8503236215 .chkMiniBlogSetInfo b{display:none;position:absolute;bottom:-1px;right:-2px;z-index:5;clear:both;width:8px;height:8px;overflow:hidden;cursor:pointer;background:url("/newpage/images/setting/synminiblog/synicon8.png") 0 -42px no-repeat;} .ui-8503236215 .js-checked em{background-position:-40px 0;} .ui-8503236215 .js-checked b{display:block;} .ui-3147653805{display:none;margin-right:6px;} .ui-3147653805 .miniBlogSetInfo{width:16px;height:16px;} .ui-3147653805 .chkMiniBlogSetInfo{float:left;position:relative;width:16px;height:16px;cursor:pointer;} .ui-3147653805 .chkMiniBlogSetInfo em{position:absolute;top:0;left:0;z-index:3;width:100%;height:100%;overflow:hidden;text-indent:-2000px;background:url("/newpage/images/setting/synminiblog/synicon8.png") -20px -20px no-repeat;} .ui-3147653805 .chkMiniBlogSetInfo b{display:none;position:absolute;bottom:-1px;right:-2px;z-index:5;clear:both;width:8px;height:8px;overflow:hidden;cursor:pointer;background:url("/newpage/images/setting/synminiblog/synicon8.png") 0 -42px no-repeat;} .ui-3147653805 .js-checked em{background-position:-20px 0;} .ui-3147653805 .js-checked b{display:block;} .ui-1290267460{position:relative;float:left;text-align:left;cursor:pointer;} .ui-1290267460,.ui-1290267460 .iblock{height:18px;line-height:18px;} .ui-1290267460 .ztxt{margin-left:5px;} .ui-1290267460 .zdwn{width:18px;text-align:center;} .ui-1290267460 .zlst{visibility:hidden;position:absolute;top:18px;left:-1px;width:100%;max-height:180px;overflow:auto;overflow-x:hidden;} .ui-1290267460 .zlst .zitm{padding:0 5px;height:18px;line-height:18px;cursor:pointer;} .ui-1290267460{font-size:12px;} .ui-1290267460,.ui-1290267460 .zlst{border:1px solid #7f9db9;} .ui-1290267460 .zlst .zitm{background-color:#fff;} .ui-1290267460 .zlst .zitm:hover,.ui-1290267460 .slst .item.js-zhvr-910{color:#fff;background-color:#002080;}.lightwin{width:680px;text-align:left;} .lightwin .zbtnbar{display:none;}.goodnighttip{width:420px;text-align:left;} .goodnighttip .box{height:90px;*height:100px;} .goodnighttip input{position:relative;margin:0 4px 0 0;top:1px;} .goodnighttip .imgwrap{padding-right:10px;margin-right:0px;} .goodnighttip .desc{margin-left:0px;line-height:20px;} .goodnighttip .key{font-size:14px;color:#f60;} .ui-2089662803{margin-right:6px;} .ui-2089662803 .miniBlogSetInfo{width:16px;height:16px;display:none;} .ui-2089662803 .chkMiniBlogSetInfo{float:left;position:relative;width:16px;height:16px;cursor:pointer;} .ui-2089662803 .chkMiniBlogSetInfo em{position:absolute;top:0;left:0;z-index:3;width:100%;height:100%;overflow:hidden;text-indent:-2000px;background:url("/newpage/images/setting/synminiblog/synicon8.png") 0 -20px no-repeat;} .ui-2089662803 .chkMiniBlogSetInfo b{display:none;position:absolute;bottom:-1px;right:-2px;z-index:5;clear:both;width:8px;height:8px;overflow:hidden;cursor:pointer;background:url("/newpage/images/setting/synminiblog/synicon8.png") 0 -42px no-repeat;} .ui-2089662803 .js-checked em{background-position:0 0;} .ui-2089662803 .js-checked b{display:block;} .grouprecommendwin{width:355px;text-align:left;} .grouprecommendwin .box{position:relative;max-height:200px;_height:200px;overflow-x:hidden;overflow-y:auto;} .grouprecommendwin ul{overflow:hidden;margin:0;padding:0 0 8px 0;list-style:none;background-color:#FFF;} .grouprecommendwin .selected{background:#ECECEC} .grouprecommendwin li{overflow:hidden;margin:0;padding:0;height:28px;line-height:28px} .grouprecommendwin .groupitem{position:relative;zoom:1;padding-left:0;cursor:pointer;} .grouprecommendwin .groupicon{width:25px;height:20px;line-height:20px;padding:2px 0 2px 5px;} .grouprecommendwin .groupicon img{width:20px;height:20px;padding:0;margin:0;border:none;} .grouprecommendwin .groupname{width:150px;height:28px;line-height:28px;color:#5872a7;} </style><script src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/show.s"></script></head>
+<body onload="prettyPrint()" id="blog-163-com" class="nb-body nb-inr nb-prv ">
+  <!--[if lte IE 6]><div id="blog-163-com-ie6bodywrap" class=""><![endif]-->
+    <!--[if lte IE 6]><div id="blog-163-com-ie6body" class="nb-body"><![endif]-->
+
+<div class="nb-nbar clearfix" id="blog-163-com-topbar">
+  <div class="pl fl clearfix">
+  <div id="" class="nbw-im fl im im0">
+    <a rel="nofollow" class="lbl bd ia noul " href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://www.163.com/" target="_blank" hidefocus="true"><span class="tx">网易</span><span class="iblock icn0 icn0-421">&nbsp;</span></a><div class="nbw-tcd box-shadow bd">
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://news.163.com/">
+            新闻
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://www.lofter.com/&amp;act=qbbkdl_20141211_01">
+            LOFTER
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://email.163.com/">
+            邮箱
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://photo.163.com/">
+            相册
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://yuedu.163.com/">
+            阅读
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://yuedu.163.com/book">
+            图书
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://www.youdao.com/">
+            有道
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://photo.163.com/pp/square/">
+            摄影
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://qiye.163.com/">
+            企业邮箱
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://quan.163.com/?from=blogdh">
+            优惠券
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://note.youdao.com/?vendor=163blog">
+            云笔记
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://fm.163.com/?fmblogzx0628">
+            闪电邮
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://mail.163.com/client/dl.html?from=mail27">
+            邮箱大师
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://yxp.163.com/">
+            印像派
+          </a>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://cps.kaola.com/cps/login?unionId=425134127131&amp;uid=blogtopnavtxt&amp;trackingCode=&amp;targetUrl=http://www.kaola.com/">
+            考拉海购
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <a rel="nofollow" target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/redirect.html?frompersonalbloghome&amp;url=http://sitemap.163.com/">
+            更多
+          </a>
+        
+    </div>
+  </div>
+
+    <span style="display:none;margin-left:0;" class="fl iblock space icn1 icn1-4">&nbsp;</span>
+
+  <div id="" class="nbw-im fl im im10">
+    <a class="lbl bd ia noul " href="http://blog.163.com/?frompersonalbloghome" target="_blank" hidefocus="true"><span class="tx">博客</span><span class="iblock icn0 icn0-421">&nbsp;</span></a><div class="nbw-tcd box-shadow bd">
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/services/wapblog.html?frompersonalbloghome">
+            手机博客
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/clone/clone.html?frompersonalbloghome">
+            博客搬家
+          </a>
+          <a target="_blank" class="itm noul youcai " hidefocus="true" href="http://blog.163.com/vip.do?frompersonalbloghome">
+            博客VIP服务
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/public/explore/?frompersonalbloghome">
+            发现
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/g/?frompersonalbloghome">
+            小组
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/public/theme/?frompersonalbloghome">
+            风格
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/blog_admin/blog/static/721279201082863728829/?frompersonalbloghome">
+            LiveWriter写博
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/blog_admin/blog/static/721279201092713253500/?frompersonalbloghome">
+            word写博
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/services/mailblog.html?frompersonalbloghome">
+            邮件写博
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/services/emsblog.html?frompersonalbloghome">
+            短信写博
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/showMultiUser.do?frompersonalbloghome">
+            群博客
+          </a>
+          <a target="_blank" class="itm noul youcai " hidefocus="true" href="http://blog.163.com/BLOG_YOUCAI/">
+            博客油菜地
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/ht/?frompersonalbloghome">
+            博客话题
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/hot/history/?frompersonalbloghome">
+            博客热点
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://q.163.com/#home?frompersonalbloghome">
+            博客圈子
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/findFriend.do?type=5?frompersonalbloghome">
+            找朋友
+          </a>
+        
+    </div>
+  </div>
+                               
+    <span style="display:none;margin-left:0;" class="fl iblock space icn1 icn1-4">&nbsp;</span>
+    
+    
+    
+    <div id="topbar_gachaArea" class="fl topbar_gachaArea">
+        <a class="dlditm" rel="nofollow" target="_blank" hidefocus="true" href="http://www.lofter.com/selection?id=1357100&amp;type=2">LOFTER－毛绒肉球的无限治愈<em></em></a>
+        
+        <div class="m-gachaWrap">
+            <div class="clearfix part1">
+                <a class="jximgwrap" target="_blank" href="http://aishenyuling.lofter.com/post/1d3b6ee7_d57b866"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/bE9YUFVTVlYvaW9VaGNHTjc1TGlMR2IzU3lTR1d6a2lUREJZOTU3SkNjSm96ak1GaUNnV2l3PT0.jpg"></a>
+                <a class="jximgwrap" target="_blank" href="http://aishenyuling.lofter.com/post/1d3b6ee7_d8d6715"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/bE9YUFVTVlYvaXJGMG9IWXpHL2ZMVTJLaHYzMTdsTHAxaHJ0RWhwUXVCR0xHZEhTSFNEYW9BPT0.jpg"></a>
+                <a class="jximgwrap" target="_blank" href="http://beilungg.lofter.com/post/2f353d_8d67cb3"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/VTFWd3Y2aUV4NStlZkc5UElLbGNFbHZXbVkyN2NoKzEvWGE0UGRlbmRGcUc1WWF2S2pUMVB3PT0.png"></a>
+                <a class="jximgwrap" target="_blank" href="http://aishenyuling.lofter.com/post/1d3b6ee7_e9f1a6d"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/bE9YUFVTVlYvaXJEeUZiRHg1d2c0RDM3amRXSFlZaXZTbjRGblhkZjBkRjQ0TXN1YUd3bEx3PT0.jpg"></a>
+            </div>
+            <div class="part2">
+                <a class="moreimg" target="_blank" href="http://www.lofter.com/view?from=blog">更多美图&gt;</a>
+            </div>
+            <div class="part4">&nbsp;</div>
+        </div>
+        
+    </div>
+    
+    <div id="topbar_lofterDldArea" class="fl topbar_lofterDldArea">
+        <a class="dlditm" onclick="statistic4Lofter(&#39;qbbkxz_20160330_04&#39;)" rel="nofollow" target="_blank" hidefocus="true" href="http://www.lofter.com/selection?id=1171100&amp;type=2">LOFTER-日系空气感少女写真<em></em></a>
+        <div class="m-lofterWrap">
+            <div class="clearfix part1">
+                <a class="jximgwrap" target="_blank" href="http://honghan-studio.lofter.com/post/34a2e0_744c90a"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/Snh4TnJ5RkloMHphV0FLTktpSGlVdVNFUGYwR1JicURIdExvTU5wQkRHK3RFM1BublJBWmtnPT0.jpg"></a>
+                <a class="jximgwrap" target="_blank" href="http://youziyouzi.lofter.com/post/3de926_ad26904"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/U0h2T0swclMrbThORWt4UVUrTTBha1loQm0rSjNUVlhJVXZWN0xpcHQ2RzZ5MGlLOUl0cjNnPT0.jpg"></a>
+                <a class="jximgwrap" target="_blank" href="http://fire-3.lofter.com/post/1097f4_d4bd6ef"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ejdrSC9GT1BVTUM2d0FUY3dodFArZnZTRG40S0FFc3hjSTE4TnFRb1c4MnE3Snh2eGVLYmdRPT0.jpg"></a>
+                <a class="jximgwrap" target="_blank" href="http://liutong2015.lofter.com/post/1ded2ac1_a8cd10c"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/TTgzUmxkdEt1YkhUTVdPTTRsTXdkMzlvc01SdWJ0Q2NmcXA3MWlma3ZsOWhtRzFvUk5YUXlRPT0.jpg"></a>
+            </div>
+            <div class="part2">
+                <a class="moreimg" target="_blank" href="http://www.lofter.com/view?from=blog">更多美图&gt;</a>
+            </div>
+            <div class="part4">&nbsp;</div>
+        </div>
+    </div>
+    
+    <div id="topbar_yxpArea" class="fl topbar_yxpArea">
+        <a class="dlditm" rel="nofollow" target="_blank" hidefocus="true" href="http://www.lofter.com/selection?id=1443101&amp;type=2">吃货拯救世界计划<em></em></a>
+    </div>
+
+
+    <div class="nbw-im fl im1 im seebyway"><a rel="nofollow" title="随便看看" class="lbl bd ima spy" href="http://blog.163.com/randomUser.do"><span>&nbsp;</span></a></div>
+
+    <span style="display:none;" class="fl iblock space icn1 icn1-4">&nbsp;</span>
+    <div id="topbar_randShowArea" class="fl" style="display: block;">
+      <div class="nbw-im fl im1 im randtag"><a target="_blank" class="bd ima moveblog randshow" href="http://www.lofter.com/selection?id=1131100&amp;type=2">走吧！五一和我去香港如何？</a></div>
+    </div>
+  </div>
+  <div class="fr pr clearfix">
+
+  <div id="" class="nbw-im fr im loginUserMenuArea">
+    <a class="lbl bd ia noul  loginUserMenu" href="http://blog.163.com/wangchaoqun1997@126/" target="_blank" hidefocus="true"><span class="tx"><img id="loginUserIcon" class="loginUserIcon" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/face60.png"></span><span class="iblock icn0 icn0-421">&nbsp;</span></a><div class="nbw-tcd box-shadow bd">
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/wangchaoqun1997@126/blogBackendManage.do">
+            <span class="iblock mgblog">&nbsp;</span>日志管理
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/wangchaoqun1997@126/dress/">
+            <span class="iblock dsblog">&nbsp;</span>博客装扮
+          </a>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/wangchaoqun1997@126/settings/">
+            <span class="iblock stblog">&nbsp;</span>博客设置
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <span class="itm noul nolink " hidefocus="true">
+            wangchaoqun1997@126.com
+          </span>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://blog.163.com/mailLogin.do?username=wangchaoqun1997@126.com">
+            网易邮箱(<span id="topbar_newEmailCount" class="newEmailCount">0</span>)
+          </a>
+          <a target="_blank" class="itm noul js-lofterhint" hidefocus="true" href="http://www.lofter.com/entry?from=blogcount&amp;logined=true" title="未读LOFTER消息1条">
+            LOFTER(<span id="topbar_newLofterCount" class="newLofterCount ">1</span>)
+          </a>
+        <div class="sep bd space">&nbsp;</div>
+          <a target="_blank" class="itm noul  " hidefocus="true" href="http://fankui.163.com/ft/comment.fb?pid=5002">
+            意见反馈
+          </a>
+          <a target="_self" class="itm noul  " hidefocus="true" href="http://blog.163.com/exit.do?target=http://blog.163.com/thinki_cao/blog/" onclick="this.href=&#39;/exit.do?target=&#39;+location.href">
+            退出登录
+          </a>
+        
+    </div>
+  </div>
+
+      <div id="topbar_messageBoxArea" class="nbw-im fr im9 msgbox js-nomsg-090">
+        <a class="lbl bd ia" href="http://blog.163.com/wangchaoqun1997@126/message/" hidefocus="true"><span class="tx ztag">消息</span>(<span class="msgcount fw1 ztag">0</span>)<span class="iblock icn0 icn0-421">&nbsp;</span></a>
+        <div class="nbw-tcd box-shadow bd msg">
+          <a class="itm noul" href="http://blog.163.com/wangchaoqun1997@126/message/">短消息：<span class="mztag">0</span></a><a class="itm noul" href="http://blog.163.com/wangchaoqun1997@126/message/?type=com">评论：<span class="mztag">0</span></a><a class="itm noul" href="http://blog.163.com/wangchaoqun1997@126/message/?type=comReply">评论回复：<span class="mztag">0</span></a><a class="itm noul" href="http://blog.163.com/wangchaoqun1997@126/message/?type=note">留言：<span class="mztag">0</span></a><a class="itm noul" href="http://blog.163.com/wangchaoqun1997@126/message/?type=alert">通知：<span class="mztag">0</span></a>
+        </div>
+      </div>
+      <div id="topbar_myLikesArea" class="nbw-im fr topbar_myLikesArea" style="display:none">
+	    <div id="likeanimate" class="f-myLikeIcons likeanimate"></div>
+	    <a id="mylikelink" class="lbl bd ima myLikes fl" href="http://www.lofter.com/mentionredirect.do?blogId=&amp;fromBlogToolbar" target="_blank"><span class="fl newpcticon">&nbsp;<em></em></span><span class="fl">我的喜欢</span></a>
+	  </div>
+      <div id="topbar_newPersonalCenterArea" class="nbw-im fr">
+        <a href="http://blog.163.com/wangchaoqun1997@126/manage/?fromBlogToolbar" class="lbl bd ima newPersonalCenter fl ztag"><span class="fl newpcticon">&nbsp;<em></em></span><span class="fl">个人中心</span></a>
+      </div>
+
+      <div id="topbar_goWriteBlogArea" class="nbw-im fr">
+        <a target="_blank" href="http://blog.163.com/wangchaoqun1997@126/getBlog.do?fromString=topbar" class="lbl bd ima gowriteblog fl ztag"><span class="fl writeicon">&nbsp;</span><span class="fl">写日志</span></a>
+      </div>
+
+
+      <span style="display:none" class="fr iblock space icn1 icn1-4">&nbsp;</span>
+      <div id="topbar_useThisTheme" class="nbw-im fr"><span class="lbl ztag ima spy spz ztag">使用此风格</span></div>
+      <div id="topbar_followArea" class="nbw-im fr"><span class="lbl bd ima followit fl ztag"><span class="fl addicon">&nbsp;</span><span class="fl">加关注</span></span></div>
+      <div id="topbar_blogDetailArea" class="fr phide">
+        <div class="nbw-im fr"><span class="lbl bd ima citeblog ztag">引用</span></div>
+        <div class="nbw-im fr"><span class="lbl bd ima recmblog ztag">推荐</span></div>
+      </div>
+  </div>
+</div>
+<script type="text/javascript">
+  (function(){
+      var e = document.getElementById('blog-163-com-main');
+      if(!!e) e.parentNode.insertBefore(document.getElementById('blog-163-com-topbar'),e);
+      e = document.getElementById('blog-notice-email');
+      if(!!e) window.setTimeout(function(){e.style.display='';},50);
+  })()
+</script>
+
+
+<script src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/1.1.1.js.下载"></script>
+
+<!-- @NOPARSE -->
+<script src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/json3.js.下载"></script>
+<script type="text/javascript" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/message.js.下载"></script>
+<!-- /@NOPARSE -->
+
+<div id="blogtoptips-yitou" class="blogtoptips blogtoptips-yitou"><script type="text/javascript" async="" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ntes-ad-cloud.min.js.下载"></script>
+<ins class="adsbydm" inner-prod="adbid" inner-width="100%" inner-height="32" inner-src="http://iad.g.163.com/wa/ad?site=netease&amp;affiliate=blog&amp;cat=notifier&amp;type=text32&amp;location=10001&amp;nomark&amp;url=http%3a%2f%2fblog.163.com%2f"><div><iframe id="e88ecefd58ce44999cbf04c6877d06e8" width="100%" height="32" prod="adbid" frameborder="0" scrolling="no" border="0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ad.html"></iframe></div></ins></div>
+
+<div class="blogtoptips phide" id="blog-163-com-toptips">
+ <div class="blogtoptipswrap">
+  <div id="newbulletinstip" class="newbulletinstip phide">
+    <a class="lnknews fc03 m2a tiptag phide" href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/" target="_blank"></a><span class="txtnews tiptag phide"></span>&nbsp;&nbsp;&nbsp;<a class="fc03 ul nextorprevnews tiptag phide" href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/" hidefocus="true">显示下一条</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a class="fc03 ul close tiptag" href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/" hidefocus="true">关闭</a>
+  </div>
+ </div>
+ 	<div id="sinaoauthtip" class="sinaoauthtip phide">
+    	<span style="">温馨提示！由于新浪微博认证机制调整，您的新浪微博帐号绑定已过期，请重新绑定！</span><a rel="nofollow" class="fc03 noul iblock" href="http://blog.163.com/thinki_cao/settings/?fromnewcenter#m=6">立即重新绑定新浪微博》</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a class="fc03 iblock close" href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/">关闭</a>
+  	</div>
+    <div id="$_faxiantip" class="faxiantip phide">
+      <div>
+	    <a class="m2a iblock" href="http://blog.163.com/public/explore/?fromblogbanner" target="_blank"></a>
+	    <span class="faxiantag m2a"></span>
+      </div>
+    </div>
+    <div id="$_guanggaotip" class="guanggaotip phide">
+      <div>
+	    <a class="m2a iblock" href="http://blog.163.com/wangchaoqun1997@126/settings/#m=7&amp;fromblogbanner" target="_blank"></a>
+	    <span class="guanggaotag m2a"></span>
+      </div>
+    </div>
+    <div id="$_lofterInviteTip" class="lofterInviteTip phide">
+      <div>
+	    <a class="m2a iblock" href="http://www.lofter.com/invite/163blog/?email=wangchaoqun1997@126.com" target="_blank"></a>
+	    <span class="lofterInviteTag m2a"></span>
+      </div>
+    </div>
+</div>  <div class="nb-wrap wsy" id="blog-163-com-main"><div class="nb-are nb-top">
+  <div class="wkg h" id="blog-163-com-banner">
+    
+    <div class="t">
+      <h1 class="n c"><span class="ztag pre">小辉辉的博客</span></h1>
+      <p class="d c"><span class="ztag pre">---------------那些逝去的岁月，用文字记录我们的心路历程</span></p>
+    </div>
+    <div class="f h ztag">&nbsp;</div>
+    <a class="x" hidefocus="true" target="_blank" href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/#"><span class="xx ztag"></span></a>
+  </div>
+</div><div class="nb-are nb-nav">
+  <div class="wkg">
+    <div class="c h">
+      <h2>导航</h2>
+      <ul class="noul clearfix">
+                
+	        <li class="w w0">
+	          <a class="i i0 fc01 h" hidefocus="true" href="http://blog.163.com/thinki_cao/">首页</a>
+	        </li>
+	        <li class="w w1 selected">
+	          <a class="i i1 fc01 h" hidefocus="true" href="http://blog.163.com/thinki_cao/blog/">日志</a>
+	        </li>
+	        <li class="w w9">
+	          <a class="i i9 fc01 h" hidefocus="true" href="http://blog.163.com/thinki_cao/loftarchive/">LOFTER</a>
+	        </li>
+	        <li class="w w2">
+	          <a class="i i2 fc01 h" hidefocus="true" href="http://blog.163.com/thinki_cao/album/">相册</a>
+	        </li>
+	        <li class="w w3">
+	          <a class="i i3 fc01 h" hidefocus="true" href="http://blog.163.com/thinki_cao/music/">音乐</a>
+	        </li>
+	        <li class="w w4">
+	          <a class="i i4 fc01 h" hidefocus="true" href="http://blog.163.com/thinki_cao/collection/">收藏</a>
+	        </li>
+	        <li class="w w5">
+	          <a class="i i5 fc01 h" hidefocus="true" href="http://blog.163.com/thinki_cao/friends/">博友</a>
+	        </li>
+	        <li class="w w6">
+	          <a class="i i6 fc01 h" hidefocus="true" href="http://blog.163.com/thinki_cao/profile/">关于我</a>
+	        </li>
+      </ul><!--
+ --></div>
+    <div class="l h">&nbsp;</div>
+    <div class="r h">&nbsp;</div>
+  </div>
+</div>  <div class="nb-are nb-smt"><div class="wkg h space"><div class="l h">&nbsp;</div><div class="r h">&nbsp;</div><div class="c h">&nbsp;</div></div></div>
+  <div class="nb-are nb-cnt">
+    <div class="wkg">
+      <div class="c wc h clearfix " id="blog-163-com-container">
+
+  <div class="nb-mdl lcr m-3 " id="-3">
+  <div class="nb-mt lcr th fc02">
+    <div class="c tc th lcr"><h2 class="thide nb-jsc mdl_t_t">日志</h2></div>
+    <div class="r tm th nb-jsc"></div>
+    <div class="l tl th">&nbsp;</div>
+    <div class="r tr th">&nbsp;</div>
+  </div>
+    <div class="nb-mc lcr">
+      <div class="c cc lcr nb-jsc">
+<script>
+function g_onSuggestedReadingImgLoad(_img){
+    var image = new Image();
+    image.src = _img.src;
+    var _width = 90;
+    var _height = 90;
+    if(image.width > image.height){
+    	_img.style.marginLeft = -Math.floor((image.width*(_height/image.height)-_width)/2)+'px';
+    	_img.style.height = _height+'px';
+    }else {
+    	_img.style.width = _width+'px';
+    	_img.style.marginTop = -Math.floor((image.height*(_width/image.width)-_height)/2)+'px';
+    }
+    _img.style.display = 'block';
+}
+</script>
+<div class="nbw-ryt ztag clearfix ">
+  <div class="right bdwl bds0 bdc0">
+    <div class="cnt ztag">
+    <div class="g-rsidebar">
+        <div class="m-aboutme">
+            <div class="ttlbar fc06 bdwb bdc0 bds0">关于我</div>
+            <a class="avatar" href="http://blog.163.com/thinki_cao/" target="_blank" hidefocus="true">
+                <img id="rsavatarimg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava.s">
+            </a>
+            <div class="nick fc03">
+                 <a href="http://blog.163.com/thinki_cao/" target="_blank" hidefocus="true">小辉辉</a>
+                 
+            </div>
+            <div id="r_statusNode" class="statusNode"><span class="findfrd"> <span class="iblock icn0 icn0-41">&nbsp;</span> <span class="fc03 ul ztag" onclick="nb.p[&#39;m-3&#39;].g.af(event);">加博友</span> </span><span class="dofollow"> <span class="iblock icn0 icn0-016">&nbsp;</span> <span class="fc03 ul tofollow" onclick="nb.p[&#39;m-3&#39;].g.sf(0);">关注他</span> </span></div>
+        </div>
+        
+        <div class="m-rtopad" style="display: block;">
+            <a href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/#" target="_blank" hidefocus="true" style="display: none;"><img style="border:none;" id="righttopadimg"></a>
+            <iframe marginwidth="0" marginheight="0" id="rtop_iframe" style="display: block;" width="240" height="240" frameborder="0" scrolling="no" allowtransparency="true" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/r.html"></iframe>
+        </div>
+        
+        <div class="m-blogclasses">
+            <div class="ttlbar fc06 bdwb bdc0 bds0">文章分类</div>
+            <ul>
+                    <li><a class="fc05" href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=1&amp;c=fks_084075085094086075084083080095092085088071080094081070" target="_blank" hidefocus="true"><span class="iblock dot">·</span>fsl（0）</a></li>
+                    <li><a class="fc05" href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=1&amp;c=fks_084068093080081075086085087095092085088071080094081070" target="_blank" hidefocus="true"><span class="iblock dot">·</span>ZedBoard（3）</a></li>
+                    <li><a class="fc05" href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=1&amp;c=fks_084068092086083074084085095095092085088071080094081070" target="_blank" hidefocus="true"><span class="iblock dot">·</span>PCB（1）</a></li>
+                    <li><a class="fc05" href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=1&amp;c=fks_084069083081089075084084095095092085088071080094081070" target="_blank" hidefocus="true"><span class="iblock dot">·</span>头脑风暴（1）</a></li>
+                    <li><a class="fc05" href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=1&amp;c=fks_084069085083083071080084080095092085088071080094081070" target="_blank" hidefocus="true"><span class="iblock dot">·</span>维修记录（1）</a></li>
+                    <li><a class="fc05" href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=1&amp;c=fks_084069085083083071085095081095092085088071080094081070" target="_blank" hidefocus="true"><span class="iblock dot">·</span>Git（2）</a></li>
+                    <li><a class="fc05" href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=1&amp;c=fks_084070093084084064086083095095092085088071080094081070" target="_blank" hidefocus="true"><span class="iblock dot">·</span>Computer Vis（2）</a></li>
+                    <li><a class="fc05" href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=1&amp;c=fks_084070083083087064080086082095092085088071080094081070" target="_blank" hidefocus="true"><span class="iblock dot">·</span>Centos（3）</a></li>
+                        <li><a class="fc05" href="http://blog.163.com/thinki_cao/blog/#m=0" target="_blank" hidefocus="true"><span class="iblock dot">·</span>更多 &gt;</a></li>
+            </ul>
+        </div>
+        <div id="r_mlofteriframe" class="m-lofteriframe">
+            <div class="ttlbar fc06 bdwb bdc0 bds0"><a hidefocus="true" style="display:none;float:left;margin-left:12px;color:#ff0000;font-size:12px;text-decoration:none;" target="_blank" href="http://www.lofter.com/?act=qbbokejingxuan_20150109_03&amp;newloginentry=1">注册免费冲印20张照片</a><span>LOFTER精选</span></div>
+            <iframe id="r_lofteriframe" width="240" height="745" frameborder="0" border="0" scrolling="no" marginheight="0" marginwidth="0" allowtransparency="true" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/mailEntry.html"></iframe>
+            
+            <div class="btlink" style="height:20px;line-height:20px;padding:10px 0 0 12px;"><a target="_blank" href="http://www.lofter.com/selection?id=1225100&amp;type=2&amp;utm_source=%E5%8D%9A%E5%AE%A2%E5%85%B3%E9%94%AE%E8%AF%8D%E5%BA%95%E9%83%A8%E6%92%A9%E5%A6%B9&amp;utm_campaign=%E5%8D%9A%E5%AE%A2%E5%85%B3%E9%94%AE%E8%AF%8D%E5%BA%95%E9%83%A8%E6%92%A9%E5%A6%B9" hidefocus="true" class="fc03" style="font-size:14px;text-decoration:none;">八招诀窍，教你实力撩妹 &gt;</a></div>
+            
+        </div>
+        <div id="r_mkaolaadv" class="m-kaolaadv">
+            <div class="ttlbar fc06 bdwb bdc0 bds0">网易考拉推荐</div>
+            <iframe width="240" height="275" marginheight="0" marginwidth="0" frameborder="0" scrolling="no" border="0" allowtransparency="true" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/r(1).html"></iframe>
+            
+        </div>
+        
+        <div id="r_m163news" class="m-163news"><div class="ttlbar fc06 bdwb bdc0 bds0">网易新闻</div>            <div class="newscnt">                <a class="headnews" hidefocus="true" target="_blank" href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/">                    <img src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/saved_resource">                    <span class="icover"></span>                    <span class="info"><span class="imgdesc thide">广西大货车撞"碎"小货车&nbsp;致2死1伤</span></span>                </a>                <ul>                                                                              <li class="thide"><a hidefocus="true" target="_blank" href="http://news.163.com/17/0527/08/CLEA7QCV0001899O.html" class="fc05"><span class="iblock dot">·</span>"辱母杀人"案二审开庭&nbsp;此前一审于欢被判无期徒刑</a></li>                                                            <li class="thide"><a hidefocus="true" target="_blank" href="http://news.163.com/17/0527/04/CLDRL60600018AOQ.html" class="fc05"><span class="iblock dot">·</span>客机差几分钟就要起飞&nbsp;乘客惊恐发现机身有一个洞</a></li>                                                            <li class="thide"><a hidefocus="true" target="_blank" href="http://news.163.com/17/0526/22/CLD5TKNN0001875P.html" class="fc05"><span class="iblock dot">·</span>女德讲师胡诌武警肩扛火车遭骂:神剧都不敢这么拍</a></li>                                                            <li class="thide"><a hidefocus="true" target="_blank" href="http://news.163.com/17/0527/07/CLE5N1360001875P.html" class="fc05"><span class="iblock dot">·</span>中国"新一线"城市排名出炉&nbsp;第一名竟然是这个城市</a></li>                                                            <li class="thide"><a hidefocus="true" target="_blank" href="http://news.163.com/17/0527/02/CLDLGLJV000187VI.html" class="fc05"><span class="iblock dot">·</span>三名小学生暑假河边玩耍不幸溺亡&nbsp;家属获赔60万元</a></li>                                                            <li class="thide"><a hidefocus="true" target="_blank" href="http://news.163.com/17/0526/23/CLDC2KQ800018AOR.html" class="fc05"><span class="iblock dot">·</span>小伙被美女搭讪60元"玩一下"&nbsp;结果对方秒变男儿身</a></li>                                                            <li class="thide"><a hidefocus="true" target="_blank" href="http://news.163.com/17/0526/21/CLD24CGL00018AOR.html" class="fc05"><span class="iblock dot">·</span>司机如厕后被贴罚单不服&nbsp;警察:车停加油站很危险</a></li>                                                            <li class="thide"><a hidefocus="true" target="_blank" href="http://news.163.com/17/0527/07/CLE54G6V00018AOR.html" class="fc05"><span class="iblock dot">·</span>浙江一小区现"军火库":10把枪30件扳机1904发子弹</a></li>                                                                          </ul>                <div class="download163news">                    <a class="fc03" target="_blank" hidefocus="true" href="http://www.163.com/newsapp/">下载网易新闻客户端 &gt;</a>                </div>            </div></div>
+        
+        
+        <div class="m-rbottomad" style="display: block;">
+            <a href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/#" target="_blank" hidefocus="true" style="display: none;"><img style="border:none;" id="rightbottomadimg"></a>
+            <iframe marginwidth="0" marginheight="0" id="rbottom_iframe" style="display: block;" width="240" height="240" frameborder="0" scrolling="no" allowtransparency="true" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/r(2).html"></iframe>
+        </div>
+        
+        <div id="r_fixedNodesWrap" class="fixedNodesWrap"><div id="r_fixedNodesCnt" class="fixedNodesCnt f-trans" style="visibility: hidden; opacity: 0;"><div id="r_mlofteriframe2" class="f-trans m-lofteriframe m-lofteriframe-2">
+            <div class="ttlbar fc06 bdwb bdc0 bds0"><a hidefocus="true" style="display:none;float:left;margin-left:12px;color:#ff0000;font-size:12px;text-decoration:none;" target="_blank" href="http://www.lofter.com/?act=qbbokejingxuan_20150109_03&amp;newloginentry=1">注册免费冲印20张照片</a><span>LOFTER精选</span></div>
+            <iframe id="r_lofteriframe" width="240" height="745" frameborder="0" border="0" scrolling="no" marginheight="0" marginwidth="0" allowtransparency="true" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/mailEntry(1).html"></iframe>
+            
+            <div class="btlink" style="height:20px;line-height:20px;padding:10px 0 0 12px;"><a target="_blank" href="http://www.lofter.com/selection?id=1225100&amp;type=2&amp;utm_source=%E5%8D%9A%E5%AE%A2%E5%85%B3%E9%94%AE%E8%AF%8D%E5%BA%95%E9%83%A8%E6%92%A9%E5%A6%B9&amp;utm_campaign=%E5%8D%9A%E5%AE%A2%E5%85%B3%E9%94%AE%E8%AF%8D%E5%BA%95%E9%83%A8%E6%92%A9%E5%A6%B9" hidefocus="true" class="fc03" style="font-size:14px;text-decoration:none;">八招诀窍，教你实力撩妹 &gt;</a></div>
+            
+        </div><div id="r_mkaolaadv2" class="m-kaolaadv m-kaolaadv-2">
+            <div class="ttlbar fc06 bdwb bdc0 bds0">网易考拉推荐</div>
+            <iframe width="240" height="275" marginheight="0" marginwidth="0" frameborder="0" scrolling="no" border="0" allowtransparency="true" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/r(3).html"></iframe>
+            
+        </div></div></div>
+    </div>
+    </div>
+  </div>
+  <div class="left">
+     <div class="lcnt bdwr bds0 bdc0 ">
+      <div id="$_newOldBlogLinkTopDiv" class="top fc03 bdwb bdc0 bds2 clearfix">       <span class="ilft iblock icn0 icn0-620">&nbsp;</span>       <div class="pleft thide"><a class="m2a" href="http://blog.163.com/thinki_cao/blog/static/83944875201361775134657/">Ubuntu12.04下HDMI输出设置以及输出无声音的解决方法</a></div>                 <span class="irgt iblock icn0 icn0-619">&nbsp;</span>       <div class="pright thide"><a class="m2a" href="http://blog.163.com/thinki_cao/blog/static/83944875201362410442466/">思维导图的介绍及其在Ubuntu下的安装与使用</a></div>     </div>
+     <div class="mcnt ztag">
+      <div class="nbw-bitm bdwb bds2 bdc0 ">
+        <div class="multicntwrap">
+	      <div class="multicnt">
+	      	<div>
+		      <h3 class="title pre fs1"><span class="tcnt">Linux下DMA驱动如何实现</span>&nbsp;&nbsp;<span class="bgc0 fc07 fw0 fs0"></span></h3>
+		      <p class="tdep clearfix nbw-act fc06" style="line-height:20px;">
+		        <span class="pleft">
+		          
+		          <span class="blogsep">2013-07-21 18:47:12</span><span class="blogsep">|&nbsp;&nbsp;分类：</span>
+		          <a class="fc03 m2a" href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=1&amp;c=fks_084070085082089071085082080095092085088071080094081070" title="Embedded System">Embedded System</a>
+		          <span class="blogsep" id="$_blogTagTitle">|&nbsp;&nbsp;标签：</span><span class="fc03" id="$_blogTagInfo"><a href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=3&amp;c=驱动程序" class="fc03 m2a">驱动程序</a>&nbsp;&nbsp;<a href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=3&amp;c=dma" class="fc03 m2a">dma</a>&nbsp;&nbsp;<a href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=3&amp;c=cache" class="fc03 m2a">cache</a>&nbsp;&nbsp;<a href="http://blog.163.com/thinki_cao/blog/#m=0&amp;t=3&amp;c=流式映射" class="fc03 m2a">流式映射</a>&nbsp;&nbsp;</span>
+		        </span>
+		        <span class="pright fc07 ztag"><span class="blogsep">|</span><span id="$_spanReport" class="fc03 m2a">举报</span></span>
+		        <span class="pright fc07 ztag"><span class="blogsep">|</span><span class="zihao fc03" id="$_fontswitch">字号<span class="zihaoshow  phide" id="$_fontsTypes"><span class="zihaoc bdc0"><span class="stag"></span><span class="fc04 stag">大</span><span class="fc04 stag">中</span><span class="fc04 stag">小</span></span></span></span></span><span class="pright pnt fc03" id="$_blog_subscribe"><span class="iblock icn0 icn0-919">&nbsp;</span><a class="m2a">订阅</a></span>
+		      </p>
+		    </div>
+	      </div>
+	      
+	      <div class="m-shareAndDownLoad">
+              <div class="share-wrap pleft">
+                <span id="$_shareBtn_lofter2" title="分享到LOFTER" class="shareitm lofter f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_sinaweibo2" title="分享到新浪微博" class="shareitm sinawb f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_qq2" title="分享到QQ空间" class="shareitm qqzone f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_qqweibo2" title="分享到腾讯微博" class="shareitm qqweibo f-bkicons">&nbsp;</span>
+                <div id="$_shareBtn_weixin2" title="分享到微信" class="shareitm weixin f-bkicons">
+<div class="code2dimlayer fc06">
+    <img src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/bitMaxImageGen.do">
+    <div class="tips">
+        <p>用微信&nbsp;&nbsp;“扫一扫”</p>
+        <p>将文章分享到朋友圈。</p>
+    </div>
+    <a class="close">&nbsp;</a>
+</div>
+                </div>
+                <div id="$_shareBtn_yixin2" title="分享到易信" class="shareitm yixin f-bkicons">
+<div class="code2dimlayer fc06">
+    <img src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/bitMaxImageGen(1).do">
+    <div class="tips">
+        <p>用易信&nbsp;&nbsp;“扫一扫”</p>
+        <p>将文章分享到朋友圈。</p>
+    </div>
+    <a class="close">&nbsp;</a>
+</div>
+                </div>
+              </div>
+              <a class="pright fc03 noul" target="_blank" href="http://www.lofter.com/app?act=qbbkrzydb_20150408_01">&nbsp;&nbsp;下载LOFTER</a>
+              <a class="pright fc03 noul" target="_blank" href="http://yxp.163.com/">我的照片书&nbsp;&nbsp;|</a>
+          </div>
+          
+        </div>
+
+        <div>
+        
+        </div>
+
+        <div class="nbw-blog-start"></div>
+        <div class="bct fc05 fc11 nbw-blog ztag">在《深入理解Linux内核》中的第545页介绍了DMA的相关操作。说道DMA，那就不得不提到Cache（高速缓存）的问题。书中引用了如下一段例子来描述了Cache一致性问题：<div><span style="line-height: 22px;">“假设设备驱动程序把一些数据填充到内存缓冲区中，然后立刻命令硬件设备利用DMA传送方式读取该数据。如果DMA访问这些物理RAM内存单元，而相应的硬件高速缓存行的内容还没有写入RAM中，那么硬件设备所读取的至就是内存缓冲区中的旧值。”</span><div>现在有两种方法来处理DMA缓冲区：</div><div><b>一致性DMA映射：</b></div><div>书上讲的比较抽象，通俗地所就是任何对DMA缓冲区的改写都会直接更新到内存中，也称之为“同步的”或者“一致的”。</div><div><b>流式DMA映射：</b></div><div>根据个人的理解，这里的流即输入输出流，我们需要事先指定DMA缓冲区的方向，比如是”读缓冲区”还是“写缓冲区”。也称之为“异步的”或“非一致性的”，详细的内容请看下文。</div><div><br></div><div>由于x86体系结构中，硬件设备驱动程序本身会“窥探”所访问的硬件告诉缓存，因此x86体系结构中不存在DMA一致性问题。而对于其他一些架构如MIPS，SPARC以及POWERPC（包括ARM在内）需要在软件上保证其DMA一致性。</div><div><br></div><div>对于以上两者如何选择，书中有一个合适的建议，<b><font color="#ff0000">如果CPU和DMA处理器以不可预知的方式去访问一个缓冲区，那么必须强制使用一致性DMA映射方式（这里我对不可预知的理解是，不能确定在何时它们访问缓冲区），其他情形下，流式DMA映射方式更可取，因为在一些体系结构中处理一致性DMA映射是很麻烦的，并且可能导致更低的系统性能。</font></b></div><div><br></div><div>这里详细介绍流式DMA：</div><div>需要访问的缓冲区需要在数据传送之前被映射（这里的映射也就是需要调用一些函数告知内核，该缓冲区进行流式映射），在传送之后被取消映射。</div><div><br></div><div>启动一次流式DMA数据传输分为如下步骤：</div><div><b>1. 分配DMA缓冲区。</b></div></div><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div><div>在DMA设备不采用S/G（分散/聚集）模式的情况下，必须保证缓冲区是物理上连续的，linux内核有两个函数用来分配连续的内存：kmalloc()和__get_free_pages()。这两个函数都有分配连续内存的最大值，kmalloc以分配字节为单位，最大约为64KB，__get_free_pages()以分配页为单位，最大能分配2^order数目的页，order参数的最大值由include/linux/Mmzone.h文件中的MAX_ORDER宏决定（在默认的2.6.18内核版本中，该宏定义为10。也就是说在理论上__get_free_pages函数一次最多能申请1&lt;&lt;10 * 4KB也就是4MB的连续物理内存，在Xilinx Zynq Linux内核中，该宏定义为11）。</div></div></blockquote><div><div><b>2. 建立流式映射。</b></div></div><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div><div>在对DMA冲区进行读写访问之后，且在启动DMA设备传输之前，启用dma_map_single()函数建立流式DMA映射，这两个函数接受缓冲区的线性地址作为其参数并返回相应的总线地址。</div></div></blockquote><div><div><b>3. 释放流式映射。</b></div></div><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div><div>当DMA传输结束之后我们需要释放该映射，这时调用dma_unmap_single()函数。</div></div></blockquote><div><div><span style="line-height: 22px;"><b>注意：</b></span></div></div><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div><div><span style="line-height: 22px;">(1). 为了避免高速缓存一致性问题，驱动程序在开始从RAM到设备的DMA数据传输之前，如果有必要，应该调用dma_sync_single_for_device()函数刷新与DMA缓冲区对应的高速缓存行。</span></div></div><div><div><span style="line-height: 22px;">(2). 从设备到RAM的一次DMA数据传送完成之前设备驱动程序是不可以访问内存缓冲区的，但如果有必要的话，驱动程序在读缓冲区之前，应该调用dma_sync_single_for_cpu()函数使相应的硬件高速缓存行无效。</span></div><div>(3). 虽然kmalloc底层也是用__get_free_pages实现的，不过kmalloc对应的释放缓冲区函数为kfree，而__get_free_pages对应的释放缓冲区函数为free_pages。具体与__get_free_pages有关系的几个申请与释放函数如下：</div></div><div><b>申请函数：</b></div></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div>alloc_pages(gfp_mask,order)</div></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div>返回第一个所分配页框描述符的地址，或者如果分配失败则返回NULL。</div></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div>__get_free_pages(gfp_mask,order)</div></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div>类似于alloc_pages()，但它返回第一个所分配页的线性地址。<span style="line-height: 22px;">如果需要获得线性地址对应的页框号，那么需要调用virt_to_page(addr)宏产生线性地址。</span></div></blockquote></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div><b>释放函数：</b></div></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div>__free_pages(page,order)</div></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div>这里主要强调page是要释放缓冲区的线性首地址所在的页框号</div></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div>free_pages(page,order)</div></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div>这个函数类似于__free_pages(page,order)，但是它接收的参数为要释放的第一个页框的线性地址addr</div></blockquote></blockquote><blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;"><div><br></div></blockquote><div><wbr></div></div>
+        <div class="nbw-blog-end"></div>
+
+        <div>
+		</div>
+
+        <div>
+		</div>
+
+		<div>
+      	  <div>
+		  	<div class="wumii-hook"></div><script type="text/javascript" id="wumiiRelatedItems"></script>
+		  </div>
+		</div>
+
+        <div class="ptc phide ztag">
+          <span class="ptcp">
+            <span class="iblock bcmimg">&nbsp;</span>
+            <span class="nbc-0 nbc-0-40 ptcmt ptcmt-2">评论这张</span>
+          </span>
+        </div>
+		<div style="display:none" class="ptc phide ztag">
+          <span class="ptcp">
+            <span class="nbc-0 nbc-0-40 ptcmi">
+              <img src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/microblog.png">
+            </span>
+            <span class="nbc-0 nbc-0-40 ptcmt">转发至微博</span>
+          </span>
+        </div>
+        <div class="ptc phide">
+          <a id="publishtolofter" class="toLofter" title="发布到LOFTER" target="_blank" hidefocus="true">&nbsp;</a>
+        </div>
+        
+        <div style="display:none" class="ptc phide ztag">
+          <span class="ptcp">
+            <span class="nbc-0 nbc-0-40 ptcmi">
+              <img src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/microblog.png">
+            </span>
+            <span class="nbc-0 nbc-0-40 ptcmt">转发至微博</span>
+          </span>
+        </div>
+
+
+        <div class="nbw-act tbar fc03 clearfix">
+          
+          
+          <div class="editopbar" style="height:32px;line-height:32px;text-align:left;">
+            <span class="fc07">阅读(<span id="$_spaniReadCount">8119</span>)</span><span class="sep fc07">|</span>
+            <span class="fc07">评论(<span id="$_spaniCommentCount">0</span>)</span>
+          </div>
+          
+          
+          <div style="height:40px;line-height:40px;">
+            <div class="pleft rdif">
+              <span style="display:none" class="pleft sep sep-last fc07">|</span>
+              <div class="share-wrap pleft">
+                <span id="$_shareBtn_lofter" title="分享到LOFTER" class="shareitm lofter f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_sinaweibo" title="分享到新浪微博" class="shareitm sinawb f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_qq" title="分享到QQ空间" class="shareitm qqzone f-bkicons">&nbsp;</span>
+                <span id="$_shareBtn_qqweibo" title="分享到腾讯微博" class="shareitm qqweibo f-bkicons">&nbsp;</span>
+                <div id="$_shareBtn_weixin" title="分享到微信" class="shareitm weixin f-bkicons">
+<div class="code2dimlayer fc06">
+    <img src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/bitMaxImageGen(2).do">
+    <div class="tips">
+        <p>用微信&nbsp;&nbsp;“扫一扫”</p>
+        <p>将文章分享到朋友圈。</p>
+    </div>
+    <a class="close">&nbsp;</a>
+</div>
+                </div>
+                <div id="$_shareBtn_yixin" title="分享到易信" class="shareitm yixin f-bkicons">
+<div class="code2dimlayer fc06">
+    <img src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/bitMaxImageGen(3).do">
+    <div class="tips">
+        <p>用易信&nbsp;&nbsp;“扫一扫”</p>
+        <p>将文章分享到朋友圈。</p>
+    </div>
+    <a class="close">&nbsp;</a>
+</div>
+                </div>
+              </div>
+              
+              <form style="display:none" id="shareToLofterForm" method="post" target="_blank" action="http://www.lofter.com/sharetext?act=qbblogpost_20131023_04">
+                <input type="hidden" name="thirdId" value="fks_087064086086080065083083085066072094082074080082094068081">
+                <input type="hidden" name="from" value="BLOGPOST">
+                <input type="hidden" name="title" value="Linux下DMA驱动如何实现">
+                <input type="hidden" name="content" value="在《深入理解Linux内核》中的第545页介绍了DMA的相关操作。说道DMA，那就不得不提到Cache（高速缓存）的问题。书中引用了如下一段例子来描述了Cache一致性问题：&lt;div&gt;&lt;span style=&quot;line-height: 22px;&quot;   &gt;“假设设备驱动程序把一些数据填充到内存缓冲区中，然后立刻命令硬件设备利用DMA传送方式读取该数据。如果DMA访问这些物理RAM内存单元，而相应的硬件高速缓存行的内容还没有写入RAM中，那么硬件设备所读取的至就是内存缓冲区中的旧值。”&lt;/span&gt;&lt;div&gt;现在有两种方法来处理DMA缓冲区：&lt;/div&gt;&lt;div&gt;&lt;b&gt;一致性DMA映射：&lt;/b&gt;&lt;/div&gt;&lt;div&gt;书上讲的比较抽象，通俗地所就是任何对DMA缓冲区的改写都会直接更新到内存中，也称之为“同步的”或者“一致的”。&lt;/div&gt;&lt;div&gt;&lt;b&gt;流式DMA映射：&lt;/b&gt;&lt;/div&gt;&lt;div&gt;根据个人的理解，这里的流即输入输出流，我们需要事先指定DMA缓冲区的方向，比如是”读缓冲区”还是“写缓冲区”。也称之为“异步的”或“非一致性的”，详细的内容请看下文。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;由于x86体系结构中，硬件设备驱动程序本身会“窥探”所访问的硬件告诉缓存，因此x86体系结构中不存在DMA一致性问题。而对于其他一些架构如MIPS，SPARC以及POWERPC（包括ARM在内）需要在软件上保证其DMA一致性。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;对于以上两者如何选择，书中有一个合适的建议，&lt;b&gt;&lt;font color=&quot;#ff0000&quot;   &gt;如果CPU和DMA处理器以不可预知的方式去访问一个缓冲区，那么必须强制使用一致性DMA映射方式（这里我对不可预知的理解是，不能确定在何时它们访问缓冲区），其他情形下，流式DMA映射方式更可取，因为在一些体系结构中处理一致性DMA映射是很麻烦的，并且可能导致更低的系统性能。&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;这里详细介绍流式DMA：&lt;/div&gt;&lt;div&gt;需要访问的缓冲区需要在数据传送之前被映射（这里的映射也就是需要调用一些函数告知内核，该缓冲区进行流式映射），在传送之后被取消映射。&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;启动一次流式DMA数据传输分为如下步骤：&lt;/div&gt;&lt;div&gt;&lt;b&gt;1. 分配DMA缓冲区。&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;&lt;div&gt;在DMA设备不采用S/G（分散/聚集）模式的情况下，必须保证缓冲区是物理上连续的，linux内核有两个函数用来分配连续的内存：kmalloc()和__get_free_pages()。这两个函数都有分配连续内存的最大值，kmalloc以分配字节为单位，最大约为64KB，__get_free_pages()以分配页为单位，最大能分配2^order数目的页，order参数的最大值由include/linux/Mmzone.h文件中的MAX_ORDER宏决定（在默认的2.6.18内核版本中，该宏定义为10。也就是说在理论上__get_free_pages函数一次最多能申请1&amp;lt;&amp;lt;10 * 4KB也就是4MB的连续物理内存，在Xilinx Zynq Linux内核中，该宏定义为11）。&lt;/div&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;div&gt;&lt;div&gt;&lt;b&gt;2. 建立流式映射。&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;&lt;div&gt;在对DMA冲区进行读写访问之后，且在启动DMA设备传输之前，启用dma_map_single()函数建立流式DMA映射，这两个函数接受缓冲区的线性地址作为其参数并返回相应的总线地址。&lt;/div&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;div&gt;&lt;div&gt;&lt;b&gt;3. 释放流式映射。&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;&lt;div&gt;当DMA传输结束之后我们需要释放该映射，这时调用dma_unmap_single()函数。&lt;/div&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;div&gt;&lt;div&gt;&lt;span style=&quot;line-height: 22px;&quot;   &gt;&lt;b&gt;注意：&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;&lt;div&gt;&lt;span style=&quot;line-height: 22px;&quot;   &gt;(1). 为了避免高速缓存一致性问题，驱动程序在开始从RAM到设备的DMA数据传输之前，如果有必要，应该调用dma_sync_single_for_device()函数刷新与DMA缓冲区对应的高速缓存行。&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;div&gt;&lt;span style=&quot;line-height: 22px;&quot;   &gt;(2). 从设备到RAM的一次DMA数据传送完成之前设备驱动程序是不可以访问内存缓冲区的，但如果有必要的话，驱动程序在读缓冲区之前，应该调用dma_sync_single_for_cpu()函数使相应的硬件高速缓存行无效。&lt;/span&gt;&lt;/div&gt;&lt;div&gt;(3). 虽然kmalloc底层也是用__get_free_pages实现的，不过kmalloc对应的释放缓冲区函数为kfree，而__get_free_pages对应的释放缓冲区函数为free_pages。具体与__get_free_pages有关系的几个申请与释放函数如下：&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;申请函数：&lt;/b&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;alloc_pages(gfp_mask,order)&lt;/div&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;返回第一个所分配页框描述符的地址，或者如果分配失败则返回NULL。&lt;/div&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;__get_free_pages(gfp_mask,order)&lt;/div&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;类似于alloc_pages()，但它返回第一个所分配页的线性地址。&lt;span style=&quot;line-height: 22px;&quot;   &gt;如果需要获得线性地址对应的页框号，那么需要调用virt_to_page(addr)宏产生线性地址。&lt;/span&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;&lt;b&gt;释放函数：&lt;/b&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;__free_pages(page,order)&lt;/div&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;这里主要强调page是要释放缓冲区的线性首地址所在的页框号&lt;/div&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;free_pages(page,order)&lt;/div&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;这个函数类似于__free_pages(page,order)，但是它接收的参数为要释放的第一个页框的线性地址addr&lt;/div&gt;&lt;/blockquote&gt;&lt;/blockquote&gt;&lt;blockquote style=&quot;margin: 0 0 0 40px; border: none; padding: 0px;&quot;   &gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/blockquote&gt;&lt;div&gt;&lt;wbr&gt;&lt;/div&gt;">
+                <input type="hidden" name="source" value="小辉辉">
+                <input type="hidden" name="sourceUrl" value="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337">
+                <input type="hidden" name="tag" value="驱动程序,dma,cache,流式映射">
+              </form>
+              
+            </div>
+            <div class="pright rightoperatebar rightoperatebar-new">
+              <span class="f-myLikeIcons likebtn pnt pright" id="$_spanLike">喜欢</span>
+	            <span class="f-myLikeIcons recommendbtn pnt pright" id="$_spanRecommend">推荐</span>
+	          <span style="display:none" id="$_spanShowRecommend" class="pleft rdct  phide">
+	            <span class="pleft ul fc03"><span id="$_spanRecommendCount">0</span>人</span><span class="pleft iblock icn0 icn0-722 nbw-tgl1 nas-icn0fix">&nbsp;</span><span class="pleft iblock icn0 icn0-621 nbw-tgl0 nas-icn0fix">&nbsp;</span><span class="fc07"></span>|&nbsp;
+	          </span>
+                <span class="f-myLikeIcons reblogbtn pnt pright" id="$_spanCite">转载</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="snl">
+        <div style="display:none" class="phide bdwb bds2 bdc0 rdcnt" id="$_divRecommendContent"></div>
+        <div id="yodaoad" class="bdwb bds2 bdc0" style="display:none;_zoom:1;">&nbsp;</div>
+        <div id="$_newOldBlogLinkBottomDiv" class="top fc03 clearfix">       <span class="ilft iblock icn0 icn0-620">&nbsp;</span>       <div class="pleft thide"><a class="m2a" href="http://blog.163.com/thinki_cao/blog/static/83944875201361775134657/">Ubuntu12.04下HDMI输出设置以及输出无声音的解决方法</a></div>                 <span class="irgt iblock icn0 icn0-619">&nbsp;</span>       <div class="pright thide"><a class="m2a" href="http://blog.163.com/thinki_cao/blog/static/83944875201362410442466/">思维导图的介绍及其在Ubuntu下的安装与使用</a></div>     </div>
+	    <div class="relateblog phide">
+          <h4 class="bdwb bds2 bdc0 fc07 fs0">历史上的今天</h4>
+          <div class="cnt ztag clearfix"></div>
+        </div>
+	    <div style="visibility: hidden; width: 0px; height: 0px; overflow: hidden;" class="author">
+	      <h4 class="bdwb bds2 bdc0 fc07 fs0">最近读者</h4>
+	      <div class="cnt ztag clearfix">        <div class="iblock nbw-fce nbw-f40">      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/wangchaoqun1997@126/">            <img alt="wangchaoqun1997" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava(1).s">            </a>      <div class="cwd vname thide">                <a class="fc03 m2a" target="_blank" hidefocus="true" href="http://blog.163.com/wangchaoqun1997@126/">          wangchao        </a>      </div>    </div>                <div class="iblock nbw-fce nbw-f40">      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/xumin_destiny/">            <img alt="xumin_destiny" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava(2).s">            </a>      <div class="cwd vname thide">                <a class="fc03 m2a" target="_blank" hidefocus="true" href="http://blog.163.com/xumin_destiny/">          xumin_de        </a>      </div>    </div>                <div class="iblock nbw-fce nbw-f40">      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/zyk1228/">            <img alt="zyk1228" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava(3).s">            </a>      <div class="cwd vname thide">                <a class="fc03 m2a" target="_blank" hidefocus="true" href="http://blog.163.com/zyk1228/">          zyk1228        </a>      </div>    </div>                <div class="iblock nbw-fce nbw-f40">      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/jiqingkai/">            <img alt="jiqingkai" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava(4).s">            </a>      <div class="cwd vname thide">                <a class="fc03 m2a" target="_blank" hidefocus="true" href="http://blog.163.com/jiqingkai/">          jiqingka        </a>      </div>    </div>                <div class="iblock nbw-fce nbw-f40">      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/lishangfeng1990/">            <img alt="尚贤博学" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava(5).s">            </a>      <div class="cwd vname thide">                <a class="fc03 m2a" target="_blank" hidefocus="true" href="http://blog.163.com/lishangfeng1990/">          尚贤博学        </a>      </div>    </div>                <div class="iblock nbw-fce nbw-f40">      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/cqcdscu999/">            <img alt="cqcdscu999" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava(6).s">            </a>      <div class="cwd vname thide">                <a class="fc03 m2a" target="_blank" hidefocus="true" href="http://blog.163.com/cqcdscu999/">          cqcdscu9        </a>      </div>    </div>                <div class="iblock nbw-fce nbw-f40">      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/weimiao1324@126/">            <img alt="新伊狂人" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava(7).s">            </a>      <div class="cwd vname thide">                <a class="fc03 m2a" target="_blank" hidefocus="true" href="http://blog.163.com/weimiao1324@126/">          新伊狂人        </a>      </div>    </div>                <div class="iblock nbw-fce nbw-f40">      <a class="fc03 noul" target="_blank" hidefocus="true" href="http://blog.163.com/jamess_zzm/">            <img alt="jamess_zzm" onerror="this.src=location.f40" class="cwd bdwa bdc0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava(8).s">            </a>      <div class="cwd vname thide">                <a class="fc03 m2a" target="_blank" hidefocus="true" href="http://blog.163.com/jamess_zzm/">          jamess_z        </a>      </div>    </div>        </div>
+	    </div>
+	    <div style="visibility: hidden; width: 0px; height: 0px; overflow: hidden;" id="hotarea" class="hotarea author ">
+	      <h4 class="bdwb bds2 bdc0 fc07 fs0">热度</h4>
+	      <div id="hotlist" class="cnt clearfix"></div>
+	    </div>
+	    <div class="phide" id="yodaoad_1" style="_zoom:1;"></div>
+	    
+	    <div class="m-lmiddlead" style="display: block;">
+	        <a class="adlink" href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/#" target="_blank" hidefocus="true" style="display: none;"><img style="border:none;" id="leftmiddleadimg"></a>
+	        <div id="flashadwrap" class="flashadwrap" style="display: none;"></div>
+	        <iframe marginwidth="0" marginheight="0" id="lmid_iframe" style="display: block;" width="590" height="100" frameborder="0" scrolling="no" allowtransparency="true" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/r(4).html"></iframe>
+	    </div>
+	    
+	    <div>
+	    	<h4 class="bdwb bds2 bdc0 fc07 fs0" style="padding:0 0 0 10px;line-height:30px;text-align:left;">在LOFTER的更多文章</h4>
+	    	<div style="width:100%;overflow:hidden;">
+	    	<iframe style="max-width:780px;margin:10px 0 10px 5px;display:block" id="morecontent_frame" width="100%" height="125" allowtransparency="true" scrolling="no" frameborder="0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/recommendblog.html"></iframe>
+	    	</div>
+	    </div>
+	    <div id="loftertextlinkad" style="display:none;padding:0 6px 0 5px;">
+	      <div style="height:40px;line-height:40px;margin:15px 0 15px 0;border:1px solid #d5d5d5;background:#ffffe1;text-align:left;">
+	        <span style="float:right;height:20px;line-height:20px;padding:10px 16px 10px 0;color:#d7854e;cursor:pointer;">关闭</span>
+	        <div style="padding-left:24px;color:#000;">玩LOFTER，免费冲印20张照片，人人有奖！&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a style="color:#d7854e;text-decoration:none;" href="http://www.lofter.com/" target="_blank">我要抢&gt;</a></div>
+	      </div>
+	    </div>
+	    <div class="comment">
+	      <h4 class="bdwb bds2 bdc0 fc07 fs0">评论</h4>
+	      <a name="blogComment" id="blogComment"></a>
+	      <div class="ztag"><div>    <div class="publish ztag"><div class="pleft"> <div class="nbw-fce nbw-f50"> <a target="_blank" hidefocus="true" href="http://blog.163.com/wangchaoqun1997@126/"><img onerror="this.src=location.f40" class="cwd ztag" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ava(1).s"></a> <a target="_blank" class="fc03" href="http://blog.163.com/wangchaoqun1997@126/"><div class="cwd m2a thide ztag fc05">wangchaoqun1997</div></a> </div> </div> <div class="redt ztag"><div class="nbw-sdt edt-cmt"><div class="hnt thide ztag" style="display: none;"></div> <div class="pr"> <div class="edt ztag"><div class="ui-2778921007"><div class="zcnt ztag zbrd bdc0"><iframe frameborder="0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/saved_resource.html"></iframe></div> <div class="zbtn"> <span class="zfce zbgp ztag space">&nbsp;</span> <input class="zbok zhnd ztag nbtn fc09 bdc1 bgc2" type="button" value="发表"> <span class="zbcc zhnd ztag fc04">取消</span> <div class="zvcd ztag" style="display:none;"> <label>验证码：</label><input class="zbrd xtag bdc0" type="text" maxlength="4"><img class="xtag" title="点击刷新验证码" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/empty.png"><span class="xtag fc04">换一张</span> </div> </div> <div class="zmsg fc07" style="display:none;"><span class="zicn zbgp iblock">&nbsp;</span><span class="ztag"></span></div></div></div> <div class="miniBlogArea ztag"> <div class="miniblog sinaminiblog ztag"><div class="ui-3147653805" style="display: none;"><div class="miniBlogSetInfo ztag" title="勾选后可同步至新浪微博"><span class="chkMiniBlogSetInfo ztag"><em>新浪微博</em><b></b></span></div></div></div> <div class="miniblog qqminiblog ztag"><div class="ui-8503236215" style="display: none;"><div class="miniBlogSetInfo ztag" title="勾选后可同步至腾讯微博"><span class="chkMiniBlogSetInfo ztag"><em>腾讯微博</em><b></b></span></div></div></div> <div class="miniblog wyminiblog ztag "><div class="ui-2089662803"><div class="miniBlogSetInfo ztag" title="勾选后可同步至网易微博"><span class="chkMiniBlogSetInfo ztag js-checked"><em>网易微博</em><b></b></span></div></div></div> </div> </div></div></div></div>
+    <div class="bdwt bds2 bdc0 phide" id="yodaoad_2" style="_zoom:1;"></div>
+    <div class="ztag bdwt bds2 bdc0">
+      <div class="case"></div>
+      <div class="clearfix" style="display: none;"><div class="ui-1204031626 noselect js-zfrg-6540" style="display: none;"><span class="pgi pgb iblock fc03 bgc9 bdc0 js-znpg-097">上一页</span> <span class="pgi zpg1 iblock fc03 bgc9 bdc0 js-zslt-987 fc05">1</span> <span class="frg fgp fc06">...</span> <span class="pgi zpg2 iblock fc03 bgc9 bdc0" style="display: none;">-1</span> <span class="pgi zpg3 iblock fc03 bgc9 bdc0" style="display: none;">-1</span> <span class="pgi zpg4 iblock fc03 bgc9 bdc0" style="display: none;">-1</span> <span class="pgi zpg5 iblock fc03 bgc9 bdc0" style="display: none;">-1</span> <span class="pgi zpg6 iblock fc03 bgc9 bdc0" style="display: none;">-1</span> <span class="pgi zpg7 iblock fc03 bgc9 bdc0" style="display: none;">-1</span> <span class="pgi zpg8 iblock fc03 bgc9 bdc0" style="display: none;">-1</span> <span class="frg fgn fc06">...</span> <span class="pgi zpg9 iblock fc03 bgc9 bdc0" style="display: none;">-1</span> <span class="pgi pgb iblock fc03 bgc9 bdc0 js-znpg-097">下一页</span></div></div>
+    </div>
+  </div></div>
+	    </div>
+	    <div class="phide" id="yodaoad_3" style="_zoom:1;"></div>
+      </div>
+      <div class="cite ztag fc03 phide"></div>
+    </div>
+   </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+var wumiiPermaLink = "http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/"; //文章的永久链接，作为文章的唯一标识
+var wumiiTags = "驱动程序,dma,cache,流式映射"; //文章标签，以英文逗号分隔，如："标签1,标签2"
+var wumiiSitePrefix = "http://blog.163.com/thinki_cao/"; //博客的主页地址，作为博客的唯一标识
+var wumiiParams = "&num=5&mode=3&pf=blog163"; //num为默认显示的相关文章数目，mode为默认的显示模式（1为文字，2为图片，3为自动）
+</script>
+<script type="text/javascript" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/relatedItemsWidget.htm"></script>
+</div>
+      <div class="l cl h100">&nbsp;</div>
+      <div class="r cr h100">&nbsp;</div>
+    </div>
+    <div class="nb-mb lcr bh space">
+      <div class="l bl bh">&nbsp;</div>
+      <div class="r br bh">&nbsp;</div>
+      <div class="c bc bh lcr">&nbsp;</div>
+    </div>
+  </div>
+
+</div>
+      <div class="l wl g lg h100">&nbsp;</div>
+      <div class="l wl t lt">&nbsp;</div>
+      <div class="l wl b lb">&nbsp;</div>
+      <div class="r wr g rg h100">&nbsp;</div>
+      <div class="r wr t rt">&nbsp;</div>
+      <div class="r wr b rb">&nbsp;</div>
+    </div>
+  </div>
+  <div class="nb-are nb-smb"><div class="wkg h space"><div class="l h">&nbsp;</div><div class="r h">&nbsp;</div><div class="c h">&nbsp;</div></div></div>
+<div class="nb-are nb-fot">
+  <div class="wkg h">
+    <h2>页脚</h2>
+    <div class="k">      <a rel="nofollow" class="m2a fc08" target="_blank" href="http://yxp.163.com/">我的照片书</a>
+      <span class="p fc10">-</span>
+      <a rel="nofollow" class="m2a fc08" target="_blank" href="http://blog.163.com/public/theme/">博客风格</a>
+      <span class="p fc10">-</span>
+      <a rel="nofollow" class="m2a fc08" target="_blank" href="http://blog.163.com/services/wapblog.html">手机博客</a>
+      <span class="p fc10">-</span>
+      <a rel="nofollow" class="m2a fc08" target="_blank" href="http://www.lofter.com/app?act=qbboke_20150209_02">下载LOFTER APP</a>
+      
+      <link rel="alternate" type="application/rss+xml" title="RSS" href="http://blog.163.com/thinki_cao/rss/">
+      <span class="p fc10">-</span><span class="fc08" id="$_foot_subscribe"><span class="iblock m2a icn0 icn0-919">&nbsp;</span><a class="m2a fc08">订阅此博客</a></span>
+    </div>
+    <p class="fc08">网易公司版权所有&nbsp;&#169;1997-2017</p>
+  </div>
+</div></div>
+    <!--[if lte IE 6]></div><![endif]-->
+  <!--[if lte IE 6]></div><![endif]-->
+  <div class="nb-layer" id="blog-163-com-layer"><div class="ui-4430709832 postadlayer adpushwin nbw-win nbwindow nbwinautoheight"><div class="nbwinwrap"> <div class="zcls zflg" title="关闭"><div class="txtclose">×</div></div> <div class="ztbr noselect zflg"><div class="zttl thide zflg">信息提示</div></div> <div class="zcnt zflg"><div class="" style="top: 100px; left: 200px;"><div class="m-adv ztag" style="bottom: -300px;"> <div class="m-advc"> <a class="ztag adv adv-img" href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/#" target="_blank" style="display: none;"> <p> <img class="ztag hidden"> <img class="ztag"> </p> <span class="cover ztag"></span> <span class="tag ztag"> <span class="logo">&nbsp;</span> <span class="source thide ztag"></span> </span> <span class="imgcover">&nbsp;</span> </a> <div class="adv adv-flash xtag" style="display: none;"> <a class="link xtag" href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/#" target="_blank"></a> <div class="flashwrap"> <div class="stubwrap xtag"></div> <div class="showwrap xtag"></div> </div> </div> <a href="http://blog.163.com/thinki_cao/blog/static/83944875201362142939337/#" title="关闭" class="ztag btn-close"></a> <iframe marginwidth="0" marginheight="0" class="ztag adv-iframe" width="300" height="250" frameborder="0" scrolling="no" allowtransparency="true" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/r(5).html" style="display: block;"></iframe> </div> </div></div></div> <div class="zbtnbar zflg"></div> <div class="zext zext0" style="left: 6px;">&nbsp;</div> <div class="zext zext1" style="left: 6px;">&nbsp;</div> <div class="zext zext2" style="height: 46px; top: 23px;">&nbsp;</div> <div class="zext zext3" style="height: 46px; top: 23px;">&nbsp;</div> <div class="zext zext4">&nbsp;</div> <div class="zext zext5">&nbsp;</div> <div class="zext zext6">&nbsp;</div> <div class="zext zext7">&nbsp;</div> </div></div></div>
+  
+<script type="text/javascript">
+  window.N = {tm:{'zbtn':'nbtn',
+                  'bdc0':'bdc0','bdc2':'bdc1',
+				  'bgc0':'bgc0','bgc1':'bgc1','bgc2':'bgc2','bgh0':'bgc9',
+				  'fc00':'fc03','fc01':'fc04','fc02':'fc05','fc03':'fc06','fc04':'fc07','fc05':'fc09'}};
+  Date.servTime = '06/12/2017 14:49:05';
+  location.api = 'http://api.blog.163.com/';
+  location.msg = 'http://api.blog.163.com/msg/dwr';
+  location.dwr = 'http://api.blog.163.com/thinki_cao/dwr';
+  location.vcd = 'http://api.blog.163.com/cap/captcha.jpgx?parentId=83944875&r=';
+  location.mrt = 'http://b.bst.126.net/newpage/style/mbox/';
+  location.fce = 'http://os.blog.163.com/common/ava.s?host=';
+  location.fce2= 'http://os.blog.163.com/common/ava.s?host=';
+  location.passportfce = 'http://os.blog.163.com/common/ava.s?passport=';
+  location.fpr = 'http://b.bst.126.net/common/portrait/face/preview/';
+  location.f60 = 'http://b.bst.126.net/common/face60.png';
+  location.f140= 'http://b.bst.126.net/common/face140.png';
+  location.f40 = location.f140;
+  location.adf140= 'http://b.bst.126.net/common/admireface140.png';
+  location.ept = 'http://b.bst.126.net/common/empty.png';
+  location.guide_profile_add= 'http://b.bst.126.net/common/guide_profile_add.gif';
+  location.phtoto_dream = 'http://photo.dream.163.com/blog/writeBlogCallback.do';
+  window.CF = {
+    ca:false
+   ,mid:-3
+   ,cb:''
+   ,cc:true
+   ,cd:false
+   ,ce:'-3'
+   ,ck:1
+   ,ci:['api.blog.163.com'
+       ,'http://photo.163.com/photo/html/crossdomain.html?t=20100205'
+        
+        ,'ud.blog.163.com'
+        
+        
+        
+        ]
+   ,cj:[-3]
+   ,cl:''
+   ,cm:["","blog/","album/","music/","collection/","friends/","profile/","pprank/","","loftarchive/"]
+   ,cf:0
+   ,co:{pv:false
+       ,ti:97381539
+       ,tn:''
+       ,tc:0
+       ,tl:3
+       ,ut:0
+       ,un:''
+       ,um:''
+       ,ui:0
+       ,ud:true}
+   ,cp:{nr:1
+       ,cr:1
+       ,vr:0
+       ,fr:0}
+   ,cs:0
+   ,ct:{'nav':['首页','日志','相册','音乐','收藏','博友','关于我','LOFTER'],'enabled':[0,1,6],'defaultnav':parseInt('11111111',2)}
+   ,cu:false
+   ,cv:true
+   ,cw:false
+  };
+  window.UD = {};
+  UD.host = {
+      userId:83944875
+     ,userName:'thinki_cao'
+     ,nickName:'小辉辉'
+     ,imageUpdateTime:1325505109139
+     ,baseUrl:'http://blog.163.com/thinki_cao/'
+     ,gender:'他'
+     ,email:'thinki_cao@163.com'
+     ,photo163Name:'thinki_cao'
+     ,photo163HostName:'thinki_cao'
+     ,TOKEN_HTMLMODULE:''
+     ,isMultiUserBlog:false
+     ,isWumiUser:true
+     ,sRank:-100
+  };
+  UD.visitor = {
+     userId:97016589,
+     userName:'wangchaoqun1997@126',
+     nickName:'wangchaoqun1997',
+     imageUpdateTime:-1,
+     userType:[12,44],
+     baseUrl:'http://blog.163.com/wangchaoqun1997@126/',
+     email:'wangchaoqun1997@126.com'
+     ,photo163Name:'wangchaoqun1997@126'
+     ,photo163VisitorName:'wangchaoqun1997@126'
+     ,isOnwer:false
+     ,isMultiUserMember:false
+     ,multiUserVisitorRank:0
+     ,isShowFaXianTip:false
+     ,isShowGuanggaoTip:false
+     ,isLofterInviteTip:false
+     ,isVIP:false
+     ,isShowYXP:false
+     ,isSinaOauthExpired:false
+  };
+</script>
+    <script type="text/javascript" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/pc.js.下载"></script><iframe width="0" height="0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/crossdomain.html" id="api.blog.163.com" name="api.blog.163.com" onload="J.a(&#39;api.blog.163.com&#39;);" style="display:none;"></iframe><iframe width="0" height="0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/crossdomain(1).html" id="photo.163.com" name="photo.163.com" onload="J.a(&#39;photo.163.com&#39;);" style="display:none;"></iframe><iframe width="0" height="0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/crossdomain(2).html" id="ud.blog.163.com" name="ud.blog.163.com" onload="J.a(&#39;ud.blog.163.com&#39;);" style="display:none;"></iframe>
+    <script type="text/javascript" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/pm.js.下载"></script>
+  <script src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/ntes.js.下载" type="text/javascript"></script>
+  <script type="text/javascript">
+    _ntes_nacc='blog';neteaseTracker();
+    
+    new Image().src = 'http://blog.163.com/newpage/images/analyse.png?s=p&t='+new Date().getTime();
+  </script>
+<script>
+window.setTimeout(function(){
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-69204963-1', 'auto');
+  ga('send', 'pageview');
+},300);
+
+
+
+</script> 
+
+
+<script type="text/javascript">
+    window.setTimeout(function(){
+			J.loadScript('http://music.ph.126.net/ph.js?001');
+			
+			J.postDataByDWR(location.dwr,'MusicBeanNew','setCopyrightMusicSessionToken',false);
+	},1000);
+</script>
+
+<script type="text/javascript">
+    window.setTimeout(function(){
+	    var _iframe = document.cloneElement('iframe');
+	    _iframe.width = 0;
+	    _iframe.height = 0;
+	    _iframe.style.display = 'none';
+	    document.body.appendChild(_iframe); 
+	    _iframe.src = "http://reg.163.com/crossdomain_all.do"; 
+			
+		J.postDataByDWR(location.dwr,'MusicBeanNew','setLofterCookieSessionToken',false);
+	},1000);
+</script>
+
+<script>
+window.setTimeout(function(){
+    var script = document.createElement('script');
+    script.async = 1;
+    script.src = 'http://b1.bst.126.net/newregflow/res/js/blog_aswlf_V3_1.js';
+    document.body.appendChild(script);
+    
+},300);
+
+</script> 
+    <script type="text/javascript" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/prettify.js.下载"></script>
+
+
+<script async="" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/blog_aswlf_V3_1.js.下载"></script><iframe frameborder="0" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/crossdomain_all.html" width="0" height="0" style="display: none;"></iframe><div class="phide"><iframe src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/saved_resource(8).html"></iframe></div><div class="m-fixedPCAd f-trans" style="visibility: visible; opacity: 1;"><div class="hoverbar f-trans"> <div class="part1"> <a class="moreimg" target="_blank" href="http://www.lofter.com/view?from=blog">更多美图&gt;</a> <span>汇聚2000万达人的兴趣社区</span> </div> <div class="part2"> <a class="jximgwrap" target="_blank" href="http://www.lofter.com/?index163Image=1497168766592&amp;newloginentry=1&amp;from=blog"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/Snh4TnJ5RkloMHphV0FLTktpSGlVdVNFUGYwR1JicURIdExvTU5wQkRHK3RFM1BublJBWmtnPT0.jpg"></a> <a class="jximgwrap" target="_blank" href="http://www.lofter.com/?index163Image=1497168766592&amp;newloginentry=1&amp;from=blog"><img class="jximg" src="./Linux下DMA驱动如何实现 - 小辉辉的日志 - 网易博客_files/U0h2T0swclMrbThORWt4UVUrTTBha1loQm0rSjNUVlhJVXZWN0xpcHQ2RzZ5MGlLOUl0cjNnPT0.jpg"></a> </div> </div><div class="fixedbar"><a target="_blank" href="http://www.lofter.com/?act=qbboketanchuang_20150109_02&amp;newloginentry=1">&nbsp;</a><em></em></div></div></body></html>
